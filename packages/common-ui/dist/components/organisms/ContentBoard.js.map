@@ -1,0 +1,1 @@
+{"version":3,"file":"ContentBoard.js","sourceRoot":"","sources":["../../../components/organisms/ContentBoard.tsx"],"names":[],"mappings":";AAEA,OAAO,MAAM,MAAM,4BAA4B,CAAC;AAKhD,MAAM,UAAU,YAAY,CAAC,EAAE,KAAK,EAAqB;IACvD,OAAO,CACL,cAAK,SAAS,EAAE,MAAM,CAAC,QAAQ,YAC7B,cAAK,SAAS,EAAE,MAAM,CAAC,UAAU,YAAG,KAAK,IAAI,KAAC,KAAK,KAAG,GAAO,GACzD,CACP,CAAC;AACJ,CAAC;AAED,eAAe,YAAY,CAAC"}
