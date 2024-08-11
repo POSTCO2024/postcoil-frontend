@@ -47,13 +47,13 @@ const columns: ColumnsType<DataType> = [
     },
   },
   // ** checkbox 설정 - true/false **
-  // {
-  //     title: 'Error Pass',  // 컬럼명 수정 필요
-  //     dataIndex: 'select',
-  //     render: (_, record) => (
-  //       <Checkbox onChange={(e) => onCheckboxChange(e, record.key)} />
-  //     ),
-  // },
+  {
+    title: 'Error Pass', // 컬럼명 수정 필요
+    dataIndex: 'select',
+    render: (_, record) => (
+      <Checkbox onChange={(e) => onCheckboxChange(e, record.key)} />
+    ),
+  },
 ];
 
 const data: DataType[] = [

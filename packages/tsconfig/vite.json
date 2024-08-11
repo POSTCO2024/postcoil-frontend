@@ -8,7 +8,7 @@
     "sourceMap": true,
     "resolveJsonModule": true,
     "noEmit": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
     "esModuleInterop": true,
     "moduleResolution": "node",
     "noUnusedLocals": true,

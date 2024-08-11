@@ -1,5 +1,4 @@
 import { Button } from '@postcoil/ui';
-import { useState } from 'react';
 import './styles/global.scss';
 
 function App() {

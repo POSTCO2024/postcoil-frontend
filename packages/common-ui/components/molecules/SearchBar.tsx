@@ -1,6 +1,6 @@
-import { AudioOutlined } from '@ant-design/icons';
+// import { AudioOutlined } from '@ant-design/icons';
 import { Input, Space, Cascader } from 'antd';
-import { CascaderProps } from 'antd/es/cascader';
+import { CascaderProps, BaseOptionType } from 'antd/es/cascader';
 import React from 'react';
 import './SearchBar.scss';
 
@@ -8,17 +8,17 @@ import './SearchBar.scss';
 // searchbar 기준 안에 들어갈 내용은 optionSearch에 구성하여 사용
 
 const { Search } = Input;
-const suffix = (
-  <AudioOutlined
-    style={{
-      fontSize: 16,
-      color: '#1677ff',
-    }}
-  />
-); // for icon
+// const suffix = (
+//   <AudioOutlined
+//     style={{
+//       fontSize: 16,
+//       color: '#1677ff',
+//     }}
+//   />
+// ); // for icon
 
 // Dropbar Event
-const onChange: CascaderProps<any>['onChange'] = (value) => {
+const onChange: CascaderProps<BaseOptionType>['onChange'] = (value) => {
   console.log(value);
 };
 
@@ -26,8 +26,7 @@ const onChange: CascaderProps<any>['onChange'] = (value) => {
 const onSearch = (value: string) => console.log(value);
 
 // Data
-const optionSearch: CascaderProps<any>['options'] = [
-  // 수정 필요
+const optionSearch: BaseOptionType[] = [
   {
     value: 'id',
     label: '코일ID',

@@ -1,5 +1,4 @@
 import { CheckCircleFilled } from '@ant-design/icons';
-import React from 'react';
 
 import CommonModal from '../../../components/common/CommonModal';
 
