@@ -1,7 +1,7 @@
 import { Cascader } from 'antd';
-import { CascaderProps } from 'antd/es/cascader';
 import React from 'react';
-import './Dropdown.scss';
+
+import styles from './Dropdown.module.scss';
 
 // info
 // dropdown 안에 들어갈 내용은 optionsDropdown에 구성하여 사용
@@ -12,8 +12,13 @@ interface DropdownProps {
   title: string; // dropdown 구분 텍스트
 }
 
+interface OptionType {
+  value: string;
+  label: string;
+}
+
 // Cascader value
-const optionsDropdown: CascaderProps<any>['options'] = [
+const optionsDropdown: OptionType[] = [
   {
     value: '1PCM',
     label: '1PCM',
@@ -28,13 +33,13 @@ const optionsDropdown: CascaderProps<any>['options'] = [
   },
 ];
 
-const onChange: CascaderProps<any>['onChange'] = (value) => {
+const onChange = (value: string[]) => {
   console.log(value);
 };
 
 export const Dropdown: React.FC<DropdownProps> = ({ title }) => {
   return (
-    <div className="dropdown-container">
+    <div className={styles.dropdownContainer}>
       <span> {title} </span>
       <span className="spacer1"></span>
       <Cascader

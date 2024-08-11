@@ -2,7 +2,8 @@ import { Table as AntTable, Checkbox } from 'antd';
 import { CheckboxChangeEvent } from 'antd/es/checkbox'; // CheckBox
 import { ColumnsType, TableProps } from 'antd/es/table'; // Table
 import React from 'react';
-import './Table.scss';
+
+import styles from './Table.module.scss';
 
 // info
 // API 결과를 columns, data에 저장하여 사용
@@ -104,9 +105,9 @@ const onCheckboxChange = (e: CheckboxChangeEvent, key: string) => {
 
 export const Table: React.FC = () => {
   return (
-    <div className="table-container">
+    <div className={styles.tableContainer}>
       <AntTable
-        className="ant-table"
+        className={styles.antTable}
         columns={columns}
         dataSource={data}
         onChange={onTableChange}

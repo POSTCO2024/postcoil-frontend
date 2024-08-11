@@ -2,7 +2,8 @@
 import { Input, Space, Cascader } from 'antd';
 import { CascaderProps, BaseOptionType } from 'antd/es/cascader';
 import React from 'react';
-import './SearchBar.scss';
+
+import styles from './SearchBar.module.scss';
 
 // info
 // searchbar 기준 안에 들어갈 내용은 optionSearch에 구성하여 사용
@@ -43,7 +44,7 @@ const optionSearch: BaseOptionType[] = [
 
 export const SearchBar: React.FC = () => {
   return (
-    <div className="searchbar-container">
+    <div className={styles.searchbarContainer}>
       <span> 검색 기준 </span>
       <span className="spacer"></span>
       <Cascader options={optionSearch} onChange={onChange} placeholder="선택" />

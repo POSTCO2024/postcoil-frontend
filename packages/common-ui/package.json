@@ -3,19 +3,25 @@
   "version": "0.0.1",
   "type": "module",
   "main": "index.ts",
-  "types": "index.ts",
+  "types": "index.d.ts",
   "exports": {
     ".": "./index.ts"
   },
   "files": [
     "index.ts",
     "components",
-    "utils"
+    "utils",
+    "dist"
   ],
   "sideEffects": false,
   "scripts": {
-    "lint": "eslint \"**/*.{ts,tsx}\"",
-    "type-check": "tsc --noEmit"
+    "clean": "rimraf dist",
+    "build-ts": "tsc",
+    "build-css": "sass components:dist/components --style compressed --no-source-map",
+    "build": "npm run clean && npm run build-ts && npm run build-css && npm run update-imports",
+    "update-imports": "find dist -name '*.js' -exec sed -i '' -e 's/\\.module\\.scss/\\.module\\.css/g' {} +",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint \"**/*.{ts,tsx}\""
   },
   "dependencies": {
     "@ant-design/icons": "5.4.0",
@@ -29,7 +35,15 @@
     "@postcoil/tsconfig": "workspace:*",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
+    "autoprefixer": "10.4.20",
     "eslint": "^8.57.0",
+    "postcss": "8.4.41",
+    "postcss-cli": "11.0.0",
+    "postcss-import": "16.1.0",
+    "postcss-nested": "6.2.0",
+    "postcss-preset-env": "10.0.0",
+    "postcss-scss": "4.0.9",
+    "sass": "1.77.8",
     "sass-embedded": "1.77.8",
     "typescript": "^5.3.0"
   }

@@ -1,6 +1,7 @@
 import { Tabs } from 'antd';
 import React from 'react';
-import './Tab.scss';
+
+import styles from './Tab.module.scss';
 
 // info
 // props: Tabs 안에 들어갈 텍스트 값으로 Array 구성한 뒤, input 값으로 전달
@@ -20,7 +21,7 @@ const onChange = (key: string) => {
 
 export const Tab: React.FC<TabsProps> = ({ labels }) => {
   return (
-    <div className="tab-container">
+    <div className={styles.tabContainer}>
       <Tabs
         onChange={onChange}
         type="card"

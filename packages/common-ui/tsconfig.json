@@ -1,11 +1,16 @@
 {
   "extends": "@postcoil/tsconfig/vite.json",
   "compilerOptions": {
+    "noEmit": false,
     "baseUrl": "./",
     "paths": {
-      "@components/*": ["src/components/*"]
-    }
+      "@components/*": ["src/components/*"],
+      "@postcoil/ui": ["./src"]
+    },
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "dist"   
   },
-  "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "include": ["**/*.ts", "**/*.tsx", "**/*.scss"],
+  "exclude": ["node_modules", "dist", "postcss.config.js"]
 }
