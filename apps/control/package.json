@@ -12,6 +12,7 @@
     "clean:all": "rimraf dist && rimraf node_modules",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "prettier": "prettier . --write --ignore-path ../../.prettierignore",
     "preview": "vite preview",
     "type-check": "tsc --noEmit"
   },
