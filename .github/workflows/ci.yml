@@ -1,0 +1,82 @@
+name: FE CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-type-check:
+    name: Lint and Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '9.6.0'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install
+      - name: Clean
+        run: pnpm run clean
+      - name: Lint
+        run: pnpm run lint
+      - name: Prettier
+        run: pnpm run prettier
+      - name: Type check
+        run: pnpm run type-check
+      - uses: actions/upload-artifact@v4
+        with:
+          name: source-code
+          path: .
+
+  test:
+    name: Run Tests
+    needs: lint-and-type-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: source-code
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '9.6.0'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install
+      - name: Run tests
+        run: pnpm turbo test
+
+  build:
+    name: Build Apps
+    needs: test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        app: [control, operation, main]
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: source-code
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '9.6.0'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build ${{ matrix.app }}
+        run: pnpm run --filter ${{ matrix.app }} build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.app }}-build
+          path: apps/${{ matrix.app }}/dist
