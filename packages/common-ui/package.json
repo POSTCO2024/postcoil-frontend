@@ -1,0 +1,36 @@
+{
+  "name": "@postcoil/ui",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "index.ts",
+  "types": "index.ts",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "files": [
+    "index.ts",
+    "components",
+    "utils"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "lint": "eslint \"**/*.{ts,tsx}\"",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@ant-design/icons": "5.4.0",
+    "antd": "5.20.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "6.26.0"
+  },
+  "devDependencies": {
+    "@postcoil/eslint-config": "workspace:*",
+    "@postcoil/tsconfig": "workspace:*",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
+    "eslint": "^8.57.0",
+    "sass-embedded": "1.77.8",
+    "typescript": "^5.3.0"
+  }
+}

@@ -1,0 +1,19 @@
+@use '../../styles/color' as C;
+
+.greyBack {
+  background-color: C.$lightGray;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.whiteBoard {
+  height: 98%;
+  width: 98%;
+  min-width: 720px;
+  min-height: 650px;
+  background-color: C.$white;
+  border-radius: 10px;
+}

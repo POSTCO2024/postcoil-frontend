@@ -3,5 +3,13 @@
     {
       "mode": "auto"
     }
-  ]
+  ],
+  "editor.formatOnSave" : true,
+  "editor.codeActionsOnSave": {
+	"source.fixAll.eslint" : "always", // eslint 자동 수정
+  },
+  "eslint.validate": [
+    "typescript",
+    "typescriptreact"
+  ],
 }

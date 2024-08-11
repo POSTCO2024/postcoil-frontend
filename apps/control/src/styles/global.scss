@@ -1,0 +1,28 @@
+@use './reset';
+@use './color' as C;
+
+html {
+  font:
+    400 62.5%/1.5 Pretendard Variable,
+    -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
+    Roboto,
+    'Helvetica Neue',
+    'Segoe UI',
+    'Apple SD Gothic Neo',
+    'Noto Sans KR',
+    'Malgun Gothic',
+    sans-serif;
+}
+
+body {
+  margin: 0 auto;
+  font-size: 1.6rem;
+  background: C.$white;
+}
+
+#root {
+  position: relative;
+  height: 100%;
+}

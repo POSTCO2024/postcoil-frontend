@@ -4,12 +4,24 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": ["dist/**"]
+      "outputs": [
+        "apps/main/dist/**",
+        "apps/control/dist/**",
+        "apps/operation/dist/**"
+      ]
     },
     "lint": {},
     "dev": {
       "cache": false,
       "persistent": true
+    },
+    "clean": {
+      "cache": false,
+      "outputs": [
+        "apps/main/dist/**",
+        "apps/control/dist/**",
+        "apps/operation/dist/**"
+      ]
     }
   }
 }
