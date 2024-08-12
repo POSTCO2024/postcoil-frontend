@@ -13,7 +13,7 @@ server/dist
 public/dist
 
 # TypeScript build info file
-*.tsbuildinfo
-
+**/tsconfig.tsbuildinfo
+apps/operation/tsconfig.tsbuildinfo
 
 !packages/common-ui/dist/

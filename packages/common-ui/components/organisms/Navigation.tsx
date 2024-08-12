@@ -60,7 +60,7 @@ export const Navigation: React.FC<NavigationProps> = ({ logo, human }) => {
       <ConfigProvider theme={menuTheme}>
         <Menu
           mode="inline"
-          defaultSelectedKeys={['231']}
+          defaultSelectedKeys={['11']}
           openKeys={stateOpenKeys}
           onOpenChange={onOpenChange}
           style={{ width: 256, margin: '20px auto auto' }}
