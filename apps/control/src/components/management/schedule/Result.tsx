@@ -2,8 +2,9 @@ import { Button, Table, Input, Form } from 'antd';
 import { useState } from 'react';
 
 import styles from './Result.module.scss';
-import { DataType } from '../../../pages/management/schedule/SchMPage';
-import CommonModal from '../../common/CommonModal';
+
+import CommonModal from '@/components/common/CommonModal';
+import { DataType } from '@/pages/management/schedule/SchMPage';
 interface PropsType {
   title: string;
   data: DataType;

@@ -1,4 +1,3 @@
-import { SearchOutlined } from '@ant-design/icons';
 import { Dropdown, SearchBar, Button } from '@postcoil/ui';
 import react from 'react';
 
