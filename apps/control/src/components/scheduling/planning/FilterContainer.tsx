@@ -1,5 +1,4 @@
 import { Button, Dropdown, SearchBar } from '@postcoil/ui';
-import React from 'react';
 
 import styles from './FilterContainer.module.scss';
 

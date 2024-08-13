@@ -1,5 +1,4 @@
 import { Table } from '@postcoil/ui';
-import React from 'react';
 
 import styles from './ContentContainer.module.scss';
 

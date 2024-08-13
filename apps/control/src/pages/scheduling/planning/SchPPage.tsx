@@ -1,5 +1,5 @@
 import { Button } from '@postcoil/ui';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import RollSuccessModal from './RollSuccessModal';
 import styles from './SchPPage.module.scss';
