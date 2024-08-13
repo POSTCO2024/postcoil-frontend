@@ -13,12 +13,12 @@ interface PropsType {
 const Result = ({ title, data }: PropsType) => {
   const [form] = Form.useForm();
   const [modalTitle, setModalTitle] = useState('');
-  const [isEditing, setIsEditing] = useState(false); // FIXME: check Remove this
+  // const [isEditing, setIsEditing] = useState(false); // FIXME: check Remove this
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModalEditing = () => {
     setModalTitle(title + ' 수정하기');
-    setIsEditing(true);
+    // setIsEditing(true);
     setIsModalOpen(true);
     form.setFieldsValue(data); // 폼에 초기값 설정
   };

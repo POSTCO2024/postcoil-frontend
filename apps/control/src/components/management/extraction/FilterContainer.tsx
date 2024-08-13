@@ -1,16 +1,15 @@
 import { Dropdown, SearchBar, Button } from '@postcoil/ui';
-import react from 'react';
 
 import styles from './FilterContainer.module.scss';
 
-interface PropsType {
-  process: {
-    title: string; // 공정명
-    options: string[]; // ['1CAL', '2CAL', 'EGL']
-  };
+// interface PropsType {
+//   process: {
+//     title: string; // 공정명
+//     options: string[]; // ['1CAL', '2CAL', 'EGL']
+//   };
 
-  handleSearch: () => void; // function to handle search button click event
-}
+//   handleSearch: () => void; // function to handle search button click event
+// }
 
 const FilterContainer = () => {
   const handleSearch = () => {};
