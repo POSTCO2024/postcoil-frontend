@@ -1,5 +1,3 @@
-import React from 'react';
-
 import styles from './SchMpage.module.scss';
 
 import FilterContainer from '@/components/management/schedule/FilterContainer';
@@ -9,10 +7,10 @@ export interface DataType {
   [key: string]: string | number;
 }
 
-interface PropsType {
-  priorities: DataType;
-  constraints: DataType;
-}
+// interface PropsType {
+//   priorities: DataType;
+//   constraints: DataType;
+// }
 
 // TODO: fetch data from API
 const priorities: DataType = {
