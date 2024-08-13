@@ -63,7 +63,7 @@ export const Navigation: React.FC<NavigationProps> = ({ logo, human }) => {
           defaultSelectedKeys={['11']}
           openKeys={stateOpenKeys}
           onOpenChange={onOpenChange}
-          style={{ width: 256, margin: '20px auto auto' }}
+          style={{ width: '90%', margin: '20px auto auto', border: 0 }}
           items={items}
         />
       </ConfigProvider>

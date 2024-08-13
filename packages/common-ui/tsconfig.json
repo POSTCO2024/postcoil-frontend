@@ -4,8 +4,8 @@
     "noEmit": false,
     "baseUrl": "./",
     "paths": {
-      "@components/*": ["src/components/*"],
-      "@postcoil/ui": ["./src"]
+      "@components/*": ["components/*"],
+      "@postcoil/ui": ["./components"]
     },
     "declaration": true,
     "declarationMap": true,

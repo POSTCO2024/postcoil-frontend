@@ -50,6 +50,11 @@ module.exports = {
         },
       },
     ],
-    'prettier/prettier': 'error',
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+      },
+    ],
   },
 };

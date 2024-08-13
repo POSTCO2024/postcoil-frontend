@@ -24,8 +24,8 @@ export const items: MenuItem[] = [
     icon: <MailOutlined />,
     label: '작업 대상재 편성',
     children: [
-      { key: '11', label: <Link to="/button1">공정별 작업 대상재 관리</Link> },
-      { key: '12', label: <Link to="/button2">공정별 에러재 관리</Link> },
+      { key: '11', label: <Link to="/control1">공정별 작업 대상재 관리</Link> },
+      { key: '12', label: <Link to="/control2">공정별 에러재 관리</Link> },
       { key: '13', label: '공장별 수급량 관리' },
       { key: '14', label: '공장별 작업대상재 분석' },
     ],

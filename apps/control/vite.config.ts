@@ -8,6 +8,10 @@ export default defineConfig({
   server: {
     host: true,
     port: 4000,
+    watch: {
+      usePolling: true,
+      interval: 100,
+    },
   },
   build: {
     outDir: 'dist',
@@ -21,11 +25,11 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      '@postcoil/ui': path.resolve(__dirname, '../../packages/common-ui/dist'),
+      '@postcoil/ui': path.resolve(__dirname, '../../packages/common-ui'),
     },
   },
   optimizeDeps: {
-    include: ['@postcoil/ui'],
+    exclude: ['@postcoil/ui'],
   },
   logLevel: 'info',
 });
