@@ -1,5 +1,6 @@
 import { Cascader } from 'antd';
 import React from 'react';
+import { optionsDropdown, onChange } from './DropdownConfig';
 
 import styles from './Dropdown.module.scss';
 
@@ -11,31 +12,6 @@ import styles from './Dropdown.module.scss';
 interface DropdownProps {
   title: string; // dropdown 구분 텍스트
 }
-
-interface OptionType {
-  value: string;
-  label: string;
-}
-
-// Cascader value
-const optionsDropdown: OptionType[] = [
-  {
-    value: '1PCM',
-    label: '1PCM',
-  },
-  {
-    value: '2PCM',
-    label: '2PCM',
-  },
-  {
-    value: '1CAL',
-    label: '1CAL',
-  },
-];
-
-const onChange = (value: string[]) => {
-  console.log(value);
-};
 
 export const Dropdown: React.FC<DropdownProps> = ({ title }) => {
   return (
