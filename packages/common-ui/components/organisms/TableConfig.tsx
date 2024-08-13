@@ -9,40 +9,51 @@ type DataType = {
   id: string;
   length: number;
   width: number;
+  [key: string]: any;
 };
 
 // Dataset Column
-export const createColumns = (useCheckBox: boolean): ColumnsType<DataType> => {
-  const columns: ColumnsType<DataType> = [
-    {
-      title: 'no',
-      dataIndex: 'no',
-    },
-    {
-      title: '코일 ID',
-      dataIndex: 'id',
-      sorter: {
-        compare: (a, b) => a.id.localeCompare(b.id),
-        multiple: 3,
-      },
-    },
-    {
-      title: '두께',
-      dataIndex: 'length',
-      sorter: {
-        compare: (a, b) => a.length - b.length,
-        multiple: 2,
-      },
-    },
-    {
-      title: '폭',
-      dataIndex: 'width',
-      sorter: {
-        compare: (a, b) => a.width - b.width,
-        multiple: 1,
-      },
-    },
-  ];
+export const createColumns = (
+  useCheckBox: boolean,
+  columnsData: any[],
+): ColumnsType<DataType> => {
+  const columns: ColumnsType<DataType> = columnsData.map((column) => ({
+    title: column.title,
+    dataIndex: column.dataIndex,
+    sorter: column.sorter,
+    ...column.otherProps, // 추가: 기타 다른 props 전달을 위한 설정
+  }));
+
+  // == Props로 받기 (columns, data) ==
+  //   {
+  //     title: 'no',
+  //     dataIndex: 'no',
+  //   },
+  //   {
+  //     title: '코일 ID',
+  //     dataIndex: 'id',
+  //     sorter: {
+  //       compare: (a, b) => a.id.localeCompare(b.id),
+  //       multiple: 3,
+  //     },
+  //   },
+  //   {
+  //     title: '두께',
+  //     dataIndex: 'length',
+  //     sorter: {
+  //       compare: (a, b) => a.length - b.length,
+  //       multiple: 2,
+  //     },
+  //   },
+  //   {
+  //     title: '폭',
+  //     dataIndex: 'width',
+  //     sorter: {
+  //       compare: (a, b) => a.width - b.width,
+  //       multiple: 1,
+  //     },
+  //   },
+  // ];
 
   if (useCheckBox) {
     // ** checkbox 설정 - true/false **
@@ -58,37 +69,37 @@ export const createColumns = (useCheckBox: boolean): ColumnsType<DataType> => {
   return columns;
 };
 
-// Dataset Value
-export const data: DataType[] = [
-  {
-    key: '1',
-    no: '1',
-    id: 'A001',
-    length: 60,
-    width: 70,
-  },
-  {
-    key: '2',
-    no: '2',
-    id: 'A002',
-    length: 66,
-    width: 89,
-  },
-  {
-    key: '3',
-    no: '3',
-    id: 'A003',
-    length: 90,
-    width: 70,
-  },
-  {
-    key: '4',
-    no: '4',
-    id: 'A004',
-    length: 99,
-    width: 89,
-  },
-];
+// // Dataset Value
+// export const data: DataType[] = [
+//   {
+//     key: '1',
+//     no: '1',
+//     id: 'A001',
+//     length: 60,
+//     width: 70,
+//   },
+//   {
+//     key: '2',
+//     no: '2',
+//     id: 'A002',
+//     length: 66,
+//     width: 89,
+//   },
+//   {
+//     key: '3',
+//     no: '3',
+//     id: 'A003',
+//     length: 90,
+//     width: 70,
+//   },
+//   {
+//     key: '4',
+//     no: '4',
+//     id: 'A004',
+//     length: 99,
+//     width: 89,
+//   },
+// ];
 
 // CheckBox Event
 export const onCheckboxChange = (e: CheckboxChangeEvent, key: string) => {
