@@ -3,6 +3,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
+<<<<<<< HEAD
       "@/*": ["src/*"],
       "@postcoil/ui": ["../../packages/common-ui/components"]
     }
@@ -10,3 +11,22 @@
   "include": ["src", "vite.config.ts", "vitest.config.ts"],
   "exclude": ["node_modules"]
 }
+=======
+      "@/*": [
+        "src/*"
+      ],
+      "@postcoil/ui": [
+        "../../packages/common-ui/components"
+      ]
+    }
+  },
+  "include": [
+    "src",
+    "vite.config.ts",
+    "vitest.config.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
+>>>>>>> b2a0ee3 (환경 설정 변경)
