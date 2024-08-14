@@ -3,17 +3,12 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-<<<<<<< HEAD
-      "@/*": ["src/*"],
-      "@postcoil/ui": ["../../packages/common-ui/components"]
-=======
       "@/*": [
         "src/*"
       ],
       "@postcoil/ui": [
         "../../packages/common-ui/components"
       ]
->>>>>>> 8e2559b (환경세팅 수정)
     }
   },
   "include": [
