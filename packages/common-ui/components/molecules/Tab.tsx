@@ -11,7 +11,7 @@ import styles from './Tab.module.scss';
 // props type
 interface TabsProps {
   labels: string[]; // Tabs에 표시될 텍스트 배열
-  onChange: (key: string) => void;
+  onChange?: (key?: string) => void;
 }
 
 //Tabs change event handler
@@ -23,7 +23,13 @@ export const Tab: React.FC<TabsProps> = ({ labels, onChange }) => {
   return (
     <div className={styles.tabContainer}>
       <Tabs
-        onChange={onChange}
+        onChange={
+          onChange
+            ? onChange
+            : () => {
+                console.log('Tab Click');
+              }
+        }
         type="card"
         items={labels.map((label, i) => {
           const id = String(i + 1);

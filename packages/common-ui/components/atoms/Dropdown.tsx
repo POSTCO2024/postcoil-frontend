@@ -13,6 +13,7 @@ import styles from './Dropdown.module.scss';
 interface DropdownProps {
   title: string; // dropdown 구분 텍스트
   options: OptionType[];
+  onChange?: (value?: string[]) => {};
 }
 
 interface OptionType {
@@ -20,17 +21,26 @@ interface OptionType {
   label: string;
 }
 
-// Event
-const onChange = (value: string[]) => {
-  console.log(value);
-};
-
-export const Dropdown: React.FC<DropdownProps> = ({ title, options }) => {
+export const Dropdown: React.FC<DropdownProps> = ({
+  title,
+  options,
+  onChange,
+}) => {
   return (
     <div className={styles.dropdownContainer}>
       <span> {title} </span>
       <span className="spacer1"></span>
-      <Cascader options={options} onChange={onChange} placeholder="선택" />
+      <Cascader
+        options={options}
+        onChange={
+          onChange
+            ? onChange
+            : () => {
+                console.log('Dropdown Click');
+              }
+        }
+        placeholder="선택"
+      />
       <span className="spacer"></span>
     </div>
   );
