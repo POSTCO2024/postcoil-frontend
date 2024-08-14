@@ -1,27 +1,27 @@
-import { ColumnsType } from 'antd/es/table'; // Table
 import { Checkbox } from 'antd';
 import { CheckboxChangeEvent } from 'antd/es/checkbox'; // CheckBox
+import { ColumnsType } from 'antd/es/table'; // Table
 
 // Dataset Type
-type DataType = {
+interface DataType {
   key: string;
   no: string;
   id: string;
   length: number;
   width: number;
-  [key: string]: any;
-};
+  [key: string]: unknown;
+}
 
 // Dataset Column
 export const createColumns = (
   useCheckBox: boolean,
-  columnsData: any[],
+  columnsData: Partial<DataType>[],
 ): ColumnsType<DataType> => {
   const columns: ColumnsType<DataType> = columnsData.map((column) => ({
-    title: column.title,
-    dataIndex: column.dataIndex,
-    sorter: column.sorter,
-    ...column.otherProps, // 추가: 기타 다른 props 전달을 위한 설정
+    title: column.title as string,
+    dataIndex: column.dataIndex as string,
+    sorter: column.sorter as (a: unknown, b: unknown) => number,
+    ...(column.otherProps || {}), // 추가: 기타 다른 props 전달을 위한 설정
   }));
 
   // == Props로 받기 (columns, data) ==
@@ -102,6 +102,6 @@ export const createColumns = (
 // ];
 
 // CheckBox Event
-export const onCheckboxChange = (e: CheckboxChangeEvent, key: string) => {
+export const onCheckboxChange = (e: CheckboxChangeEvent, key: string): void => {
   console.log(`Checkbox for row ${key} checked = ${e.target.checked}`);
 };

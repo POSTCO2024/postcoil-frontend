@@ -1,8 +1,9 @@
-import React from 'react';
 import { Table as AntTable } from 'antd';
 import { TableProps } from 'antd/es/table'; // Table
-import { createColumns } from './TableConfig';
+import React from 'react';
+
 import styles from './Table.module.scss';
+import { createColumns } from './TableConfig';
 
 // info
 // API 결과를 columns, data에 저장하여 사용
@@ -10,15 +11,25 @@ import styles from './Table.module.scss';
 // props2: 테이블의 내용(columns, data)을 json형식으로 전달해준다.
 // ex) <Table useCheckBox={true} columns={columnsData} data={tableData} />
 
+// Dataset Type
+interface DataType {
+  key: string;
+  no: string;
+  id: string;
+  length: number;
+  width: number;
+  [key: string]: unknown;
+}
+
 interface TableComponentProps {
   useCheckBox: boolean;
   // Config
-  columns: any[];
-  data: any[];
+  columns: Partial<DataType>[];
+  data: DataType[];
 }
 
 // Column Event
-const onTableChange: TableProps<any>['onChange'] = (
+const onTableChange: TableProps<DataType>['onChange'] = (
   pagination,
   filters,
   sorter,

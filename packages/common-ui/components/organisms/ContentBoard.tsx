@@ -5,7 +5,7 @@ interface ContentBoardProps {
   Board?: React.ComponentType;
 }
 
-export function ContentBoard({ Board }: ContentBoardProps) {
+export function ContentBoard({ Board }: ContentBoardProps): JSX.Element {
   return (
     <div className={styles.greyBack}>
       <div className={styles.whiteBoard}>{Board && <Board />}</div>
