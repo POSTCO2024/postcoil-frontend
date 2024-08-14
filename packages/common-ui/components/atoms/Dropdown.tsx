@@ -12,7 +12,7 @@ import styles from './Dropdown.module.scss';
 interface DropdownProps {
   title: string; // dropdown 구분 텍스트
   options: OptionType[];
-  onChange?: (value?: string[]) => {};
+  onChange?: (value?: string[]) => void;
 }
 
 interface OptionType {

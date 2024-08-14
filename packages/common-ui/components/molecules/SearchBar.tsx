@@ -1,5 +1,5 @@
-import React from 'react';
 import { Input, Space, Cascader } from 'antd';
+import React from 'react';
 // import { onChange, onSearch } from './SearchBarConfig'; // Config import
 // import { CascaderProps, BaseOptionType } from 'antd/es/cascader';
 
@@ -15,8 +15,8 @@ const { Search } = Input;
 // options
 interface SearchBarProps {
   options?: OptionType[];
-  onChange?: (value?: string[]) => {};
-  onSearch?: (value?: string) => {};
+  onChange?: (value?: string[]) => void;
+  onSearch?: (value?: string) => void;
 }
 
 interface OptionType {

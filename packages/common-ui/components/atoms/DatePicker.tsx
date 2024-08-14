@@ -8,7 +8,7 @@ import styles from './DatePicker.module.scss';
 // onChange함수로 날짜 전달
 
 export const DatePicker: React.FC<{
-  onChange?: (dateString?: string | Date) => {};
+  onChange?: (dateString?: string | Date) => void;
 }> = ({ onChange }) => {
   return (
     <div className={styles.datepickerContainer}>
