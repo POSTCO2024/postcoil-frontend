@@ -1,7 +1,7 @@
 import React from 'react';
 import { Input, Space, Cascader } from 'antd';
 // import { onChange, onSearch } from './SearchBarConfig'; // Config import
-import { CascaderProps, BaseOptionType } from 'antd/es/cascader';
+// import { CascaderProps, BaseOptionType } from 'antd/es/cascader';
 
 import styles from './SearchBar.module.scss';
 
@@ -14,7 +14,9 @@ const { Search } = Input;
 
 // options
 interface SearchBarProps {
-  options: OptionType[];
+  options?: OptionType[];
+  onChange?: (value?: string[]) => {};
+  onSearch?: (value?: string) => {};
 }
 
 interface OptionType {
@@ -22,23 +24,47 @@ interface OptionType {
   label: string;
 }
 
-// Dropbar Event
-const onChange: CascaderProps<BaseOptionType>['onChange'] = (value) => {
-  console.log(value);
-};
+// // Dropbar Event
+// const onChange: CascaderProps<BaseOptionType>['onChange'] = (value) => {
+//   console.log(value);
+// };
 
-// Searchbar Event
-const onSearch = (value: string) => console.log(value);
+// // Searchbar Event
+// const onSearch = (value: string) => console.log(value);
 
-export const SearchBar: React.FC<SearchBarProps> = ({ options }) => {
+export const SearchBar: React.FC<SearchBarProps> = ({
+  options,
+  onChange,
+  onSearch,
+}) => {
   return (
     <div className={styles.searchbarContainer}>
       <span> 검색 기준 </span>
       <span className="spacer"></span>
-      <Cascader options={options} onChange={onChange} placeholder="선택" />
+      <Cascader
+        options={options}
+        onChange={
+          onChange
+            ? onChange
+            : () => {
+                console.log('Dropdown Click');
+              }
+        }
+        placeholder="선택"
+      />
       <span className="spacer"></span>
       <Space direction="vertical">
-        <Search className="searchbar" placeholder="검색" onSearch={onSearch} />
+        <Search
+          className="searchbar"
+          placeholder="검색"
+          onSearch={
+            onSearch
+              ? onSearch
+              : () => {
+                  console.log('Search Click');
+                }
+          }
+        />
       </Space>
     </div>
   );
