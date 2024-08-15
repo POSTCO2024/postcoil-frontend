@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
-export const JoUpItems: MenuItem[] = [
+export const MenuItems: MenuItem[] = [
   {
     key: '4',
     icon: <MailOutlined />,
