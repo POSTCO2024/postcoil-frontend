@@ -4,7 +4,7 @@ import { TopBar } from '../TopBar/TopBar';
 import styles from './Board.module.scss';
 import Modal from '../Modal/Modal';
 
-const Board: React.FC<{}> = () => {
+const Board: React.FC = () => {
   const label = ['에러재', '정상재'];
 
   return (
