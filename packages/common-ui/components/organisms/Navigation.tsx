@@ -7,12 +7,14 @@ import {
   NavigationProps,
   LevelKeysProps,
   getLevelKeys,
-  items,
 } from '../../utils/navigationUtils';
 
-const levelKeys = getLevelKeys(items as LevelKeysProps[]);
-
-export const Navigation: React.FC<NavigationProps> = ({ logo, human }) => {
+export const Navigation: React.FC<NavigationProps> = ({
+  logo,
+  human,
+  menuItems,
+}) => {
+  const levelKeys = getLevelKeys(menuItems as LevelKeysProps[]);
   const [stateOpenKeys, setStateOpenKeys] = useState(['1', '11']);
 
   const menuTheme = {
@@ -64,7 +66,7 @@ export const Navigation: React.FC<NavigationProps> = ({ logo, human }) => {
           openKeys={stateOpenKeys}
           onOpenChange={onOpenChange}
           style={{ width: '90%', margin: '20px auto auto', border: 0 }}
-          items={items}
+          items={menuItems}
         />
       </ConfigProvider>
       <div
