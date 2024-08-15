@@ -4,7 +4,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@postcoil/ui": ["../../packages/common-ui/src"]
+      "@postcoil/ui": ["../../packages/common-ui/components"]
     }
   },
   "include": ["src", "vite.config.ts", "vitest.config.ts"],
