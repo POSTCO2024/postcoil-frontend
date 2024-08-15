@@ -1,8 +1,9 @@
-import React from 'react';
 import { Tab, Table } from '@postcoil/ui';
-import { TopBar } from '../TopBar/TopBar';
+import React from 'react';
+
 import styles from './Board.module.scss';
 import Modal from '../Modal/Modal';
+import { TopBar } from '../TopBar/TopBar';
 
 const Board: React.FC = () => {
   const label = ['에러재', '정상재'];

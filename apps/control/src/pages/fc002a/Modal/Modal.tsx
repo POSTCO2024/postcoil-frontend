@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { Modal as AntModal } from 'antd';
 import { Button } from '@postcoil/ui';
+import { Modal as AntModal } from 'antd';
+import React, { useState } from 'react';
 
-const Modal: React.FC<{}> = () => {
+const Modal: React.FC = () => {
   // Modal state management
   const [isModalOpen, setIsModalOpen] = useState(false);
 
