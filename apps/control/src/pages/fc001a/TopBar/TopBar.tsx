@@ -1,8 +1,9 @@
-import React from 'react';
 import { SearchBar, Dropdown } from '@postcoil/ui';
+import React from 'react';
+
 import styles from './TopBar.module.scss';
 
-export const TopBar: React.FC<{}> = () => {
+export const TopBar: React.FC = () => {
   return (
     <div className={styles.topbarContainer}>
       <div className={styles.dropdown}>
