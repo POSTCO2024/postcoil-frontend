@@ -7,5 +7,3 @@ export { Tab } from './components/molecules/Tab';
 export { Table } from './components/organisms/Table';
 export { Navigation } from './components/organisms/Navigation';
 export { ContentBoard } from './components/organisms/ContentBoard';
-export { Items } from './config/MenuItems';
-export { JoUpItems } from './config/JoUpItems';

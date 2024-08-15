@@ -1,8 +1,9 @@
-import { Navigation, Items, ContentBoard } from '@postcoil/ui';
+import { Navigation, ContentBoard } from '@postcoil/ui';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import human from './assets/human.svg';
 import logo from './assets/logo.svg';
+import { MenuItems } from './config/MenuItems';
 import './styles/global.scss';
 import { Board } from './pages/fc001a/Board/Borad';
 import { TopBar } from './pages/fc001a/TopBar/TopBar';
@@ -12,7 +13,7 @@ function App() {
   return (
     <Router>
       <div style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
-        <Navigation logo={logo} human={human} menuItems={Items} />
+        <Navigation logo={logo} human={human} menuItems={MenuItems} />
         <Routes>
           <Route path="/control1" element={<ContentBoard Board={Board} />} />
           <Route path="/control2" element={<ContentBoard Board={TopBar} />} />
