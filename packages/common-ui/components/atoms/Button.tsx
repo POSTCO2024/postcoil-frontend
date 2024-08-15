@@ -17,7 +17,7 @@ export const Button: React.FC<ButtonProps> = ({ text, onClick }) => {
   return (
     <div className={styles.buttonContainer}>
       <AntButton
-        className="button"
+        className={styles.button}
         type="primary"
         onClick={
           onClick

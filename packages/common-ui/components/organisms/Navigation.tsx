@@ -12,10 +12,7 @@ import {
 
 const levelKeys = getLevelKeys(items as LevelKeysProps[]);
 
-export const Navigation: React.FC<NavigationProps> = ({
-  logo,
-  human,
-}): JSX.Element => {
+export const Navigation: React.FC<NavigationProps> = ({ logo, human }) => {
   const [stateOpenKeys, setStateOpenKeys] = useState(['1', '11']);
 
   const menuTheme = {

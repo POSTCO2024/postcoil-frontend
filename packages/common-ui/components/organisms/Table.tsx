@@ -3,7 +3,7 @@ import { TableProps } from 'antd/es/table'; // Table
 import React from 'react';
 
 import styles from './Table.module.scss';
-import { createColumns } from './TableConfig';
+import { createColumns } from '../../utils/TableUtils';
 
 // info
 // API 결과를 columns, data에 저장하여 사용

@@ -48,7 +48,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
   return (
     <div className={styles.dropdownContainer}>
       <span> {title} </span>
-      <span className="spacer1"></span>
+      <span className={styles.spacer}></span>
       <Cascader
         options={options}
         onChange={
@@ -60,7 +60,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
         }
         placeholder="선택"
       />
-      <span className="spacer"></span>
+      <span className={styles.spacer}></span>
     </div>
   );
 };
