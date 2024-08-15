@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import human from './assets/human.svg';
 import logo from './assets/logo.svg';
 import './styles/global.scss';
-import Board from './pages/fc002a/Board/Board';
 
 function App() {
   return (
@@ -15,7 +14,6 @@ function App() {
           <Route path="/control1" />
           <Route path="/control2" />
         </Routes>
-        <Board />
       </div>
     </Router>
   );
