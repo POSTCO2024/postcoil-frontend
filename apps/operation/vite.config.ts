@@ -21,7 +21,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      '@postcoil/ui': path.resolve(__dirname, '../../packages/common-ui/dist'),
+      '@postcoil/ui': path.resolve(__dirname, '../../packages/common-ui'),
     },
   },
   optimizeDeps: {
