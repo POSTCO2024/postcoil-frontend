@@ -40,7 +40,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   return (
     <div className={styles.searchbarContainer}>
       <span> 검색 기준 </span>
-      <span className="spacer"></span>
+      <span className={styles.spacer}></span>
       <Cascader
         options={options}
         onChange={
@@ -52,10 +52,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         }
         placeholder="선택"
       />
-      <span className="spacer"></span>
+      <span className={styles.spacer}></span>
       <Space direction="vertical">
         <Search
-          className="searchbar"
+          className={styles.searchbar}
           placeholder="검색"
           onSearch={
             onSearch
