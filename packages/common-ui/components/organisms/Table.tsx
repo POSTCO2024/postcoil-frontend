@@ -1,92 +1,32 @@
-import { Table as AntTable, Checkbox } from 'antd';
-import { CheckboxChangeEvent } from 'antd/es/checkbox'; // CheckBox
-import { ColumnsType, TableProps } from 'antd/es/table'; // Table
+import { Table as AntTable } from 'antd';
+import { TableProps } from 'antd/es/table'; // Table
 import React from 'react';
 
 import styles from './Table.module.scss';
+import { createColumns } from '../../utils/TableUtils';
 
 // info
 // API 결과를 columns, data에 저장하여 사용
-// CheckBox 사용 시, 아래 ** checkbox 설정 - true/false ** 부분 주석를 해제하여 사용
+// props1: CheckBox 사용 여부를 props를 이용하여 useCheckBox에 true/false로 전달해준다.
+// props2: 테이블의 내용(columns, data)을 json형식으로 전달해준다.
+// ex) <Table useCheckBox={true} columns={columnsData} data={tableData} />
 
-// Dataset
+// Dataset Type
 interface DataType {
   key: string;
   no: string;
   id: string;
   length: number;
   width: number;
+  [key: string]: unknown;
 }
 
-const columns: ColumnsType<DataType> = [
-  {
-    title: 'no',
-    dataIndex: 'no',
-  },
-  {
-    title: '코일 ID',
-    dataIndex: 'id',
-    sorter: {
-      compare: (a, b) => a.id.localeCompare(b.id),
-      multiple: 3,
-    },
-  },
-  {
-    title: '두께',
-    dataIndex: 'length',
-    sorter: {
-      compare: (a, b) => a.length - b.length,
-      multiple: 2,
-    },
-  },
-  {
-    title: '폭',
-    dataIndex: 'width',
-    sorter: {
-      compare: (a, b) => a.width - b.width,
-      multiple: 1,
-    },
-  },
-  // ** checkbox 설정 - true/false **
-  {
-    title: 'Error Pass', // 컬럼명 수정 필요
-    dataIndex: 'select',
-    render: (_, record) => (
-      <Checkbox onChange={(e) => onCheckboxChange(e, record.key)} />
-    ),
-  },
-];
-
-const data: DataType[] = [
-  {
-    key: '1',
-    no: '1',
-    id: 'A001',
-    length: 60,
-    width: 70,
-  },
-  {
-    key: '2',
-    no: '2',
-    id: 'A002',
-    length: 66,
-    width: 89,
-  },
-  {
-    key: '3',
-    no: '3',
-    id: 'A003',
-    length: 90,
-    width: 70,
-  },
-  {
-    key: '4',
-    no: '4',
-    id: 'A004',
-    length: 99,
-    width: 89,
-  },
-];
+interface TableComponentProps {
+  useCheckBox: boolean;
+  // Config
+  columns: Partial<DataType>[];
+  data: DataType[];
+}
 
 // Column Event
 const onTableChange: TableProps<DataType>['onChange'] = (
@@ -98,17 +38,18 @@ const onTableChange: TableProps<DataType>['onChange'] = (
   console.log('params', pagination, filters, sorter, extra);
 };
 
-// CheckBox Event
-const onCheckboxChange = (e: CheckboxChangeEvent, key: string) => {
-  console.log(`Checkbox for row ${key} checked = ${e.target.checked}`);
-};
+export const Table: React.FC<TableComponentProps> = ({
+  useCheckBox,
+  columns,
+  data,
+}) => {
+  const processedColumns = createColumns(useCheckBox, columns);
 
-export const Table: React.FC = () => {
   return (
     <div className={styles.tableContainer}>
       <AntTable
         className={styles.antTable}
-        columns={columns}
+        columns={processedColumns}
         dataSource={data}
         onChange={onTableChange}
       />

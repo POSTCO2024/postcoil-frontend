@@ -16,9 +16,17 @@ interface ButtonProps {
 export const Button: React.FC<ButtonProps> = ({ text, onClick }) => {
   return (
     <div className={styles.buttonContainer}>
-      <AntButton className="button" type="primary" onClick={onClick}>
-        {' '}
-        {text}{' '}
+      <AntButton
+        className={styles.button}
+        type="primary"
+        onClick={
+          onClick
+            ? onClick
+            : () => {
+                console.log(text + ' Click');
+              }
+        }>
+        {text}
       </AntButton>
     </div>
   );

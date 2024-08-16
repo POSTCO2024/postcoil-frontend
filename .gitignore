@@ -17,3 +17,5 @@ public/dist
 apps/operation/tsconfig.tsbuildinfo
 
 !packages/common-ui/dist/
+
+.gitmessage.txt
