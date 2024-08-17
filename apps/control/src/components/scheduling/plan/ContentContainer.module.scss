@@ -1,0 +1,22 @@
+.contentContainer {
+  margin: 10px auto;
+  font-size: 1.6rem;
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  height: 70%;
+
+  p {
+    padding: 0 10px 10px;
+    height: fit-content;
+  }
+
+  .result {
+    height: 90%;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    .table {
+      width: max-content;
+    }
+  }
+}
