@@ -1,6 +1,8 @@
+@use '@postcoil/ui/styles/color' as C;
+
 .filterContainer {
   font-size: 1.5rem;
-  background-color: #111115;
+  background-color: C.$skyBlue;
   width: 90%;
   padding: 0 30px;
   border-radius: 10px;
