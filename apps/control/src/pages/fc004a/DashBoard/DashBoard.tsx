@@ -1,13 +1,22 @@
 import React from 'react';
+
+import styles from './DashBoard.module.scss';
+
+// 그래프
 import Barchart from './chart/BarChart';
 import Piechart from './chart/PieChart';
 import DonutChart from './chart/DonutChart';
 import RowbarChart from './chart/RowbarChart';
-
-import styles from './DashBoard.module.scss';
+import Status from './chart/Status';
+import BarChartV2 from './chart/BarChartV2';
 
 // BarChart
 const barchartOption: echarts.EChartsOption = {
+  title: {
+    text: '재료',
+    left: 'center',
+    top: '30px',
+  },
   xAxis: {
     type: 'category',
     data: ['100', '200', '300', '400', '500', '600', '700'],
@@ -26,16 +35,18 @@ const barchartOption: echarts.EChartsOption = {
 // PieChart
 const piechartOption: echarts.EChartsOption = {
   title: {
-    text: 'Referer of a Website',
+    text: '품질',
     // subtext: 'Fake Data',
-    // left: 'center'
+    left: 'center',
+    top: '30px',
   },
   tooltip: {
     trigger: 'item',
   },
   legend: {
     orient: 'vertical',
-    left: 'right',
+    top: '50px',
+    right: '10px',
   },
   series: [
     {
@@ -59,18 +70,23 @@ const piechartOption: echarts.EChartsOption = {
 
 // Donut Chart
 const donutcahrtOption: echarts.EChartsOption = {
+  title: {
+    text: '품종',
+    left: 'center',
+    top: '30px',
+  },
   tooltip: {
     trigger: 'item',
   },
   legend: {
-    top: '5%',
+    bottom: '10%',
     left: 'right',
   },
   series: [
     {
       name: 'Access From',
       type: 'pie',
-      radius: ['40%', '70%'],
+      radius: ['25%', '50%'],
       avoidLabelOverlap: false,
       label: {
         show: false,
@@ -99,6 +115,11 @@ const donutcahrtOption: echarts.EChartsOption = {
 
 // Rowbar Chart
 const rowbarchartOption: echarts.EChartsOption = {
+  title: {
+    text: '재료 진도',
+    left: 'center',
+    top: '30px',
+  },
   tooltip: {
     trigger: 'axis',
     axisPointer: {
@@ -106,11 +127,15 @@ const rowbarchartOption: echarts.EChartsOption = {
       type: 'shadow', // 'shadow' as default; can also be 'line' or 'shadow'
     },
   },
-  legend: {},
+  legend: {
+    top: '20%',
+    left: 'right',
+  },
   grid: {
     left: '3%',
-    right: '4%',
-    bottom: '3%',
+    right: '5%',
+    top: '30%',
+    bottom: '20%',
     containLabel: true,
   },
   xAxis: {
@@ -118,7 +143,7 @@ const rowbarchartOption: echarts.EChartsOption = {
   },
   yAxis: {
     type: 'category',
-    data: ['1PCM', '2PCM'],
+    data: ['1PCM'],
   },
   series: [
     {
@@ -131,7 +156,7 @@ const rowbarchartOption: echarts.EChartsOption = {
       emphasis: {
         focus: 'series',
       },
-      data: [12, 32],
+      data: [12],
     },
     {
       name: 'J',
@@ -143,7 +168,7 @@ const rowbarchartOption: echarts.EChartsOption = {
       emphasis: {
         focus: 'series',
       },
-      data: [20, 12],
+      data: [20],
     },
     {
       name: 'D',
@@ -155,7 +180,7 @@ const rowbarchartOption: echarts.EChartsOption = {
       emphasis: {
         focus: 'series',
       },
-      data: [27, 18],
+      data: [27],
     },
     {
       name: 'E',
@@ -167,20 +192,119 @@ const rowbarchartOption: echarts.EChartsOption = {
       emphasis: {
         focus: 'series',
       },
-      data: [10, 12],
+      data: [12],
     },
   ],
 };
 
-export const DashBoard: React.FC = () => {
+const barchartV2Option: echarts.EChartsOption = {
+  title: {
+    text: '스케줄',
+    left: 'center',
+  },
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: {
+      type: 'shadow',
+    },
+  },
+  legend: { bottom: '10px', right: '5px' },
+  grid: {
+    left: '3%',
+    right: '4%',
+    top: '50px',
+    bottom: '15%',
+    containLabel: true,
+  },
+  xAxis: {
+    type: 'value',
+    boundaryGap: [0, 0.01],
+  },
+  yAxis: {
+    type: 'category',
+    data: ['공정'],
+  },
+  series: [
+    {
+      name: '1CAL',
+      type: 'bar',
+      data: [30],
+    },
+    {
+      name: '2CAL',
+      type: 'bar',
+      data: [21],
+    },
+  ],
+};
+
+const DashBoard: React.FC = () => {
   return (
-    <div className={styles.dashboardContainer}>
-      <h3>분석 화면</h3>
-      <div className={styles.chartContainer}>
-        <Barchart option={barchartOption} />
-        <Piechart option={piechartOption} />
-        <DonutChart option={donutcahrtOption} />
-        <RowbarChart option={rowbarchartOption} />
+    <div className={styles.parentDiv}>
+      awdawdwaawdwda
+      <div className={styles.line1}>
+        <div className={styles.small_card}>
+          <h6>현재 작업중</h6>
+          <h3>50</h3>
+        </div>
+        <div className={styles.small_card}>
+          <h6>대기중</h6>
+          <h3>13</h3>
+        </div>
+        <div className={styles.small_card}>
+          <h6>작업 완료</h6>
+          <h3>13</h3>
+        </div>
+
+        <div className={styles.small_card}>
+          <h6>작업 시간</h6>
+          <h3>00:15:03</h3>
+        </div>
+      </div>
+      <div className={styles.line2}>
+        <div className={styles.small_card}>
+          {/* <img src={human} />
+                    <div>addw</div> */}
+          <Piechart option={piechartOption} />
+        </div>
+        <div className={styles.small_card}>
+          {/* <img src={human} />
+                    <div>addw</div> */}
+          <BarChartV2 option={barchartV2Option} />
+        </div>
+        <div className={styles.small_card}>
+          {/* <img src={human} />
+                    <div>addw</div> */}
+          <RowbarChart option={rowbarchartOption} />
+        </div>
+        <div className={styles.small_card}>
+          {/* <img src={human} />
+                    <div>addw</div> */}
+          <h4>설비 이상</h4>
+          <Status />
+        </div>
+      </div>
+      <div className={styles.line2}>
+        <div className={styles.small_card}>
+          {/* <img src={human} />
+                    <div>addw</div> */}
+          <DonutChart option={donutcahrtOption} />
+        </div>
+        <div className={styles.small_card}>
+          {/* <img src={human} />
+                    <div>addw</div> */}
+          <DonutChart option={donutcahrtOption} />
+        </div>
+        <div className={styles.small_card}>
+          {/* <img src={human} />
+                    <div>addw</div> */}
+          <Barchart option={barchartOption} />
+        </div>
+        <div className={styles.small_card}>
+          {/* <img src={human} />
+                    <div>addw</div> */}
+          <Barchart option={barchartOption} />
+        </div>
       </div>
     </div>
   );

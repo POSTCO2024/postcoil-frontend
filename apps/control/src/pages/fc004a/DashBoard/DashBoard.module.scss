@@ -1,17 +1,63 @@
-.dashboardContainer {
-    padding: 20px;
+.parentDiv {
+    height: 100%;
+    width: 100%;
+    background-color: #f5f5f5;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
 }
 
-.chartContainer {
+.line1 {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-    height: auto;
+    height: 15%;
+    justify-content: space-evenly;
+
+    // font-size: 20px;
+    // font-weight: 900;
 }
 
+.small_card {
+    width: 23%;
+    height: 100%;
+    border-radius: 20px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+}
+
+.text {
+    flex-direction: column;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.line2 {
+    display: flex;
+    flex-direction: row;
+    height: 35%;
+    justify-content: space-evenly;
+}
+
+
 h3 {
-    margin: 20px;
     font-weight: bold;
-    text-align: center;
+    font-size: 32px;
+}
+
+
+h4 {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+
+h6 {
+    font-weight: bold;
+    font-size: 18px;
+    // color: gray;
 }
