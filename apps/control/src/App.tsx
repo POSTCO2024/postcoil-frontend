@@ -10,7 +10,12 @@ import human from './assets/human.svg';
 import logo from './assets/logo.svg';
 import { MenuItems } from './config/MenuItems';
 import './styles/global.scss';
-import Fc003 from './pages/monitoring/Fc003';
+import Board1 from './pages/fc001a/Board/Borad';
+import Board2 from './pages/fc002a/Board/Board';
+import ExtMPage from './pages/management/extraction/ExtMPage';
+import SchMPage from './pages/management/schedule/SchMPage';
+import StockCharts from './pages/monitoring/stock/StockCharts';
+import SchPPage from './pages/scheduling/plan/SchPPage';
 
 function App() {
   return (
@@ -19,8 +24,22 @@ function App() {
         <Navigation logo={logo} human={human} menuItems={MenuItems} />
         <Routes>
           <Route path="/" element={<Navigate replace to="/control1" />} />
-          <Route path="/control1" element={<ContentBoard Board={Fc003} />} />
-          <Route path="/control2" />
+          <Route path="/control1" element={<ContentBoard Board={Board1} />} />
+          <Route path="/control2" element={<ContentBoard Board={Board2} />} />
+          <Route
+            path="/control3"
+            element={<ContentBoard Board={StockCharts} />}
+          />
+          <Route
+            path="/control4"
+            element={<ContentBoard Board={StockCharts} />}
+          />
+          <Route
+            path="/schedule1"
+            element={<ContentBoard Board={SchPPage} />}
+          />
+          <Route path="/manage1" element={<ContentBoard Board={ExtMPage} />} />
+          <Route path="/manage2" element={<ContentBoard Board={SchMPage} />} />
         </Routes>
       </div>
     </Router>
