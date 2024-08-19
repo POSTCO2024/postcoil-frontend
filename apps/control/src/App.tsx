@@ -19,7 +19,10 @@ function App() {
         <Navigation logo={logo} human={human} menuItems={MenuItems} />
         <Routes>
           <Route path="/" element={<Navigate replace to="/control1" />} />
-          <Route path="/control1" element={<ContentBoard />} />
+          <Route
+            path="/control1"
+            element={<ContentBoard Board={StockCharts} />}
+          />
           <Route path="/control2" />
         </Routes>
       </div>
