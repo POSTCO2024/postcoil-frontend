@@ -87,9 +87,10 @@ const StockCharts: React.FC = () => {
       instance.setOption(treemapOption);
 
       return () => {
-        instance?.dispose();
+        instance.dispose();
       };
     }
+    return undefined;
   }, []);
 
   useEffect(() => {
@@ -99,7 +100,6 @@ const StockCharts: React.FC = () => {
         true,
       );
     }
-    console.log(chartInstanceRef.current?.getOption());
   }, [isTreemap]);
 
   const toggleChart = () => {
