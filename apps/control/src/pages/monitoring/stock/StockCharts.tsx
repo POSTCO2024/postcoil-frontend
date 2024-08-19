@@ -17,34 +17,48 @@ treemapData.sort(function (a, b) {
   return a.value - b.value;
 });
 const treemapOption: echarts.EChartsOption = {
-  color: [
-    '#FFADAD',
-    '#FFD6A5',
-    '#FDFFB6',
-    '#CAFFBF',
-    '#9BF6FF',
-    '#A0C4FF',
-    '#BDB2FF',
-    '#FFC6FF',
-    '#FFFFFC',
-  ],
   series: [
     {
       type: 'treemap',
-      data: treemapData.map((item) => ({
+      data: treemapData.map((item, index) => ({
         name: item.name,
         value: item.value,
+        itemStyle: {
+          // 색상 지정 후 하나씩 가져오기
+          color: [
+            '#FFADAD',
+            '#FFD6A5',
+            '#FDFFB6',
+            '#CAFFBF',
+            '#9BF6FF',
+            '#A0C4FF',
+            '#BDB2FF',
+            '#FFC6FF',
+            '#FFFFFC',
+          ][8 - (index % 9)],
+        },
       })),
-
       label: {
         color: 'black',
         fontWeight: 'bolder',
+      },
+      emphasis: {
+        itemStyle: {
+          // hover시 배경화면
+          color: 'white',
+        },
+        label: {
+          show: true,
+          // 해당 표에 손을 놓으면 개수 표시
+          formatter: function (graph) {
+            return `${graph.name} : ${graph.value} 개`;
+          },
+        },
       },
       universalTransition: true,
     },
   ],
 };
-
 const barOption: echarts.EChartsOption = {
   xAxis: {
     type: 'value',
@@ -63,37 +77,39 @@ const barOption: echarts.EChartsOption = {
 };
 
 const StockCharts: React.FC = () => {
-  const [chartInstance, setChartInstance] =
-    useState<echarts.EChartsType | null>(null);
-
+  const chartInstanceRef = useRef<echarts.EChartsType | null>(null);
   const [isTreemap, setIsTreemap] = useState(true);
   const chartRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     if (chartRef.current) {
       const instance = echarts.init(chartRef.current);
-      setChartInstance(instance);
-    }
+      chartInstanceRef.current = instance;
+      instance.setOption(treemapOption);
 
-    return () => {
-      chartInstance?.dispose();
-    };
+      return () => {
+        instance?.dispose();
+      };
+    }
   }, []);
 
   useEffect(() => {
-    if (chartInstance) {
-      chartInstance.setOption(isTreemap ? treemapOption : barOption);
+    if (chartInstanceRef.current) {
+      chartInstanceRef.current.setOption(
+        isTreemap ? treemapOption : barOption,
+        true,
+      );
     }
-  }, [chartInstance, isTreemap]);
+    console.log(chartInstanceRef.current?.getOption());
+  }, [isTreemap]);
 
   const toggleChart = () => {
     setIsTreemap((prev) => !prev);
   };
 
   return (
-    <div>
-      <button onClick={toggleChart}>Toggle Chart</button>
-      <div ref={chartRef} style={{ width: '100%', height: '500px' }} />
+    <div style={{ height: '100%' }}>
+      <button onClick={toggleChart}>그래프 변환</button>
+      <div ref={chartRef} style={{ width: '100%', height: '50%' }} />
     </div>
   );
 };
