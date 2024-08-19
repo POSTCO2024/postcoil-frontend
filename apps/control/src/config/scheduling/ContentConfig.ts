@@ -1,0 +1,21 @@
+// Table Data Interface 정의
+export interface MaterialDataType {
+  key: string | number;
+  materialNumber: string;
+  materialStatus: string;
+  operationCode: string;
+  processCode: string;
+  materialType: string;
+  materialProgress: string;
+  outerDiameter: number | string;
+  innerDiameter: number | string;
+  width: number | string;
+  length: number | string;
+  thickness: number | string;
+  unitWeight: number | string;
+  passedProcess: string | null;
+  previousProcess: string | null;
+  storageLocation: string;
+  yardDivision: string;
+  orderNumber: string;
+}
