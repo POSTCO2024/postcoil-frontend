@@ -1,0 +1,12 @@
+.graph {
+  width: 100%;
+
+  #container {
+    width: 95%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: fit-content;
+  }
+}

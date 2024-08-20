@@ -1,0 +1,24 @@
+@use '@/styles/color' as C;
+
+.contentContainer {
+  margin: 10px auto;
+  font-size: 1.6rem;
+  display: flex;
+  flex-direction: column;
+  width: 95%;
+  height: 95%;
+
+  .tableWrapper {
+    overflow-x: scroll;
+    overflow-y: scroll;
+    height: 100%;
+
+    .table {
+      width: max-content;
+
+      .rowChanged {
+        background-color: C.$tableRed !important; // changed: true 인 색상
+      }
+    }
+  }
+}
