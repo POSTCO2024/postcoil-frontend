@@ -1,8 +1,6 @@
 import { Tabs } from 'antd';
 import React from 'react';
 
-import styles from './Tab.module.scss';
-
 // info
 // props: Tabs 안에 들어갈 텍스트와 발생 이벤트를 input 값으로 전달
 // ex) labels = ['에러재","대상재"];
@@ -21,7 +19,7 @@ interface TabsProps {
 
 export const Tab: React.FC<TabsProps> = ({ labels, onChange }) => {
   return (
-    <div className={styles.tabContainer}>
+    <div>
       <Tabs
         onChange={
           onChange
