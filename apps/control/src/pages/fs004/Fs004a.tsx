@@ -1,3 +1,4 @@
+import { Table } from '@postcoil/ui';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
