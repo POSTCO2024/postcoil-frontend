@@ -1,7 +1,9 @@
-import { Table } from '@postcoil/ui';
 import React from 'react';
 
+import styles from './Fs004a.module.scss';
+
 import FilterContainer from '@/components/management/extraction/FilterContainer';
+import { Table } from '@/components/scheduling/results/Table';
 
 // Table 임의 데이터
 const columnsData = [
@@ -83,9 +85,14 @@ const tableData = Array.from({ length: 9 }, (_, index) => ({
 
 const Fs004a: React.FC = () => {
   return (
-    <div>
-      <FilterContainer />
-      <Table useCheckBox={false} columns={columnsData} data={tableData} />
+    <div className={styles.frame}>
+      <h1 className={styles.h1}>스케줄 조회</h1>
+      <div className={styles.filterContainer}>
+        <FilterContainer />
+      </div>
+      <div style={{ width: '92%', margin: 'auto' }}>
+        <Table useCheckBox={false} columns={columnsData} data={tableData} />
+      </div>
     </div>
   );
 };

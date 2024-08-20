@@ -14,6 +14,7 @@ import Board1 from './pages/fc001a/Board/Borad';
 import Board2 from './pages/fc002a/Board/Board';
 import DashBoard from './pages/fc004a/DashBoard/DashBoard';
 import Fs004a from './pages/fs004/Fs004a';
+import Fs004b from './pages/fs004/Fs004b';
 import ExtMPage from './pages/management/extraction/ExtMPage';
 import SchMPage from './pages/management/schedule/SchMPage';
 import Fc003 from './pages/monitoring/Fc003';
@@ -50,6 +51,7 @@ function App() {
           <Route path="/schedule4" element={<ContentBoard Board={Fs004a} />} />
           <Route path="/manage1" element={<ContentBoard Board={ExtMPage} />} />
           <Route path="/manage2" element={<ContentBoard Board={SchMPage} />} />
+          <Route path="/roll/*" element={<ContentBoard Board={Fs004b} />} />
         </Routes>
       </div>
     </Router>
