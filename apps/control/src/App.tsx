@@ -10,7 +10,7 @@ import human from './assets/human.svg';
 import logo from './assets/logo.svg';
 import { MenuItems } from './config/MenuItems';
 import './styles/global.scss';
-import Fc003 from './pages/monitoring/fc003';
+import Fc003 from './pages/monitoring/Fc003';
 
 function App() {
   return (
