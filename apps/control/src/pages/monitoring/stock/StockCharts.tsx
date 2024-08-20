@@ -36,7 +36,10 @@ const StockCharts: React.FC = () => {
   return (
     <div style={{ height: '100%' }}>
       <button onClick={toggleChart}>그래프 변환</button>
-      <div ref={chartRef} style={{ width: '100%', height: '50%' }} />
+      <div
+        ref={chartRef}
+        style={{ width: '100%', height: '80%', margin: 'auto' }}
+      />
     </div>
   );
 };
