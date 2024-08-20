@@ -64,6 +64,7 @@ export const mockdata: MaterialDataType[] = [
     storageLocation: '7-2-12-2-1',
     yardDivision: '1A1A',
     orderNumber: '20240731-2175',
+    changed: true,
   },
   {
     key: '3',
@@ -104,6 +105,7 @@ export const mockdata: MaterialDataType[] = [
     storageLocation: '7-2-20-2-3',
     yardDivision: '1A1A',
     orderNumber: '20240802-KP00',
+    changed: true,
   },
   {
     key: '5',

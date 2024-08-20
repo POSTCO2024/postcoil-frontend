@@ -18,4 +18,5 @@ export interface MaterialDataType {
   storageLocation: string;
   yardDivision: string;
   orderNumber: string;
+  changed?: boolean;
 }
