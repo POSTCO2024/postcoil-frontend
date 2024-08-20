@@ -56,6 +56,9 @@ importers:
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
+      highcharts:
+        specifier: ^11.4.7
+        version: 11.4.7
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -2078,6 +2081,9 @@ packages:
   hasown@2.0.2:
     resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}
     engines: {node: '>= 0.4'}
+
+  highcharts@11.4.7:
+    resolution: {integrity: sha512-4FQTaV/9DtYal6U8rCgGeFWzzoL5QoKowpzyGlG0sp+UJKjm9G9t4bvyz+odvXt+YcqUvK9GEspdLoBnKSWGVA==}
 
   http-signature@1.2.0:
     resolution: {integrity: sha512-CAbnr6Rz4CYQkLYUtSNXxQPUH2gK8f3iWexVlsnMeD+GjlsQ0Xsy1cOX+mN3dtxYomRy21CiOzU8Uhw6OwncEQ==}
@@ -5725,6 +5731,8 @@ snapshots:
   hasown@2.0.2:
     dependencies:
       function-bind: 1.1.2
+
+  highcharts@11.4.7: {}
 
   http-signature@1.2.0:
     dependencies:
