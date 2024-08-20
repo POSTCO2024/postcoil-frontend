@@ -33,8 +33,9 @@ export const MenuItems: MenuItem[] = [
     label: '작업 스케줄 편성',
     children: [
       { key: '21', label: <Link to="/schedule1">Schedule 편성</Link> },
-      { key: '22', label: 'Schedule 편성관리' },
-      { key: '23', label: 'Schedule 이력관리' },
+      { key: '22', label: <Link to="/schedule2">Schedule 편성관리</Link> },
+      { key: '23', label: <Link to="/schedule3">Schedule 결과</Link> },
+      { key: '24', label: 'Schedule 이력관리' },
     ],
   },
   {

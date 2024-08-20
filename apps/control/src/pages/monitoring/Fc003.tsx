@@ -2,7 +2,7 @@ import { Tab } from '@postcoil/ui';
 import React, { useState } from 'react';
 
 import StockCharts from './stock/StockCharts';
-import Board from '../fc002a/Board/Board';
+import DashBoard from '../fc003a/DashBoard/DashBoard';
 
 const Fc003: React.FC = () => {
   const [isChart, setIsChart] = useState(false);
@@ -22,7 +22,7 @@ const Fc003: React.FC = () => {
       </h1>
       <Tab labels={['공정별 보기', '그래프보기']} onChange={changeTab} />
       <div style={{ height: '80%' }}>
-        {isChart ? <StockCharts /> : <Board />}
+        {isChart ? <StockCharts /> : <DashBoard />}
       </div>
     </div>
   );

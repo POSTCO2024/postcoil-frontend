@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
 import { Flex, Progress, Tabs, Table } from 'antd';
-import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import type { TableColumnsType } from 'antd';
+import React, { useState } from 'react';
+import { CSSTransition, SwitchTransition } from 'react-transition-group';
 
 import styles from './Board.module.scss';
 
