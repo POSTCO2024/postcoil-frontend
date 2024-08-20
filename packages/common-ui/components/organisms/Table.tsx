@@ -19,6 +19,12 @@ interface DataType {
   length: number;
   width: number;
   [key: string]: unknown;
+  schduleId?: string;
+  createdDate?: string;
+  rollID?: string;
+  facility?: string;
+  startTime?: string;
+  endTime?: string;
 }
 
 interface TableComponentProps {
