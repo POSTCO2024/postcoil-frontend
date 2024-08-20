@@ -19,7 +19,7 @@ import BarChartV2 from './chart/BarChartV2';
 const DashBoard: React.FC = () => {
   return (
     <div className={styles.parentDiv}>
-      awdawdwaawdwda
+      공정 별 작업대상재 분석
       <div className={styles.line1}>
         <div className={styles.small_card}>
           <h6>현재 작업중</h6>
