@@ -1,17 +1,19 @@
 import { CheckCircleFilled } from '@ant-design/icons';
 
-import CommonModal from '@/components/common/CommonModal';
+import CommonModal from './CommonModal';
 
 interface PropsType {
   isModalOpen: boolean;
   handleCancel: () => void;
   handleApply: () => void;
+  title?: string | null;
 }
 
 const RollSuccessModal = ({
   isModalOpen,
   handleCancel,
   handleApply,
+  title,
 }: PropsType) => {
   return (
     <CommonModal
@@ -21,7 +23,7 @@ const RollSuccessModal = ({
       onApply={handleApply}>
       <CheckCircleFilled style={{ fontSize: '4rem', color: '#1677FF' }} />
       <p style={{ fontSize: '1.5rem', textAlign: 'center', marginTop: '10px' }}>
-        스케줄이 편성되었습니다.
+        {title}
       </p>
     </CommonModal>
   );

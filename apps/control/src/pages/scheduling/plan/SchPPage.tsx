@@ -1,9 +1,9 @@
 import { Button } from 'antd';
 import { useState } from 'react';
 
-import RollSuccessModal from './RollSuccessModal';
 import styles from './SchPPage.module.scss';
 
+import RollSuccessModal from '@/components/common/RollSuccessModal';
 import ContentContainer from '@/components/scheduling/plan/ContentContainer';
 import FilterContainer from '@/components/scheduling/plan/FilterContainer';
 
@@ -28,6 +28,7 @@ const SchPPage = () => {
         isModalOpen={isModalOpen}
         handleCancel={handleCancel}
         handleApply={handleApply}
+        title="스케줄이 편성되었습니다."
       />
     </div>
   );
