@@ -12,6 +12,7 @@ import { MenuItems } from './config/MenuItems';
 import './styles/global.scss';
 import Board1 from './pages/fc001a/Board/Borad';
 import Board2 from './pages/fc002a/Board/Board';
+import DashBoard from './pages/fc004a/DashBoard/DashBoard';
 import ExtMPage from './pages/management/extraction/ExtMPage';
 import SchMPage from './pages/management/schedule/SchMPage';
 import Fc003 from './pages/monitoring/Fc003';
@@ -32,7 +33,7 @@ function App() {
           <Route path="/control3" element={<ContentBoard Board={Fc003} />} />
           <Route
             path="/control4"
-            element={<ContentBoard Board={StockCharts} />}
+            element={<ContentBoard Board={DashBoard} />}
           />
           <Route
             path="/schedule1"

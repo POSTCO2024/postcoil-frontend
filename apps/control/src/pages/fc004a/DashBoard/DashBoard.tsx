@@ -1,4 +1,14 @@
 import React from 'react';
+
+// 그래프
+import Barchart from './chart/BarChart';
+import BarChartV2 from './chart/BarChartV2';
+import DonutChart from './chart/DonutChart';
+import Piechart from './chart/PieChart';
+import RowbarChart from './chart/RowbarChart';
+import Status from './chart/Status';
+import styles from './DashBoard.module.scss';
+
 import {
   barchartOption,
   barchartV2Option,
@@ -6,15 +16,6 @@ import {
   donutcahrtOption,
   rowbarchartOption,
 } from '@/config/DashBoard/DashBoardConfig';
-import styles from './DashBoard.module.scss';
-
-// 그래프
-import Barchart from './chart/BarChart';
-import Piechart from './chart/PieChart';
-import DonutChart from './chart/DonutChart';
-import RowbarChart from './chart/RowbarChart';
-import Status from './chart/Status';
-import BarChartV2 from './chart/BarChartV2';
 
 const DashBoard: React.FC = () => {
   return (

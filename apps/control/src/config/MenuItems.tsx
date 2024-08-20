@@ -18,13 +18,9 @@ export const MenuItems: MenuItem[] = [
       { key: '12', label: <Link to="/control2">공정별 에러재 관리</Link> },
       {
         key: '13',
-        label: '공장별 수급량 관리',
-        children: [
-          { key: '14', label: <Link to="/control3">저장위치별 수급량</Link> },
-          { key: '15', label: <Link to="/control4">공정별 모니터링</Link> },
-        ],
+        label: <Link to="/control3">공장별 수급량 관리</Link>,
       },
-      { key: '16', label: <Link to="/control5">공정별 작업대상재 분석</Link> },
+      { key: '14', label: <Link to="/control4">공정별 작업대상재 분석</Link> },
     ],
   },
   {
