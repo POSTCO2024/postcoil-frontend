@@ -10,7 +10,7 @@ import human from './assets/human.svg';
 import logo from './assets/logo.svg';
 import { MenuItems } from './config/MenuItems';
 import './styles/global.scss';
-import StockCharts from './pages/monitoring/stock/StockCharts';
+import Fc003 from './pages/monitoring/Fc003';
 
 function App() {
   return (
@@ -19,10 +19,7 @@ function App() {
         <Navigation logo={logo} human={human} menuItems={MenuItems} />
         <Routes>
           <Route path="/" element={<Navigate replace to="/control1" />} />
-          <Route
-            path="/control1"
-            element={<ContentBoard Board={StockCharts} />}
-          />
+          <Route path="/control1" element={<ContentBoard Board={Fc003} />} />
           <Route path="/control2" />
         </Routes>
       </div>
