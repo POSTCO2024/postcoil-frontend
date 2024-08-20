@@ -10,6 +10,7 @@ import RowbarChart from './chart/RowbarChart';
 import Status from './chart/Status';
 import BarChartV2 from './chart/BarChartV2';
 
+// 임시 데이터
 // BarChart
 const barchartOption: echarts.EChartsOption = {
   title: {
@@ -263,46 +264,30 @@ const DashBoard: React.FC = () => {
       </div>
       <div className={styles.line2}>
         <div className={styles.small_card}>
-          {/* <img src={human} />
-                    <div>addw</div> */}
           <Piechart option={piechartOption} />
         </div>
         <div className={styles.small_card}>
-          {/* <img src={human} />
-                    <div>addw</div> */}
           <BarChartV2 option={barchartV2Option} />
         </div>
         <div className={styles.small_card}>
-          {/* <img src={human} />
-                    <div>addw</div> */}
           <RowbarChart option={rowbarchartOption} />
         </div>
         <div className={styles.small_card}>
-          {/* <img src={human} />
-                    <div>addw</div> */}
           <h4>설비 이상</h4>
           <Status />
         </div>
       </div>
       <div className={styles.line2}>
         <div className={styles.small_card}>
-          {/* <img src={human} />
-                    <div>addw</div> */}
           <DonutChart option={donutcahrtOption} />
         </div>
         <div className={styles.small_card}>
-          {/* <img src={human} />
-                    <div>addw</div> */}
           <DonutChart option={donutcahrtOption} />
         </div>
         <div className={styles.small_card}>
-          {/* <img src={human} />
-                    <div>addw</div> */}
           <Barchart option={barchartOption} />
         </div>
         <div className={styles.small_card}>
-          {/* <img src={human} />
-                    <div>addw</div> */}
           <Barchart option={barchartOption} />
         </div>
       </div>
