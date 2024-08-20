@@ -1,7 +1,7 @@
 import React from 'react';
-import Board from '../Board/Board';
 
 import styles from './DashBoard.module.scss';
+import Board from '../Board/Board';
 
 // Tab Dataset
 const tabData = [
