@@ -20,7 +20,7 @@ import {
 const DashBoard: React.FC = () => {
   return (
     <div className={styles.parentDiv}>
-      공정 별 작업대상재 분석
+      <h1>공정 별 작업대상재 분석</h1>
       <div className={styles.line1}>
         <div className={styles.small_card}>
           <h6>현재 작업중</h6>

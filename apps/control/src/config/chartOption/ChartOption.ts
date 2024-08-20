@@ -1,15 +1,15 @@
 import * as echarts from 'echarts';
 
 export const treemapData = [
-  { name: 'Max Flow Min Cut', value: 7840 },
-  { name: 'Link Distance', value: 5731 },
-  { name: 'Shortest Paths', value: 5914 },
-  { name: 'Betweenness Centrality', value: 3534 },
-  { name: 'Spanning Tree', value: 3416 },
-  { name: 'Hierarchical Cluster', value: 6714 },
-  { name: 'Aspect Ratio Banker', value: 7074 },
-  { name: 'Agglomeration Cluster', value: 3938 },
-  { name: 'Community Structure', value: 3812 },
+  { name: '1PCM', value: 7840 },
+  { name: '2PCM', value: 5731 },
+  { name: '1CAL', value: 5914 },
+  { name: '2CAL', value: 3534 },
+  { name: '1EGL', value: 3416 },
+  { name: '2EGL', value: 6714 },
+  { name: 'RCL', value: 7074 },
+  { name: '산세', value: 3938 },
+  { name: '포장', value: 3812 },
 ];
 
 treemapData.sort(function (a, b) {
@@ -54,6 +54,9 @@ export const treemapOption: echarts.EChartsOption = {
             return `${graph.name} : ${graph.value} 개`;
           },
         },
+      },
+      breadcrumb: {
+        show: false,
       },
       roam: false, // 확대 기능 사용안함
       nodeClick: false, // 클릭시 표 움직이는 기능 사용안함

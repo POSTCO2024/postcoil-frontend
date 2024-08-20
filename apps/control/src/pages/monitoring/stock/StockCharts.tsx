@@ -1,3 +1,4 @@
+import { Button } from '@postcoil/ui';
 import * as echarts from 'echarts';
 import React, { useEffect, useRef, useState } from 'react';
 
@@ -35,11 +36,11 @@ const StockCharts: React.FC = () => {
 
   return (
     <div style={{ height: '100%' }}>
-      <button onClick={toggleChart}>그래프 변환</button>
       <div
         ref={chartRef}
         style={{ width: '100%', height: '80%', margin: 'auto' }}
       />
+      <Button onClick={toggleChart} text="그래프 변환" />
     </div>
   );
 };
