@@ -16,7 +16,6 @@ import DashBoard from './pages/fc004a/DashBoard/DashBoard';
 import ExtMPage from './pages/management/extraction/ExtMPage';
 import SchMPage from './pages/management/schedule/SchMPage';
 import Fc003 from './pages/monitoring/Fc003';
-import StockCharts from './pages/monitoring/stock/StockCharts';
 import SchPePage from './pages/scheduling/pending/SchPePage';
 import SchPPage from './pages/scheduling/plan/SchPPage';
 import SchRpage from './pages/scheduling/result/SchRPage';
