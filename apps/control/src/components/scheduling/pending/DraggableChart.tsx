@@ -96,9 +96,7 @@ const DraggableChart: React.FC = ({ filteredData }: PropsType) => {
               drop: function (e) {
                 const draggedPoint = this as Highcharts.Point;
                 const updatedData = [...data];
-                const selectedX = e.newPoint!.point.x;
-
-                console.log(selectedX);
+                const selectedX = e.newPoint!.x;
 
                 // 드래그된 포인트의 현재 인덱스
                 const pointIndex = updatedData.findIndex(
