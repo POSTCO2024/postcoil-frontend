@@ -3,10 +3,10 @@ import { Button } from 'antd';
 import { useState } from 'react';
 
 import styles from './SchPePage.module.scss';
-import DraggableChart from '../../../components/scheduling/pending/DraggableChart';
 
 import RollSuccessModal from '@/components/common/RollSuccessModal';
 import ContentContainer from '@/components/scheduling/pending/ContentContainer';
+import DraggableChart from '@/components/scheduling/pending/DraggableChart';
 import FilterContainer from '@/components/scheduling/pending/FilterContainer';
 
 const SchPePage = () => {

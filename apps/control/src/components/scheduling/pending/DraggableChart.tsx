@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
 import { Button } from 'antd';
-import Highcharts from 'highcharts';
+import Highcharts, { PointDragDropObject } from 'highcharts';
 import draggablePoints from 'highcharts/modules/draggable-points';
 import variwide from 'highcharts/modules/variwide';
 import React, { useState, useEffect } from 'react';
@@ -16,6 +16,10 @@ interface DataPoint {
   y: number; // length에 해당하는 값
   z: number; // width에 해당하는 값
   x: number; // sequence number
+}
+
+interface NewPointDragDropObject extends PointDragDropObject {
+  x: number;
 }
 
 const initialData: DataPoint[] = [
@@ -96,9 +100,9 @@ const DraggableChart: React.FC = ({ filteredData }: PropsType) => {
               drop: function (e) {
                 const draggedPoint = this as Highcharts.Point;
                 const updatedData = [...data];
-                const selectedX = e.newPoint!.point.x;
+                const newPoint = e.newPoint! as NewPointDragDropObject;
 
-                console.log(selectedX);
+                const selectedX = newPoint.x;
 
                 // 드래그된 포인트의 현재 인덱스
                 const pointIndex = updatedData.findIndex(
