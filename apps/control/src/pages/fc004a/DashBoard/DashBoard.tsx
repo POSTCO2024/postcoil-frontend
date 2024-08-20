@@ -5,7 +5,7 @@ import {
   piechartOption,
   donutcahrtOption,
   rowbarchartOption,
-} from './DashBoardConfig';
+} from '../../../config/DashBoard/DashBoardConfig';
 import styles from './DashBoard.module.scss';
 
 // 그래프
