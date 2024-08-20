@@ -19,12 +19,26 @@
     margin: 10px;
 }
 
-
-.table {
-    // margin: 10px;
-}
-
 h3 {
     font-weight: bold;
     text-align: center;
+}
+
+/* Rerendering */
+.fadeEnter {
+    opacity: 0;
+}
+
+.fadeEnterActive {
+    opacity: 1;
+    transition: opacity 300ms ease-in-out;
+}
+
+.fadeExit {
+    opacity: 1;
+}
+
+.fadeExitActive {
+    opacity: 0;
+    transition: opacity 300ms ease-in-out;
 }

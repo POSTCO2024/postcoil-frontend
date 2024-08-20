@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Flex, Progress, Tabs, Table } from 'antd';
+import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import type { TableColumnsType } from 'antd';
 
 import styles from './Board.module.scss';
@@ -50,24 +51,41 @@ export const Board: React.FC<BoardProps> = ({ tabData }) => {
           label: tab.label,
         }))}
       />
-      {/* 활성화된 탭에 따라 내용 렌더링 */}
-      {tabData.map(
-        (tab) =>
-          tab.key === activeKey && (
-            <div key={tab.key}>
-              <Flex className={styles.progress} gap="small" wrap>
-                <Progress type="circle" percent={tab.percent} />
-              </Flex>
-              <Table
-                className={styles.table}
-                columns={columns}
-                dataSource={tab.tableData}
-                size="small"
-                pagination={false}
-              />
-            </div>
-          ),
-      )}
+      {/* == Rerendering 효과 == */}
+      <SwitchTransition>
+        <CSSTransition
+          key={activeKey}
+          timeout={200}
+          classNames={{
+            enter: styles.fadeEnter,
+            enterActive: styles.fadeEnterActive,
+            exit: styles.fadeExit,
+            exitActive: styles.fadeExitActive,
+          }}>
+          {/* -- 활성화된 탭에 따라 내용 렌더링 -- */}
+          <div>
+            {tabData.map(
+              (tab) =>
+                tab.key === activeKey && (
+                  <div key={tab.key}>
+                    <Flex className={styles.progress} gap="small" wrap>
+                      <Progress type="circle" percent={tab.percent} />
+                    </Flex>
+                    <Table
+                      className={styles.table}
+                      columns={columns}
+                      dataSource={tab.tableData}
+                      size="small"
+                      pagination={false}
+                    />
+                  </div>
+                ),
+            )}
+          </div>
+          {/* --- */}
+        </CSSTransition>
+      </SwitchTransition>
+      {/* === */}
     </div>
   );
 };
