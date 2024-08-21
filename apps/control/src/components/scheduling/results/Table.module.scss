@@ -1,0 +1,18 @@
+.tableContainer {
+  background-color: #ffffff; // 회색 배경색
+  border-radius: 8px; // 모서리 둥글게
+  padding: 20px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgb(247, 247, 247);
+  margin: 10px;
+
+  .antTable {
+    width: 100%; // 테이블이 부모의 너비를 가득 채우도록
+    border-radius: inherit; // 부모의 border-radius 상속
+
+    ul {
+      justify-content: center; // 페이징 버튼 가운데로 이동
+    }
+  }
+}

@@ -10,9 +10,11 @@ import human from './assets/human.svg';
 import logo from './assets/logo.svg';
 import { MenuItems } from './config/MenuItems';
 import './styles/global.scss';
+import Fs004a from './pages/fs004/Fs004a';
+import Fs004b from './pages/fs004/Fs004b';
 import Fc001 from './pages/fc001/Fc001';
 import Fc002 from './pages/fc002/Fc002';
-import DashBoard from './pages/fc004/DashBoard';
+import DashBoard from './pages/fc004/DashBoard'
 import ExtMPage from './pages/management/extraction/ExtMPage';
 import SchMPage from './pages/management/schedule/SchMPage';
 import Fc003 from './pages/monitoring/Fc003';
@@ -46,8 +48,10 @@ function App() {
             path="/schedule3"
             element={<ContentBoard Board={SchRPage} />}
           />
+          <Route path="/schedule4" element={<ContentBoard Board={Fs004a} />} />
           <Route path="/manage1" element={<ContentBoard Board={ExtMPage} />} />
           <Route path="/manage2" element={<ContentBoard Board={SchMPage} />} />
+          <Route path="/roll/*" element={<ContentBoard Board={Fs004b} />} />
         </Routes>
       </div>
     </Router>

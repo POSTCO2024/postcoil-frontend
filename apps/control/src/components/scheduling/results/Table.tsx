@@ -1,9 +1,10 @@
 import { Table as AntTable } from 'antd';
 import { TableProps } from 'antd/es/table'; // Table
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import styles from './Table.module.scss';
-import { createColumns } from '../../utils/TableUtils';
+import { createColumns } from './TableUtils';
 
 // info
 // API 결과를 columns, data에 저장하여 사용
@@ -15,16 +16,13 @@ import { createColumns } from '../../utils/TableUtils';
 interface DataType {
   key: string;
   no: string;
-  id: string;
-  length: number;
-  width: number;
   [key: string]: unknown;
-  schduleId?: string;
-  createdDate?: string;
-  rollID?: string;
-  facility?: string;
-  startTime?: string;
-  endTime?: string;
+  schduleId: string;
+  createdDate: string;
+  rollID: string;
+  facility: string;
+  startTime: string;
+  endTime: string;
 }
 
 interface TableComponentProps {
@@ -50,7 +48,7 @@ export const Table: React.FC<TableComponentProps> = ({
   data,
 }) => {
   const processedColumns = createColumns(useCheckBox, columns);
-
+  const navigate = useNavigate();
   return (
     <div className={styles.tableContainer}>
       <AntTable
@@ -58,6 +56,14 @@ export const Table: React.FC<TableComponentProps> = ({
         columns={processedColumns}
         dataSource={data}
         onChange={onTableChange}
+        onRow={(record) => {
+          return {
+            onClick: () => {
+              console.log(record);
+              navigate(`/roll/${record.schduleId}`);
+            },
+          };
+        }}
       />
     </div>
   );
