@@ -2,6 +2,8 @@ import { Button } from '@postcoil/ui';
 import * as echarts from 'echarts';
 import React, { useEffect, useRef, useState } from 'react';
 
+import styles from './StockCharts.module.scss';
+
 import { barOption, treemapOption } from '@/config/chartOption/ChartOption';
 
 const StockCharts: React.FC = () => {
@@ -35,11 +37,8 @@ const StockCharts: React.FC = () => {
   };
 
   return (
-    <div style={{ height: '100%' }}>
-      <div
-        ref={chartRef}
-        style={{ width: '100%', height: '80%', margin: 'auto' }}
-      />
+    <div className={styles.chartContainer}>
+      <div ref={chartRef} className={styles.chart} />
       <Button onClick={toggleChart} text="그래프 변환" />
     </div>
   );

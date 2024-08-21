@@ -1,6 +1,7 @@
 .result {
-  width: 45%;
-  padding: 0 10px;
+  width: calc(50% - 1rem);
+  height: 100%;
+  box-sizing: border-box;
 
   p {
     padding: 0 10px 10px;
@@ -11,7 +12,7 @@
     display: flex;
     justify-content: end;
     button {
-      margin: 20px 5px;
+      margin: 20px 0px;
     }
   }
 }

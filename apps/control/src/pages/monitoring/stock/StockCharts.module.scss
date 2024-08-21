@@ -1,0 +1,19 @@
+@use '@postcoil/ui/styles/color' as C;
+
+.chartContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: C.$white;
+  border: 1px solid C.$white;
+  border-radius: 0 10px 10px 10px;
+
+  .chart {
+    width: 100%;
+    height: 80%;
+    margin: auto;
+  }
+}

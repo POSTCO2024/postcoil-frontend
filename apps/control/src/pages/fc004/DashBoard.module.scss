@@ -1,0 +1,81 @@
+@use '@postcoil/ui/styles/color' as C;
+
+.parentDiv {
+  height: 100%;
+  width: 100%;
+  background-color: C.$lightGray;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    width: 90%;
+    height: 2.2rem;
+    margin-top: 35px;
+  }
+
+  .page {
+    display: flex;
+    flex-direction: column;
+    min-width: 700px;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    width: 90%;
+    height: calc(100% - 2.2rem - 25px);
+    justify-content: space-evenly;
+    margin-bottom: 20px;
+  }
+}
+
+.smallCard {
+  width: 23%;
+  height: 100%;
+  border-radius: 20px;
+  background-color: C.$white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.line1 {
+  display: flex;
+  flex-direction: row;
+  height: 15%;
+  justify-content: space-between;
+
+  h3 {
+    font-size: 30px;
+    font-weight: bold;
+  }
+
+  // font-size: 20px;
+  // font-weight: 900;
+}
+
+.text {
+  flex-direction: column;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.line2 {
+  display: flex;
+  flex-direction: row;
+  height: 35%;
+  justify-content: space-between;
+}
+
+h4 {
+  font-weight: bold;
+  font-size: 20px;
+  text-align: center;
+}
+
+h6 {
+  font-weight: bold;
+  font-size: 17px;
+}

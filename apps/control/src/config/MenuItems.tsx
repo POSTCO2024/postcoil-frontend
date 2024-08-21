@@ -20,7 +20,7 @@ export const MenuItems: MenuItem[] = [
         key: '13',
         label: <Link to="/control3">공장별 수급량 관리</Link>,
       },
-      { key: '14', label: <Link to="/control4">공정별 작업대상재 분석</Link> },
+      { key: '14', label: <Link to="/control4">공정별 작업 대상재 분석</Link> },
     ],
   },
   {
@@ -31,7 +31,7 @@ export const MenuItems: MenuItem[] = [
       { key: '21', label: <Link to="/schedule1">Schedule 편성</Link> },
       { key: '22', label: <Link to="/schedule2">Schedule 편성관리</Link> },
       { key: '23', label: <Link to="/schedule3">Schedule 결과</Link> },
-      { key: '24', label: 'Schedule 이력관리' },
+      { key: '24', label: 'Schedule 이력' },
     ],
   },
   {

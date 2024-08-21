@@ -1,13 +1,13 @@
 import { Tab } from '@postcoil/ui';
 import { useState } from 'react';
 
-import styles from './SchRpage.module.scss';
+import styles from './SchRPage.module.scss';
 
 import ContentContainer from '@/components/scheduling/result/ContentContainer';
 import DraggableChart from '@/components/scheduling/result/DraggableChart';
 import FilterContainer from '@/components/scheduling/result/FilterContainer';
 
-const SchRpage = () => {
+const SchRPage = () => {
   const [isGraphVisible, setIsGraphVisible] = useState(true);
 
   const handleTabChange = () => {
@@ -28,4 +28,4 @@ const SchRpage = () => {
   );
 };
 
-export default SchRpage;
+export default SchRPage;

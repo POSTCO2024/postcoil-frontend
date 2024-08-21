@@ -20,15 +20,16 @@
   .tab {
     width: 90%;
     margin: 10px auto;
+    height: 60px;
   }
 
   .result {
-    margin: 10px auto;
+    margin: 20px auto 10px;
     font-size: 1.6rem;
     display: flex;
     flex-direction: column;
     width: 90%;
-    height: 60%;
+    height: calc(100% - 2.2rem - 250px);
 
     p {
       padding: 0 20px;

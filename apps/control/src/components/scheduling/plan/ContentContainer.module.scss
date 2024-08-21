@@ -1,22 +1,19 @@
 .contentContainer {
-  margin: 10px auto;
+  margin: 20px auto 10px;
   font-size: 1.6rem;
   display: flex;
   flex-direction: column;
   width: 90%;
-  height: 70%;
-
-  p {
-    padding: 0 10px 10px;
-    height: fit-content;
-  }
+  height: calc(100% - 2.2rem - 2.2rem - 200px);
 
   .result {
-    height: 90%;
+    height: 100%;
     overflow-x: scroll;
     overflow-y: scroll;
+
     .table {
       width: max-content;
+      height: 100%;
     }
   }
 }

@@ -15,6 +15,7 @@ export const barchartOption: echarts.EChartsOption = {
     text: '재료',
     left: 'center',
     top: '30px',
+    show: false,
   },
   xAxis: {
     type: 'category',
@@ -22,6 +23,13 @@ export const barchartOption: echarts.EChartsOption = {
   },
   yAxis: {
     type: 'value',
+  },
+  grid: {
+    left: '20%', // 왼쪽 여백
+    right: '20%', // 오른쪽 여백
+    top: '10%', // 상단 여백
+    bottom: '20%', // 하단 여백
+    containLabel: true, // 이 옵션을 true로 설정하면 축의 라벨이 그리드 영역 안에 포함되도록 자동으로 조정됩니다.
   },
   series: [
     {
@@ -38,6 +46,7 @@ export const piechartOption: echarts.EChartsOption = {
     // subtext: 'Fake Data',
     left: 'center',
     top: '30px',
+    show: false,
   },
   tooltip: {
     trigger: 'item',
@@ -46,6 +55,13 @@ export const piechartOption: echarts.EChartsOption = {
     orient: 'vertical',
     top: '50px',
     right: '10px',
+  },
+  grid: {
+    left: '0%', // 왼쪽 여백
+    right: '0%', // 오른쪽 여백
+    top: '0%', // 상단 여백
+    bottom: '0%', // 하단 여백
+    containLabel: true, // 이 옵션을 true로 설정하면 축의 라벨이 그리드 영역 안에 포함되도록 자동으로 조정됩니다.
   },
   series: [
     {
@@ -68,24 +84,36 @@ export const piechartOption: echarts.EChartsOption = {
 };
 
 // Donut Chart
-export const donutcahrtOption: echarts.EChartsOption = {
+export const donutchartOption: echarts.EChartsOption = {
   title: {
     text: '품종',
     left: 'center',
     top: '30px',
+    show: false,
   },
   tooltip: {
     trigger: 'item',
   },
   legend: {
-    bottom: '10%',
-    left: 'right',
+    bottom: '0%',
+    left: 'center',
+  },
+  grid: {
+    left: '30%', // 왼쪽 여백
+    right: '30%', // 오른쪽 여백
+    top: '30%', // 상단 여백
+    bottom: '20%', // 하단 여백
+    containLabel: true, // 이 옵션을 true로 설정하면 축의 라벨이 그리드 영역 안에 포함되도록 자동으로 조정됩니다.
   },
   series: [
     {
       name: 'Access From',
       type: 'pie',
-      radius: ['25%', '50%'],
+      width: '70%',
+      height: '70%',
+      left: 'center',
+      top: '5%',
+      radius: ['25%', '70%'],
       avoidLabelOverlap: false,
       label: {
         show: false,
@@ -94,7 +122,7 @@ export const donutcahrtOption: echarts.EChartsOption = {
       emphasis: {
         label: {
           show: true,
-          fontSize: 20,
+          fontSize: '1rem',
           fontWeight: 'bold',
         },
       },
@@ -118,6 +146,7 @@ export const rowbarchartOption: echarts.EChartsOption = {
     text: '재료 진도',
     left: 'center',
     top: '30px',
+    show: false,
   },
   tooltip: {
     trigger: 'axis',
@@ -127,13 +156,13 @@ export const rowbarchartOption: echarts.EChartsOption = {
     },
   },
   legend: {
-    top: '20%',
-    left: 'right',
+    bottom: '0%',
+    left: 'center',
   },
   grid: {
-    left: '3%',
-    right: '5%',
-    top: '30%',
+    left: '0%',
+    right: '0%',
+    top: '15%',
     bottom: '20%',
     containLabel: true,
   },
@@ -144,6 +173,7 @@ export const rowbarchartOption: echarts.EChartsOption = {
     type: 'category',
     data: ['1PCM'],
   },
+
   series: [
     {
       name: 'H',
@@ -201,6 +231,7 @@ export const barchartV2Option: echarts.EChartsOption = {
   title: {
     text: '스케줄',
     left: 'center',
+    show: false,
   },
   tooltip: {
     trigger: 'axis',
@@ -208,12 +239,12 @@ export const barchartV2Option: echarts.EChartsOption = {
       type: 'shadow',
     },
   },
-  legend: { bottom: '10px', right: '5px' },
+  legend: { bottom: '0%', left: 'center' },
   grid: {
-    left: '3%',
-    right: '4%',
-    top: '50px',
-    bottom: '15%',
+    left: '0%',
+    right: '0%',
+    top: '15%',
+    bottom: '20%',
     containLabel: true,
   },
   xAxis: {
