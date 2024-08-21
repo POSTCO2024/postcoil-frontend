@@ -62,40 +62,6 @@ const Result = ({ title, data }: PropsType) => {
 
   return (
     <div className={styles.result}>
-      <CommonModal
-        title={modalTitle}
-        isModalOpen={isModalOpen}
-        onCancel={handleCancel}
-        onApply={handleApply}>
-        <Form
-          form={form}
-          name={modalTitle}
-          labelCol={{
-            span: 6,
-          }}
-          wrapperCol={{
-            span: 8,
-          }}
-          style={{
-            maxWidth: 300,
-          }}
-          onFinish={onFinish}
-          autoComplete="off">
-          {Object.keys(data).map((key) => {
-            return (
-              <div key={key}>
-                <p style={{ fontWeight: 'bold' }}>{key}</p>
-                <Form.Item name={key.trim()}>
-                  <Input
-                    type="text"
-                    addonAfter={title == '에러기준' ? '%' : ''}
-                  />
-                </Form.Item>
-              </div>
-            );
-          })}
-        </Form>
-      </CommonModal>
       <p>{title}</p>
       <Table
         style={{ borderRadius: '5px' }}
@@ -105,6 +71,40 @@ const Result = ({ title, data }: PropsType) => {
       />
       <div className={styles.resultBtns}>
         <Button onClick={showModalEditing}>수정</Button>
+        <CommonModal
+          title={modalTitle}
+          isModalOpen={isModalOpen}
+          onCancel={handleCancel}
+          onApply={handleApply}>
+          <Form
+            form={form}
+            name={modalTitle}
+            labelCol={{
+              span: 6,
+            }}
+            wrapperCol={{
+              span: 8,
+            }}
+            style={{
+              maxWidth: 300,
+            }}
+            onFinish={onFinish}
+            autoComplete="off">
+            {Object.keys(data).map((key) => {
+              return (
+                <div key={key}>
+                  <p style={{ fontWeight: 'bold' }}>{key}</p>
+                  <Form.Item name={key.trim()}>
+                    <Input
+                      type="text"
+                      addonAfter={title == '에러기준' ? '%' : ''}
+                    />
+                  </Form.Item>
+                </div>
+              );
+            })}
+          </Form>
+        </CommonModal>
       </div>
     </div>
   );
