@@ -1,0 +1,47 @@
+@use '@/styles/color' as C;
+
+.board {
+  margin: 5px;
+  padding: 30px;
+  min-width: 250px;
+  width: 18%;
+
+  /* 테두리 */
+  border-style: solid;
+  border-radius: 8px;
+  border-width: 2px;
+  border-color: C.$whiteSmoke;
+
+  .tab {
+    padding: 10px;
+  }
+
+  .progress {
+    padding: 10px;
+    margin: 10px;
+  }
+
+  h3 {
+    font-weight: bold;
+    text-align: center;
+  }
+
+  /* Rerendering */
+  .fadeEnter {
+    opacity: 0;
+  }
+
+  .fadeEnterActive {
+    opacity: 1;
+    transition: opacity 300ms ease-in-out;
+  }
+
+  .fadeExit {
+    opacity: 1;
+  }
+
+  .fadeExitActive {
+    opacity: 0;
+    transition: opacity 300ms ease-in-out;
+  }
+}

@@ -1,19 +1,21 @@
-@use '../../styles/color' as C;
+@use '@postcoil/ui/styles/color' as C;
 
 .greyBack {
   background-color: C.$lightGray;
+  max-width: calc(100vw - 250px);
   width: 86%;
+  min-height: 650px;
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-}
 
-.whiteBoard {
-  height: 98%;
-  width: 98%;
-  min-width: 720px;
-  min-height: 650px;
-  background-color: C.$white;
-  border-radius: 10px;
+  .whiteBoard {
+    height: 98%;
+    width: 98%;
+    min-width: 720px;
+    min-height: 650px;
+    background-color: C.$white;
+    border-radius: 10px;
+  }
 }

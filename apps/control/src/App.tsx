@@ -10,17 +10,17 @@ import human from './assets/human.svg';
 import logo from './assets/logo.svg';
 import { MenuItems } from './config/MenuItems';
 import './styles/global.scss';
-import Board1 from './pages/fc001a/Board/Borad';
-import Board2 from './pages/fc002a/Board/Board';
-import DashBoard from './pages/fc004a/DashBoard/DashBoard';
 import Fs004a from './pages/fs004/Fs004a';
 import Fs004b from './pages/fs004/Fs004b';
+import Fc001 from './pages/fc001/Fc001';
+import Fc002 from './pages/fc002/Fc002';
+import DashBoard from './pages/fc004/DashBoard'
 import ExtMPage from './pages/management/extraction/ExtMPage';
 import SchMPage from './pages/management/schedule/SchMPage';
 import Fc003 from './pages/monitoring/Fc003';
 import SchPePage from './pages/scheduling/pending/SchPePage';
 import SchPPage from './pages/scheduling/plan/SchPPage';
-import SchRpage from './pages/scheduling/result/SchRPage';
+import SchRPage from './pages/scheduling/result/SchRPage';
 
 function App() {
   return (
@@ -29,8 +29,8 @@ function App() {
         <Navigation logo={logo} human={human} menuItems={MenuItems} />
         <Routes>
           <Route path="/" element={<Navigate replace to="/control1" />} />
-          <Route path="/control1" element={<ContentBoard Board={Board1} />} />
-          <Route path="/control2" element={<ContentBoard Board={Board2} />} />
+          <Route path="/control1" element={<ContentBoard Board={Fc001} />} />
+          <Route path="/control2" element={<ContentBoard Board={Fc002} />} />
           <Route path="/control3" element={<ContentBoard Board={Fc003} />} />
           <Route
             path="/control4"
@@ -46,7 +46,7 @@ function App() {
           />
           <Route
             path="/schedule3"
-            element={<ContentBoard Board={SchRpage} />}
+            element={<ContentBoard Board={SchRPage} />}
           />
           <Route path="/schedule4" element={<ContentBoard Board={Fs004a} />} />
           <Route path="/manage1" element={<ContentBoard Board={ExtMPage} />} />
