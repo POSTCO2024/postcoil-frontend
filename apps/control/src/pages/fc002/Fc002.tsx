@@ -1,4 +1,4 @@
-import { Tab, Table } from '@postcoil/ui';
+import { Table } from '@postcoil/ui';
 import { Button } from 'antd';
 import React from 'react';
 
@@ -68,7 +68,7 @@ const tableData = [
 ];
 
 export const Fc002: React.FC = () => {
-  const label = ['에러재', '정상재'];
+  // const label = ['에러재', '정상재'];
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const handleModalOpen = () => setIsModalOpen(true);
   const handleOk = () => {
@@ -83,9 +83,9 @@ export const Fc002: React.FC = () => {
     <div className={styles.boardContainer}>
       <h1>공정별 에러재 관리</h1>
       <TopBar />
-      <div className={styles.tab}>
+      {/* <div className={styles.tab}>
         <Tab labels={label} />
-      </div>
+      </div> */}
       <div className={styles.result}>
         <div className={styles.table}>
           <Table useCheckBox={true} columns={columnsData} data={tableData} />
