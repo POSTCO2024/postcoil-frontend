@@ -10,7 +10,6 @@ const tabData = [
     label: '1PCM',
     percent: 75,
     tableData: [
-      { key: '1', column: '생산 마감일', value: '2024-10-15' },
       { key: '2', column: '목표 수량', value: '131' },
       { key: '3', column: '작업 완료', value: '42' },
       { key: '4', column: '작업 예정', value: '89' },
@@ -21,7 +20,6 @@ const tabData = [
     label: '2PCM',
     percent: 50,
     tableData: [
-      { key: '1', column: '생산 마감일', value: '2024-11-15' },
       { key: '2', column: '목표 수량', value: '200' },
       { key: '3', column: '작업 완료', value: '100' },
       { key: '4', column: '작업 예정', value: '100' },
