@@ -39,19 +39,19 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 }) => {
   return (
     <div className={styles.searchbarContainer}>
-      <span> 검색 기준 </span>
+      {/* <span> 검색 기준 </span> */}
       <span className={styles.spacer}></span>
-      <Cascader
+      {/* <Cascader
         options={options}
         onChange={
           onChange
             ? onChange
             : () => {
-                console.log('Dropdown Click');
-              }
+              console.log('Dropdown Click');
+            }
         }
         placeholder="선택"
-      />
+      /> */}
       <span className={styles.spacer}></span>
       <Space direction="vertical">
         <Search
