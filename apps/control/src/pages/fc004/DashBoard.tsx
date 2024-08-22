@@ -7,6 +7,9 @@ import DonutChart from './chart/DonutChart';
 import Piechart from './chart/PieChart';
 import RowbarChart from './chart/RowbarChart';
 import Status from './chart/Status';
+import DoubleBarChart from './chart/DoubleBarChart';
+import List from './chart/List';
+
 import styles from './DashBoard.module.scss';
 
 import {
@@ -15,6 +18,8 @@ import {
   piechartOption,
   donutchartOption,
   rowbarchartOption,
+  doublebarchartOption1,
+  doublebarchartOption2,
 } from '@/config/DashBoard/DashBoardConfig';
 
 const DashBoard: React.FC = () => {
@@ -62,18 +67,23 @@ const DashBoard: React.FC = () => {
             <DonutChart title="고객사" option={donutchartOption} />
           </div>
           <div className={styles.smallCard}>
-            <Barchart
+            {/* <Barchart
               title="재료 정보"
               subtitle="(폭)"
               option={barchartOption}
+            /> */}
+            <DoubleBarChart
+              option1={doublebarchartOption1}
+              option2={doublebarchartOption2}
             />
           </div>
           <div className={styles.smallCard}>
-            <Barchart
+            {/* <Barchart
               title="재료 정보"
               subtitle="(두께)"
               option={barchartOption}
-            />
+            /> */}
+            <List />
           </div>
         </div>
       </div>

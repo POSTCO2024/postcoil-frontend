@@ -268,3 +268,77 @@ export const barchartV2Option: echarts.EChartsOption = {
     },
   ],
 };
+
+export const doublebarchartOption1: echarts.EChartsOption = {
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: {
+      type: 'shadow',
+    },
+  },
+  grid: {
+    left: '3%',
+    right: '4%',
+    bottom: '3%',
+    containLabel: true,
+  },
+  xAxis: [
+    {
+      type: 'category',
+      data: ['300', '400', '500', '600', '700', '800', '900'],
+      axisTick: {
+        alignWithLabel: true,
+      },
+    },
+  ],
+  yAxis: [
+    {
+      type: 'value',
+    },
+  ],
+  series: [
+    {
+      name: '폭',
+      type: 'bar',
+      barWidth: '60%',
+      data: [10, 22, 10, 13, 14, 5, 7],
+    },
+  ],
+};
+
+export const doublebarchartOption2: echarts.EChartsOption = {
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: {
+      type: 'shadow',
+    },
+  },
+  grid: {
+    left: '3%',
+    right: '4%',
+    bottom: '3%',
+    containLabel: true,
+  },
+  xAxis: [
+    {
+      type: 'category',
+      data: ['0', '0.5', '1.0', '1.5', '2.0', '2.5', '3.0'],
+      axisTick: {
+        alignWithLabel: true,
+      },
+    },
+  ],
+  yAxis: [
+    {
+      type: 'value',
+    },
+  ],
+  series: [
+    {
+      name: '두께',
+      type: 'bar',
+      barWidth: '60%',
+      data: [5, 12, 10, 13, 20, 11, 7],
+    },
+  ],
+};
