@@ -40,7 +40,7 @@ const ExtMPage = () => {
           <Table useCheckBox={false} columns={columnData} data={facilityData} />
           {/* <Result title="에러기준" data={outlierCriteria} /> */}
         </div>
-        <div className={styles.icon_div}>
+        <div className={styles.iconDiv}>
           <ArrowRightOutlined style={{ fontSize: '5em', margin: 'auto' }} />
         </div>
         <div className={styles.facilityStandard}>

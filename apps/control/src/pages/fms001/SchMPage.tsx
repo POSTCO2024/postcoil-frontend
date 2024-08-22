@@ -1,7 +1,7 @@
 import styles from './SchMpage.module.scss';
 
-import FilterContainer from '@/components/management/schedule/FilterContainer';
-import Result from '@/components/management/schedule/Result';
+import FilterContainer from '@/pages/fms001/schedule/FilterContainer';
+import Result from '@/pages/fms001/schedule/Result';
 
 export interface DataType {
   [key: string]: string | number;
