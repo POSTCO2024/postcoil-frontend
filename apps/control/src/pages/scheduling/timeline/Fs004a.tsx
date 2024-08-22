@@ -1,9 +1,10 @@
+import { Table } from '@postcoil/ui';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import styles from './Fs004a.module.scss';
 
-import FilterContainer from '@/components/management/extraction/FilterContainer';
-import { Table } from '@/components/scheduling/results/Table';
+import FilterContainer from '@/components/scheduling/timeline/FilterContainer';
 
 // Table 임의 데이터
 const columnsData = [
@@ -17,7 +18,7 @@ const columnsData = [
   },
   {
     title: '스케줄ID',
-    dataIndex: 'schduleId',
+    dataIndex: 'scheduleId',
     sorter: {
       compare: (a: any, b: any) => a.id.localeCompare(b.id),
       multiple: 2,
@@ -66,7 +67,7 @@ const columnsData = [
 ];
 
 const baseData = {
-  schduleId: 'A001',
+  scheduleId: 'A001',
   createdDate: '2024-08-20',
   rollID: 'A012H24Q',
   facility: 'PCM',
@@ -84,14 +85,22 @@ const tableData = Array.from({ length: 9 }, (_, index) => ({
 }));
 
 const Fs004a: React.FC = () => {
+  const navigate = useNavigate();
+
   return (
-    <div className={styles.frame}>
-      <h1 className={styles.h1}>스케줄 조회</h1>
-      <div className={styles.filterContainer}>
-        <FilterContainer />
-      </div>
-      <div style={{ width: '92%', margin: 'auto' }}>
-        <Table useCheckBox={false} columns={columnsData} data={tableData} />
+    <div className={styles.page}>
+      <h1>Schedule 이력</h1>
+      <FilterContainer />
+      <div className={styles.table}>
+        <Table
+          useCheckBox={false}
+          columns={columnsData}
+          data={tableData}
+          handleRowClick={(record) => {
+            console.log(record);
+            navigate(`/roll/${record!.scheduleId}`);
+          }}
+        />
       </div>
     </div>
   );

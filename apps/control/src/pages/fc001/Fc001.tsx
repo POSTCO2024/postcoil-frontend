@@ -38,6 +38,14 @@ const columnsData = [
       multiple: 0,
     },
   },
+  {
+    title: '길이',
+    dataIndex: 'thickness',
+    sorter: {
+      compare: (a: any, b: any) => a.thickness - b.thickness,
+      multiple: 0,
+    },
+  },
 ];
 
 const tableData = [
@@ -47,6 +55,7 @@ const tableData = [
     id: 'A001',
     length: 60,
     width: 70,
+    thickness: 0.5,
   },
   {
     key: '2',
@@ -54,6 +63,7 @@ const tableData = [
     id: 'A002',
     length: 66,
     width: 89,
+    thickness: 0.5,
   },
   {
     key: '3',
@@ -61,6 +71,7 @@ const tableData = [
     id: 'A003',
     length: 90,
     width: 70,
+    thickness: 0.5,
   },
 ];
 

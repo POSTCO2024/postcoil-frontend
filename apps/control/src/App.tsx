@@ -10,17 +10,17 @@ import human from './assets/human.svg';
 import logo from './assets/logo.svg';
 import { MenuItems } from './config/MenuItems';
 import './styles/global.scss';
-import Fs004a from './pages/fs004/Fs004a';
-import Fs004b from './pages/fs004/Fs004b';
 import Fc001 from './pages/fc001/Fc001';
 import Fc002 from './pages/fc002/Fc002';
-import DashBoard from './pages/fc004/DashBoard'
+import DashBoard from './pages/fc004/DashBoard';
 import ExtMPage from './pages/management/extraction/ExtMPage';
 import SchMPage from './pages/management/schedule/SchMPage';
 import Fc003 from './pages/monitoring/Fc003';
 import SchPePage from './pages/scheduling/pending/SchPePage';
 import SchPPage from './pages/scheduling/plan/SchPPage';
 import SchRPage from './pages/scheduling/result/SchRPage';
+import Fs004a from './pages/scheduling/timeline/Fs004a';
+import Fs004b from './pages/scheduling/timeline/Fs004b';
 
 function App() {
   return (
