@@ -3,7 +3,8 @@
 .tableContainer {
   background-color: C.$white;
   border-radius: 8px; // 모서리 둥글게
-  padding: 20px;
+  // padding: 5px; // TODO: 조정하기~!!
+  box-sizing: border-box;
   border-style: solid;
   border-width: 1px;
   border-color: C.$tableBorderColor;
@@ -13,6 +14,10 @@
   .antTable {
     border-radius: inherit; // 부모의 border-radius 상속
     width: 100%;
+
+    td {
+      // text-align: center;
+    }
 
     ul {
       justify-content: center; // 페이징 버튼 가운데로 이동

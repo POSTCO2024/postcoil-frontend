@@ -2,7 +2,7 @@ import { Table as AntTable } from 'antd';
 
 import styles from './ContentContainer.module.scss';
 
-import { mockcolumns, mockdata } from '@/utils/scheduling/ContentUtils';
+import { mockcolumns, mockdata } from '@/utils/scheduling/MaterialTableUtils';
 
 // interface PropsType{
 //   data?: TODO: props로 데이터 받기

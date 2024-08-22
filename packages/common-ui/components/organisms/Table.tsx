@@ -1,10 +1,16 @@
-import { Table as AntTable, ConfigProvider, TablePaginationConfig } from 'antd';
-import React from 'react';
+import {
+  Table as AntTable,
+  Checkbox,
+  ConfigProvider,
+  TablePaginationConfig,
+} from 'antd';
+import React, { useState } from 'react';
 
 import styles from './Table.module.scss';
 import { DataType, ColumnDataType } from '../../config/TableConfig';
 import { createColumns } from '../../utils/TableUtils';
-// info
+
+// ** INFO **
 // Data 예시
 //
 // const data: DataType[] = [
@@ -39,7 +45,7 @@ import { createColumns } from '../../utils/TableUtils';
 // ];
 
 // ColumnData 예시
-// const column : ColumnDataType[] = [
+// const column : ColumnDataType<DataType>[] = [
 //   {
 //     title: '코일 ID',
 //     dataIndex: 'id',
@@ -64,63 +70,98 @@ import { createColumns } from '../../utils/TableUtils';
 //   },
 // ];
 
-interface TableComponentProps {
+interface TableComponentProps<T extends DataType> {
   pagination?: false | TablePaginationConfig;
-  useCheckBox: boolean;
-  // Config
-  columns: ColumnDataType[];
-  data: DataType[];
-  handleRowClick?: (record?: DataType, rowIndex?: number) => void; // Row click event handler
-  handleRowsClick?: (selectedRows: DataType[]) => void; // useCheckBox event handler, 데이터를 가지고 다룰 정보 처리 함수
+  useCheckBox?: boolean;
+  columns: ColumnDataType<T>[];
+  data: T[];
+  handleRowClick?: (record?: T, rowIndex?: number) => void; // Row click event handler
+  handleRowsClick?: (selectedRows: T[]) => void; // useCheckBox event handler, 데이터를 가지고 다룰 정보 처리 함수
   scroll?: { x?: number | string; y?: number | string }; // 스크롤 설정
 }
 
-export const Table: React.FC<TableComponentProps> = ({
+export const Table = <T extends DataType>({
   pagination = false,
-  useCheckBox,
+  useCheckBox = false,
   columns,
   data,
   handleRowClick,
   handleRowsClick,
   scroll,
-}) => {
-  const processedColumns = createColumns(columns);
-  const [selectedRowKeys, setSelectedRowKeys] = React.useState<React.Key[]>([]);
+}: TableComponentProps<T>) => {
+  const processedColumns = [
+    // ...(useCheckBox
+    //   ? [
+    //       {
+    //         title: <Checkbox />,
+    //         dataIndex: 'selection',
+    //         key: 'selection',
+    //         fixed: 'left', // Fixed to the left
+    //         width: 60,
+    //         render: (_: any, record: any) => (
+    //           <Checkbox
+    //             checked={selectedRowKeys.includes(record.key)}
+    //             onChange={() => {
+    //               const newSelectedRowKeys = selectedRowKeys.includes(
+    //                 record.key,
+    //               )
+    //                 ? selectedRowKeys.filter((key) => key !== record.key)
+    //                 : [...selectedRowKeys, record.key];
+    //               setSelectedRowKeys(newSelectedRowKeys);
+    //               const selectedRows = data.filter((item) =>
+    //                 newSelectedRowKeys.includes(item.key),
+    //               );
+
+    //               console.log(selectedRows);
+    //               console.log(selectedRows.length);
+    //               if (handleRowsClick) {
+    //                 handleRowsClick(selectedRows);
+    //               }
+    //             }}
+    //           />
+    //         ),
+    //       },
+    //     ]
+    //   : []),
+    ...createColumns(columns),
+  ];
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+
   const rowSelection = {
     selectedRowKeys,
-    onChange: (newSelectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+    onChange: (newSelectedRowKeys: React.Key[], selectedRows: T[]) => {
       setSelectedRowKeys(newSelectedRowKeys);
-      handleRowsClick!(selectedRows);
+      if (handleRowsClick) {
+        handleRowsClick(selectedRows);
+      }
     },
   };
+
   return (
     <div className={styles.tableContainer}>
       <ConfigProvider
         theme={{
           components: {
             Table: {
-              // headerBg: '#eff4ff90',
+              // headerBg: '#eff4ff',
               // rowSelectedBg: '#eff4ff',
             },
           },
         }}>
         <AntTable
-          pagination={pagination ? pagination : false}
+          pagination={pagination || false}
           rowSelection={useCheckBox ? rowSelection : undefined}
           className={styles.antTable}
           columns={processedColumns}
           dataSource={data}
-          // onChange={onTableChange}
           onRow={
             handleRowClick
               ? (record, rowIndex) => ({
-                  onClick: () => handleRowClick!(record, rowIndex), // Click event handler
+                  onClick: () => handleRowClick(record, rowIndex),
                 })
               : undefined
           }
           scroll={scroll}
-          // TODO: rowClassName을 가지고 선택된, 호버된, row들의 클래스이름을 줘서 색을 바꾸게!
-          // rowClassName={(_, index) => {}}
         />
       </ConfigProvider>
     </div>

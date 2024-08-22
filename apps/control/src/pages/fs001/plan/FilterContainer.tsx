@@ -1,5 +1,4 @@
 import { Dropdown } from '@postcoil/ui';
-// import { Button } from 'antd';
 
 import styles from './FilterContainer.module.scss';
 
@@ -9,9 +8,6 @@ interface OptionType {
 }
 
 const FilterContainer = () => {
-  // TODO: implement function
-  // const handleSearch = () => {};
-
   // TODO: fetch DATA
   const mockOptions: OptionType[] = [
     {
@@ -25,25 +21,11 @@ const FilterContainer = () => {
     // Add more options...
   ];
 
-  const mockRollUnitName: OptionType[] = [
-    { value: '1P1_A0001', label: '1P1_A0001' },
-    { value: '1P1_A0002', label: '1P1_A0002' },
-    { value: '1P1_B0344', label: '1P1_B0344' },
-    { value: '1P1_C0015', label: '1P1_C0015' },
-    { value: '1P1_D0002', label: '1P1_D0002' },
-    // Add more options...
-  ];
-
   return (
     <div className={styles.filterContainer}>
       <div className={styles.dropdown}>
         <Dropdown title="공정명" options={mockOptions} />
-        {/* TODO: Dropdown 데이터 변경, 함수 받게 */}
       </div>
-      <Dropdown title="롤단위명" options={mockRollUnitName} />
-      {/* <Button type="primary" onClick={handleSearch}>
-        조회
-      </Button> */}
     </div>
   );
 };
