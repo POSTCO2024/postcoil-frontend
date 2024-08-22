@@ -17,13 +17,34 @@
     height: 2.2rem;
   }
 
-  .contentContainer {
+  .frame {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-evenly;
+  }
+
+  .facility {
     margin: 20px auto 10px;
     padding-bottom: 10px;
     font-size: 1.6rem;
     display: flex;
     flex-direction: column;
-    width: 90%;
-    height: calc(100% - 2.2rem - 170px);
+    width: 30%;
+  }
+
+  .icon_div {
+    margin: auto;
+    display: flex;
+    justify-content: center;
+  }
+
+  .facilityStandard {
+    margin: 20px auto 10px;
+    padding-bottom: 10px;
+    font-size: 1.6rem;
+    display: flex;
+    flex-direction: column;
+    width: 50%;
   }
 }
