@@ -22,7 +22,6 @@ export const columnsData = [
   {
     title: '값',
     dataIndex: 'value',
-
     sorter: {
       compare: (a: any, b: any) => a.no - b.no,
       multiple: 3,

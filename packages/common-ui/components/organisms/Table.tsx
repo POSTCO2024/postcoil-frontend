@@ -1,8 +1,8 @@
 import { Table as AntTable, ConfigProvider, TablePaginationConfig } from 'antd';
-import { DataType, ColumnDataType } from 'config/TableConfig';
 import React from 'react';
 
 import styles from './Table.module.scss';
+import { DataType, ColumnDataType } from '../../config/TableConfig';
 import { createColumns } from '../../utils/TableUtils';
 // info
 // Data 예시

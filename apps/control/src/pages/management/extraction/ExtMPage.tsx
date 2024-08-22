@@ -8,7 +8,7 @@ import {
   columnsData,
   facilityData,
   standardData,
-} from '@/config/management/ExtractionManagement';
+} from '@/config/management/ExtMConfig';
 
 // // TODO: fetch data from API
 // const extractions: DataType = {
