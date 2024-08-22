@@ -1,5 +1,6 @@
-import { DataType, ColumnDataType } from '@components/organisms/Table';
 import { ColumnsType } from 'antd/es/table'; // Table
+
+import { DataType, ColumnDataType } from '../components/organisms/Table';
 
 // ** 데이터를 Antd 테이블에 들어가는 columns로 자동 변환해주는 함수 **
 export const createColumns = (
