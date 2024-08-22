@@ -7,7 +7,7 @@ interface DataType {
   key: string;
   no: string;
   [key: string]: unknown;
-  schduleId: string;
+  scheduleId: string;
   createdDate: string;
   rollID: string;
   facility: string;

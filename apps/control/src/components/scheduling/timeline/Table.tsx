@@ -17,7 +17,7 @@ interface DataType {
   key: string;
   no: string;
   [key: string]: unknown;
-  schduleId: string;
+  scheduleId: string;
   createdDate: string;
   rollID: string;
   facility: string;
@@ -60,7 +60,7 @@ export const Table: React.FC<TableComponentProps> = ({
           return {
             onClick: () => {
               console.log(record);
-              navigate(`/roll/${record.schduleId}`);
+              navigate(`/roll/${record.scheduleId}`);
             },
           };
         }}
