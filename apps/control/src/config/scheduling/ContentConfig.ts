@@ -1,12 +1,14 @@
+import { DataType } from '@postcoil/ui/config/TableConfig';
+
 // Table Data Interface 정의
-export interface MaterialDataType {
-  key: string | number;
+export interface MaterialDataType extends DataType {
   materialNumber: string;
   materialStatus: string;
   operationCode: string;
   processCode: string;
   materialType: string;
   materialProgress: string;
+  materialGroup: string;
   outerDiameter: number | string;
   innerDiameter: number | string;
   width: number | string;
@@ -19,4 +21,6 @@ export interface MaterialDataType {
   yardDivision: string;
   orderNumber: string;
   changed?: boolean;
+  targetWidth: number | string;
+  targetThickness: number | string;
 }

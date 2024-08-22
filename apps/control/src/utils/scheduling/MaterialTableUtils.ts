@@ -1,26 +1,92 @@
 // Columns 정의
-import { ColumnsType } from 'antd/es/table';
+import { ColumnDataType } from '@postcoil/ui/config/TableConfig';
 
 import { MaterialDataType } from '@/config/scheduling/ContentConfig';
 
-export const mockcolumns: ColumnsType<MaterialDataType> = [
-  { title: '재료번호', dataIndex: 'materialNumber', key: 'materialNumber' },
+export const mockcolumns: ColumnDataType<MaterialDataType>[] = [
+  {
+    title: '재료번호',
+    dataIndex: 'materialNumber',
+    key: 'materialNumber',
+    fixed: true,
+  },
   { title: '재료진행상태', dataIndex: 'materialStatus', key: 'materialStatus' },
   { title: '조업코드', dataIndex: 'operationCode', key: 'operationCode' },
   { title: '공정코드', dataIndex: 'processCode', key: 'processCode' },
   { title: '재료유형', dataIndex: 'materialType', key: 'materialType' },
   { title: '재료진도', dataIndex: 'materialProgress', key: 'materialProgress' },
+  {
+    title: '재료단위',
+    dataIndex: 'materialGroup',
+    key: 'materialGroup',
+    otherProps: {
+      filters: [
+        {
+          text: 'A',
+          value: 'A',
+        },
+        {
+          text: 'B',
+          value: 'B',
+        },
+      ],
+      onFilter: (value: string, record: { materialGroup: string[] }) =>
+        record.materialGroup.indexOf(value) === 0,
+    },
+  },
   { title: '외경', dataIndex: 'outerDiameter', key: 'outerDiameter' },
   { title: '내경', dataIndex: 'innerDiameter', key: 'innerDiameter' },
   { title: '폭', dataIndex: 'width', key: 'width' },
-  { title: '길이', dataIndex: 'length', key: 'length' },
-  { title: '두께', dataIndex: 'thickness', key: 'thickness' },
-  { title: '단중', dataIndex: 'unitWeight', key: 'unitWeight' },
-  { title: '통과공정', dataIndex: 'passedProcess', key: 'passedProcess' },
-  { title: '전공장공정', dataIndex: 'previousProcess', key: 'previousProcess' },
-  { title: '저장위치', dataIndex: 'storageLocation', key: 'storageLocation' },
-  { title: '야드구분', dataIndex: 'yardDivision', key: 'yardDivision' },
-  { title: '주문번호', dataIndex: 'orderNumber', key: 'orderNumber' },
+  {
+    title: '길이',
+    dataIndex: 'length',
+    key: 'length',
+  },
+  {
+    title: '두께',
+    dataIndex: 'thickness',
+    key: 'thickness',
+  },
+  {
+    title: '단중',
+    dataIndex: 'unitWeight',
+    key: 'unitWeight',
+  },
+  {
+    title: '통과공정',
+    dataIndex: 'passedProcess',
+    key: 'passedProcess',
+  },
+  {
+    title: '전공장공정',
+    dataIndex: 'previousProcess',
+    key: 'previousProcess',
+  },
+  {
+    title: '저장위치',
+    dataIndex: 'storageLocation',
+    key: 'storageLocation',
+  },
+  {
+    title: '야드구분',
+    dataIndex: 'yardDivision',
+    key: 'yardDivision',
+  },
+  {
+    title: '주문번호',
+    dataIndex: 'orderNumber',
+    key: 'orderNumber',
+  },
+  {
+    title: '목표폭',
+    dataIndex: 'targetWidth',
+    key: 'targetWidth',
+  },
+  {
+    title: '목표두께',
+    dataIndex: 'targetThickness',
+    key: 'targetThickness',
+  },
 ];
 
 // Table Data 정의
@@ -33,6 +99,7 @@ export const mockdata: MaterialDataType[] = [
     processCode: '1PCM',
     materialType: 'H',
     materialProgress: 'E',
+    materialGroup: 'A',
     outerDiameter: 35.9824301584831,
     innerDiameter: 22,
     width: 1107,
@@ -44,6 +111,8 @@ export const mockdata: MaterialDataType[] = [
     storageLocation: '7-2-20-2-1',
     yardDivision: '1A1B',
     orderNumber: '20240730-F6BG',
+    targetWidth: 1000,
+    targetThickness: 2.5,
   },
   {
     key: '2',
@@ -53,6 +122,7 @@ export const mockdata: MaterialDataType[] = [
     processCode: '1CAL',
     materialType: 'H',
     materialProgress: 'D',
+    materialGroup: 'A',
     outerDiameter: 52.9602313116795,
     innerDiameter: 25,
     width: 1877,
@@ -65,6 +135,8 @@ export const mockdata: MaterialDataType[] = [
     yardDivision: '1A1A',
     orderNumber: '20240731-2175',
     changed: true,
+    targetWidth: 1800,
+    targetThickness: 4.0,
   },
   {
     key: '3',
@@ -74,6 +146,7 @@ export const mockdata: MaterialDataType[] = [
     processCode: '1PCM',
     materialType: 'H',
     materialProgress: 'E',
+    materialGroup: 'A',
     outerDiameter: 49.4609835245515,
     innerDiameter: 24,
     width: 942,
@@ -85,6 +158,8 @@ export const mockdata: MaterialDataType[] = [
     storageLocation: '8-1-5-3-1',
     yardDivision: '1A1A',
     orderNumber: '20240801-30WL',
+    targetWidth: 900,
+    targetThickness: 14.0,
   },
   {
     key: '4',
@@ -94,6 +169,7 @@ export const mockdata: MaterialDataType[] = [
     processCode: '1EGL',
     materialType: 'H',
     materialProgress: 'E',
+    materialGroup: 'A',
     outerDiameter: 54.0121547172835,
     innerDiameter: 28,
     width: 757,
@@ -106,6 +182,8 @@ export const mockdata: MaterialDataType[] = [
     yardDivision: '1A1A',
     orderNumber: '20240802-KP00',
     changed: true,
+    targetWidth: 700,
+    targetThickness: 16.0,
   },
   {
     key: '5',
@@ -115,6 +193,7 @@ export const mockdata: MaterialDataType[] = [
     processCode: '포장',
     materialType: 'C',
     materialProgress: 'E',
+    materialGroup: 'A',
     outerDiameter: 60.8096102448159,
     innerDiameter: 28,
     width: 1079,
@@ -126,6 +205,8 @@ export const mockdata: MaterialDataType[] = [
     storageLocation: '9-3-5-2-1',
     yardDivision: '1A1A',
     orderNumber: '20240803-TSXE',
+    targetWidth: 1000,
+    targetThickness: 6.0,
   },
   {
     key: '6',
@@ -135,6 +216,7 @@ export const mockdata: MaterialDataType[] = [
     processCode: '포장',
     materialType: 'C',
     materialProgress: 'E',
+    materialGroup: 'B',
     outerDiameter: 53.7773466191942,
     innerDiameter: 25,
     width: 1352,
@@ -146,6 +228,8 @@ export const mockdata: MaterialDataType[] = [
     storageLocation: '5-1-3-2-3',
     yardDivision: '1A1B',
     orderNumber: '20240804-U7IR',
+    targetWidth: 1300,
+    targetThickness: 2.5,
   },
   {
     key: '7',
@@ -155,6 +239,7 @@ export const mockdata: MaterialDataType[] = [
     processCode: '1CAL',
     materialType: 'H',
     materialProgress: 'J',
+    materialGroup: 'A',
     outerDiameter: 42.1349622390059,
     innerDiameter: 21,
     width: 1124,
@@ -166,6 +251,8 @@ export const mockdata: MaterialDataType[] = [
     storageLocation: '5-2-3-3-3',
     yardDivision: '1A1B',
     orderNumber: '20240805-XCPF',
+    targetWidth: 1100,
+    targetThickness: 3.0,
   },
   {
     key: '8',
@@ -175,6 +262,7 @@ export const mockdata: MaterialDataType[] = [
     processCode: '1PCM',
     materialType: 'H',
     materialProgress: 'E',
+    materialGroup: 'A',
     outerDiameter: 53.3285872359957,
     innerDiameter: 25,
     width: 835,
@@ -186,6 +274,8 @@ export const mockdata: MaterialDataType[] = [
     storageLocation: '7-3-15-2-1',
     yardDivision: '1A1B',
     orderNumber: '20240806-XLEG',
+    targetWidth: 800,
+    targetThickness: 8.5,
   },
   {
     key: '9',
@@ -195,6 +285,7 @@ export const mockdata: MaterialDataType[] = [
     processCode: '포장',
     materialType: 'C',
     materialProgress: 'E',
+    materialGroup: 'B',
     outerDiameter: 53.526933092068,
     innerDiameter: 29,
     width: 784,
@@ -206,6 +297,8 @@ export const mockdata: MaterialDataType[] = [
     storageLocation: '3-3-20-2-1',
     yardDivision: '1A1B',
     orderNumber: '20240807-WJF6',
+    targetWidth: 750,
+    targetThickness: 2.5,
   },
   {
     key: '10',
@@ -215,6 +308,7 @@ export const mockdata: MaterialDataType[] = [
     processCode: '1EGL',
     materialType: 'H',
     materialProgress: 'H',
+    materialGroup: 'B',
     outerDiameter: 40.344223871778,
     innerDiameter: 30,
     width: 737,
@@ -223,7 +317,9 @@ export const mockdata: MaterialDataType[] = [
     unitWeight: 33.9806455809316,
     passedProcess: '1EGL',
     previousProcess: '1CAL',
-    storageLocation: '6-1-8-1-3',
+    storageLocation: '6',
+    targetWidth: 700,
+    targetThickness: 2.0,
     yardDivision: '1A1A',
     orderNumber: '20240808-2RTP',
   },

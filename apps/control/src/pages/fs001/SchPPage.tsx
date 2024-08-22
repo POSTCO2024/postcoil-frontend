@@ -1,5 +1,6 @@
 import { Button } from 'antd';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import styles from './SchPPage.module.scss';
 
@@ -8,11 +9,15 @@ import ContentContainer from '@/pages/fs001/plan/ContentContainer';
 import FilterContainer from '@/pages/fs001/plan/FilterContainer';
 
 const SchPPage = () => {
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const handleCancel = () => setIsModalOpen(false);
+  const handleCancel = () => {
+    setIsModalOpen(false);
+    navigate('/schedule2'); // TODO: 현재, 페이지는 변경가능, 메뉴바는 변경 X => menu navigation 도 같이 움직이게 하기!
+  };
   const handleApply = () => {
     setIsModalOpen(false);
-    // TODO: implement roll success action
+    navigate('/schedule2');
   };
   const handleRoll = () => setIsModalOpen(true);
 

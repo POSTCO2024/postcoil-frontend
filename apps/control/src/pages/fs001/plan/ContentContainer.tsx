@@ -1,16 +1,16 @@
-import { Table as AntTable } from 'antd';
+import { Table } from '@postcoil/ui';
 
 import styles from './ContentContainer.module.scss';
 
-import { mockcolumns, mockdata } from '@/utils/scheduling/ContentUtils';
+import { mockcolumns, mockdata } from '@/utils/scheduling/MaterialTableUtils';
 
 const ContentContainer = () => {
   return (
     <div className={styles.contentContainer}>
       <section className={styles.result}>
-        {/* TODO: 데이터 확정시, @postcoil/ui의 Table 로 변경하기 */}
         <div className={styles.table}>
-          <AntTable columns={mockcolumns} dataSource={mockdata} />
+          {/* TODO: common-ui의 Table checkbox fix!!  */}
+          <Table useCheckBox={true} columns={mockcolumns} data={mockdata} />
         </div>
       </section>
     </div>
