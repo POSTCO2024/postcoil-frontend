@@ -75,7 +75,6 @@ export const Board: React.FC<BoardProps> = ({ tabData }) => {
                       className={styles.table}
                       columns={columns}
                       dataSource={tab.tableData}
-                      size="small"
                       pagination={false}
                     />
                   </div>
