@@ -1,0 +1,18 @@
+.result {
+  width: calc(50% - 1rem);
+  height: 100%;
+  box-sizing: border-box;
+
+  p {
+    padding: 0 10px 10px;
+    height: fit-content;
+  }
+
+  .resultBtns {
+    display: flex;
+    justify-content: end;
+    button {
+      margin: 20px 0px;
+    }
+  }
+}
