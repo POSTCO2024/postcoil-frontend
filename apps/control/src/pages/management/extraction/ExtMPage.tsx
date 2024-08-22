@@ -4,11 +4,11 @@ import { Table } from '@postcoil/ui';
 import styles from './ExtMPage.module.scss';
 
 import {
-  columData,
-  columsData,
+  columnData,
+  columnsData,
   facilityData,
   standardData,
-} from '@/config/management/ExtractionManageMent';
+} from '@/config/management/ExtractionManagement';
 
 // // TODO: fetch data from API
 // const extractions: DataType = {
@@ -20,7 +20,7 @@ import {
 
 // // <에러기준>을 화면에 넣는다면 넣는 데이터 형식
 // // const outlierCriteria: DataType = {
-// //   width: '1',
+// //   width: '1',\
 // //   thickness: '1',
 // // };
 
@@ -37,14 +37,18 @@ const ExtMPage = () => {
       <h1>작업대상재 기준 관리</h1>
       <div className={styles.frame}>
         <div className={styles.facility}>
-          <Table useCheckBox={false} columns={columData} data={facilityData} />
+          <Table useCheckBox={false} columns={columnData} data={facilityData} />
           {/* <Result title="에러기준" data={outlierCriteria} /> */}
         </div>
         <div className={styles.icon_div}>
           <ArrowRightOutlined style={{ fontSize: '5em', margin: 'auto' }} />
         </div>
         <div className={styles.facilityStandard}>
-          <Table useCheckBox={false} columns={columsData} data={standardData} />
+          <Table
+            useCheckBox={false}
+            columns={columnsData}
+            data={standardData}
+          />
         </div>
       </div>
     </div>

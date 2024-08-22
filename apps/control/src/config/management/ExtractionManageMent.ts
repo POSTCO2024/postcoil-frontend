@@ -1,4 +1,4 @@
-export const columData = [
+export const columnData = [
   {
     title: '공정명',
     dataIndex: 'facilityId',
@@ -9,7 +9,7 @@ export const columData = [
   },
 ];
 
-export const columsData = [
+export const columnsData = [
   {
     title: '항목',
     dataIndex: 'column',
