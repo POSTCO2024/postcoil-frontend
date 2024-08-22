@@ -20,7 +20,7 @@ const BarChartV2: React.FC<BarChartV2Props> = ({ option }) => {
 
   return (
     <div className={styles.barchartv2Container}>
-      <h4>스케줄</h4>
+      <h4>제목 미정</h4>
       <div ref={chartRef} id="barchart" className={styles.chartContainer}></div>
     </div>
   );

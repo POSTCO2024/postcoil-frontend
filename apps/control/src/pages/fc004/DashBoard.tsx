@@ -47,9 +47,6 @@ const DashBoard: React.FC = () => {
         </div>
         <div className={styles.line2}>
           <div className={styles.smallCard}>
-            <Piechart option={piechartOption} />
-          </div>
-          <div className={styles.smallCard}>
             <BarChartV2 option={barchartV2Option} />
           </div>
           <div className={styles.smallCard}>
@@ -58,13 +55,18 @@ const DashBoard: React.FC = () => {
           <div className={styles.smallCard}>
             <Status />
           </div>
+          <div className={styles.smallCard}>
+            {/* <Barchart
+              title="재료 정보"
+              subtitle="(두께)"
+              option={barchartOption}
+            /> */}
+            <List />
+          </div>
         </div>
         <div className={styles.line2}>
           <div className={styles.smallCard}>
-            <DonutChart title="품종" option={donutchartOption} />
-          </div>
-          <div className={styles.smallCard}>
-            <DonutChart title="고객사" option={donutchartOption} />
+            <Piechart option={piechartOption} />
           </div>
           <div className={styles.smallCard}>
             {/* <Barchart
@@ -78,12 +80,10 @@ const DashBoard: React.FC = () => {
             />
           </div>
           <div className={styles.smallCard}>
-            {/* <Barchart
-              title="재료 정보"
-              subtitle="(두께)"
-              option={barchartOption}
-            /> */}
-            <List />
+            <DonutChart title="품종" option={donutchartOption} />
+          </div>
+          <div className={styles.smallCard}>
+            <DonutChart title="고객사" option={donutchartOption} />
           </div>
         </div>
       </div>
