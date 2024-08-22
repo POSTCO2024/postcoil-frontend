@@ -69,8 +69,8 @@ export const piechartOption: echarts.EChartsOption = {
       type: 'pie',
       radius: '50%',
       data: [
-        { value: 1048, name: '에러재' },
-        { value: 735, name: '정상재' },
+        { value: 2, name: '에러재', itemStyle: { color: '#fb8383' } },
+        { value: 46, name: '정상재', itemStyle: { color: '#7fdb85' } },
       ],
       emphasis: {
         itemStyle: {
