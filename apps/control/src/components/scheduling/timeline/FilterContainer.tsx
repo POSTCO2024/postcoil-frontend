@@ -1,4 +1,4 @@
-import { DatePicker, Dropdown, SearchBar } from '@postcoil/ui';
+import { DatePicker, Dropdown } from '@postcoil/ui';
 
 import styles from './FilterContainer.module.scss';
 
