@@ -13,6 +13,11 @@ import './styles/global.scss';
 import Fc001 from './pages/fc001/Fc001';
 import Fc002 from './pages/fc002/Fc002';
 import DashBoard from './pages/fc004/DashBoard';
+<<<<<<< HEAD
+=======
+import Fs004a from './pages/fs004/Fs004a';
+import Fs004b from './pages/fs004/Fs004b';
+>>>>>>> 2cb03fa (Refactor: 대상재 추출기준 관리 화면 생성)
 import ExtMPage from './pages/management/extraction/ExtMPage';
 import SchMPage from './pages/management/schedule/SchMPage';
 import Fc003 from './pages/monitoring/Fc003';

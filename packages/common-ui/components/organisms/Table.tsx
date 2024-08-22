@@ -67,7 +67,7 @@ import { createColumns } from '../../utils/TableUtils';
 // Dataset Type
 export interface DataType {
   key: string;
-  no: string;
+  no?: string;
   id: string;
   [key: string]: unknown;
 }
