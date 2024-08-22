@@ -1,7 +1,6 @@
 import React from 'react';
 
 // 그래프
-import Barchart from './chart/BarChart';
 import BarChartV2 from './chart/BarChartV2';
 import DonutChart from './chart/DonutChart';
 import Piechart from './chart/PieChart';
@@ -13,7 +12,6 @@ import List from './chart/List';
 import styles from './DashBoard.module.scss';
 
 import {
-  barchartOption,
   barchartV2Option,
   piechartOption,
   donutchartOption,
@@ -29,16 +27,16 @@ const DashBoard: React.FC = () => {
       <div className={styles.page}>
         <div className={styles.line1}>
           <div className={styles.smallCard}>
-            <h6>현재 작업중</h6>
+            <h6>총 작업량</h6>
             <h3>50</h3>
           </div>
           <div className={styles.smallCard}>
-            <h6>대기중</h6>
+            <h6>작업 예정</h6>
             <h3>13</h3>
           </div>
           <div className={styles.smallCard}>
             <h6>작업 완료</h6>
-            <h3>13</h3>
+            <h3>36</h3>
           </div>
           <div className={styles.smallCard}>
             <h6>작업 시간</h6>
@@ -56,24 +54,15 @@ const DashBoard: React.FC = () => {
             <Status />
           </div>
           <div className={styles.smallCard}>
-            {/* <Barchart
-              title="재료 정보"
-              subtitle="(두께)"
-              option={barchartOption}
-            /> */}
             <List />
           </div>
         </div>
+        {/* <h4>재료 정보</h4> */}
         <div className={styles.line2}>
           <div className={styles.smallCard}>
             <Piechart option={piechartOption} />
           </div>
           <div className={styles.smallCard}>
-            {/* <Barchart
-              title="재료 정보"
-              subtitle="(폭)"
-              option={barchartOption}
-            /> */}
             <DoubleBarChart
               option1={doublebarchartOption1}
               option2={doublebarchartOption2}

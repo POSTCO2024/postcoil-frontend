@@ -29,7 +29,7 @@ export const DoubleBarChart: React.FC<DoubleBarChartProps> = ({
 
   return (
     <div className={styles.doublebarchartContainer}>
-      <h4>재료 정보</h4>
+      <h4>재료 특성</h4>
       <div ref={chartRef1} className={styles.chartContainer}></div>
       <div ref={chartRef2} className={styles.chartContainer}></div>
     </div>

@@ -69,7 +69,7 @@ export const piechartOption: echarts.EChartsOption = {
       type: 'pie',
       radius: '50%',
       data: [
-        { value: 2, name: '에러재', itemStyle: { color: '#fb8383' } },
+        { value: 4, name: '에러재', itemStyle: { color: '#fb8383' } },
         { value: 46, name: '정상재', itemStyle: { color: '#7fdb85' } },
       ],
       emphasis: {
@@ -160,8 +160,8 @@ export const rowbarchartOption: echarts.EChartsOption = {
     left: 'center',
   },
   grid: {
-    left: '0%',
-    right: '0%',
+    left: '5%',
+    right: '5%',
     top: '15%',
     bottom: '20%',
     containLabel: true,
@@ -241,8 +241,8 @@ export const barchartV2Option: echarts.EChartsOption = {
   },
   legend: { bottom: '0%', left: 'center' },
   grid: {
-    left: '0%',
-    right: '0%',
+    left: '5%',
+    right: '5%',
     top: '15%',
     bottom: '20%',
     containLabel: true,
@@ -269,6 +269,7 @@ export const barchartV2Option: echarts.EChartsOption = {
   ],
 };
 
+// Double BarChart
 export const doublebarchartOption1: echarts.EChartsOption = {
   tooltip: {
     trigger: 'axis',
@@ -277,9 +278,10 @@ export const doublebarchartOption1: echarts.EChartsOption = {
     },
   },
   grid: {
-    left: '3%',
-    right: '4%',
+    left: '10%',
+    right: '5%',
     bottom: '3%',
+    top: '10%', // 그래프 위쪽 간격 넓히기
     containLabel: true,
   },
   xAxis: [
@@ -294,6 +296,10 @@ export const doublebarchartOption1: echarts.EChartsOption = {
   yAxis: [
     {
       type: 'value',
+      name: '폭(mm)', // y축 라벨 추가
+      nameLocation: 'middle', // 라벨 위치를 중간에 설정
+      nameGap: 25, // y축 라벨과 y축 사이의 간격 설정
+      minInterval: 5, // y축 최소 간격 설정
     },
   ],
   series: [
@@ -314,9 +320,10 @@ export const doublebarchartOption2: echarts.EChartsOption = {
     },
   },
   grid: {
-    left: '3%',
-    right: '4%',
+    left: '10%',
+    right: '5%',
     bottom: '3%',
+    top: '10%',
     containLabel: true,
   },
   xAxis: [
@@ -331,6 +338,10 @@ export const doublebarchartOption2: echarts.EChartsOption = {
   yAxis: [
     {
       type: 'value',
+      name: '두께(mm)', // y축 라벨 추가
+      nameLocation: 'middle', // 라벨 위치를 중간에 설정
+      nameGap: 25, // y축 라벨과 y축 사이의 간격 설정
+      minInterval: 5, // y축 최소 간격 설정
     },
   ],
   series: [
