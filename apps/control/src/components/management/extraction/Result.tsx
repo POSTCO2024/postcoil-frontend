@@ -1,10 +1,10 @@
+import { DataType } from '@postcoil/ui/config/TableConfig';
 import { Button, Table, Input, Form } from 'antd';
 import { useState } from 'react';
 
 import styles from './Result.module.scss';
 
 import CommonModal from '@/components/common/CommonModal';
-import { DataType } from '@/pages/management/extraction/ExtMPage';
 interface PropsType {
   title: string;
   data: DataType;
