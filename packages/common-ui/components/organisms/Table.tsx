@@ -1,6 +1,6 @@
 import {
   Table as AntTable,
-  Checkbox,
+  // Checkbox,
   ConfigProvider,
   TablePaginationConfig,
 } from 'antd';
