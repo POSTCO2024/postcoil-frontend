@@ -12,15 +12,16 @@ import { MenuItems } from './config/MenuItems';
 import './styles/global.scss';
 import Fc001 from './pages/fc001/Fc001';
 import Fc002 from './pages/fc002/Fc002';
-import DashBoard from './pages/fc004/DashBoard';
-import ExtMPage from './pages/management/extraction/ExtMPage';
-import SchMPage from './pages/management/schedule/SchMPage';
-import Fc003 from './pages/monitoring/Fc003';
-import SchPePage from './pages/scheduling/pending/SchPePage';
-import SchPPage from './pages/scheduling/plan/SchPPage';
-import SchRPage from './pages/scheduling/result/SchRPage';
-import Fs004a from './pages/scheduling/timeline/Fs004a';
-import Fs004b from './pages/scheduling/timeline/Fs004b';
+import Fc003 from './pages/fc003/Fc003';
+import Fc004 from './pages/fc004/DashBoard';
+import ExtMPage from './pages/fmc001/ExtMPage';
+import ErrMPage from './pages/fme001/ErrMPage';
+import SchMPage from './pages/fms001/SchMPage';
+import SchPPage from './pages/fs001/SchPPage';
+import SchPePage from './pages/fs002/SchPePage';
+import SchRPage from './pages/fs003/SchRPage';
+import Fs004a from './pages/fs004/Fs004a';
+import Fs004b from './pages/fs004/Fs004b';
 
 function App() {
   return (
@@ -32,10 +33,7 @@ function App() {
           <Route path="/control1" element={<ContentBoard Board={Fc001} />} />
           <Route path="/control2" element={<ContentBoard Board={Fc002} />} />
           <Route path="/control3" element={<ContentBoard Board={Fc003} />} />
-          <Route
-            path="/control4"
-            element={<ContentBoard Board={DashBoard} />}
-          />
+          <Route path="/control4" element={<ContentBoard Board={Fc004} />} />
           <Route
             path="/schedule1"
             element={<ContentBoard Board={SchPPage} />}
@@ -49,9 +47,10 @@ function App() {
             element={<ContentBoard Board={SchRPage} />}
           />
           <Route path="/schedule4" element={<ContentBoard Board={Fs004a} />} />
-          <Route path="/manage1" element={<ContentBoard Board={ExtMPage} />} />
-          <Route path="/manage2" element={<ContentBoard Board={SchMPage} />} />
           <Route path="/roll/*" element={<ContentBoard Board={Fs004b} />} />
+          <Route path="/manage1" element={<ContentBoard Board={ExtMPage} />} />
+          <Route path="/manage2" element={<ContentBoard Board={ErrMPage} />} />
+          <Route path="/manage3" element={<ContentBoard Board={SchMPage} />} />
         </Routes>
       </div>
     </Router>

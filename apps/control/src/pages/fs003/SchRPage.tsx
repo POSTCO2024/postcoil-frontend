@@ -3,9 +3,9 @@ import { useState } from 'react';
 
 import styles from './SchRPage.module.scss';
 
-import ContentContainer from '@/components/scheduling/result/ContentContainer';
-import DraggableChart from '@/components/scheduling/result/DraggableChart';
-import FilterContainer from '@/components/scheduling/result/FilterContainer';
+import ContentContainer from '@/pages/fs003/result/ContentContainer';
+import DraggableChart from '@/pages/fs003/result/DraggableChart';
+import FilterContainer from '@/pages/fs003/result/FilterContainer';
 
 const SchRPage = () => {
   const [isGraphVisible, setIsGraphVisible] = useState(true);

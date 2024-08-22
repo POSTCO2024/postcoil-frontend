@@ -5,9 +5,9 @@ import { useState } from 'react';
 import styles from './SchPePage.module.scss';
 
 import RollSuccessModal from '@/components/common/RollSuccessModal';
-import ContentContainer from '@/components/scheduling/pending/ContentContainer';
-import DraggableChart from '@/components/scheduling/pending/DraggableChart';
-import FilterContainer from '@/components/scheduling/pending/FilterContainer';
+import ContentContainer from '@/pages/fs002/pending/ContentContainer';
+import DraggableChart from '@/pages/fs002/pending/DraggableChart';
+import FilterContainer from '@/pages/fs002/pending/FilterContainer';
 
 const SchPePage = () => {
   const [isGraphVisible, setIsGraphVisible] = useState(true);

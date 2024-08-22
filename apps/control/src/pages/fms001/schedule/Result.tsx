@@ -4,7 +4,7 @@ import { useState } from 'react';
 import styles from './Result.module.scss';
 
 import CommonModal from '@/components/common/CommonModal';
-import { DataType } from '@/pages/management/schedule/SchMPage';
+import { DataType } from '@/pages/fms001/SchMPage';
 interface PropsType {
   title: string;
   data: DataType;
