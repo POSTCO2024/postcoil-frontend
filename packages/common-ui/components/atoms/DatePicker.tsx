@@ -37,7 +37,7 @@ export const DatePicker: React.FC<{
         disabledDate={disabledDate}
         onChange={(dates) => handleRangeChange(dates as [Dayjs, Dayjs])}
         className={styles.datepicker}
-        // TODO: width!!!
+        // TODO: width !!!
         // style={{
         //   width: '100%',
         //   maxWidth: 200,
