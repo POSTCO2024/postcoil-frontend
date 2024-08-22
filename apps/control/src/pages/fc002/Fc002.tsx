@@ -68,7 +68,6 @@ const tableData = [
 ];
 
 export const Fc002: React.FC = () => {
-  // const label = ['에러재', '정상재'];
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const handleModalOpen = () => setIsModalOpen(true);
   const handleOk = () => {
@@ -83,9 +82,6 @@ export const Fc002: React.FC = () => {
     <div className={styles.boardContainer}>
       <h1>공정별 에러재 관리</h1>
       <TopBar />
-      {/* <div className={styles.tab}>
-        <Tab labels={label} />
-      </div> */}
       <div className={styles.result}>
         <div className={styles.table}>
           <Table useCheckBox={true} columns={columnsData} data={tableData} />
@@ -95,7 +91,7 @@ export const Fc002: React.FC = () => {
         에러패스
       </Button>
       <CommonModal
-        title="에러패스 적용 여부"
+        title="에러패스 적용"
         isModalOpen={isModalOpen}
         onCancel={handleCancel}
         onApply={handleOk}>
