@@ -12,7 +12,8 @@ import { MenuItems } from './config/MenuItems';
 import './styles/global.scss';
 import Fc001 from './pages/fc001/Fc001';
 import Fc002 from './pages/fc002/Fc002';
-import DashBoard from './pages/fc004/DashBoard';
+import Fc003 from './pages/fc003/Fc003';
+import Fc004 from './pages/fc004/DashBoard';
 import SchPPage from './pages/fs001/SchPPage';
 import SchPePage from './pages/fs002/SchPePage';
 import SchRPage from './pages/fs003/SchRPage';
@@ -20,7 +21,6 @@ import Fs004a from './pages/fs004/Fs004a';
 import Fs004b from './pages/fs004/Fs004b';
 import ExtMPage from './pages/management/extraction/ExtMPage';
 import SchMPage from './pages/management/schedule/SchMPage';
-import Fc003 from './pages/monitoring/Fc003';
 
 function App() {
   return (
@@ -32,10 +32,7 @@ function App() {
           <Route path="/control1" element={<ContentBoard Board={Fc001} />} />
           <Route path="/control2" element={<ContentBoard Board={Fc002} />} />
           <Route path="/control3" element={<ContentBoard Board={Fc003} />} />
-          <Route
-            path="/control4"
-            element={<ContentBoard Board={DashBoard} />}
-          />
+          <Route path="/control4" element={<ContentBoard Board={Fc004} />} />
           <Route
             path="/schedule1"
             element={<ContentBoard Board={SchPPage} />}
