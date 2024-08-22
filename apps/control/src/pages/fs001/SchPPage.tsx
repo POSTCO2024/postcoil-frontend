@@ -4,8 +4,8 @@ import { useState } from 'react';
 import styles from './SchPPage.module.scss';
 
 import RollSuccessModal from '@/components/common/RollSuccessModal';
-import ContentContainer from '@/components/scheduling/plan/ContentContainer';
-import FilterContainer from '@/components/scheduling/plan/FilterContainer';
+import ContentContainer from '@/pages/fs001/plan/ContentContainer';
+import FilterContainer from '@/pages/fs001/plan/FilterContainer';
 
 const SchPPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

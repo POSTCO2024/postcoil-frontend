@@ -1,7 +1,7 @@
 import styles from './Fs004b.module.scss';
 
-import ContentContainer from '@/components/scheduling/plan/ContentContainer';
-import FilterContainer from '@/components/scheduling/plan/FilterContainer';
+import ContentContainer from '@/pages/fs001/plan/ContentContainer';
+import FilterContainer from '@/pages/fs001/plan/FilterContainer';
 
 const Fs004b: React.FC = () => {
   // TODO: Modal 창으로 상세화면 조회!!

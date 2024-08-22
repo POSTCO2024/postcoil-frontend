@@ -3,8 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import styles from './Fs004a.module.scss';
-
-import FilterContainer from '@/components/scheduling/timeline/FilterContainer';
+import FilterContainer from './timeline/FilterContainer';
 
 // Table 임의 데이터
 const columnsData = [
