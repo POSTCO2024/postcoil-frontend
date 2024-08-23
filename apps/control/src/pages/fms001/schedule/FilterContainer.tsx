@@ -18,6 +18,16 @@ const mockOptions: OptionType[] = [
     label: '2CAL',
   },
 ];
+const rollOptions: OptionType[] = [
+  {
+    value: 'AA',
+    label: 'AA',
+  },
+  {
+    value: 'BB',
+    label: 'BB',
+  },
+];
 
 const FilterContainer = () => {
   // const handleSearch = () => {};
@@ -31,7 +41,7 @@ const FilterContainer = () => {
         {/* TODO: Dropdown 데이터 변경, 함수 받게 */}
       </div>
       {/* <Button text="조회" onClick={handleSearch} /> */}
-      <SearchBar />
+      <Dropdown title="롤 단위" options={rollOptions} />
       {/* TODO: searchbar 함수 받게! */}
       {/* <Button text="검색" onClick={handleFilter} /> */}
     </div>

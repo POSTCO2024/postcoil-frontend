@@ -23,8 +23,14 @@
     padding-bottom: 10px;
     font-size: 1.6rem;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-evenly;
+    margin: auto;
     width: 90%;
     height: calc(100% - 2.2rem - 170px);
+  }
+  p {
+    font-weight: bold;
+    font-size: 1.2em;
+    padding-bottom: 10px;
   }
 }
