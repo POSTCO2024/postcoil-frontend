@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 import styles from './Fc001.module.scss';
 import { TopBar } from './topBar/TopBar';
-import { RowheaderTable } from './rowheadertable/rowheaderTable';
+import { RowheaderTable } from './rowheadertable/RowheaderTable';
 
 // 1) List 임의 데이터
 const columnsDataList = [
