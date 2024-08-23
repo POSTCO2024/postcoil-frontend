@@ -20,12 +20,12 @@ const mockOptions: OptionType[] = [
 ];
 const rollOptions: OptionType[] = [
   {
-    value: 'AA',
-    label: 'AA',
+    value: 'A',
+    label: 'A',
   },
   {
-    value: 'BB',
-    label: 'BB',
+    value: 'B',
+    label: 'B',
   },
 ];
 

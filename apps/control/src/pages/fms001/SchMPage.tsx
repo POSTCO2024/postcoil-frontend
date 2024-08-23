@@ -22,14 +22,7 @@ const SchMPage = () => {
       <FilterContainer />
       <div className={styles.contentContainer}>
         <div style={{ width: '40%' }}>
-          <p
-            style={{
-              fontWeight: 'bold',
-              fontSize: '1.2em',
-              paddingBottom: '10px',
-            }}>
-            우선순위
-          </p>
+          <p>우선순위</p>
           <Table useCheckBox={false} columns={priority} data={priorityData} />
           <Result title="우선순위" data={priorityData} />
         </div>
