@@ -166,6 +166,8 @@ export const Table = <T extends DataType>({
               : undefined
           }
           scroll={scroll}
+          size={size ? 'small' : 'large'}
+          tableLayout={tableLayout ? 'fixed' : undefined}
         />
       </ConfigProvider>
     </div>
