@@ -1,4 +1,4 @@
-import { Dropdown, SearchBar, Input, Button, SearchButton } from '@postcoil/ui';
+import { Dropdown, SearchBar, Input, SearchButton } from '@postcoil/ui';
 import React, { useState } from 'react';
 
 import styles from './TopBar.module.scss';
@@ -38,7 +38,8 @@ const optionsDropdown2 = [
 export const TopBar: React.FC = () => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
-  const handleDropdownChange = (selectedValues: string[]) => {
+  const handleDropdownChange = (selectedValues: any) => {
+    // console.log(e.target.value);
     // 배열이 비어있지 않다면 첫 번째 값을 사용하도록 설정
     if (selectedValues && selectedValues.length > 0) {
       setSelectedOption(selectedValues[0]);
