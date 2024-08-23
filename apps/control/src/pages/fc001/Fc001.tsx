@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 
 import styles from './Fc001.module.scss';
 import { TopBar } from './topBar/TopBar';
+import { RowheaderTable } from './rowheadertable/rowheaderTable';
 
 // 1) List 임의 데이터
 const columnsDataList = [
@@ -168,11 +169,12 @@ export const Fc001: React.FC = () => {
             data={tableDataList}
           />
         ) : (
-          <Table
-            useCheckBox={true}
-            columns={columnsDataTable}
-            data={tableDataTable}
-          />
+          // <Table
+          //   useCheckBox={true}
+          //   columns={columnsDataTable}
+          //   data={tableDataTable}
+          // />
+          <RowheaderTable />
         )}
       </div>
     </div>
