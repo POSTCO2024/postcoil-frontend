@@ -1,6 +1,6 @@
 import React from 'react';
 import { SearchOutlined } from '@ant-design/icons';
-import { Button, Flex, Tooltip } from 'antd';
+import { Button, Flex } from 'antd';
 
 export const SearchButton: React.FC = () => {
   return (
