@@ -13,6 +13,7 @@ export const Navigation: React.FC<NavigationProps> = ({
   logo,
   human,
   menuItems,
+  mappingKeys,
 }) => {
   const levelKeys = getLevelKeys(menuItems as LevelKeysProps[]);
   const [stateOpenKeys, setStateOpenKeys] = useState(['1', '11']);
@@ -54,6 +55,11 @@ export const Navigation: React.FC<NavigationProps> = ({
     }
   };
 
+  const pathname = location.pathname;
+  function getKeyByPath(pathname: string): string {
+    const mapping = mappingKeys.find((item) => item!.path === pathname);
+    return mapping!.key;
+  }
   return (
     <div className={styles.navigation_style}>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -62,7 +68,7 @@ export const Navigation: React.FC<NavigationProps> = ({
       <ConfigProvider theme={menuTheme}>
         <Menu
           mode="inline"
-          defaultSelectedKeys={['11']}
+          defaultSelectedKeys={[getKeyByPath(pathname)]}
           openKeys={stateOpenKeys}
           onOpenChange={onOpenChange}
           style={{ width: '90%', margin: '20px auto auto', border: 0 }}
