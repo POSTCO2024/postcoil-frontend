@@ -30,6 +30,28 @@
     flex-direction: column;
     width: 90%;
     height: calc(100% - 2.2rem - 250px);
+    position: relative;
+
+    .charts {
+      display: flex;
+      justify-content: space-around;
+      flex-direction: column;
+      height: 70%;
+
+      &:nth-child(1) {
+        // highchart.com 가리기용
+        &::after {
+          content: '';
+          display: block;
+          height: 10px;
+          width: 100%;
+          background-color: white;
+          position: relative;
+          top: -30px;
+          right: 0px;
+        }
+      }
+    }
 
     p {
       padding: 0 20px;
