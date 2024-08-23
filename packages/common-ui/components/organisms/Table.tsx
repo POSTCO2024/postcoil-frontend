@@ -78,6 +78,8 @@ interface TableComponentProps<T extends DataType> {
   handleRowClick?: (record?: T, rowIndex?: number) => void; // Row click event handler
   handleRowsClick?: (selectedRows: T[]) => void; // useCheckBox event handler, 데이터를 가지고 다룰 정보 처리 함수
   scroll?: { x?: number | string; y?: number | string }; // 스크롤 설정
+  size?: string;
+  tableLayout?: string | undefined;
 }
 
 export const Table = <T extends DataType>({
@@ -88,6 +90,8 @@ export const Table = <T extends DataType>({
   handleRowClick,
   handleRowsClick,
   scroll,
+  size,
+  tableLayout,
 }: TableComponentProps<T>) => {
   const processedColumns = [
     // ...(useCheckBox
@@ -162,6 +166,8 @@ export const Table = <T extends DataType>({
               : undefined
           }
           scroll={scroll}
+          size={size ? 'small' : 'large'}
+          tableLayout={tableLayout ? 'fixed' : undefined}
         />
       </ConfigProvider>
     </div>
