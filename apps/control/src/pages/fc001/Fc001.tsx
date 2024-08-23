@@ -1,5 +1,5 @@
-import { Table } from '@postcoil/ui';
-import React from 'react';
+import { Table, Tab } from '@postcoil/ui';
+import React, { useState } from 'react';
 
 import styles from './Fc001.module.scss';
 import { TopBar } from './topBar/TopBar';
@@ -76,12 +76,25 @@ const tableData = [
 ];
 
 export const Fc001: React.FC = () => {
+  const label = ['리스트', '표']; // Tab
+  const [isValue, setIsValue] = useState(true); // 기본값을 true로 설정(첫페이지)
+  const changeTab = () => {
+    setIsValue(!isValue);
+  };
+
   return (
     <div className={styles.boardContainer}>
       <h1>공정별 작업대상재 관리</h1>
       <TopBar />
+      <div className={styles.tab}>
+        <Tab labels={label} onChange={changeTab} />
+      </div>
       <div className={styles.table}>
-        <Table useCheckBox={false} columns={columnsData} data={tableData} />
+        {isValue ? (
+          <Table useCheckBox={false} columns={columnsData} data={tableData} />
+        ) : (
+          <Table useCheckBox={true} columns={columnsData} data={tableData} />
+        )}
       </div>
     </div>
   );
