@@ -1,4 +1,4 @@
-import { Dropdown, SearchBar } from '@postcoil/ui';
+import { Dropdown } from '@postcoil/ui';
 
 import styles from './FilterContainer.module.scss';
 
