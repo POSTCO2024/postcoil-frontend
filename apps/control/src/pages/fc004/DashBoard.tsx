@@ -3,12 +3,11 @@ import React from 'react';
 // 그래프
 import BarChartV2 from './chart/BarChartV2';
 import DonutChart from './chart/DonutChart';
+import DoubleBarChart from './chart/DoubleBarChart';
+import List from './chart/List';
 import Piechart from './chart/PieChart';
 import RowbarChart from './chart/RowbarChart';
 import Status from './chart/Status';
-import DoubleBarChart from './chart/DoubleBarChart';
-import List from './chart/List';
-
 import styles from './DashBoard.module.scss';
 
 import {
