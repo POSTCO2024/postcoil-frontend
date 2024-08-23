@@ -31,7 +31,7 @@ export const MenuItems: MenuItem[] = [
       { key: '21', label: <Link to="/schedule1">Schedule 편성</Link> },
       { key: '22', label: <Link to="/schedule2">Schedule 편성관리</Link> },
       { key: '23', label: <Link to="/schedule3">Schedule 결과</Link> },
-      { key: '24', label: <Link to="./schedule4">Schedule 이력</Link> },
+      { key: '24', label: <Link to="/schedule4">Schedule 이력</Link> },
     ],
   },
   {
@@ -44,4 +44,19 @@ export const MenuItems: MenuItem[] = [
       { key: '33', label: <Link to="/manage3">스케줄기준 관리 </Link> },
     ],
   },
+];
+
+export const mappingKeys = [
+  { key: '11', path: '/' },
+  { key: '11', path: '/control1' },
+  { key: '12', path: '/control2' },
+  { key: '13', path: '/control3' },
+  { key: '14', path: '/control4' },
+  { key: '21', path: '/schedule1' },
+  { key: '22', path: '/schedule2' },
+  { key: '23', path: '/schedule3' },
+  { key: '24', path: '/schedule4' },
+  { key: '31', path: '/manage1' },
+  { key: '32', path: '/manage2' },
+  { key: '33', path: '/manage3' },
 ];

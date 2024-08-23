@@ -8,7 +8,7 @@ import {
 
 import human from './assets/human.svg';
 import logo from './assets/logo.svg';
-import { MenuItems } from './config/MenuItems';
+import { MenuItems, mappingKeys } from './config/MenuItems';
 import './styles/global.scss';
 import Fc001 from './pages/fc001/Fc001';
 import Fc002 from './pages/fc002/Fc002';
@@ -27,7 +27,12 @@ function App() {
   return (
     <Router>
       <div style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
-        <Navigation logo={logo} human={human} menuItems={MenuItems} />
+        <Navigation
+          logo={logo}
+          human={human}
+          menuItems={MenuItems}
+          mappingKeys={mappingKeys}
+        />
         <Routes>
           <Route path="/" element={<Navigate replace to="/control1" />} />
           <Route path="/control1" element={<ContentBoard Board={Fc001} />} />
