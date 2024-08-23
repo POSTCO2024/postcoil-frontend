@@ -165,7 +165,7 @@ export const Table = <T extends DataType>({
                 })
               : undefined
           }
-          scroll={scroll}
+          scroll={scroll ? scroll : undefined}
           size={size ? 'small' : 'large'}
           tableLayout={tableLayout ? 'fixed' : undefined}
         />
