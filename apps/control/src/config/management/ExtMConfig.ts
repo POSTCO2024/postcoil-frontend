@@ -40,4 +40,9 @@ export const facilityData = [
   { key: '2', id: '2', facilityId: '2PCM' },
   { key: '3', id: '3', facilityId: '1CAL' },
   { key: '4', id: '4', facilityId: '2CAL' },
+  { key: '5', id: '5', facilityId: '1EGL' },
+  { key: '6', id: '6', facilityId: '2EGL' },
+  { key: '7', id: '7', facilityId: '1CGL' },
+  { key: '8', id: '8', facilityId: '2CGL' },
+  { key: '9', id: '9', facilityId: '포장' },
 ];
