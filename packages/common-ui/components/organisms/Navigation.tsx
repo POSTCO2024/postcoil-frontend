@@ -57,7 +57,7 @@ export const Navigation: React.FC<NavigationProps> = ({
 
   const pathname = location.pathname;
   function getKeyByPath(pathname: string): string {
-    const mapping = mappingKeys.find((item) => item!.path === pathname);
+    const mapping = mappingKeys!.find((item) => item!.path === pathname);
     return mapping!.key;
   }
   return (
