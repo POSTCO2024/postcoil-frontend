@@ -12,7 +12,7 @@ export const columnData = [
 export const columnsData = [
   {
     title: '항목',
-    dataIndex: 'column',
+    dataIndex: 'columnName',
 
     sorter: {
       compare: (a: any, b: any) => a.no - b.no,
@@ -29,10 +29,10 @@ export const columnsData = [
   },
 ];
 export const standardData = [
-  { key: '1', id: '1', column: '공장코드', value: 'L' },
-  { key: '2', id: '2', column: '공정코드', value: '1L1' },
-  { key: '3', id: '3', column: '재료상태구분', value: '2' },
-  { key: '4', id: '4', column: '진도구분', value: 'D' },
+  { key: '1', id: '1', columnName: '공장코드', value: 'L' },
+  { key: '2', id: '2', columnName: '공정코드', value: '1L1' },
+  { key: '3', id: '3', columnName: '재료상태구분', value: '2' },
+  { key: '4', id: '4', columnName: '진도구분', value: 'D' },
 ];
 
 export const facilityData = [
