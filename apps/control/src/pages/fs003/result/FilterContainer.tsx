@@ -1,11 +1,15 @@
+import { CheckCircleFilled, SyncOutlined } from '@ant-design/icons';
 import { Dropdown } from '@postcoil/ui';
 // import { Button } from 'antd';
+import { DropdownColor } from '@postcoil/ui';
+import { ReactNode } from 'react';
 
 import styles from './FilterContainer.module.scss';
 
 interface OptionType {
   value: string;
   label: string;
+  icon?: React.ReactNode;
 }
 
 const FilterContainer = () => {
@@ -27,11 +31,11 @@ const FilterContainer = () => {
   ];
 
   const mockRollUnitName: OptionType[] = [
-    { value: '1P1_A0001', label: '1P1_A0001' },
-    { value: '1P1_A0002', label: '1P1_A0002' },
-    { value: '1P1_B0344', label: '1P1_B0344' },
-    { value: '1P1_C0015', label: '1P1_C0015' },
-    { value: '1P1_D0002', label: '1P1_D0002' },
+    { value: '1P1_A0001', label: '1P1_A0001', icon: <CheckCircleFilled /> },
+    { value: '1P1_A0002', label: '1P1_A0002', icon: <CheckCircleFilled /> },
+    { value: '1P1_B0344', label: '1P1_B0344', icon: <CheckCircleFilled /> },
+    { value: '1P1_C0015', label: '1P1_C0015', icon: <SyncOutlined spin /> },
+    { value: '1P1_D0002', label: '1P1_D0002', icon: <SyncOutlined spin /> },
     // Add more options...
   ];
   return (
@@ -41,6 +45,7 @@ const FilterContainer = () => {
         {/* TODO: Dropdown 데이터 변경, 함수 받게 */}
       </div>
       <Dropdown title="롤단위명" options={mockRollUnitName} />
+      <DropdownColor title="야호" options={mockRollUnitName} />
       {/* <Button type="primary" onClick={handleSearch}>
         조회
       </Button> */}
