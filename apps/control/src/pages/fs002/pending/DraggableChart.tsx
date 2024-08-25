@@ -35,7 +35,10 @@ interface PropsType {
 }
 
 const DraggableChart: React.FC = ({ filteredData }: PropsType) => {
-  const [data, setData] = useState(filteredData ? filteredData : initialData);
+  const clonedData = (filteredData ? filteredData : initialData).map(
+    (point) => ({ ...point }),
+  );
+  const [data, setData] = useState(clonedData);
 
   useEffect(() => {
     const chartOptions: Highcharts.Options = {
