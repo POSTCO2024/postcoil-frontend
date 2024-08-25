@@ -21,14 +21,6 @@ const FilterContainer = () => {
   // TODO: fetch DATA
   const mockOptions: OptionType[] = [
     {
-      value: '1PCM',
-      label: '1PCM',
-    },
-    {
-      value: '2PCM',
-      label: '2PCM',
-    },
-    {
       value: '1CAL',
       label: '1CAL',
     },
@@ -36,11 +28,6 @@ const FilterContainer = () => {
       value: '2CAL',
       label: '2CAL',
     },
-    {
-      value: '1EGL',
-      label: '1EGL',
-    },
-    // Add more options...
   ];
   return (
     <div className={styles.filterContainer}>

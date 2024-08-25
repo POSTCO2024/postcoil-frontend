@@ -1,10 +1,10 @@
-import { Table as AntTable } from 'antd';
-import { TableProps } from 'antd/es/table'; // Table
+import { Table as AntTable } from '@postcoil/ui';
+import { DataType } from '@postcoil/ui/config/TableConfig';
+import { ColumnDataType } from '@postcoil/ui/config/TableConfig';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import styles from './Table.module.scss';
-import { createColumns } from './TableUtils';
 
 // info
 // API 결과를 columns, data에 저장하여 사용
@@ -13,57 +13,47 @@ import { createColumns } from './TableUtils';
 // ex) <Table useCheckBox={true} columns={columnsData} data={tableData} />
 
 // Dataset Type
-interface DataType {
+interface SchDataType extends DataType {
   key: string;
-  no: string;
-  [key: string]: unknown;
+  no: string | number;
   scheduleId: string;
   createdDate: string;
   rollID: string;
   facility: string;
   startTime: string;
   endTime: string;
+  rejectCount: number;
 }
 
 interface TableComponentProps {
-  useCheckBox: boolean;
   // Config
-  columns: Partial<DataType>[];
-  data: DataType[];
+  columns: ColumnDataType<SchDataType>[];
+  data: SchDataType[];
 }
 
 // Column Event
-const onTableChange: TableProps<DataType>['onChange'] = (
-  pagination,
-  filters,
-  sorter,
-  extra,
-) => {
-  console.log('params', pagination, filters, sorter, extra);
-};
+// const onTableChange: TableProps<SchDataType>['onChange'] = (
+//   pagination,
+//   filters,
+//   sorter,
+//   extra,
+// ) => {
+//   console.log('params', pagination, filters, sorter, extra);
+// };
 
-export const Table: React.FC<TableComponentProps> = ({
-  useCheckBox,
-  columns,
-  data,
-}) => {
-  const processedColumns = createColumns(useCheckBox, columns);
+export const Table = ({ columns, data }: TableComponentProps) => {
   const navigate = useNavigate();
+  const handleRowClick = (record: { scheduleId: string }) => {
+    console.log(record);
+    navigate(`/roll/${record.scheduleId}`);
+  };
   return (
     <div className={styles.tableContainer}>
       <AntTable
-        className={styles.antTable}
-        columns={processedColumns}
-        dataSource={data}
-        onChange={onTableChange}
-        onRow={(record) => {
-          return {
-            onClick: () => {
-              console.log(record);
-              navigate(`/roll/${record.scheduleId}`);
-            },
-          };
-        }}
+        data={data}
+        columns={columns}
+        // onChange={onTableChange}
+        handleRowClick={handleRowClick}
       />
     </div>
   );

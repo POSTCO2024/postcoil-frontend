@@ -8,7 +8,7 @@ export const mockcolumns: ColumnDataType<MaterialDataType>[] = [
     title: '재료번호',
     dataIndex: 'materialNumber',
     key: 'materialNumber',
-    fixed: true,
+    // fixed: true,
   },
   // { title: '재료진행상태', dataIndex: 'materialStatus', key: 'materialStatus' },
   // { title: '조업코드', dataIndex: 'operationCode', key: 'operationCode' },
