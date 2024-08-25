@@ -5,7 +5,6 @@ import { useState } from 'react';
 import SchListModal from './pending/SchListModal';
 import styles from './SchPePage.module.scss';
 
-import RollSuccessModal from '@/components/common/RollSuccessModal';
 import ContentContainer from '@/pages/fs002/pending/ContentContainer';
 import DraggableChart from '@/pages/fs002/pending/DraggableChart';
 import FilterContainer from '@/pages/fs002/pending/FilterContainer';

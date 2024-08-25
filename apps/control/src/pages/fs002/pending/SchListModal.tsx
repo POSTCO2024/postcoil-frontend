@@ -1,5 +1,4 @@
-import { Table } from '@postcoil/ui';
-import { Checkbox, Form, Input } from 'antd';
+import { Checkbox, Form } from 'antd';
 import { useState } from 'react';
 
 import CommonModal from '@/components/common/CommonModal';
