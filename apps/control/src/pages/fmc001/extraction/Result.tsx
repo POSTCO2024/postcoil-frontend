@@ -1,5 +1,5 @@
-import { DataType } from '@postcoil/ui/config/TableConfig';
-import { Button, Table, Input, Form } from 'antd';
+import { Button } from '@postcoil/ui';
+import { Input, Form } from 'antd';
 import { useState } from 'react';
 
 import styles from './Result.module.scss';
@@ -7,7 +7,7 @@ import styles from './Result.module.scss';
 import CommonModal from '@/components/common/CommonModal';
 interface PropsType {
   title: string;
-  data: DataType;
+  data: any;
 }
 
 const Result = ({ title, data }: PropsType) => {
@@ -15,12 +15,10 @@ const Result = ({ title, data }: PropsType) => {
   const [modalTitle, setModalTitle] = useState('');
   // const [isEditing, setIsEditing] = useState(false); // FIXME: check Remove this
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const showModalEditing = () => {
     setModalTitle(title + ' 수정하기');
     // setIsEditing(true);
     setIsModalOpen(true);
-    form.setFieldsValue(data); // 폼에 초기값 설정
   };
 
   const handleCancel = () => {
@@ -35,77 +33,49 @@ const Result = ({ title, data }: PropsType) => {
   };
 
   // TODO: 조회 common 컴포넌트꺼 사용! - 롤편성조회 화면 지우기
-  // fetch data 후 values 수정
-  const onFinish = (values: string[] | null) => {
+
+  const onFinish = (values: any) => {
     console.log('Success:', values);
     setIsModalOpen(false);
   };
 
-  // For Table
-  // columns 설정
-  const columns = [
-    {
-      title: 'Key',
-      dataIndex: 'key',
-    },
-    {
-      title: 'Value',
-      dataIndex: 'value',
-    },
-  ];
-
-  // dataSource로 변환
-  const dataSource = Object.keys(data).map((key) => ({
-    key: key,
-    value: title == '에러기준' ? data[key] + '%' : data[key],
-  }));
-
   return (
-    <div className={styles.result}>
-      <p>{title}</p>
-      <Table
-        style={{ borderRadius: '5px' }}
-        pagination={false}
-        columns={columns}
-        dataSource={dataSource}
-      />
-      <div className={styles.resultBtns}>
-        <Button onClick={showModalEditing}>수정</Button>
-        <CommonModal
-          title={modalTitle}
-          isModalOpen={isModalOpen}
-          onCancel={handleCancel}
-          onApply={handleApply}>
-          <Form
-            form={form}
-            name={modalTitle}
-            labelCol={{
-              span: 6,
-            }}
-            wrapperCol={{
-              span: 8,
-            }}
-            style={{
-              maxWidth: 300,
-            }}
-            onFinish={onFinish}
-            autoComplete="off">
-            {Object.keys(data).map((key) => {
-              return (
-                <div key={key}>
-                  <p style={{ fontWeight: 'bold' }}>{key}</p>
-                  <Form.Item name={key.trim()}>
-                    <Input
-                      type="text"
-                      addonAfter={title == '에러기준' ? '%' : ''}
-                    />
-                  </Form.Item>
-                </div>
-              );
-            })}
-          </Form>
-        </CommonModal>
-      </div>
+    <div className={styles.resultBtns}>
+      <Button text={'수정'} onClick={showModalEditing} />
+      <CommonModal
+        title={modalTitle}
+        isModalOpen={isModalOpen}
+        onCancel={handleCancel}
+        onApply={handleApply}>
+        <Form
+          form={form}
+          name={modalTitle}
+          labelCol={{
+            span: 6,
+          }}
+          wrapperCol={{
+            span: 8,
+          }}
+          style={{
+            maxWidth: 300,
+          }}
+          onFinish={onFinish}
+          autoComplete="off">
+          {data.map((item: any) => {
+            return (
+              <div key={item.key}>
+                <p style={{ fontWeight: 'bold' }}>{item.columnName}</p>
+                <Form.Item name={item.columnName}>
+                  <Input
+                    type="text"
+                    addonAfter={item.columnName == '소둔온도' ? '°C' : ''}
+                  />
+                </Form.Item>
+              </div>
+            );
+          })}
+        </Form>
+      </CommonModal>
     </div>
   );
 };
