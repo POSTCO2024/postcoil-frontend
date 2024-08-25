@@ -93,6 +93,7 @@ const FilterContainer = () => {
     },
     // Add more options...
   ];
+  
   return (
     <div className={styles.filterContainer}>
       <div className={styles.dropdown}>

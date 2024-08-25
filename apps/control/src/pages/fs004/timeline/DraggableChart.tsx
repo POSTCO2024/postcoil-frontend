@@ -61,7 +61,7 @@ const DraggableChart: React.FC = ({ filteredData }: PropsType) => {
   // TODO: utils 로 옮기기
   const data = (filteredData ? filteredData : initialData).map((point) => ({
     ...point,
-    color: point.changed ? '#ff5f4c' : undefined, // changed: true인 항목에만 색상 적용
+    color: point.changed ? '#ff9382' : 'lightgray', // changed: true인 항목에만 색상 적용
   }));
 
   useEffect(() => {
@@ -80,7 +80,7 @@ const DraggableChart: React.FC = ({ filteredData }: PropsType) => {
       xAxis: {
         type: 'category',
         labels: {
-          enabled: true, // X축 라벨 숨기기
+          enabled: false, // X축 라벨 숨기기
         },
       },
       yAxis: {

@@ -1,6 +1,7 @@
 import { Table } from '@postcoil/ui';
 
 import styles from './ExtMPage.module.scss';
+import Result from './extraction/Result';
 
 import {
   columnData,
@@ -45,7 +46,9 @@ const ExtMPage = () => {
             useCheckBox={false}
             columns={columnsData}
             data={standardData}
+            tableLayout="fixed"
           />
+          <Result title="추출기준 관리" data={standardData} />
         </div>
       </div>
     </div>

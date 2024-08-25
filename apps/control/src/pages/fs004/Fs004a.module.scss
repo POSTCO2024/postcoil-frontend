@@ -23,6 +23,48 @@
     display: flex;
     flex-direction: column;
     width: 90%;
-    height: calc(100% - 2.2rem - 170px);
+    height: calc(50% - 1.1rem - 150px);
+    overflow: scroll;
+  }
+
+  .tab {
+    width: 90%;
+    margin: 10px auto;
+    height: 60px;
+  }
+
+  .result {
+    margin: 20px auto 10px;
+    font-size: 1.6rem;
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    height: calc(50% - 1.1rem - 150px);
+    position: relative;
+
+    .charts {
+      display: flex;
+      justify-content: space-around;
+      flex-direction: column;
+      height: 100%;
+
+      &:nth-child(1) {
+        // highchart.com 가리기용
+        &::after {
+          content: '';
+          display: block;
+          height: 10px;
+          width: 100%;
+          background-color: white;
+          position: relative;
+          top: -30px;
+          right: 0px;
+        }
+      }
+    }
+
+    p {
+      padding: 0 20px;
+    }
   }
 }
