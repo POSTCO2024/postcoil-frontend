@@ -1,10 +1,10 @@
 .contentContainer {
-  margin: 20px auto 10px;
+  margin: 0 auto;
   font-size: 1.6rem;
   display: flex;
   flex-direction: column;
-  width: 95%;
-  height: 100%;
+  width: 100%;
+  height: 95%;
 
   .tableWrapper {
     overflow-x: scroll;
@@ -12,7 +12,7 @@
     height: 100%;
 
     .table {
-      width: max-content;
+      width: 100%;
     }
   }
 }
