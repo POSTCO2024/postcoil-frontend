@@ -30,7 +30,7 @@ const tabData = [
 export const DashBoard: React.FC = () => {
   return (
     <div className={styles.dashboardContainer}>
-      <h3>공정별 수급량 분석</h3>
+      <h3>작업 현황 모니터링</h3>
       <div className={styles.boardContainer}>
         <Board tabData={tabData} />
         <Board tabData={tabData} />
