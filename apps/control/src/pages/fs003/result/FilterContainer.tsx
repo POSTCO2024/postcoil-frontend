@@ -10,6 +10,7 @@ import styles from './FilterContainer.module.scss';
 
 interface dropDownOptionType {
   value: string;
+  // label을 ReactNode로 지정하여 jsx형식 return이 가능케함
   label: React.ReactNode;
   icon?: React.ReactNode;
 }
@@ -43,6 +44,7 @@ const FilterContainer = () => {
       value: '1P1_A0001',
       label: (
         <div>
+          {/* 아이콘추가 부분 */}
           <CheckCircleFilled style={{ color: 'green' }} />
           <span style={{ marginLeft: 10 }}>{'1P1_A0001'}</span>
         </div>
