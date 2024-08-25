@@ -37,11 +37,11 @@ export const DatePicker: React.FC<{
         disabledDate={disabledDate}
         onChange={(dates) => handleRangeChange(dates as [Dayjs, Dayjs])}
         className={styles.datepicker}
-      // TODO: width !!!
-      // style={{
-      //   width: '100%',
-      //   maxWidth: 200,
-      // }}
+        // TODO: width !!!
+        // style={{
+        //   width: '100%',
+        //   maxWidth: 200,
+        // }}
       />
       <span className={styles.spacer}></span>
     </div>
