@@ -1,10 +1,18 @@
-import { CheckCircleFilled, SyncOutlined } from '@ant-design/icons';
+import {
+  CheckCircleFilled,
+  SyncOutlined,
+  FormOutlined,
+} from '@ant-design/icons';
 import { Dropdown } from '@postcoil/ui';
 // import { Button } from 'antd';
-import { DropdownColor } from '@postcoil/ui';
-import { ReactNode } from 'react';
 
 import styles from './FilterContainer.module.scss';
+
+interface dropDownOptionType {
+  value: string;
+  label: React.ReactNode;
+  icon?: React.ReactNode;
+}
 
 interface OptionType {
   value: string;
@@ -30,12 +38,57 @@ const FilterContainer = () => {
     // Add more options...
   ];
 
-  const mockRollUnitName: OptionType[] = [
-    { value: '1P1_A0001', label: '1P1_A0001', icon: <CheckCircleFilled /> },
-    { value: '1P1_A0002', label: '1P1_A0002', icon: <CheckCircleFilled /> },
-    { value: '1P1_B0344', label: '1P1_B0344', icon: <CheckCircleFilled /> },
-    { value: '1P1_C0015', label: '1P1_C0015', icon: <SyncOutlined spin /> },
-    { value: '1P1_D0002', label: '1P1_D0002', icon: <SyncOutlined spin /> },
+  const mockRollUnitName: dropDownOptionType[] = [
+    {
+      value: '1P1_A0001',
+      label: (
+        <div>
+          <CheckCircleFilled style={{ color: 'green' }} />
+          <span style={{ marginLeft: 10 }}>{'1P1_A0001'}</span>
+        </div>
+      ),
+      icon: <CheckCircleFilled />,
+    },
+    {
+      value: '1P1_A0002',
+      label: (
+        <div>
+          <CheckCircleFilled style={{ color: 'green' }} />
+          <span style={{ marginLeft: 10 }}>{'1P1_A0002'}</span>
+        </div>
+      ),
+      icon: <CheckCircleFilled />,
+    },
+    {
+      value: '1P1_B0344',
+      label: (
+        <div>
+          <CheckCircleFilled style={{ color: 'green' }} />
+          <span style={{ marginLeft: 10 }}>{'1P1_B0344'}</span>
+        </div>
+      ),
+      icon: <CheckCircleFilled />,
+    },
+    {
+      value: '1P1_C0015',
+      label: (
+        <div>
+          <FormOutlined style={{ color: '#1677ff' }} />
+          <span style={{ marginLeft: 10 }}>{'1P1_B0001'}</span>
+        </div>
+      ),
+      icon: <SyncOutlined spin />,
+    },
+    {
+      value: '1P1_D0002',
+      label: (
+        <div>
+          <SyncOutlined spin style={{ color: '#1677ff' }} />
+          <span style={{ marginLeft: 10 }}>{'1P1_D0002'}</span>
+        </div>
+      ),
+      icon: <SyncOutlined spin />,
+    },
     // Add more options...
   ];
   return (
@@ -45,7 +98,6 @@ const FilterContainer = () => {
         {/* TODO: Dropdown 데이터 변경, 함수 받게 */}
       </div>
       <Dropdown title="롤단위명" options={mockRollUnitName} />
-      <DropdownColor title="야호" options={mockRollUnitName} />
       {/* <Button type="primary" onClick={handleSearch}>
         조회
       </Button> */}

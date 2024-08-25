@@ -17,7 +17,7 @@ interface DropdownProps {
 
 interface OptionType {
   value: string;
-  label: string;
+  label: string | React.ReactNode;
 }
 
 // // Cascader value

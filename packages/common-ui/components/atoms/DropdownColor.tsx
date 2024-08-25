@@ -1,10 +1,7 @@
-import { CheckCircleFilled, SyncOutlined } from '@ant-design/icons';
 import { Cascader } from 'antd';
-import type { CascaderProps, GetProp } from 'antd';
 import React from 'react';
 
 import styles from './DropdownColor.module.scss';
-type DefaultOptionType = GetProp<CascaderProps, 'options'>[number];
 
 // info
 // dropdown 안에 들어갈 내용은 optionsDropdown에 구성하여 사용
@@ -20,7 +17,7 @@ interface DropdownProps {
 
 interface OptionType {
   value: string;
-  label: string;
+  label: React.ReactNode;
   icon?: React.ReactNode;
 }
 
@@ -57,36 +54,39 @@ export const DropdownColor: React.FC<DropdownProps> = ({
   //   e.stopPropagation();
   //   console.log('clicked', label, option);
   // };
-  const displayRender: CascaderProps<OptionType>['displayRender'] = (
-    labels,
-    selectedOptions = [],
-  ) =>
-    labels.map((label, i) => {
-      console.log(labels);
-      const option = selectedOptions[i];
-      console.log(option);
-      if (i === labels.length - 1) {
-        return (
-          <span key={option.value}>
-            {option.icon}
-            {label}
-            {/* (
-            <a onClick={(e) => handleAreaClick(e, label, option)}>
-              {option.label}
-            </a>
-            ) */}
-          </span>
-        );
-      }
-      return <span key={option.value}>{label} / </span>;
-    });
+
+  // 각 dropdown을 클릭시 보여줄 내용
+  // const displayRender: CascaderProps<OptionType>['displayRender'] = (
+  //   labels,
+  //   selectedOptions = [],
+  // ) =>
+  //   labels.map((label, i) => {
+  //     // label 은 이름
+  //     const option = selectedOptions[i];
+  //     //option 은 각 배열요소의 모든 값들
+  //     // console.dir(option);
+  //     if (i === labels.length - 1) {
+  //       return (
+  //         <span key={option.value}>
+  //           {option.icon}
+  //           {label}
+  //           {/* (
+  //           <a onClick={(e) => handleAreaClick(e, label, option)}>
+  //             {option.label}
+  //           </a>
+  //           ) */}
+  //         </span>
+  //       );
+  //     }
+  //     return <span key={option.value}>{label} / </span>;
+  //   });
   return (
     <div className={styles.dropdownContainer}>
       <span> {title} </span>
       <span className={styles.spacer}></span>
       <Cascader
         options={options}
-        displayRender={displayRender}
+        // displayRender={displayRender}
         onChange={
           onChange
             ? onChange
