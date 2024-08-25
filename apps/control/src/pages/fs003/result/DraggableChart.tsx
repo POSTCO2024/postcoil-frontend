@@ -80,7 +80,7 @@ const DraggableChart: React.FC = ({ filteredData }: PropsType) => {
       xAxis: {
         type: 'category',
         labels: {
-          enabled: false, // X축 라벨 숨기기
+          enabled: true, // X축 라벨 숨기기
         },
       },
       yAxis: {
