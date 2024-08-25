@@ -27,11 +27,8 @@ const FilterContainer = () => {
   ];
 
   const mockRollUnitName: OptionType[] = [
-    { value: '1P1_A0001', label: '1P1_A0001' },
-    { value: '1P1_A0002', label: '1P1_A0002' },
-    { value: '1P1_B0344', label: '1P1_B0344' },
-    { value: '1P1_C0015', label: '1P1_C0015' },
-    { value: '1P1_D0002', label: '1P1_D0002' },
+    { value: '1CAL001A', label: '1CAL001A' },
+    { value: '1CAL001B', label: '1CAL001B' },
     // Add more options...
   ];
   return (
