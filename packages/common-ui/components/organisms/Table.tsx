@@ -1,9 +1,4 @@
-import {
-  Table as AntTable,
-  // Checkbox,
-  ConfigProvider,
-  TablePaginationConfig,
-} from 'antd';
+import { Table as AntTable, ConfigProvider, TablePaginationConfig } from 'antd';
 import React, { useState } from 'react';
 
 import styles from './Table.module.scss';
@@ -12,7 +7,6 @@ import { createColumns } from '../../utils/TableUtils';
 
 // ** INFO **
 // Data 예시
-//
 // const data: DataType[] = [
 //   {
 //     key: '1',
@@ -20,38 +14,10 @@ import { createColumns } from '../../utils/TableUtils';
 //     id: 'A001',
 //     length: 60,
 //     width: 70,
-//   },
-//   {
-//     key: '2',
-//     no: '2',
-//     id: 'A002',
-//     length: 66,
-//     width: 89,
-//   },
-//   {
-//     key: '3',
-//     no: '3',
-//     id: 'A003',
-//     length: 90,
-//     width: 70,
-//   },
-//   {
-//     key: '4',
-//     no: '4',
-//     id: 'A004',
-//     length: 99,
-//     width: 89,
-//   },
-// ];
+//   },..]
 
 // ColumnData 예시
 // const column : ColumnDataType<DataType>[] = [
-//   {
-//     title: '코일 ID',
-//     dataIndex: 'id',
-//     sortable: false,
-//     fix: true,              // 왼쪽에 고정, 오른쪽 고정이고 싶으면 'right'로 넣기
-//   },
 //   {
 //     title: '두께',
 //     dataIndex: 'length',
@@ -63,10 +29,8 @@ import { createColumns } from '../../utils/TableUtils';
 //   {
 //     title: '폭',
 //     dataIndex: 'width',
-//     sortable: {
-//       compare: (a, b) => a.width - b.width,
-//       multiple: 1,
-//     },
+//     sortable: false,
+//     fix: true,              // 왼쪽에 고정, 오른쪽 고정이고 싶으면 'right'로 넣기
 //   },
 // ];
 
@@ -75,11 +39,13 @@ interface TableComponentProps<T extends DataType> {
   useCheckBox?: boolean;
   columns: ColumnDataType<T>[];
   data: T[];
-  handleRowClick?: (record?: T, rowIndex?: number) => void; // Row click event handler
+  handleRowClick?: (record?: any, rowIndex?: number) => void; // Row click event handler
   handleRowsClick?: (selectedRows: T[]) => void; // useCheckBox event handler, 데이터를 가지고 다룰 정보 처리 함수
   scroll?: { x?: number | string; y?: number | string }; // 스크롤 설정
   size?: string;
   tableLayout?: string | undefined;
+  className?: string;
+  rowClassName?: (record: any) => string;
 }
 
 export const Table = <T extends DataType>({
@@ -92,43 +58,10 @@ export const Table = <T extends DataType>({
   scroll,
   size,
   tableLayout,
+  className,
+  rowClassName,
 }: TableComponentProps<T>) => {
-  const processedColumns = [
-    // ...(useCheckBox
-    //   ? [
-    //       {
-    //         title: <Checkbox />,
-    //         dataIndex: 'selection',
-    //         key: 'selection',
-    //         fixed: 'left', // Fixed to the left
-    //         width: 60,
-    //         render: (_: any, record: any) => (
-    //           <Checkbox
-    //             checked={selectedRowKeys.includes(record.key)}
-    //             onChange={() => {
-    //               const newSelectedRowKeys = selectedRowKeys.includes(
-    //                 record.key,
-    //               )
-    //                 ? selectedRowKeys.filter((key) => key !== record.key)
-    //                 : [...selectedRowKeys, record.key];
-    //               setSelectedRowKeys(newSelectedRowKeys);
-    //               const selectedRows = data.filter((item) =>
-    //                 newSelectedRowKeys.includes(item.key),
-    //               );
-
-    //               console.log(selectedRows);
-    //               console.log(selectedRows.length);
-    //               if (handleRowsClick) {
-    //                 handleRowsClick(selectedRows);
-    //               }
-    //             }}
-    //           />
-    //         ),
-    //       },
-    //     ]
-    //   : []),
-    ...createColumns(columns),
-  ];
+  const processedColumns = [...createColumns(columns)];
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   const rowSelection = {
@@ -155,7 +88,7 @@ export const Table = <T extends DataType>({
         <AntTable
           pagination={pagination || false}
           rowSelection={useCheckBox ? rowSelection : undefined}
-          className={styles.antTable}
+          className={`${styles.antTable} ${className}`}
           columns={processedColumns}
           dataSource={data}
           onRow={
@@ -168,6 +101,7 @@ export const Table = <T extends DataType>({
           scroll={scroll ? scroll : undefined}
           size={size ? 'small' : 'large'}
           tableLayout={tableLayout ? 'fixed' : undefined}
+          rowClassName={rowClassName}
         />
       </ConfigProvider>
     </div>
