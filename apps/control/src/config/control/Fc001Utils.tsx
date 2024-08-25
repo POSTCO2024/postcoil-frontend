@@ -111,7 +111,7 @@ export const columnsList = [
     key: 'order_no',
   },
   {
-    title: '고객명',
+    title: '고객사',
     dataIndex: 'customer_name',
     key: 'customer_name',
   },
