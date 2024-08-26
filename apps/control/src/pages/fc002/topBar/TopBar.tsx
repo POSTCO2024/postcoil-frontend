@@ -17,6 +17,18 @@ const optionsDropdown1 = [
     value: '1CAL',
     label: '1CAL',
   },
+  {
+    value: '2CAL',
+    label: '2CAL',
+  },
+  {
+    value: 'EGL',
+    label: 'EGL',
+  },
+  {
+    value: 'CGL',
+    label: 'CGL',
+  },
 ];
 
 // for Searchbar

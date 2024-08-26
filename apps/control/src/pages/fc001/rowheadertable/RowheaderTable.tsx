@@ -1,21 +1,20 @@
 import React from 'react';
-import type { TableColumnsType } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
 import { Table } from 'antd';
 
 interface DataType {
   key: string;
-  final: number;
-  cal1: number;
-  cal2: number;
-  egl1: number;
-  egl2: number;
+  total: number;
+  packing: number;
+  unpacking: number;
   cgl1: number;
   cgl2: number;
-  packing: number;
+  egl1: number;
+  egl2: number;
 }
 
 interface RowheaderTableProps {
-  columns: TableColumnsType<DataType>;
+  columns: ColumnsType<DataType>;
   data: DataType[];
 }
 
