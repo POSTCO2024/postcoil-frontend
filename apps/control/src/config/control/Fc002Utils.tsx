@@ -4,21 +4,25 @@ export const columnsData = [
     title: '번호',
     dataIndex: 'id',
     key: 'id',
+    fixed: true,
   },
   {
     title: '코일 번호',
     dataIndex: 'no',
     key: 'no',
+    fixed: true,
   },
   {
     title: '에러 코드',
     dataIndex: 'error_code',
     key: 'error_code',
+    fixed: true,
   },
   {
     title: '에러 이유',
     dataIndex: 'error_reason',
     key: 'error_reason',
+    fixed: true,
   },
   {
     title: '공장 코드',

@@ -4,11 +4,13 @@ export const columnsList = [
     title: '번호',
     dataIndex: 'id',
     key: 'id',
+    fixed: true,
   },
   {
     title: '코일 번호',
     dataIndex: 'no',
     key: 'no',
+    fixed: true,
   },
   {
     title: '공장 코드',
