@@ -1,10 +1,5 @@
-import {
-  RedoOutlined,
-  SyncOutlined,
-  ClockCircleOutlined,
-} from '@ant-design/icons';
+import { RedoOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { Dropdown } from '@postcoil/ui';
-// import { Button } from 'antd';
 
 import styles from './FilterContainer.module.scss';
 
