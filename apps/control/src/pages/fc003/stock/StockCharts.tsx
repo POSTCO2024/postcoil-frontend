@@ -39,7 +39,7 @@ const StockCharts: React.FC = () => {
   return (
     <div className={styles.chartContainer}>
       <h1 style={{ textAlign: 'center', fontSize: '1.2em', paddingTop: 20 }}>
-        공장별 현공정 모니터링
+        공장별 현공정 수급량 모니터링
       </h1>
       <div ref={chartRef} className={styles.chart} />
       <Button onClick={toggleChart} text="그래프 변환" />
