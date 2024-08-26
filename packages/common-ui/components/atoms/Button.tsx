@@ -27,7 +27,11 @@ export const Button: React.FC<ButtonProps> = ({ text, onClick, style }) => {
                 console.log(text + ' Click');
               }
         }
+<<<<<<< HEAD
         style={style ? { width: 90 } : undefined}>
+=======
+        style={style ? { width: '70%' } : undefined}>
+>>>>>>> 7ceac47 (Feat: 조업 작업지시 화면 생성)
         {text}
       </AntButton>
     </div>
