@@ -1,7 +1,7 @@
 import {
-  CheckCircleFilled,
+  RedoOutlined,
   SyncOutlined,
-  FormOutlined,
+  ClockCircleOutlined,
 } from '@ant-design/icons';
 import { Dropdown } from '@postcoil/ui';
 // import { Button } from 'antd';
@@ -41,59 +41,59 @@ const FilterContainer = () => {
 
   const mockRollUnitName: dropDownOptionType[] = [
     {
-      value: '1P1_A0001',
+      value: '1CAL001A',
       label: (
         <div>
           {/* 아이콘추가 부분 */}
-          <CheckCircleFilled style={{ color: 'green' }} />
-          <span style={{ marginLeft: 10 }}>{'1P1_A0001'}</span>
+          <RedoOutlined spin style={{ color: '#1677ff' }} />
+          <span style={{ marginLeft: 10 }}>{'1CAL001A'}</span>
         </div>
       ),
-      icon: <CheckCircleFilled />,
+      icon: <RedoOutlined />,
     },
     {
-      value: '1P1_A0002',
+      value: '1CAL001B',
       label: (
         <div>
-          <CheckCircleFilled style={{ color: 'green' }} />
-          <span style={{ marginLeft: 10 }}>{'1P1_A0002'}</span>
+          <ClockCircleOutlined style={{ color: '#1677ff' }} />
+          <span style={{ marginLeft: 10 }}>{'1CAL001B'}</span>
         </div>
       ),
-      icon: <CheckCircleFilled />,
+      icon: <ClockCircleOutlined />,
     },
     {
-      value: '1P1_B0344',
+      value: '1CAL002A',
       label: (
         <div>
-          <CheckCircleFilled style={{ color: 'green' }} />
-          <span style={{ marginLeft: 10 }}>{'1P1_B0344'}</span>
+          <ClockCircleOutlined style={{ color: '#1677ff' }} />
+          <span style={{ marginLeft: 10 }}>{'1CAL002A'}</span>
         </div>
       ),
-      icon: <CheckCircleFilled />,
+      icon: <ClockCircleOutlined />,
     },
     {
-      value: '1P1_C0015',
+      value: '1CAL002B',
       label: (
         <div>
-          <FormOutlined style={{ color: '#1677ff' }} />
-          <span style={{ marginLeft: 10 }}>{'1P1_B0001'}</span>
+          <ClockCircleOutlined style={{ color: '#1677ff' }} />
+          <span style={{ marginLeft: 10 }}>{'1CAL002B'}</span>
         </div>
       ),
-      icon: <SyncOutlined spin />,
+      icon: <ClockCircleOutlined />,
     },
     {
-      value: '1P1_D0002',
+      value: '1CAL003B',
       label: (
         <div>
-          <SyncOutlined spin style={{ color: '#1677ff' }} />
-          <span style={{ marginLeft: 10 }}>{'1P1_D0002'}</span>
+          <ClockCircleOutlined style={{ color: '#1677ff' }} />
+          <span style={{ marginLeft: 10 }}>{'1CAL003B'}</span>
         </div>
       ),
-      icon: <SyncOutlined spin />,
+      icon: <ClockCircleOutlined />,
     },
     // Add more options...
   ];
-  
+
   return (
     <div className={styles.filterContainer}>
       <div className={styles.dropdown}>
