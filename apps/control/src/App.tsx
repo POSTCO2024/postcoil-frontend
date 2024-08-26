@@ -38,7 +38,7 @@ function App() {
           <Route path="/control1" element={<ContentBoard Board={Fc001} />} />
           <Route path="/control2" element={<ContentBoard Board={Fc002} />} />
           <Route path="/control3" element={<ContentBoard Board={Fc003} />} />
-          <Route path="/control4" element={<ContentBoard Board={Fc004} />} />
+          <Route path="/control4/*" element={<ContentBoard Board={Fc004} />} />
           <Route
             path="/schedule1"
             element={<ContentBoard Board={SchPPage} />}
