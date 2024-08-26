@@ -77,9 +77,6 @@ importers:
       sass:
         specifier: 1.77.8
         version: 1.77.8
-      zustand:
-        specifier: 4.5.4
-        version: 4.5.4(@types/react@18.3.3)(react@18.3.1)
     devDependencies:
       '@postcoil/eslint-config':
         specifier: workspace:*
@@ -208,9 +205,6 @@ importers:
       sass:
         specifier: 1.77.8
         version: 1.77.8
-      zustand:
-        specifier: 4.5.4
-        version: 4.5.4(@types/react@18.3.3)(react@18.3.1)
     devDependencies:
       '@postcoil/eslint-config':
         specifier: workspace:*
@@ -3754,20 +3748,6 @@ packages:
   zrender@5.6.0:
     resolution: {integrity: sha512-uzgraf4njmmHAbEUxMJ8Oxg+P3fT04O+9p7gY+wJRVxo8Ge+KmYv0WJev945EH4wFuc4OY2NLXz46FZrWS9xJg==}
 
-  zustand@4.5.4:
-    resolution: {integrity: sha512-/BPMyLKJPtFEvVL0E9E9BTUM63MNyhPGlvxk1XjrfWTUlV+BR8jufjsovHzrtR6YNcBEcL7cMHovL1n9xHawEg==}
-    engines: {node: '>=12.7.0'}
-    peerDependencies:
-      '@types/react': '>=16.8'
-      immer: '>=9.0.6'
-      react: '>=16.8'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      immer:
-        optional: true
-      react:
-        optional: true
 
 snapshots:
 
@@ -7541,9 +7521,3 @@ snapshots:
     dependencies:
       tslib: 2.3.0
 
-  zustand@4.5.4(@types/react@18.3.3)(react@18.3.1):
-    dependencies:
-      use-sync-external-store: 1.2.0(react@18.3.1)
-    optionalDependencies:
-      '@types/react': 18.3.3
-      react: 18.3.1

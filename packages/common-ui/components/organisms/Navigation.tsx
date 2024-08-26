@@ -1,6 +1,7 @@
 import type { MenuProps } from 'antd';
 import { Menu, ConfigProvider } from 'antd';
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import styles from './Navigation.module.scss';
 import {
@@ -15,8 +16,10 @@ export const Navigation: React.FC<NavigationProps> = ({
   menuItems,
   mappingKeys,
 }) => {
+  const location = useLocation();
   const levelKeys = getLevelKeys(menuItems as LevelKeysProps[]);
-  const [stateOpenKeys, setStateOpenKeys] = useState(['1', '11']);
+
+  const [stateOpenKeys, setStateOpenKeys] = useState(['11']);
   const menuTheme = {
     components: {
       Menu: {
@@ -30,6 +33,12 @@ export const Navigation: React.FC<NavigationProps> = ({
       },
     },
   };
+
+  function getKeyByPath(): string {
+    const pathname = location.pathname;
+    const mapping = mappingKeys!.find((item) => item!.path === pathname);
+    return mapping!.key;
+  }
 
   const onOpenChange: MenuProps['onOpenChange'] = (openKeys) => {
     console.log(openKeys);
@@ -55,13 +64,6 @@ export const Navigation: React.FC<NavigationProps> = ({
     }
   };
 
-  function getKeyByPath(): string {
-    const pathname = location.pathname;
-    console.log(pathname);
-    const mapping = mappingKeys!.find((item) => item!.path === pathname);
-    return mapping!.key;
-  }
-
   return (
     <div className={styles.navigation_style}>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -71,6 +73,7 @@ export const Navigation: React.FC<NavigationProps> = ({
         <Menu
           mode="inline"
           defaultSelectedKeys={[getKeyByPath()]}
+          selectedKeys={[getKeyByPath()]}
           openKeys={stateOpenKeys}
           onOpenChange={onOpenChange}
           style={{ width: '90%', margin: '20px auto auto', border: 0 }}
