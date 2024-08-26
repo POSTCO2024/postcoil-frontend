@@ -64,13 +64,6 @@ export const Navigation: React.FC<NavigationProps> = ({
     }
   };
 
-
-  function getKeyByPath(): string {
-    const pathname = location.pathname;
-    console.log(pathname);
-    const mapping = mappingKeys!.find((item) => item!.path === pathname);
-    return mapping!.key;
-  }
   return (
     <div className={styles.navigation_style}>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
