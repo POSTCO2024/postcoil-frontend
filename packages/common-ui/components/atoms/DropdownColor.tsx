@@ -1,7 +1,7 @@
 import { Cascader } from 'antd';
 import React from 'react';
 
-import styles from './Dropdown.module.scss';
+import styles from './DropdownColor.module.scss';
 
 // info
 // dropdown 안에 들어갈 내용은 optionsDropdown에 구성하여 사용
@@ -17,7 +17,8 @@ interface DropdownProps {
 
 interface OptionType {
   value: string;
-  label: string | React.ReactNode;
+  label: React.ReactNode;
+  icon?: React.ReactNode;
 }
 
 // // Cascader value
@@ -40,22 +41,55 @@ interface OptionType {
 //   console.log(value);
 // };
 
-export const Dropdown: React.FC<DropdownProps> = ({
+export const DropdownColor: React.FC<DropdownProps> = ({
   title,
   options,
   onChange,
 }) => {
+  // const handleAreaClick = (
+  //   e: React.MouseEvent<HTMLAnchorElement>,
+  //   label: string,
+  //   option: DefaultOptionType,
+  // ) => {
+  //   e.stopPropagation();
+  //   console.log('clicked', label, option);
+  // };
+
+  // 각 dropdown을 클릭시 보여줄 내용
+  // const displayRender: CascaderProps<OptionType>['displayRender'] = (
+  //   labels,
+  //   selectedOptions = [],
+  // ) =>
+  //   labels.map((label, i) => {
+  //     // label 은 이름
+  //     const option = selectedOptions[i];
+  //     //option 은 각 배열요소의 모든 값들
+  //     // console.dir(option);
+  //     if (i === labels.length - 1) {
+  //       return (
+  //         <span key={option.value}>
+  //           {option.icon}
+  //           {label}
+  //           {/* (
+  //           <a onClick={(e) => handleAreaClick(e, label, option)}>
+  //             {option.label}
+  //           </a>
+  //           ) */}
+  //         </span>
+  //       );
+  //     }
+  //     return <span key={option.value}>{label} / </span>;
+  //   });
   return (
     <div className={styles.dropdownContainer}>
       <span> {title} </span>
       <span className={styles.spacer}></span>
       <Cascader
         options={options}
+        // displayRender={displayRender}
         onChange={
           onChange
-            ? (value) => {
-                onChange(value); // `undefined`를 허용
-              }
+            ? onChange
             : () => {
                 console.log('Dropdown Click');
               }
@@ -67,4 +101,4 @@ export const Dropdown: React.FC<DropdownProps> = ({
   );
 };
 
-export default Dropdown;
+export default DropdownColor;
