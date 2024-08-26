@@ -17,6 +17,12 @@
     height: 2.2rem;
   }
 
+  .tab {
+    width: 90%;
+    margin: 10px auto;
+    height: 60px;
+  }
+
   .table {
     margin: 20px auto 10px;
     font-size: 1.6rem;
@@ -26,9 +32,4 @@
     height: calc(100% - 2.2rem - 170px);
   }
 
-  .tab {
-    width: 90%;
-    margin: 10px auto;
-    height: 60px;
-  }
 }
