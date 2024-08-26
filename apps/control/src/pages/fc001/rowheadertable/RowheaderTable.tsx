@@ -4,14 +4,11 @@ import { Table } from 'antd';
 
 interface DataType {
   key: string;
-  final: number;
+  total: number;
+  packing: number;
+  unpacking: number;
   cal1: number;
   cal2: number;
-  egl1: number;
-  egl2: number;
-  cgl1: number;
-  cgl2: number;
-  packing: number;
 }
 
 interface RowheaderTableProps {
