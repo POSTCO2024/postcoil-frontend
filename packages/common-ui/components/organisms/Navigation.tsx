@@ -17,7 +17,6 @@ export const Navigation: React.FC<NavigationProps> = ({
 }) => {
   const levelKeys = getLevelKeys(menuItems as LevelKeysProps[]);
   const [stateOpenKeys, setStateOpenKeys] = useState(['1', '11']);
-
   const menuTheme = {
     components: {
       Menu: {
@@ -33,6 +32,7 @@ export const Navigation: React.FC<NavigationProps> = ({
   };
 
   const onOpenChange: MenuProps['onOpenChange'] = (openKeys) => {
+    console.log(openKeys);
     const currentOpenKey = openKeys.find(
       (key) => stateOpenKeys.indexOf(key) === -1,
     );
@@ -55,11 +55,13 @@ export const Navigation: React.FC<NavigationProps> = ({
     }
   };
 
-  const pathname = location.pathname;
-  function getKeyByPath(pathname: string): string {
+  function getKeyByPath(): string {
+    const pathname = location.pathname;
+    console.log(pathname);
     const mapping = mappingKeys!.find((item) => item!.path === pathname);
     return mapping!.key;
   }
+
   return (
     <div className={styles.navigation_style}>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -68,7 +70,7 @@ export const Navigation: React.FC<NavigationProps> = ({
       <ConfigProvider theme={menuTheme}>
         <Menu
           mode="inline"
-          defaultSelectedKeys={[getKeyByPath(pathname)]}
+          defaultSelectedKeys={[getKeyByPath()]}
           openKeys={stateOpenKeys}
           onOpenChange={onOpenChange}
           style={{ width: '90%', margin: '20px auto auto', border: 0 }}
