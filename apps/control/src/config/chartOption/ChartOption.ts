@@ -48,7 +48,8 @@ export const treemapOption: echarts.EChartsOption = {
       })),
       label: {
         color: 'black',
-        fontWeight: 'bolder',
+        fontWeight: 600,
+        fontSize: '1.8rem',
       },
       emphasis: {
         itemStyle: {

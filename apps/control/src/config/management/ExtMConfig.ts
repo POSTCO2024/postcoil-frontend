@@ -30,7 +30,7 @@ export const columnsData = [
 ];
 export const standardData = [
   { key: '1', id: '1', columnName: '공장코드', value: 'L' },
-  { key: '2', id: '2', columnName: '공정코드', value: '1L1' },
+  { key: '2', id: '2', columnName: '공정코드', value: '1CAL' },
   { key: '3', id: '3', columnName: '재료상태구분', value: '2' },
   { key: '4', id: '4', columnName: '진도구분', value: 'D' },
 ];
