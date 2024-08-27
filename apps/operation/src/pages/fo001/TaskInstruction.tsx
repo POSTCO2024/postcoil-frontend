@@ -1,15 +1,13 @@
 import { Tab } from '@postcoil/ui';
-import { Table } from '@postcoil/ui';
-import { Button } from '@postcoil/ui/components/atoms/Button';
 import { useState } from 'react';
 
+import AnalyzeChart from './result/AnalyzeChart';
 import ContentContainer from './result/ContentContainer';
 import DraggableChart from './result/DraggableChart';
 import DraggableChart2 from './result/DraggableChart2';
 import FilterContainer from './result/FilterContainer';
 import styles from './TaskInstruction.module.scss';
 
-import { mockcolumns, mockdata } from '@/utils/fs002/MaterialTableUtils';
 export const TaskInstruction = () => {
   const [isGraphVisible, setIsGraphVisible] = useState(true);
 
@@ -31,15 +29,8 @@ export const TaskInstruction = () => {
                 <DraggableChart2 />
                 <DraggableChart />
               </div>
-              <div className={styles.btn_div}>
-                <Button text={'보급요구'} style={true} />
-                <div style={{ height: '12%' }} />
-                <Button text={'reject'} style={true} />
-                <div style={{ height: '12%' }} />
-                <Button text={'긴급정지'} style={true} />
-              </div>
             </div>
-            <div style={{ height: '40%' }}>ㅠㅛ</div>
+            <AnalyzeChart />
           </div>
         ) : (
           <ContentContainer />

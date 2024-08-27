@@ -1,5 +1,6 @@
 import { RedoOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { Dropdown } from '@postcoil/ui';
+import { Button } from '@postcoil/ui/components/atoms/Button';
 
 import styles from './FilterContainer.module.scss';
 
@@ -96,6 +97,9 @@ const FilterContainer = () => {
         {/* TODO: Dropdown 데이터 변경, 함수 받게 */}
       </div>
       <Dropdown title="롤단위명" options={mockRollUnitName} />
+      <Button text={'보급요구'} style={true} />
+      <Button text={'reject'} style={true} />
+      <Button text={'긴급정지'} style={true} />
       {/* <Button type="primary" onClick={handleSearch}>
         조회
       </Button> */}

@@ -27,7 +27,7 @@ export const Button: React.FC<ButtonProps> = ({ text, onClick, style }) => {
                 console.log(text + ' Click');
               }
         }
-        style={style ? { width: '70%' } : undefined}>
+        style={style ? { width: 90 } : undefined}>
         {text}
       </AntButton>
     </div>
