@@ -28,10 +28,14 @@ export const Button: React.FC<ButtonProps> = ({ text, onClick, style }) => {
               }
         }
 <<<<<<< HEAD
+<<<<<<< HEAD
         style={style ? { width: 90 } : undefined}>
 =======
         style={style ? { width: '70%' } : undefined}>
 >>>>>>> 7ceac47 (Feat: 조업 작업지시 화면 생성)
+=======
+        style={style ? { width: 90 } : undefined}>
+>>>>>>> c33799e (Refactor: 조업 부분 작업 지시화면에 편성코일 분석 화면 추가)
         {text}
       </AntButton>
     </div>
