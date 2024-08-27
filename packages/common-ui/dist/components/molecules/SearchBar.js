@@ -2,7 +2,11 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Input, Space } from 'antd';
 // import { onChange, onSearch } from './SearchBarConfig'; // Config import
 // import { CascaderProps, BaseOptionType } from 'antd/es/cascader';
+<<<<<<< HEAD
 import styles from './SearchBar.module.css';
+=======
+import styles from './SearchBar.module.scss';
+>>>>>>> aa899f5 (Chore: 빌드 스크립트 수정 및 빌드...)
 // info
 // searchbar 기준 안에 들어갈 내용은 optionSearch에 구성하여 사용
 // props: option으로 구성할 값을 json 형식으로 전달해준다.

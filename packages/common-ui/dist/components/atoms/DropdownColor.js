@@ -1,6 +1,10 @@
 import { jsxs as _jsxs, jsx as _jsx } from "react/jsx-runtime";
 import { Cascader } from 'antd';
+<<<<<<< HEAD
 import styles from './DropdownColor.module.css';
+=======
+import styles from './DropdownColor.module.scss';
+>>>>>>> aa899f5 (Chore: 빌드 스크립트 수정 및 빌드...)
 // // Cascader value
 // const optionsDropdown: OptionType[] = [
 //   {
