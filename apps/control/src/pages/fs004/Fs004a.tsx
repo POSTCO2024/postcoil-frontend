@@ -147,7 +147,7 @@ const Fs004a: React.FC = () => {
           data={baseData}
           handleRowClick={(record) => {
             console.log(record);
-            navigate(`/roll/${record!.scheduleId}`);
+            // navigate(`/roll/${record!.scheduleId}`);
           }}
           size="small"
         />
