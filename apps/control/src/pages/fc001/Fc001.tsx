@@ -26,17 +26,19 @@ export const Fc001: React.FC = () => {
       <div className={styles.tab}>
         <Tab labels={label} onChange={changeTab} />
       </div>
-      <div className={styles.table}>
+      <div className={styles.tableContainer}>
         {isValue ? (
-          <Table
-            useCheckBox={false}
-            columns={columnsList}
-            data={dataList}
-            scroll={{ x: 'max-content', y: 450 }}
-            tableLayout={'fixed'}
-          />
+          <div className={styles.table}>
+            <Table
+              columns={columnsList}
+              data={dataList}
+              scroll={{ x: 'max-content', y: 500 }}
+            />
+          </div>
         ) : (
-          <RowheaderTable columns={columnsTable} data={dataTable} />
+          <div className={styles.customTable}>
+            <RowheaderTable columns={columnsTable} data={dataTable} />
+          </div>
         )}
       </div>
     </div>

@@ -5,23 +5,49 @@
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: center;
   flex-direction: column;
+  align-items: center;
 
   h1 {
     font-size: 2rem;
     font-weight: 600;
     width: 90%;
-    margin: 20px 50px;
+    margin: 40px auto 30px;
     height: 2.2rem;
   }
 
-  .tables_frame {
-    width: 55%;
-    margin-left: 8%;
+  .frame {
+    display: flex;
+    width: 90%;
+    height: calc(100% - 2.2rem - 70px);
+    justify-content: space-around;
+    align-items: center;
+    column-gap: 6%;
+
+    * {
+      th {
+        font-size: 1.7rem !important;
+        font-weight: 600 !important;
+      }
+      font-size: 1.5rem !important;
+    }
+  }
+
+  .facility {
+    width: 25%;
+    * {
+      text-align: center !important;
+    }
+  }
+
+  .tablesFrame {
+    width: 50%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    padding-left: 7%;
+
+    .table {
+    }
   }
 }

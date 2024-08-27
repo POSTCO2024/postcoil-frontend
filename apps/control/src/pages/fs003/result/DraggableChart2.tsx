@@ -65,7 +65,7 @@ const initialData: DataPoint[] = [
 const baseData = initialData.map((data) => {
   let newData = { ...data, ...baseValues };
 
-  if (data.x == 3) {
+  if (data.x == 2) {
     newData = {
       ...newData,
       ...baseValues,

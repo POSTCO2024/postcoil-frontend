@@ -90,7 +90,7 @@ export const managementData = [
 ];
 
 export const infoErrData = [
-  { key: '1', id: '1', columnName: '공장공정코드', value: '1L1' },
+  { key: '1', id: '1', columnName: '공장공정코드', value: '1CAL' },
   { key: '2', id: '2', columnName: '주문번호', value: 'CMD001' },
   { key: '3', id: '3', columnName: '잔공장공정코드', value: '2CAL' },
   { key: '4', id: '4', columnName: '롤단위구분', value: 'AA' },

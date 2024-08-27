@@ -20,6 +20,7 @@ const ContentContainer = () => {
             rowClassName={(record) =>
               record.changed ? `${styles.rowChanged}` : ''
             }
+            size="small"
           />
         </div>
       </section>

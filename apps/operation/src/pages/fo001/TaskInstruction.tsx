@@ -15,26 +15,24 @@ export const TaskInstruction = () => {
     setIsGraphVisible((prevState) => !prevState);
   };
   return (
-    <div className={styles.boardContainer}>
-      <h1>작업지시</h1>
+    <div className={styles.page}>
+      <h1>작업 지시 전문</h1>
       <FilterContainer />
       <section className={styles.tab}>
         <Tab labels={['그래프', '리스트']} onChange={handleTabChange} />
       </section>
       <div className={styles.result}>
         {isGraphVisible ? (
-          <div style={{ height: '100%' }}>
-            <div style={{ display: 'flex', width: '100%', height: '60%' }}>
-              <div className={styles.charts}>
-                <DraggableChart2 />
-                <DraggableChart />
-              </div>
-            </div>
-            <AnalyzeChart />
+          <div className={styles.charts}>
+            <DraggableChart2 />
+            <DraggableChart />
           </div>
         ) : (
           <ContentContainer />
         )}
+        <div className={styles.summary}>
+          <AnalyzeChart />
+        </div>
       </div>
     </div>
   );

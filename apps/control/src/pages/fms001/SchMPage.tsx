@@ -21,27 +21,22 @@ const SchMPage = () => {
       <h1>스케줄 기준 관리</h1>
       <FilterContainer />
       <div className={styles.contentContainer}>
-        <div style={{ width: '40%' }}>
+        <div className={styles.priority}>
           <p>우선순위</p>
-          <Table useCheckBox={false} columns={priority} data={priorityData} />
+          <Table columns={priority} data={priorityData} />
           <Result title="우선순위" data={priorityData} />
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', width: '40%' }}>
-          <p>제약조건</p>
-          <Table
-            useCheckBox={false}
-            columns={constraints}
-            data={constraintsData}
-          />
-          <Result title="제약조건" data={constraintsData} />
-          <div style={{ height: '11%' }}></div>
-          <p>미편성삽입</p>
-          <Table
-            useCheckBox={false}
-            columns={unInsConstraints}
-            data={unInsConstraintsData}
-          />
-          <Result title="미편성삽입조건" data={unInsConstraints} />
+        <div className={styles.constraints}>
+          <div className={styles.constraint}>
+            <p>제약조건</p>
+            <Table columns={constraints} data={constraintsData} />
+            <Result title="제약조건" data={constraintsData} />
+          </div>
+          <div className={styles.constraint}>
+            <p>미편성삽입</p>
+            <Table columns={unInsConstraints} data={unInsConstraintsData} />
+            <Result title="미편성삽입조건" data={unInsConstraints} />
+          </div>
         </div>
       </div>
     </div>

@@ -97,12 +97,14 @@ const FilterContainer = () => {
         {/* TODO: Dropdown 데이터 변경, 함수 받게 */}
       </div>
       <Dropdown title="롤단위명" options={mockRollUnitName} />
-      <Button text={'보급요구'} style={true} />
-      <Button text={'reject'} style={true} />
-      <Button text={'긴급정지'} style={true} />
       {/* <Button type="primary" onClick={handleSearch}>
         조회
       </Button> */}
+      <div className={styles.btns}>
+        <Button text={'보급요구'} style={true} />
+        <Button text={'REJECT'} style={true} />
+        <Button text={'긴급정지'} style={true} />
+      </div>
     </div>
   );
 };

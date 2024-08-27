@@ -140,7 +140,7 @@ const Fs004a: React.FC = () => {
     <div className={styles.page}>
       <h1>Schedule 이력</h1>
       <FilterContainer />
-      <div className={styles.table}>
+      <div className={styles.schtable}>
         <Table
           useCheckBox={false}
           columns={columnsData}

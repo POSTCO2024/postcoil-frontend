@@ -8,7 +8,7 @@ export const MenuItems: MenuItem[] = [
   {
     key: '4',
     icon: <MailOutlined />,
-    label: <Link to="operation1">작업 지시</Link>,
+    label: <Link to="operation1">작업 지시 전문</Link>,
   },
   {
     key: '5',
