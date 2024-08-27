@@ -1,4 +1,4 @@
-import { MailOutlined, AppstoreOutlined } from '@ant-design/icons';
+import { MailOutlined, FundProjectionScreenOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Link } from 'react-router-dom';
 
@@ -12,8 +12,8 @@ export const MenuItems: MenuItem[] = [
   },
   {
     key: '5',
-    icon: <AppstoreOutlined />,
-    label: <Link to="operation2">작업 지시문 이력</Link>,
+    icon: <FundProjectionScreenOutlined />,
+    label: <Link to="operation2">작업 화면</Link>,
   },
 ];
 

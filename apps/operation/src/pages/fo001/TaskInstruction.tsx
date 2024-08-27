@@ -25,32 +25,25 @@ export const TaskInstruction = () => {
       </section>
       <div className={styles.result}>
         {isGraphVisible ? (
-          <div style={{ display: 'flex', height: '100%', width: '100%' }}>
-            <div className={styles.charts}>
-              <DraggableChart2 />
-              <DraggableChart />
+          <div style={{ height: '100%' }}>
+            <div style={{ display: 'flex', width: '100%', height: '60%' }}>
+              <div className={styles.charts}>
+                <DraggableChart2 />
+                <DraggableChart />
+              </div>
+              <div className={styles.btn_div}>
+                <Button text={'보급요구'} style={true} />
+                <div style={{ height: '12%' }} />
+                <Button text={'reject'} style={true} />
+                <div style={{ height: '12%' }} />
+                <Button text={'긴급정지'} style={true} />
+              </div>
             </div>
-            <div className={styles.btn_div}>
-              <Button text={'보급요구'} style={true} />
-              <div style={{ height: '20%' }} />
-              <Button text={'reject'} style={true} />
-              <div style={{ height: '20%' }} />
-              <Button text={'긴급정지'} style={true} />
-            </div>
+            <div style={{ height: '40%' }}>ㅠㅛ</div>
           </div>
         ) : (
           <ContentContainer />
         )}
-      </div>
-      <div style={{ height: '40%', width: '80%' }}>
-        <Table
-          scroll={{ y: 200 }}
-          columns={mockcolumns}
-          data={mockdata}
-          rowClassName={(record) =>
-            record.changed ? `${styles.rowChanged}` : ''
-          }
-        />
       </div>
     </div>
   );
