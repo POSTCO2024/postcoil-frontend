@@ -1,7 +1,7 @@
 import { Tab, Table } from '@postcoil/ui';
 import { ColumnDataType, DataType } from '@postcoil/ui/config/TableConfig';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 import styles from './Fs004a.module.scss';
 import ContentContainer from './timeline/ContentContainer';
@@ -129,7 +129,7 @@ const baseData: SchDataType[] = [
 ];
 
 const Fs004a: React.FC = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [isGraphVisible, setIsGraphVisible] = useState(true);
 
   const handleTabChange = () => {
