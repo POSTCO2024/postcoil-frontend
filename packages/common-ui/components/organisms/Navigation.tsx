@@ -92,7 +92,13 @@ export const Navigation: React.FC<NavigationProps> = ({
           selectedKeys={[getKeyByPath()]}
           openKeys={stateOpenKeys}
           onOpenChange={onOpenChange}
-          style={{ width: '90%', margin: '20px auto auto', border: 0 }}
+          style={{
+            width: '90%',
+            margin: '20px auto auto',
+            border: 0,
+            maxHeight: '80%',
+            overflowY: 'scroll',
+          }}
           items={menuItems}
         />
       </ConfigProvider>

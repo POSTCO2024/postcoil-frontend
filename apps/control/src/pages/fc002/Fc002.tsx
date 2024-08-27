@@ -29,14 +29,14 @@ export const Fc002: React.FC = () => {
             useCheckBox={true}
             columns={columnsData}
             data={tableData}
-            scroll={{ x: 'max-content', y: 450 }}
+            scroll={{ x: 'max-content', y: 600 }}
             tableLayout={'fixed'}
           />
         </div>
-        <Button type="primary" className={styles.btn} onClick={handleModalOpen}>
-          에러패스
-        </Button>
       </div>
+      <Button type="primary" className={styles.btn} onClick={handleModalOpen}>
+        에러패스
+      </Button>
 
       <CommonModal
         title="에러패스"

@@ -29,7 +29,11 @@ export const Fc001: React.FC = () => {
       <div className={styles.tableContainer}>
         {isValue ? (
           <div className={styles.table}>
-            <Table columns={columnsList} data={dataList} />
+            <Table
+              columns={columnsList}
+              data={dataList}
+              scroll={{ x: 'max-content', y: 500 }}
+            />
           </div>
         ) : (
           <div className={styles.customTable}>
