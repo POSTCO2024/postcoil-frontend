@@ -19,70 +19,22 @@ export const AnalyzeChart = () => {
   return (
     <div className={styles.chart}>
       <h1>편성 코일 분석</h1>
-      <div
-        style={{
-          height: '100%',
-          borderRadius: '20px',
-          backgroundColor: '#f9f9f9',
-        }}>
-        <div
-          style={{
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            padding: '20px',
-          }}>
+      <div className={styles.analyze_background}>
+        <div className={styles.analyze_frame}>
           <div style={{ flex: 2 }}>
             <div style={{ height: '50%' }}>
-              <div
-                style={{
-                  display: 'flex',
-                  height: '100%',
-                }}>
-                <div
-                  style={{
-                    width: '50%',
-                    height: '100%',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <div
-                    style={{
-                      width: '90%',
-                      height: '80%',
-                      textAlign: 'center',
-                      alignContent: 'center',
-                      borderRadius: '20px',
-                      boxShadow: '2px 2px 12px -9px blue',
-                      backgroundColor: '#ffffff',
-                    }}>
+              <div className={styles.item_flex}>
+                <div className={styles.item_frame}>
+                  <div className={styles.item_style}>
                     <div style={{ fontWeight: 800 }}>현재상황</div>
                     <div style={{ fontSize: '1.4em', fontWeight: 700 }}>
-                      <RedoOutlined spin style={{ color: '#1677ff' }} />{' '}
-                      &nbsp;작업중
+                      <RedoOutlined spin style={{ color: '#1677ff' }} />
+                      &ensp;작업중
                     </div>
                   </div>
                 </div>
-                <div
-                  style={{
-                    width: '50%',
-                    height: '100%',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <div
-                    style={{
-                      width: '90%',
-                      height: '80%',
-                      textAlign: 'center',
-                      alignContent: 'center',
-                      borderRadius: '20px',
-                      boxShadow: '2px 2px 12px -9px blue',
-                      //   boxShadow: '2px 2px 12px -7px blue',
-                      backgroundColor: '#ffffff',
-                    }}>
+                <div className={styles.item_frame}>
+                  <div className={styles.item_style}>
                     <div style={{ fontWeight: 800 }}>
                       보급 현황 / 전체 코일 수
                     </div>
@@ -92,55 +44,19 @@ export const AnalyzeChart = () => {
                   </div>
                 </div>
               </div>
-              <div
-                style={{
-                  display: 'flex',
-                  height: '100%',
-                }}>
-                <div
-                  style={{
-                    width: '50%',
-                    height: '100%',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <div
-                    style={{
-                      width: '90%',
-                      height: '80%',
-                      textAlign: 'center',
-                      alignContent: 'center',
-                      borderRadius: '20px',
-                      boxShadow: '2px 2px 12px -9px blue',
-                      //   boxShadow: '2px 2px 12px -7px blue',
-                      backgroundColor: '#ffffff',
-                    }}>
+            </div>
+            <div style={{ height: '50%' }}>
+              <div className={styles.item_flex}>
+                <div className={styles.item_frame}>
+                  <div className={styles.item_style}>
                     <div style={{ fontWeight: 800 }}>작업소요 시간</div>
                     <div style={{ fontSize: '1.4em', fontWeight: 700 }}>
                       18 : 56 : 16
                     </div>
                   </div>
                 </div>
-                <div
-                  style={{
-                    width: '50%',
-                    height: '100%',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <div
-                    style={{
-                      width: '90%',
-                      height: '80%',
-                      textAlign: 'center',
-                      alignContent: 'center',
-                      borderRadius: '20px',
-                      boxShadow: '2px 2px 12px -9px blue',
-                      //   boxShadow: '2px 2px 12px -7px blue',
-                      backgroundColor: '#ffffff',
-                    }}>
+                <div className={styles.item_frame}>
+                  <div className={styles.item_style}>
                     <div style={{ fontWeight: 800 }}>Reject 된 코일 수</div>
                     <div style={{ fontSize: '1.4em', fontWeight: 700 }}>
                       1 개
@@ -149,22 +65,9 @@ export const AnalyzeChart = () => {
                 </div>
               </div>
             </div>
-            <div style={{ height: '50%' }}></div>
           </div>
-          <div
-            style={{
-              flex: 1,
-
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <div
-              style={{
-                width: '90%',
-                margin: 'auto',
-                boxShadow: '2px 2px 12px -9px blue',
-              }}>
+          <div className={styles.type_chart_flex}>
+            <div className={styles.type_chart_frame}>
               <ConfigProvider
                 theme={{
                   components: {
