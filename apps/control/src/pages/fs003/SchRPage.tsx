@@ -1,6 +1,7 @@
 import { Tab } from '@postcoil/ui';
 import { useState } from 'react';
 
+import AnalyzeChart from './result/AnalyzeChart';
 import styles from './SchRPage.module.scss';
 
 import ContentContainer from '@/pages/fs003/result/ContentContainer';
@@ -31,22 +32,8 @@ const SchRPage = () => {
         ) : (
           <ContentContainer />
         )}
-        <div
-          className={styles.summary}
-          style={{
-            width: '100%',
-            height: '30%',
-            backgroundColor: 'lightgray',
-            position: 'absolute',
-            bottom: '10px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '2.5rem',
-            textAlign: 'center',
-            borderRadius: '10px',
-          }}>
-          스케줄 재료 분석
+        <div className={styles.summary}>
+          <AnalyzeChart />
         </div>
       </div>
     </div>

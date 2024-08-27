@@ -6,7 +6,6 @@ import styles from './Fc002.module.scss';
 import { TopBar } from './topBar/TopBar';
 
 import CommonModal from '@/components/common/CommonModal';
-
 import { columnsData, tableData } from '@/config/control/Fc002Utils';
 
 export const Fc002: React.FC = () => {
@@ -34,10 +33,11 @@ export const Fc002: React.FC = () => {
             tableLayout={'fixed'}
           />
         </div>
+        <Button type="primary" className={styles.btn} onClick={handleModalOpen}>
+          에러패스
+        </Button>
       </div>
-      <Button type="primary" className={styles.btn} onClick={handleModalOpen}>
-        에러패스
-      </Button>
+
       <CommonModal
         title="에러패스"
         isModalOpen={isModalOpen}

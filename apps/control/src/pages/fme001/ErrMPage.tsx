@@ -18,18 +18,13 @@ const ErrMPage: React.FC = () => {
   return (
     <div className={styles.page}>
       <h1>에러기준 관리</h1>
-      <div style={{ display: 'flex', width: '85%', height: '90%' }}>
-        <div style={{ width: '25%', margin: 'auto' }}>
-          <Table
-            useCheckBox={false}
-            columns={facilitycolumn}
-            data={facilityData}
-          />
+      <div className={styles.frame}>
+        <div className={styles.facility}>
+          <Table columns={facilitycolumn} data={facilityData} />
         </div>
-        <div className={styles.tables_frame}>
-          <div style={{ display: 'flex' }}>
+        <div className={styles.tablesFrame}>
+          <div className={styles.table}>
             <Table
-              useCheckBox={false}
               columns={facilityErrColumn}
               data={facilityErrData}
               size={'small'}
@@ -37,9 +32,8 @@ const ErrMPage: React.FC = () => {
             />
             <Result title="설비사양 에러" data={facilityErrData} />
           </div>
-          <div style={{ display: 'flex' }}>
+          <div className={styles.table}>
             <Table
-              useCheckBox={false}
               columns={ManageColumn}
               data={managementData}
               size={'small'}
@@ -47,13 +41,8 @@ const ErrMPage: React.FC = () => {
             />
             <Result title="관리재" data={managementData} />
           </div>
-          <div style={{ display: 'flex' }}>
-            <Table
-              useCheckBox={false}
-              columns={infoErrColumn}
-              data={infoErrData}
-              size={'small'}
-            />
+          <div className={styles.table}>
+            <Table columns={infoErrColumn} data={infoErrData} size={'small'} />
             <Result title="정보이상재" data={infoErrData} />
           </div>
         </div>

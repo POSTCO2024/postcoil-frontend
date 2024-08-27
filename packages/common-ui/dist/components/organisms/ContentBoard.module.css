@@ -1,1 +1,1 @@
-.greyBack{background-color:#f5f5f5;width:100vw;height:100vh;display:flex;align-items:center;justify-content:center}.whiteBoard{height:98%;width:98%;min-width:720px;min-height:650px;background-color:#fff;border-radius:10px}
+.greyBack{background-color:#f5f5f5;max-width:calc(100vw - 280px);width:85%;min-height:650px;height:100vh;display:flex;align-items:center;justify-content:center}.greyBack .whiteBoard{height:98%;width:98%;min-width:720px;min-height:650px;background-color:#fff;border-radius:10px}

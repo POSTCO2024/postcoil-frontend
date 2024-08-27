@@ -2,7 +2,7 @@
 
 .filterContainer {
   font-size: 1.5rem;
-  background-color: C.$skyBlue;
+  background-color: C.$lightGreen;
   width: 90%;
   height: 70px;
   padding: 0 30px;
@@ -13,5 +13,10 @@
 
   .dropdown {
     margin-right: 30px;
+  }
+
+  .btns {
+    margin-left: auto;
+    display: flex;
   }
 }

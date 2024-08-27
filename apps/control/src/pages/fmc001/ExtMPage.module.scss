@@ -5,7 +5,6 @@
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: center;
   flex-direction: column;
   align-items: center;
 
@@ -13,38 +12,35 @@
     font-size: 2rem;
     font-weight: 600;
     width: 90%;
-    margin: 20px 10px;
+    margin: 40px auto 30px;
     height: 2.2rem;
   }
 
   .frame {
     display: flex;
-    flex-direction: row;
-    width: 100%;
-    justify-content: space-evenly;
+    width: 90%;
+    height: calc(100% - 2.2rem - 70px);
+    justify-content: space-around;
+    align-items: center;
+    column-gap: 6%;
+
+    * {
+      th {
+        font-size: 1.7rem !important;
+        font-weight: 600 !important;
+      }
+      font-size: 1.5rem !important;
+    }
   }
 
   .facility {
-    margin: 20px auto 10px;
-    padding-bottom: 10px;
-    font-size: 1.6rem;
-    display: flex;
-    flex-direction: column;
-    width: 30%;
-  }
-
-  .iconDiv {
-    margin: auto;
-    display: flex;
-    justify-content: center;
+    width: 25%;
+    * {
+      text-align: center !important;
+    }
   }
 
   .facilityStandard {
-    margin: 20px auto 10px;
-    padding-bottom: 10px;
-    font-size: 1.6rem;
-    display: flex;
-    flex-direction: column;
     width: 50%;
   }
 }

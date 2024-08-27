@@ -12,8 +12,8 @@
     font-size: 2rem;
     font-weight: 600;
     width: 90%;
+    margin: 40px auto 0px;
     height: 2.2rem;
-    margin-top: 35px;
   }
 
   .page {
@@ -23,7 +23,7 @@
     overflow-x: scroll;
     overflow-y: scroll;
     width: 90%;
-    height: calc(100% - 2.2rem - 25px);
+    height: calc(100% - 2.2rem - 40px);
     justify-content: space-evenly;
     margin-bottom: 20px;
   }
@@ -50,7 +50,6 @@
     font-size: 30px;
     font-weight: bold;
   }
-
 }
 
 .text {

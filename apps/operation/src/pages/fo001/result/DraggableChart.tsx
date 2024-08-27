@@ -12,15 +12,30 @@ variwide(Highcharts);
 
 interface DataPoint {
   name: string;
-  y: number; // length에 해당하는 값
-  z: number; // Thickness에 해당하는 값
+  y: number; // Thickness에 해당하는 값
+  z: number; // Working Time 해당하는 값
   x: number; // sequence number
-  changed?: boolean; // is the point changed by user?
+  supplyCompleted?: boolean; // is the supply completed by user?
+  startTime?: string; // work start time
+  endTime?: string; // work end time
+  rejected?: boolean; // is the point rejected by user?
 }
 
+const baseValues = {
+  supplyCompleted: false,
+  startTime: '',
+  endTime: '',
+  rejected: false,
+};
+
 const initialData: DataPoint[] = [
-  { name: 'C1CAL0001A', y: 7.3, z: 30, x: 1 },
-  { name: 'C1CAL0002B', y: 6.2, z: 45, x: 2, changed: true },
+  {
+    name: 'C1CAL0001A',
+    y: 7.3,
+    z: 30,
+    x: 1,
+  },
+  { name: 'C1CAL0002B', y: 6.2, z: 45, x: 2 },
   { name: 'C1CAL0003A', y: 5.8, z: 50, x: 3 },
   { name: 'C1CAL0004B', y: 7.1, z: 25, x: 4 },
   { name: 'C1CAL0005A', y: 6.4, z: 35, x: 5 },
@@ -53,15 +68,46 @@ const initialData: DataPoint[] = [
   { name: 'C1CAL0030B', y: 5.8, z: 10, x: 30 },
 ];
 
+const baseData = initialData.map((data) => {
+  let newData = { ...data, ...baseValues };
+
+  if (data.x == 2) {
+    newData = {
+      ...newData,
+      supplyCompleted: true,
+      rejected: true,
+    };
+  } else if (data.x < 5) {
+    newData = {
+      ...newData,
+      supplyCompleted: true,
+      startTime: '24/08/20-00:00:00',
+      endTime: '24/08/20-00:00:00',
+    };
+  } else if (data.x < 12) {
+    newData = { ...newData, supplyCompleted: true };
+  }
+
+  return newData;
+});
+
+console.log(baseData);
+
 interface PropsType {
   filteredData?: DataPoint[] | undefined;
 }
 
 const DraggableChart: React.FC = ({ filteredData }: PropsType) => {
   // TODO: utils 로 옮기기
-  const data = (filteredData ? filteredData : initialData).map((point) => ({
+  const data = (filteredData ? filteredData : baseData).map((point) => ({
     ...point,
-    color: point.changed ? '#ff5f4c' : undefined, // changed: true인 항목에만 색상 적용
+    color: point.rejected
+      ? '#ff0c00a8' // case1: rejected 재료
+      : point.supplyCompleted === true && point.endTime === ''
+        ? 'yellowgreen' // case2: 보급완료 재료
+        : point.supplyCompleted
+          ? '#b3b3b3' // case3: 작업완료 재료
+          : undefined, // case4: 작업예정 재료
   }));
 
   useEffect(() => {
@@ -104,7 +150,7 @@ const DraggableChart: React.FC = ({ filteredData }: PropsType) => {
         series: {
           stickyTracking: false,
           dataLabels: {
-            enabled: true,
+            // enabled: true,
             format: '{point.y:.0f} mm / {point.z:.0f} mins',
             style: {
               fontSize: '1.2rem', // 데이터 레이블의 글씨 크기
