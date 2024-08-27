@@ -1,5 +1,6 @@
 import { Tabs } from 'antd';
 import React from 'react';
+import './Tab.module.scss';
 
 // info
 // props: Tabs 안에 들어갈 텍스트와 발생 이벤트를 input 값으로 전달

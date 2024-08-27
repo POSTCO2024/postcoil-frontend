@@ -59,7 +59,13 @@ export const Navigation = ({ logo, human, menuItems, mappingKeys, isOperationSys
             setStateOpenKeys(openKeys);
         }
     };
-    return (_jsxs("div", { className: `${styles.navigationStyle} ${isOperationSystem ? styles.operationColor : ''}`, children: [_jsx("div", { className: styles.logoContainer, children: _jsx("img", { src: logo, className: styles.logo }) }), _jsx(ConfigProvider, { theme: menuTheme, children: _jsx(Menu, { mode: "inline", defaultSelectedKeys: [getKeyByPath()], selectedKeys: [getKeyByPath()], openKeys: stateOpenKeys, onOpenChange: onOpenChange, style: { width: '90%', margin: '20px auto auto', border: 0 }, items: menuItems }) }), _jsx("div", { className: styles.loginContainer, children: _jsxs("div", { className: styles.loginDiv, children: [_jsx("img", { src: human }), _jsxs("div", { className: styles.loginInfo, children: ["\uC2E0\uCC2C\uADDC \uC0AC\uC6D0", _jsx("br", {}), "\uBD80\uC11C : \uAD00\uC81C\uD300"] })] }) })] }));
+    return (_jsxs("div", { className: `${styles.navigationStyle} ${isOperationSystem ? styles.operationColor : ''}`, children: [_jsx("div", { className: styles.logoContainer, children: _jsx("img", { src: logo, className: styles.logo }) }), _jsx(ConfigProvider, { theme: menuTheme, children: _jsx(Menu, { mode: "inline", defaultSelectedKeys: [getKeyByPath()], selectedKeys: [getKeyByPath()], openKeys: stateOpenKeys, onOpenChange: onOpenChange, style: {
+                        width: '90%',
+                        margin: '20px auto auto',
+                        border: 0,
+                        maxHeight: '80%',
+                        overflowY: 'scroll',
+                    }, items: menuItems }) }), _jsx("div", { className: styles.loginContainer, children: _jsxs("div", { className: styles.loginDiv, children: [_jsx("img", { src: human }), _jsxs("div", { className: styles.loginInfo, children: ["\uC2E0\uCC2C\uADDC \uC0AC\uC6D0", _jsx("br", {}), "\uBD80\uC11C : \uAD00\uC81C\uD300"] })] }) })] }));
 };
 export default Navigation;
 //# sourceMappingURL=Navigation.js.map

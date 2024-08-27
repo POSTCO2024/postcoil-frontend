@@ -1,4 +1,5 @@
 import React from 'react';
+import './Tab.module.scss';
 interface TabsProps {
     labels: string[];
     onChange?: (key?: string) => void;

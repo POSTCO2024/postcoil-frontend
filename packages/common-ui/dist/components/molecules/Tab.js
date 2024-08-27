@@ -1,5 +1,6 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import { Tabs } from 'antd';
+import './Tab.module.css';
 //Tabs change event handler
 // const onChange = (key: string) => {
 //   console.log(key);
