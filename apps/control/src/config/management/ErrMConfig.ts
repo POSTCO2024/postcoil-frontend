@@ -86,13 +86,13 @@ export const facilityErrData = [
 ];
 
 export const managementData = [
-  { key: '1', id: '1', columnName: '자동차용도제약', value: 'd' },
+  { key: '1', id: '1', columnName: '자동차용도제약', value: 'PAWS50' },
 ];
 
 export const infoErrData = [
-  { key: '1', id: '1', columnName: '공장공정코드', value: '1CAL' },
-  { key: '2', id: '2', columnName: '주문번호', value: 'CMD001' },
-  { key: '3', id: '3', columnName: '잔공장공정코드', value: '2CAL' },
-  { key: '4', id: '4', columnName: '롤단위구분', value: 'AA' },
-  { key: '5', id: '5', columnName: '품명', value: '10mm' },
+  { key: '1', id: '1', columnName: '공장공정코드', value: 'NULL' },
+  { key: '2', id: '2', columnName: '주문번호', value: 'NULL' },
+  { key: '3', id: '3', columnName: '잔공장공정코드', value: 'NULL' },
+  { key: '4', id: '4', columnName: '롤단위구분', value: '21jr!@!' },
+  { key: '5', id: '5', columnName: '품명', value: 'NULL' },
 ];
