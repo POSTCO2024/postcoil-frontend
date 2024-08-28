@@ -93,6 +93,6 @@ export const infoErrData = [
   { key: '1', id: '1', columnName: '공장공정코드', value: 'NULL' },
   { key: '2', id: '2', columnName: '주문번호', value: 'NULL' },
   { key: '3', id: '3', columnName: '잔공장공정코드', value: 'NULL' },
-  { key: '4', id: '4', columnName: '롤단위구분', value: '21jr!@!' },
+  { key: '4', id: '4', columnName: '롤단위구분', value: '@&%$!' },
   { key: '5', id: '5', columnName: '품명', value: 'NULL' },
 ];
