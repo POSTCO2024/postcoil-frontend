@@ -86,7 +86,7 @@ export const facilityErrData = [
 ];
 
 export const managementData = [
-  { key: '1', id: '1', columnName: '자동차용도제약', value: 'PAWS50' },
+  { key: '1', id: '1', columnName: '자동차용도제약', value: 'ATOS' },
 ];
 
 export const infoErrData = [
