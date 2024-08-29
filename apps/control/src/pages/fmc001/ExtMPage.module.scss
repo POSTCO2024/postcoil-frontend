@@ -1,3 +1,5 @@
+@use '@postcoil/ui/styles/color' as C;
+
 .page {
   margin: auto;
   font-size: 1rem;
@@ -38,9 +40,40 @@
     * {
       text-align: center !important;
     }
+    background-color: C.$white;
+    border-radius: 8px; // 모서리 둥글게
+    // padding: 5px; // TODO: 조정하기~!!
+    box-sizing: border-box;
+    border-style: solid;
+    border-width: 1px;
+    border-color: C.$tableBorderColor;
+    box-sizing: border-box;
   }
 
   .facilityStandard {
     width: 50%;
   }
+
+  .modifyTable {
+    background-color: C.$white;
+    border-radius: 8px; // 모서리 둥글게
+    // padding: 5px; // TODO: 조정하기~!!
+    box-sizing: border-box;
+    border-style: solid;
+    border-width: 1px;
+    border-color: C.$tableBorderColor;
+    box-sizing: border-box;
+  }
+}
+.antTable {
+  border-radius: inherit; // 부모의 border-radius 상속
+  width: 100%;
+
+  ul {
+    justify-content: center; // 페이징 버튼 가운데로 이동
+  }
+}
+.selected_row {
+  background-color: #eff4ff;
+  font-weight: 500;
 }

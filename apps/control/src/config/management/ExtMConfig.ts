@@ -2,10 +2,6 @@ export const columnData = [
   {
     title: '공정명',
     dataIndex: 'facilityId',
-    sorter: {
-      compare: (a: any, b: any) => a.no - b.no,
-      multiple: 3,
-    },
   },
 ];
 
@@ -13,19 +9,10 @@ export const columnsData = [
   {
     title: '항목',
     dataIndex: 'columnName',
-
-    sorter: {
-      compare: (a: any, b: any) => a.no - b.no,
-      multiple: 3,
-    },
   },
   {
     title: '값',
     dataIndex: 'value',
-    sorter: {
-      compare: (a: any, b: any) => a.no - b.no,
-      multiple: 3,
-    },
   },
 ];
 export const standardData = [
