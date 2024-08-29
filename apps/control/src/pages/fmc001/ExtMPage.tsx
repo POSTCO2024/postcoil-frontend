@@ -38,7 +38,10 @@ const ExtMPage = () => {
     // console.log(
     //   JSON.stringify(record) + index + JSON.stringify(selectedRowIndex),
     // );
-    const result = record === selectedRowIndex ? `${styles.selected_row}` : '';
+    const result =
+      record === selectedRowIndex
+        ? `${styles.antTable} ${styles.selected_row}`
+        : `${styles.antTable}`;
     return result;
   };
 
@@ -78,12 +81,14 @@ const ExtMPage = () => {
         </div>
 
         <div className={styles.facilityStandard}>
-          <Table
-            columns={columnsData}
-            dataSource={standardData}
-            tableLayout="fixed"
-            pagination={false}
-          />
+          <div className={styles.modifyTable}>
+            <Table
+              columns={columnsData}
+              dataSource={standardData}
+              tableLayout="fixed"
+              pagination={false}
+            />
+          </div>
           <Result title="추출기준 관리" data={standardData} />
         </div>
       </div>
