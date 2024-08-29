@@ -17,7 +17,7 @@ import {
 
 const ErrMPage: React.FC = () => {
   const [selectedRowIndex, setSelectedRowIndex] = useState(facilityData[0]);
-  const setClassName = (record: any, index: any) => {
+  const setClassName = (record: any) => {
     // console.log(
     //   JSON.stringify(record) + index + JSON.stringify(selectedRowIndex),
     // );
@@ -28,7 +28,7 @@ const ErrMPage: React.FC = () => {
     return result;
   };
 
-  const handleRowClick = (index: any, rowIndex: any) => {
+  const handleRowClick = (index: any) => {
     setSelectedRowIndex(index);
   };
   return (
@@ -48,8 +48,9 @@ const ErrMPage: React.FC = () => {
               columns={facilitycolumn}
               dataSource={facilityData}
               pagination={false}
-              onRow={(record, rowIndex) => ({
-                onClick: () => handleRowClick(record, rowIndex),
+              // 인수에 rowIndex를 넣어서, 표 기준 index를 가져올 수 있음
+              onRow={(record) => ({
+                onClick: () => handleRowClick(record),
               })}
               rowClassName={setClassName}
             />
