@@ -2,7 +2,7 @@ import { DataType } from '@postcoil/ui/config/TableConfig';
 
 // Table Data Interface 정의
 export interface MaterialDataType extends DataType {
-  key?: any;
+  key?: string;
   materialNumber: string;
   materialStatus: string;
   operationCode: string;

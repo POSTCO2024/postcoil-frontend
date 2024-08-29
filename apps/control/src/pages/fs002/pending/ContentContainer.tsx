@@ -116,7 +116,7 @@ const ContentContainer = () => {
             modifiers={[restrictToVerticalAxis]}
             onDragEnd={onDragEnd}>
             <SortableContext
-              items={dataSource.map((i) => i.key)}
+              items={dataSource.map((i) => i.key!)}
               strategy={verticalListSortingStrategy}>
               <Table
                 rowKey="key"
