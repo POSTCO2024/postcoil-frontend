@@ -25,8 +25,9 @@ export const createColumns = <T extends DataType>(
           ? column.fixed
           : 'left'
         : undefined,
-
+      align: column.align,
       width: column.width ? column.width : undefined,
+      render: column.render,
       ...(column.otherProps || {}), // 추가: 기타 다른 props 전달을 위한 설정
     };
 

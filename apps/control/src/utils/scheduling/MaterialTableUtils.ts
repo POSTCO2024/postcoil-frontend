@@ -1,8 +1,7 @@
 // Columns 정의
+import { MaterialDataType } from '@/config/scheduling/ContentConfig';
 import { ColumnDataType } from '@postcoil/ui/config/TableConfig';
 // import { Tag } from 'antd';
-
-import { MaterialDataType } from '@/config/scheduling/ContentConfig';
 
 export const mockcolumns: ColumnDataType<MaterialDataType>[] = [
   {
