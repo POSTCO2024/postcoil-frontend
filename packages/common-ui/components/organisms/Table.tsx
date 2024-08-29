@@ -46,6 +46,8 @@ interface TableComponentProps<T extends DataType> {
   tableLayout?: string | undefined;
   className?: string;
   rowClassName?: (record: any) => string;
+  rowKey?: string | ((record: T) => string);
+  components?: any;
 }
 
 export const Table = <T extends DataType>({
@@ -60,6 +62,8 @@ export const Table = <T extends DataType>({
   tableLayout,
   className,
   rowClassName,
+  rowKey,
+  components,
 }: TableComponentProps<T>) => {
   const processedColumns = [...createColumns(columns)];
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -102,6 +106,8 @@ export const Table = <T extends DataType>({
           size={size ? 'small' : 'large'}
           tableLayout={tableLayout ? 'fixed' : undefined}
           rowClassName={rowClassName}
+          rowKey={rowKey}
+          components={components}
         />
       </ConfigProvider>
     </div>

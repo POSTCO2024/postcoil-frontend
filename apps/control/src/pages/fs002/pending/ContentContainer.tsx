@@ -10,33 +10,39 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Table } from 'antd';
+import { Table } from '@postcoil/ui';
+import { ColumnDataType } from '@postcoil/ui/config/TableConfig';
 import { Button } from 'antd';
 import React, { useContext, useMemo } from 'react';
 
 import styles from './ContentContainer.module.scss';
 
 import { MaterialDataType } from '@/config/scheduling/ContentConfig';
-import { ColumnDataType } from '@/config/scheduling/TableConfig';
 import { mockcolumns, mockdata } from '@/utils/scheduling/MaterialTableUtils';
 // interface PropsType{
 //   data?: TODO: props로 데이터 받기
 // }
+
+interface RowProps extends React.HTMLAttributes<HTMLTableRowElement> {
+  'data-row-key': string;
+}
+
+interface RowContextProps {
+  setActivatorNodeRef?: (element: HTMLElement | null) => void;
+  listeners?: SyntheticListenerMap;
+}
 
 const dragColumns: ColumnDataType<MaterialDataType>[] = [
   {
     key: 'sort',
     align: 'center',
     width: 80,
+    title: '',
+    dataIndex: 'dragHandle',
     render: () => <DragHandle />,
   },
   ...mockcolumns,
 ];
-
-interface RowContextProps {
-  setActivatorNodeRef?: (element: HTMLElement | null) => void;
-  listeners?: SyntheticListenerMap;
-}
 
 const RowContext = React.createContext<RowContextProps>({});
 
@@ -84,10 +90,6 @@ const Row: React.FC<RowProps> = (props) => {
   );
 };
 
-interface RowProps extends React.HTMLAttributes<HTMLTableRowElement> {
-  'data-row-key': string;
-}
-
 const ContentContainer = () => {
   const [dataSource, setDataSource] =
     React.useState<MaterialDataType[]>(mockdata);
@@ -120,7 +122,7 @@ const ContentContainer = () => {
                 rowKey="key"
                 components={{ body: { row: Row } }}
                 columns={dragColumns}
-                dataSource={dataSource}
+                data={dataSource}
               />
             </SortableContext>
           </DndContext>
