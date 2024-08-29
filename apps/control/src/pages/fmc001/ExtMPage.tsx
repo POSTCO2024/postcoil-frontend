@@ -1,4 +1,5 @@
-import { Table } from '@postcoil/ui';
+import { Table, ConfigProvider } from 'antd';
+import { useState } from 'react';
 
 import styles from './ExtMPage.module.scss';
 import Result from './extraction/Result';
@@ -32,21 +33,56 @@ import {
 // // { extractions, errorCriteria }: PropsType
 
 const ExtMPage = () => {
+  const [selectedRowIndex, setSelectedRowIndex] = useState(facilityData[0]);
+  const setClassName = (record: any, index: any) => {
+    // console.log(
+    //   JSON.stringify(record) + index + JSON.stringify(selectedRowIndex),
+    // );
+    const result = record === selectedRowIndex ? `${styles.selected_row}` : '';
+    return result;
+  };
+
+  const handleRowClick = (index: any, rowIndex: any) => {
+    setSelectedRowIndex(index);
+    // console.log(
+    //   '선택된 행의 index' +
+    //     JSON.stringify(selectedRowIndex) +
+    //     '    ' +
+    //     rowIndex,
+    // );
+  };
   return (
     <div className={styles.page}>
       <h1>작업대상재 기준 관리</h1>
       <div className={styles.frame}>
         <div className={styles.facility}>
-          <Table useCheckBox={false} columns={columnData} data={facilityData} />
+          <ConfigProvider
+            theme={{
+              components: {
+                Table: {
+                  rowHoverBg: '#eff4ff',
+                },
+              },
+            }}>
+            <Table
+              columns={columnData}
+              dataSource={facilityData}
+              pagination={false}
+              onRow={(record, rowIndex) => ({
+                onClick: () => handleRowClick(record, rowIndex),
+              })}
+              rowClassName={setClassName}
+            />
+          </ConfigProvider>
           {/* <Result title="에러기준" data={outlierCriteria} /> */}
         </div>
 
         <div className={styles.facilityStandard}>
           <Table
-            useCheckBox={false}
             columns={columnsData}
-            data={standardData}
+            dataSource={standardData}
             tableLayout="fixed"
+            pagination={false}
           />
           <Result title="추출기준 관리" data={standardData} />
         </div>
