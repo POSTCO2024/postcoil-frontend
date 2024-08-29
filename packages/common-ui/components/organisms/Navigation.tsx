@@ -96,8 +96,8 @@ export const Navigation: React.FC<NavigationProps> = ({
             width: '90%',
             margin: '20px auto auto',
             border: 0,
-            maxHeight: '80%',
-            overflowY: 'scroll',
+            maxHeight: '70%',
+            overflowY: 'auto',
           }}
           items={menuItems}
         />
