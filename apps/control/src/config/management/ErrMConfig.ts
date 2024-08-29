@@ -2,10 +2,6 @@ export const facilitycolumn = [
   {
     title: '공정명',
     dataIndex: 'facilityId',
-    sorter: {
-      compare: (a: any, b: any) => a.no - b.no,
-      multiple: 3,
-    },
   },
 ];
 
@@ -13,18 +9,10 @@ export const facilityErrColumn = [
   {
     title: '설비사양 에러',
     dataIndex: 'columnName',
-    sorter: {
-      compare: (a: any, b: any) => a.no - b.no,
-      multiple: 3,
-    },
   },
   {
     title: '값',
     dataIndex: 'value',
-    sorter: {
-      compare: (a: any, b: any) => a.no - b.no,
-      multiple: 3,
-    },
   },
 ];
 
@@ -32,18 +20,10 @@ export const ManageColumn = [
   {
     title: '관리재',
     dataIndex: 'columnName',
-    sorter: {
-      compare: (a: any, b: any) => a.no - b.no,
-      multiple: 3,
-    },
   },
   {
     title: '값',
     dataIndex: 'value',
-    sorter: {
-      compare: (a: any, b: any) => a.no - b.no,
-      multiple: 3,
-    },
   },
 ];
 
@@ -51,19 +31,13 @@ export const infoErrColumn = [
   {
     title: '정보이상재',
     dataIndex: 'columnName',
-    sorter: {
-      compare: (a: any, b: any) => a.no - b.no,
-      multiple: 3,
-    },
+
     width: '50%',
   },
   {
     title: '값',
     dataIndex: 'value',
-    sorter: {
-      compare: (a: any, b: any) => a.no - b.no,
-      multiple: 3,
-    },
+
     width: '50%',
   },
 ];
