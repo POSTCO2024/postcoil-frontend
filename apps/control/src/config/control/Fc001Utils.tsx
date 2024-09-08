@@ -766,43 +766,53 @@ export const dataList = [
 export const columnsTable = [
   {
     title: '품명', // Row Header Title
-    dataIndex: 'key',
+    dataIndex: 'coilTypeCode',
     key: 'key',
   },
   {
     title: '총 합계',
-    dataIndex: 'total',
+    dataIndex: 'totalCnt',
     key: 'total',
   },
   {
-    title: 'Final(포장)',
-    dataIndex: 'packing',
-    key: 'packing',
+    title: '1CAL',
+    dataIndex: 'proc1CAL',
+    key: 'cal1',
   },
   {
-    title: 'Final(비포장)',
-    dataIndex: 'unpacking',
-    key: 'unpacking',
+    title: '2CAL',
+    dataIndex: 'proc2CAL',
+    key: 'cal2',
   },
   {
     title: '1EGL',
-    dataIndex: 'egl1',
+    dataIndex: 'proc1EGL',
     key: 'egl1',
   },
   {
     title: '2EGL',
-    dataIndex: 'egl2',
+    dataIndex: 'proc2EGL',
     key: 'egl2',
   },
   {
     title: '1CGL',
-    dataIndex: 'cgl1',
+    dataIndex: 'proc1CGL',
     key: 'cgl1',
   },
   {
     title: '2CGL',
-    dataIndex: 'cgl2',
+    dataIndex: 'proc2CGL',
     key: 'cgl2',
+  },
+  {
+    title: '1냉연 포장',
+    dataIndex: 'proc1Packing',
+    key: '1packing',
+  },
+  {
+    title: '2냉연 포장',
+    dataIndex: 'proc2Packing',
+    key: '2packing',
   },
 ];
 
