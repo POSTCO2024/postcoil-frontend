@@ -13,6 +13,20 @@ import {
   dataTable,
 } from '@/config/control/Fc001Utils';
 
+// 작업대상재 추출 및 저장
+async function fetchTargetMaerialData() {
+  const url = `http://localhost:8086/control/target`;
+  try {
+    const response = await axios.get(url);
+    console.log('작업 대상재 등록: ' + response.data);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+// 작업대상재 목록(List) 조회
 async function getTable(processCode: string) {
   const url = `http://localhost:8086/control/fc001a/list/${processCode}`;
   try {
@@ -39,14 +53,19 @@ export const Fc001: React.FC = () => {
   // 컴포넌트가 마운트될 때 API로부터 데이터를 가져옴
   useEffect(() => {
     const fetchData = async () => {
+      // 1. 작업대상재 추출
+      await fetchTargetMaerialData();
+
+      // 2. 작업대상재 목록 조회
       const data = await getTable(selectedProcessCode);
       setDataList(data); // 가져온 데이터를 상태에 저장
     };
+
     fetchData(); // 함수 호출
   }, [selectedProcessCode]);
 
   const handleDropdownChange = (processCode: string) => {
-    setSelectedProcessCode(processCode);
+    setSelectedProcessCode(processCode); // 공정 변경
   };
 
   return (
