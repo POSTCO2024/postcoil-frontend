@@ -8,11 +8,10 @@ import styles from './Fc002.module.scss';
 import { TopBar } from './topBar/TopBar';
 
 import CommonModal from '@/components/common/CommonModal';
-import { columnsData, tableData } from '@/config/control/Fc002Utils';
-import { aw } from 'vitest/dist/chunks/reporters.C_zwCd4j';
+import { columnsData } from '@/config/control/Fc002Utils';
 
-async function getErrorMaterialData() {
-  const url = `http://localhost:8086/control/error`;
+async function getErrorMaterialData(processCode: string) {
+  const url = `http://localhost:8086/control/error/${processCode}`;
   try {
     const response = await axios.get(url);
     console.log(response.data);
@@ -25,8 +24,9 @@ async function getErrorMaterialData() {
 
 export const Fc002: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [isValue, setIsValue] = useState(true); // 기본값을 true로 설정(첫페이지)
   const [dataList, setDataList] = useState<any[]>([]); // API로부터 받을 데이터 상태
+  const [selectedProcessCode, setSelectedProcessCode] =
+    useState<string>('1PCM'); //
 
   const handleModalOpen = () => setIsModalOpen(true);
   const handleOk = () => {
@@ -40,16 +40,20 @@ export const Fc002: React.FC = () => {
   // 에러재 목록 조회
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getErrorMaterialData();
+      const data = await getErrorMaterialData(selectedProcessCode);
       setDataList(data);
     };
     fetchData();
-  }, []);
+  }, [selectedProcessCode]);
+
+  const handleDropdownChange = (processCode: string) => {
+    setSelectedProcessCode(processCode);
+  };
 
   return (
     <div className={styles.boardContainer}>
       <h1>공정별 에러재 관리</h1>
-      <TopBar />
+      <TopBar onProcessChange={handleDropdownChange} />
       <div className={styles.result}>
         <div className={styles.table}>
           <Table
