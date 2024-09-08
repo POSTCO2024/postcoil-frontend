@@ -7,6 +7,8 @@ interface DataType {
   total: number;
   packing: number;
   unpacking: number;
+  // cal1: number;
+  // cal2: number;
   cgl1: number;
   cgl2: number;
   egl1: number;
