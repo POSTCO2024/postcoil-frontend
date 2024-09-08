@@ -43,7 +43,7 @@ export const Fc001: React.FC = () => {
   const label = ['리스트', '표']; // Tab
   const [isValue, setIsValue] = useState(true); // 기본값을 true로 설정(첫페이지)
   const [dataList, setDataList] = useState<any[]>([]); // API로부터 받을 데이터 상태
-  const [targetMaterialData, setTargetMaterialData] = useState<any[]>([]);
+  // const [targetMaterialData, setTargetMaterialData] = useState<any[]>([]);
   const [selectedProcessCode, setSelectedProcessCode] =
     useState<string>('1PCM'); // 선택된 공정
 
@@ -54,9 +54,8 @@ export const Fc001: React.FC = () => {
   // 컴포넌트가 마운트될 때 API로부터 데이터를 가져옴
   useEffect(() => {
     const fetchData = async () => {
-      // 1. 작업대상재 추출 및 저장
-      const target = await fetchTargetMaerialData();
-      setTargetMaterialData(target);
+      // 1. 작업대상재 추출
+      await fetchTargetMaerialData();
     };
 
     fetchData(); // 함수 호출
