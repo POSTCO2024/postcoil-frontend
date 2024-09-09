@@ -1,23 +1,45 @@
+import axios from 'axios';
+
 import { Table } from '@postcoil/ui';
 import { Button } from 'antd';
-import React from 'react';
+import React, { useState } from 'react';
 
 import styles from './Fc002.module.scss';
 import { TopBar } from './topBar/TopBar';
 
 import CommonModal from '@/components/common/CommonModal';
 import { columnsData, tableData } from '@/config/control/Fc002Utils';
+import { List } from 'echarts';
 
 export const Fc002: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [selectedRows, setSelectedRows] = useState<React.Key[]>([]); //
+  console.log(selectedRows);
   const handleModalOpen = () => setIsModalOpen(true);
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
+  // const handleOk = async () => {
+  //   if (selectedRows.length > 0) {
+  //     await updateIsError(selectedRows);
+  //   }
+  //   setIsModalOpen(false);
+  // };
+  const handleCancel = () => setIsModalOpen(false);
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+  function setSelectedMaterials(selectedRows: any) {
+    setSelectedRows(selectedRows);
+  }
+
+  // 에러패스
+  async function updateIsError(data: List) {
+    const url = `http://localhost:8086/control/errorpass`;
+    try {
+      const response = await axios.put(url, data);
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error('PUT 요청 중 오류 발생:', error);
+      return [];
+    }
+  }
 
   return (
     <div className={styles.boardContainer}>
@@ -31,6 +53,8 @@ export const Fc002: React.FC = () => {
             data={tableData}
             scroll={{ x: 'max-content', y: 600 }}
             tableLayout={'fixed'}
+            handleRowsClick={setSelectedRows}
+            setSelectedMaterials={setSelectedMaterials}
           />
         </div>
       </div>
@@ -42,7 +66,8 @@ export const Fc002: React.FC = () => {
         title="에러패스"
         isModalOpen={isModalOpen}
         onCancel={handleCancel}
-        onApply={handleOk}>
+        // onApply={handleOk}
+      >
         <p
           style={{
             fontSize: '1.5rem',
