@@ -9,19 +9,21 @@ import { TopBar } from './topBar/TopBar';
 
 import CommonModal from '@/components/common/CommonModal';
 import { columnsData, tableData } from '@/config/control/Fc002Utils';
-import { List } from 'echarts';
 
 export const Fc002: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [selectedRows, setSelectedRows] = useState<React.Key[]>([]); //
+  const [selectedRows, setSelectedRows] = useState<React.Key[]>([]); // Checked Rows
   console.log(selectedRows);
+
   const handleModalOpen = () => setIsModalOpen(true);
-  // const handleOk = async () => {
-  //   if (selectedRows.length > 0) {
-  //     await updateIsError(selectedRows);
-  //   }
-  //   setIsModalOpen(false);
-  // };
+  const handleOk = async () => {
+    if (selectedRows.length > 0) {
+      // const errorpassMaterialIds = selectedRows.map(row => row.id);
+      await updateIsError(selectedRows); // API 요청
+      console.log(selectedRows);
+    }
+    setIsModalOpen(false);
+  };
   const handleCancel = () => setIsModalOpen(false);
 
   function setSelectedMaterials(selectedRows: any) {
@@ -29,7 +31,7 @@ export const Fc002: React.FC = () => {
   }
 
   // 에러패스
-  async function updateIsError(data: List) {
+  async function updateIsError(data: React.Key[]) {
     const url = `http://localhost:8086/control/errorpass`;
     try {
       const response = await axios.put(url, data);
@@ -66,8 +68,7 @@ export const Fc002: React.FC = () => {
         title="에러패스"
         isModalOpen={isModalOpen}
         onCancel={handleCancel}
-        // onApply={handleOk}
-      >
+        onApply={handleOk}>
         <p
           style={{
             fontSize: '1.5rem',
