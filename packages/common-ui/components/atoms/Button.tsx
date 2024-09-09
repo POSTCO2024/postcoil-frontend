@@ -11,9 +11,10 @@ import styles from './Button.module.scss';
 interface ButtonProps {
   text: string;
   onClick?: () => void;
+  style?: boolean;
 }
 
-export const Button: React.FC<ButtonProps> = ({ text, onClick }) => {
+export const Button: React.FC<ButtonProps> = ({ text, onClick, style }) => {
   return (
     <div className={styles.buttonContainer}>
       <AntButton
@@ -25,7 +26,8 @@ export const Button: React.FC<ButtonProps> = ({ text, onClick }) => {
             : () => {
                 console.log(text + ' Click');
               }
-        }>
+        }
+        style={style ? { width: 90 } : undefined}>
         {text}
       </AntButton>
     </div>

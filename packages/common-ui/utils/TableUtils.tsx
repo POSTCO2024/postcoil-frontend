@@ -13,10 +13,10 @@ export const createColumns = <T extends DataType>(
       key: column.dataIndex as string,
       sorter: column.sortable
         ? typeof column.sortable === 'boolean'
-          ? (a: T, b: T) =>
+          ? (a: any, b: any) =>
               a[column.dataIndex]! > b[column.dataIndex]! ? 1 : -1
           : {
-              compare: column.sortable.compare as (a: T, b: T) => number,
+              compare: column.sortable.compare as (a: any, b: any) => number,
               multiple: column.sortable.multiple || 1,
             }
         : undefined,
@@ -25,8 +25,9 @@ export const createColumns = <T extends DataType>(
           ? column.fixed
           : 'left'
         : undefined,
-
+      align: column.align,
       width: column.width ? column.width : undefined,
+      render: column.render,
       ...(column.otherProps || {}), // 추가: 기타 다른 props 전달을 위한 설정
     };
 

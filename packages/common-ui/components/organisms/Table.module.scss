@@ -1,4 +1,4 @@
-@use '@postcoil/ui/styles/color' as C;
+@use '../../styles/color' as C;
 
 .tableContainer {
   background-color: C.$white;
@@ -14,11 +14,6 @@
   .antTable {
     border-radius: inherit; // 부모의 border-radius 상속
     width: 100%;
-
-    td {
-      // text-align: center;
-    }
-
     ul {
       justify-content: center; // 페이징 버튼 가운데로 이동
     }

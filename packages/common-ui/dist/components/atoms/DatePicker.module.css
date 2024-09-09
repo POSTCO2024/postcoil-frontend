@@ -1,1 +1,1 @@
-.datepickerContainer .spacer{margin:0 5px}
+.datepickerContainer{display:flex;align-items:center;justify-content:center}.datepickerContainer .spacer{display:inline-block;width:10px}

@@ -1,6 +1,7 @@
 import type { MenuProps } from 'antd';
 import { Menu, ConfigProvider } from 'antd';
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import styles from './Navigation.module.scss';
 import {
@@ -13,25 +14,50 @@ export const Navigation: React.FC<NavigationProps> = ({
   logo,
   human,
   menuItems,
+  mappingKeys,
+  isOperationSystem,
 }) => {
+  const location = useLocation();
   const levelKeys = getLevelKeys(menuItems as LevelKeysProps[]);
-  const [stateOpenKeys, setStateOpenKeys] = useState(['1', '11']);
 
-  const menuTheme = {
-    components: {
-      Menu: {
-        itemBg: '#EFF4FF',
-        itemColor: '#09090A',
-        itemSelectedBg: '#E0E7FF',
-        itemHoverColor: '#09090A',
-        subMenuItemBg: '#EFF4FF',
-        itemBorderRadius: 15,
-        itemMarginInline: 5,
-      },
-    },
-  };
+  const [stateOpenKeys, setStateOpenKeys] = useState(['11']);
+
+  const menuTheme = isOperationSystem
+    ? {
+        components: {
+          Menu: {
+            itemBg: '#f2f6f1',
+            itemColor: '#0A290A',
+            itemSelectedBg: '#C9E7C9',
+            itemHoverColor: '#0A290A',
+            subMenuItemBg: '#f2f6f1',
+            itemBorderRadius: 15,
+            itemMarginInline: 5,
+          },
+        },
+      }
+    : {
+        components: {
+          Menu: {
+            itemBg: '#EFF4FF',
+            itemColor: '#09090A',
+            itemSelectedBg: '#E0E7FF',
+            itemHoverColor: '#09090A',
+            subMenuItemBg: '#EFF4FF',
+            itemBorderRadius: 15,
+            itemMarginInline: 5,
+          },
+        },
+      };
+
+  function getKeyByPath(): string {
+    const pathname = location.pathname;
+    const mapping = mappingKeys!.find((item) => item!.path === pathname);
+    return mapping!.key;
+  }
 
   const onOpenChange: MenuProps['onOpenChange'] = (openKeys) => {
+    console.log(openKeys);
     const currentOpenKey = openKeys.find(
       (key) => stateOpenKeys.indexOf(key) === -1,
     );
@@ -53,30 +79,33 @@ export const Navigation: React.FC<NavigationProps> = ({
       setStateOpenKeys(openKeys);
     }
   };
-
   return (
-    <div className={styles.navigation_style}>
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
+    <div
+      className={`${styles.navigationStyle} ${isOperationSystem ? styles.operationColor : ''}`}>
+      <div className={styles.logoContainer}>
         <img src={logo} className={styles.logo} />
       </div>
       <ConfigProvider theme={menuTheme}>
         <Menu
           mode="inline"
-          defaultSelectedKeys={['11']}
+          defaultSelectedKeys={[getKeyByPath()]}
+          selectedKeys={[getKeyByPath()]}
           openKeys={stateOpenKeys}
           onOpenChange={onOpenChange}
-          style={{ width: '90%', margin: '20px auto auto', border: 0 }}
+          style={{
+            width: '90%',
+            margin: '20px auto auto',
+            border: 0,
+            maxHeight: '70%',
+            overflowY: 'auto',
+          }}
           items={menuItems}
         />
       </ConfigProvider>
-      <div
-        style={{
-          height: 100,
-          width: '100%',
-        }}>
-        <div className={styles.login_div}>
+      <div className={styles.loginContainer}>
+        <div className={styles.loginDiv}>
           <img src={human} />
-          <div className={styles.login_info}>
+          <div className={styles.loginInfo}>
             신찬규 사원
             <br />
             부서 : 관제팀

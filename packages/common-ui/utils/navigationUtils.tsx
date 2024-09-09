@@ -4,6 +4,8 @@ export interface NavigationProps {
   logo: string;
   human: string;
   menuItems: MenuProps['items'];
+  mappingKeys?: Array<{ key: string; path: string }>;
+  isOperationSystem?: boolean;
 }
 
 export interface LevelKeysProps {

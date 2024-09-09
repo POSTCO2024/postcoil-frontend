@@ -1,1 +1,1 @@
-.tableContainer{background-color:#fff;border-radius:8px;padding:20px;border-style:solid;border-width:1px;border-color:#f7f7f7;margin:10px}.tableContainer .antTable{width:100%;border-radius:inherit}.tableContainer .antTable ul{justify-content:center}
+.tableContainer{background-color:#fff;border-radius:8px;box-sizing:border-box;border-style:solid;border-width:1px;border-color:#f3f3f3;box-sizing:border-box;width:100%}.tableContainer .antTable{border-radius:inherit;width:100%}.tableContainer .antTable ul{justify-content:center}

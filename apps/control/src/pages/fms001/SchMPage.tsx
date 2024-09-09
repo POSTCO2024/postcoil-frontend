@@ -1,26 +1,17 @@
+import { Table } from '@postcoil/ui';
+
 import styles from './SchMpage.module.scss';
 
+import {
+  priority,
+  priorityData,
+  constraints,
+  constraintsData,
+  unInsConstraints,
+  unInsConstraintsData,
+} from '@/config/management/SchMConfig';
 import FilterContainer from '@/pages/fms001/schedule/FilterContainer';
 import Result from '@/pages/fms001/schedule/Result';
-
-export interface DataType {
-  [key: string]: string | number;
-}
-
-// interface PropsType {
-//   priorities: DataType;
-//   constraints: DataType;
-// }
-
-// TODO: fetch data from API
-const constraints: DataType = {
-  length: 100,
-  width: 50,
-};
-
-const unInsConstraints: DataType = {
-  width: 10,
-};
 
 // TODO: fetch data 후 props 또는 데이터 삽입
 // { constraints, unInsConstraints }: PropsType
@@ -30,8 +21,23 @@ const SchMPage = () => {
       <h1>스케줄 기준 관리</h1>
       <FilterContainer />
       <div className={styles.contentContainer}>
-        <Result title="제약조건" data={constraints} />
-        <Result title="미편성삽입조건" data={unInsConstraints} />
+        <div className={styles.priority}>
+          <p>우선순위</p>
+          <Table columns={priority} data={priorityData} />
+          <Result title="우선순위" data={priorityData} />
+        </div>
+        <div className={styles.constraints}>
+          <div className={styles.constraint}>
+            <p>제약조건</p>
+            <Table columns={constraints} data={constraintsData} />
+            <Result title="제약조건" data={constraintsData} />
+          </div>
+          <div className={styles.constraint}>
+            <p>미편성삽입</p>
+            <Table columns={unInsConstraints} data={unInsConstraintsData} />
+            <Result title="미편성삽입조건" data={unInsConstraints} />
+          </div>
+        </div>
       </div>
     </div>
   );

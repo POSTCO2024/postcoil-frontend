@@ -17,7 +17,7 @@ interface DropdownProps {
 
 interface OptionType {
   value: string;
-  label: string;
+  label: string | React.ReactNode;
 }
 
 // // Cascader value
@@ -53,7 +53,9 @@ export const Dropdown: React.FC<DropdownProps> = ({
         options={options}
         onChange={
           onChange
-            ? onChange
+            ? (value) => {
+                onChange(value); // `undefined`를 허용
+              }
             : () => {
                 console.log('Dropdown Click');
               }

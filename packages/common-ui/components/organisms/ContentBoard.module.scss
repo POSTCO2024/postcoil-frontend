@@ -1,9 +1,9 @@
-@use '@postcoil/ui/styles/color' as C;
+@use '../../styles/color' as C;
 
 .greyBack {
   background-color: C.$lightGray;
-  max-width: calc(100vw - 250px);
-  width: 86%;
+  max-width: calc(100vw - 280px);
+  width: 85%;
   min-height: 650px;
   height: 100vh;
   display: flex;

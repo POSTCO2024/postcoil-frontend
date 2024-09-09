@@ -38,8 +38,13 @@ const StockCharts: React.FC = () => {
 
   return (
     <div className={styles.chartContainer}>
-      <div ref={chartRef} className={styles.chart} />
-      <Button onClick={toggleChart} text="그래프 변환" />
+      <h3>공장별 수급량 조회</h3>
+      <div className={styles.contentContainer}>
+        <div ref={chartRef} className={styles.chart} />
+        <div className={styles.btn}>
+          <Button onClick={toggleChart} text="그래프 변환" />
+        </div>
+      </div>
     </div>
   );
 };

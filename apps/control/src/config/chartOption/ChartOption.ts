@@ -7,13 +7,21 @@ export const treemapData = [
   { name: '2CAL', value: 3534 },
   { name: '1EGL', value: 3416 },
   { name: '2EGL', value: 6714 },
-  { name: 'RCL', value: 7074 },
-  { name: '산세', value: 3938 },
+  { name: '1CGL', value: 7074 },
+  { name: '2CGL', value: 3938 },
   { name: '포장', value: 3812 },
 ];
 
 treemapData.sort(function (a, b) {
-  return a.value - b.value;
+  const firstCharA = b.name[0];
+  const firstCharB = a.name[0];
+
+  if (firstCharA !== firstCharB) {
+    return firstCharA.localeCompare(firstCharB);
+  } else {
+    // If the first characters are the same, sort by value
+    return a.value - b.value;
+  }
 });
 
 export const treemapOption: echarts.EChartsOption = {
@@ -34,13 +42,14 @@ export const treemapOption: echarts.EChartsOption = {
             '#A0C4FF',
             '#BDB2FF',
             '#FFC6FF',
-            '#FFFFFC',
+            '#FFFFFE',
           ][8 - (index % 9)],
         },
       })),
       label: {
         color: 'black',
-        fontWeight: 'bolder',
+        fontWeight: 600,
+        fontSize: '1.8rem',
       },
       emphasis: {
         itemStyle: {

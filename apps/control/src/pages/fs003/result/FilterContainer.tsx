@@ -1,11 +1,19 @@
+import { RedoOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { Dropdown } from '@postcoil/ui';
-// import { Button } from 'antd';
 
 import styles from './FilterContainer.module.scss';
+
+interface dropDownOptionType {
+  value: string;
+  // label을 ReactNode로 지정하여 jsx형식 return이 가능케함
+  label: React.ReactNode;
+  icon?: React.ReactNode;
+}
 
 interface OptionType {
   value: string;
   label: string;
+  icon?: React.ReactNode;
 }
 
 const FilterContainer = () => {
@@ -26,14 +34,61 @@ const FilterContainer = () => {
     // Add more options...
   ];
 
-  const mockRollUnitName: OptionType[] = [
-    { value: '1P1_A0001', label: '1P1_A0001' },
-    { value: '1P1_A0002', label: '1P1_A0002' },
-    { value: '1P1_B0344', label: '1P1_B0344' },
-    { value: '1P1_C0015', label: '1P1_C0015' },
-    { value: '1P1_D0002', label: '1P1_D0002' },
+  const mockRollUnitName: dropDownOptionType[] = [
+    {
+      value: '1CAL001A',
+      label: (
+        <div>
+          {/* 아이콘추가 부분 */}
+          <RedoOutlined spin style={{ color: '#1677ff' }} />
+          <span style={{ marginLeft: 10 }}>{'1CAL001A'}</span>
+        </div>
+      ),
+      icon: <RedoOutlined />,
+    },
+    {
+      value: '1CAL001B',
+      label: (
+        <div>
+          <ClockCircleOutlined style={{ color: '#1677ff' }} />
+          <span style={{ marginLeft: 10 }}>{'1CAL001B'}</span>
+        </div>
+      ),
+      icon: <ClockCircleOutlined />,
+    },
+    {
+      value: '1CAL002A',
+      label: (
+        <div>
+          <ClockCircleOutlined style={{ color: '#1677ff' }} />
+          <span style={{ marginLeft: 10 }}>{'1CAL002A'}</span>
+        </div>
+      ),
+      icon: <ClockCircleOutlined />,
+    },
+    {
+      value: '1CAL002B',
+      label: (
+        <div>
+          <ClockCircleOutlined style={{ color: '#1677ff' }} />
+          <span style={{ marginLeft: 10 }}>{'1CAL002B'}</span>
+        </div>
+      ),
+      icon: <ClockCircleOutlined />,
+    },
+    {
+      value: '1CAL003B',
+      label: (
+        <div>
+          <ClockCircleOutlined style={{ color: '#1677ff' }} />
+          <span style={{ marginLeft: 10 }}>{'1CAL003B'}</span>
+        </div>
+      ),
+      icon: <ClockCircleOutlined />,
+    },
     // Add more options...
   ];
+
   return (
     <div className={styles.filterContainer}>
       <div className={styles.dropdown}>

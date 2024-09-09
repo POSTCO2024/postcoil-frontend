@@ -12,9 +12,12 @@ const Fc003: React.FC = () => {
   };
   return (
     <div className={styles.page}>
-      <h1>공장별 수급량 조회</h1>
+      <h1>공장별 작업대상재 현황</h1>
       <div className={styles.tab}>
-        <Tab labels={['공정별 분석', '그래프']} onChange={changeTab} />
+        <Tab
+          labels={['작업 현황 모니터링', '공장별 수급량 조회']}
+          onChange={changeTab}
+        />
       </div>
       <div className={styles.content}>
         {isChart ? <StockCharts /> : <DashBoard />}

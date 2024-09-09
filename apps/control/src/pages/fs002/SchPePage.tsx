@@ -2,9 +2,9 @@ import { Tab } from '@postcoil/ui';
 import { Button } from 'antd';
 import { useState } from 'react';
 
+import SchListModal from './pending/SchListModal';
 import styles from './SchPePage.module.scss';
 
-import RollSuccessModal from '@/components/common/RollSuccessModal';
 import ContentContainer from '@/pages/fs002/pending/ContentContainer';
 import DraggableChart from '@/pages/fs002/pending/DraggableChart';
 import FilterContainer from '@/pages/fs002/pending/FilterContainer';
@@ -40,11 +40,10 @@ const SchPePage = () => {
       <Button className={styles.btn} type="primary" onClick={handleModal}>
         스케줄 등록
       </Button>
-      <RollSuccessModal
+      <SchListModal
         isModalOpen={isModalOpen}
-        handleCancel={handleCancel}
-        handleApply={handleApply}
-        title="스케줄이 정상적으로 등록되었습니다."
+        onApply={handleApply}
+        onCancel={handleCancel}
       />
     </div>
   );
