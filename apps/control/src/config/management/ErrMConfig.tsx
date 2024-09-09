@@ -1,4 +1,4 @@
-import { ConfigProvider, Tag } from 'antd';
+import { Tag } from 'antd';
 
 export const facilitycolumn = [
   {
