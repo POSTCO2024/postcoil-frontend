@@ -75,10 +75,7 @@ export const Fc001: React.FC = () => {
     );
   };
 
-
-
-  // Effect: 컴포넌트가 마운트될 때 API로부터 데이터를 가져옴
-  // 1) 작업대상재 추출
+  // 컴포넌트가 마운트될 때 API로부터 데이터를 가져옴
   useEffect(() => {
     const fetchData = async () => {
       await fetchTargetMaerialData();
