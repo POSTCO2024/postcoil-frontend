@@ -1,5 +1,7 @@
 import { Table, Tab } from '@postcoil/ui';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
+import axios from 'axios';
 
 import styles from './Fc001.module.scss';
 import { RowheaderTable } from './rowheadertable/RowheaderTable';
