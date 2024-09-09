@@ -1,5 +1,7 @@
+import { url } from '@postcoil/ui/config/UrlConfig';
 import { Table, ConfigProvider } from 'antd';
-import { useState } from 'react';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
 
 import styles from './ErrMPage.module.scss';
 import Result from './Result';
@@ -8,15 +10,55 @@ import {
   facilitycolumn,
   facilityData,
   facilityErrColumn,
-  facilityErrData,
   ManageColumn,
   infoErrColumn,
-  infoErrData,
-  managementData,
+  columnMapping,
 } from '@/config/management/ErrMConfig';
 
+async function getErrorStandard(facility: string) {
+  try {
+    const response = await axios.get(
+      url + '/control/management/error/' + facility,
+    );
+    return response.data.criteriaDetails;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 const ErrMPage: React.FC = () => {
+  useEffect(() => {
+    const initialData = async () => {
+      try {
+        const fetchData = await getErrorStandard('1PCM');
+        console.log('Fetched Data:', fetchData); // 실제 데이터를 로그로 확인
+        transformedData(fetchData); // 데이터를 변환
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    initialData(); // async 함수 호출
+  }, []);
+
+  //antd 테이블에 들어가게 변환
+  function transformedData(fetchData: any) {
+    const standardData = fetchData.map((item: any, index: any) => ({
+      key: (index + 1).toString(),
+      id: (index + 1).toString(),
+      columnName: columnMapping[item.columnName],
+      value: item.columnValue != null ? item.columnValue : '미지정',
+      mapperId: item.id,
+    }));
+    console.log('standardData   ' + JSON.stringify(standardData));
+    setStandardDatas(standardData);
+  }
+
+  const setPostedData = (newData: any) => {
+    setStandardDatas(newData);
+  };
+
   const [selectedRowIndex, setSelectedRowIndex] = useState(facilityData[0]);
+  const [standardDatas, setStandardDatas] = useState([]);
   const setClassName = (record: any) => {
     // console.log(
     //   JSON.stringify(record) + index + JSON.stringify(selectedRowIndex),
@@ -28,8 +70,10 @@ const ErrMPage: React.FC = () => {
     return result;
   };
 
-  const handleRowClick = (index: any) => {
+  const handleRowClick = async (index: any) => {
     setSelectedRowIndex(index);
+    const fetchData = await getErrorStandard(index.facilityId);
+    transformedData(fetchData);
   };
   return (
     <div className={styles.page}>
@@ -61,36 +105,54 @@ const ErrMPage: React.FC = () => {
             <div className={styles.table}>
               <Table
                 columns={facilityErrColumn}
-                dataSource={facilityErrData}
+                dataSource={standardDatas.slice(0, 4)}
                 size={'small'}
                 tableLayout={'fixed'}
                 pagination={false}
               />
             </div>
-            <Result title="설비사양 에러" data={facilityErrData} />
+            <Result
+              title="설비사양 에러"
+              data={standardDatas.slice(0, 4)}
+              fullData={standardDatas}
+              facility={selectedRowIndex.facilityId}
+              setPostedData={setPostedData}
+            />
           </div>
           <div>
             <div className={styles.table}>
               <Table
                 columns={ManageColumn}
-                dataSource={managementData}
+                dataSource={standardDatas.slice(4, 5)}
                 size={'small'}
                 tableLayout={'fixed'}
                 pagination={false}
               />
             </div>
-            <Result title="관리재" data={managementData} />
+            <Result
+              title="관리재"
+              data={standardDatas.slice(4, 5)}
+              fullData={standardDatas}
+              facility={selectedRowIndex.facilityId}
+              setPostedData={setPostedData}
+            />
           </div>
           <div>
             <div className={styles.table}>
               <Table
                 columns={infoErrColumn}
-                dataSource={infoErrData}
+                dataSource={standardDatas.slice(5)}
                 size={'small'}
                 pagination={false}
               />
             </div>
-            <Result title="정보이상재" data={infoErrData} />
+            <Result
+              title="정보이상재"
+              data={standardDatas.slice(5)}
+              fullData={standardDatas}
+              facility={selectedRowIndex.facilityId}
+              setPostedData={setPostedData}
+            />
           </div>
         </div>
       </div>
