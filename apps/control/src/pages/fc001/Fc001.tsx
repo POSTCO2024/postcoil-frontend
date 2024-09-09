@@ -7,7 +7,7 @@ import styles from './Fc001.module.scss';
 import { RowheaderTable } from './rowheadertable/RowheaderTable';
 import { TopBar } from './topBar/TopBar';
 
-import { columnsList, columnsTable } from '@/config/control/Fc001Utils';
+import { columnsList, columnsTableConfig } from '@/config/control/Fc001Utils';
 
 // 작업대상재 추출 및 저장
 async function fetchTargetMaerialData() {
@@ -55,12 +55,26 @@ export const Fc001: React.FC = () => {
   // const [targetMaterialData, setTargetMaterialData] = useState<any[]>([]);
   const [selectedProcessCode, setSelectedProcessCode] =
     useState<string>('1PCM'); // 선택된 공정
-
-  const [RowTableData, setRowTableData] = useState<any[]>([]);
+  const [rowTableColumns, setRowTableColumns] = useState(
+    columnsTableConfig['default'],
+  );
+  const [rowTableData, setRowTableData] = useState<any[]>([]);
 
   // Tab 이동
   const changeTab = () => {
     setIsValue(!isValue);
+  };
+
+  // DropBox
+  const handleDropdownChange = (processCode: string) => {
+    console.log('Selected Process Code:', processCode);
+    setSelectedProcessCode(processCode); // 공정 변경
+    console.log(columnsTableConfig[processCode]);
+    console.log(columnsTableConfig['default']);
+
+    setRowTableColumns(
+      columnsTableConfig[processCode] || columnsTableConfig['default'],
+    );
   };
 
   // 컴포넌트가 마운트될 때 API로부터 데이터를 가져옴
@@ -83,20 +97,17 @@ export const Fc001: React.FC = () => {
     fetchListData();
   }, [selectedProcessCode]);
 
-  const handleDropdownChange = (processCode: string) => {
-    setSelectedProcessCode(processCode); // 공정 변경
-  };
-
   useEffect(() => {
     if (!isValue) {
       const fetchData = async () => {
         const data = await getRowTable(); // API 요청
         setRowTableData(data);
-        console.log('표 불러오기 ');
+        console.log('표 불러오기');
+        console.log(data);
       };
       fetchData();
     }
-  }, [isValue]); // isValue가 변경될 때마다 실행
+  }, [selectedProcessCode, isValue]); // isValue가 변경될 때마다 실행
 
   return (
     <div className={styles.boardContainer}>
@@ -117,8 +128,8 @@ export const Fc001: React.FC = () => {
         ) : (
           <div className={styles.customTable}>
             <RowheaderTable
-              columns={columnsTable}
-              data={RowTableData.map((item, index) => ({
+              columns={rowTableColumns}
+              data={rowTableData.map((item, index) => ({
                 ...item,
                 key: index,
               }))}
