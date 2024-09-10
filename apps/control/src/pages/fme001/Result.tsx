@@ -1,16 +1,65 @@
 import { Button } from '@postcoil/ui';
+import { url } from '@postcoil/ui/config/UrlConfig';
 import { Input, Form } from 'antd';
-import { useState } from 'react';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
 
 import styles from './Result.module.scss';
 
 import CommonModal from '@/components/common/CommonModal';
+import { keyMapping } from '@/config/management/ErrMConfig';
+
 interface PropsType {
   title: string;
   data: any;
+  facility: string;
+  setPostedData: any;
+  fullData: any;
 }
 
-const Result = ({ title, data }: PropsType) => {
+// API Post 용
+function transformData(data: any) {
+  const transformedData: { [key: string]: any } = {};
+  // 원본 객체의 각 키를 매핑된 새로운 키로 변환
+  Object.keys(data).forEach((key) => {
+    const newKey = keyMapping[key]; // 매핑된 새로운 키
+    if (newKey) {
+      transformedData[newKey] = data[key]; // 새로운 키에 값을 할당
+    }
+  });
+  return transformedData;
+}
+
+// modal을 수정하고 부모의 setStandardDatas 에 맞는 형태로 바꿔주는 함수
+function updateValues(dataArray: any, newValues: any) {
+  return dataArray.map((item: any) => {
+    // 새로운 값을 찾기
+    const newValue = newValues[item.columnName];
+    return {
+      ...item, // 기존 속성을 그대로 복사
+      value: newValue !== undefined ? newValue : item.value, // 새로운 값이 있으면 업데이트, 없으면 기존 값 유지
+    };
+  });
+}
+
+const Result = ({
+  title,
+  data,
+  facility,
+  setPostedData,
+  fullData,
+}: PropsType) => {
+  const postStandard = async (data: any) => {
+    console.log(data);
+    await axios
+      .post(url + '/control/management/error/' + facility, data)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   const [form] = Form.useForm();
   const [modalTitle, setModalTitle] = useState('');
   // const [isEditing, setIsEditing] = useState(false); // FIXME: check Remove this
@@ -26,18 +75,36 @@ const Result = ({ title, data }: PropsType) => {
   };
 
   const handleApply = () => {
-    // TODO: save data to server
-    // form.submit();
-    console.log('Success:');
-    setIsModalOpen(false);
+    form
+      .validateFields()
+      .then((values) => {
+        onFinish(values); // Call onFinish with the form values
+        setIsModalOpen(false); // Close the modal after applying changes
+      })
+      .catch((info) => {
+        console.log('Validate Failed:', info);
+      });
   };
 
   // TODO: 조회 common 컴포넌트꺼 사용! - 롤편성조회 화면 지우기
 
   const onFinish = (values: any) => {
-    console.log('Success:', values);
+    // console.log('Success:', values);
+    // console.log('모달 수정 후 부모 새로고침용' + JSON.stringify(updateValues(fullData, values)));
+    postStandard(transformData(values));
+    setPostedData(updateValues(fullData, values));
     setIsModalOpen(false);
   };
+
+  // 각 버튼 누를때마다 모달 안의 내용이 바뀌게 만듬
+  useEffect(() => {
+    form.setFieldsValue(
+      data.reduce((acc: any, item: any) => {
+        acc[item.columnName] = item.value;
+        return acc;
+      }, {}),
+    );
+  }, [data, form]);
 
   return (
     <div className={styles.resultBtns}>
@@ -67,8 +134,9 @@ const Result = ({ title, data }: PropsType) => {
                 <p style={{ fontWeight: 'bold' }}>{item.columnName}</p>
                 <Form.Item name={item.columnName}>
                   <Input
+                    style={{ marginTop: '10%' }}
                     type="text"
-                    addonAfter={item.columnName == '소둔온도' ? '°C' : 'mm'}
+                    // addonAfter={item.columnName == '소둔온도' ? '°C' : 'mm'}
                   />
                 </Form.Item>
               </div>

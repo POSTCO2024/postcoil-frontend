@@ -67,6 +67,7 @@ const Result = ({ title, data }: PropsType) => {
                 <p style={{ fontWeight: 'bold' }}>{item.columnName}</p>
                 <Form.Item name={item.columnName}>
                   <Input
+                    style={{ marginTop: '10%' }}
                     type="text"
                     addonAfter={item.columnName == '소둔온도' ? '°C' : ''}
                   />
