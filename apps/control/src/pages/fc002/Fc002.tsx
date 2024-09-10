@@ -32,18 +32,35 @@ export const Fc002: React.FC = () => {
   const [selectedRows, setSelectedRows] = useState<React.Key[]>([]); // Checked Rows
   console.log(selectedRows);
 
+  // const [selectedRows, setSelectedRows] = useState<string[]>([]); // Checked Rows
+  // console.log(selectedRows);
+  // const handleRowSelection = (selectedKeys: React.Key[]) => {
+  //   const selectedFCodes = rowData
+  //     .filter(row => selectedKeys.includes(row.key)) // 선택된 키와 일치하는 row를 필터링
+  //     .map(row => row.f_code); // f_code 값을 추출
+
+  //   setSelectedRows(selectedFCodes); // f_code를 저장
+  // };
+
   const handleModalOpen = () => setIsModalOpen(true);
   const handleOk = async () => {
     if (selectedRows.length > 0) {
-      // const errorpassMaterialIds = selectedRows.map(row => row.id);
+      const errorpassFcodes = tableData
+        .filter((row) => selectedRows.includes(row.key)) // 선택된 key와 일치하는 행 필터링
+        .map((row) => row.key); // 각 행에서 f_code만 추출
+
+      console.log('API 요청: ' + JSON.stringify(selectedRows, null, 2));
+      console.log('API 요청: ' + JSON.stringify(errorpassFcodes, null, 2));
+
       await updateIsError(selectedRows); // API 요청
-      console.log(selectedRows);
     }
     setIsModalOpen(false);
   };
   const handleCancel = () => setIsModalOpen(false);
 
+  // 상태 세팅 함수
   function setSelectedMaterials(selectedRows: any) {
+    console.log('선택된 Materials:', selectedRows);
     setSelectedRows(selectedRows);
   }
 
