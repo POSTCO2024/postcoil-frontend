@@ -47,17 +47,25 @@ const optionsDropdown2 = [
   },
 ];
 
-export const TopBar: React.FC = () => {
+interface TopBarProps {
+  onProcessChange: (processCode: string) => void;
+}
+
+export const TopBar: React.FC<TopBarProps> = ({ onProcessChange }) => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
   const handleDropdownChange = (selectedValues: any) => {
     // console.log(e.target.value);
     // 배열이 비어있지 않다면 첫 번째 값을 사용하도록 설정
     if (selectedValues && selectedValues.length > 0) {
-      setSelectedOption(selectedValues[0]);
-      console.log(selectedValues[0]);
+      const processCode = selectedValues[0];
+      setSelectedOption(processCode);
+      console.log(processCode);
+
+      onProcessChange(processCode); // 선택된 공정명을 부모 컴포넌트로 전달
     } else {
       setSelectedOption(null);
+      onProcessChange('1PCM'); // default values
       console.log('-');
     }
   };
@@ -82,7 +90,6 @@ export const TopBar: React.FC = () => {
           <span> (mm) ~ </span>
           <Input />
           <span> (mm)</span>
-          {/* <Button text={'검색'} /> */}
           <SearchButton />
         </div>
       ) : (
