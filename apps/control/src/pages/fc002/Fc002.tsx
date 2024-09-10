@@ -1,7 +1,6 @@
-import axios from 'axios';
-
 import { Table } from '@postcoil/ui';
 import { Button } from 'antd';
+import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 
 import styles from './Fc002.module.scss';
