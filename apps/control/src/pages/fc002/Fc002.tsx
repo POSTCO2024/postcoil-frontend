@@ -10,6 +10,8 @@ import { TopBar } from './topBar/TopBar';
 import CommonModal from '@/components/common/CommonModal';
 import { columnsData } from '@/config/control/Fc002Utils';
 
+// API
+// 1. 에러재 목록 조회
 async function getErrorMaterialData(processCode: string) {
   const url = `http://localhost:8086/control/error/${processCode}`;
   try {
@@ -22,51 +24,49 @@ async function getErrorMaterialData(processCode: string) {
   }
 }
 
+// 2. 에러패스
+async function updateIsError(data: React.Key[]) {
+  const url = `http://localhost:8086/control/errorpass`;
+  try {
+    const response = await axios.put(url, data);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error('PUT 요청 중 오류 발생:', error);
+    return [];
+  }
+}
+
 export const Fc002: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [dataList, setDataList] = useState<any[]>([]); // API로부터 받을 데이터 상태
   const [selectedProcessCode, setSelectedProcessCode] =
     useState<string>('1PCM');
   const [selectedRows, setSelectedRows] = useState<any[]>([]); // Checked Rows
-  console.log(selectedRows);
 
+  // Modal
   const handleModalOpen = () => setIsModalOpen(true);
   const handleOk = async () => {
     if (selectedRows.length > 0) {
-      // console.log('선택된 재료:', selectedRows);
-      // console.log('전체 재료:', dataList);
+      const materialIdsSelected = selectedRows.map((r, _) => r.materialId);
+      // const selectedMaterialIds = dataList.filter((row) => materialIdsSelected.includes(row.materialId));
 
-      const materialIdsSelected = selectedRows.map((r, _) => r.materialId); // ***
-      const selectedMaterialIds = dataList.filter((row) =>
-        materialIdsSelected.includes(row.materialId),
-      );
       console.log('Filtering ... ');
       console.log(materialIdsSelected); // 선택된 materialId
-      console.log(selectedMaterialIds); // 필터링 된 rows
+      // console.log(selectedMaterialIds); // 필터링 된 rows
 
-      await updateIsError(materialIdsSelected); // API 요청
+      await updateIsError(materialIdsSelected); // Error Pass API 요청
+      const data = await getErrorMaterialData(selectedProcessCode); // 리랜더링
+      setDataList(data);
     }
     setIsModalOpen(false);
   };
   const handleCancel = () => setIsModalOpen(false);
 
-  // 상태 세팅 함수
+  // Checked Row 상태 변환
   function setSelectedMaterials(selectedRows: any) {
-    console.log('선택된 Materials:', selectedRows);
+    // console.log('선택된 Materials:', selectedRows);
     setSelectedRows(selectedRows);
-  }
-
-  // 에러패스
-  async function updateIsError(data: React.Key[]) {
-    const url = `http://localhost:8086/control/errorpass`;
-    try {
-      const response = await axios.put(url, data);
-      console.log(response.data);
-      return response.data;
-    } catch (error) {
-      console.error('PUT 요청 중 오류 발생:', error);
-      return [];
-    }
   }
 
   // 에러재 목록 조회
