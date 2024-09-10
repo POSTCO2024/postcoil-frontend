@@ -2,7 +2,8 @@ import { Button, Dropdown } from '@postcoil/ui';
 import React, { useState } from 'react';
 
 import styles from './FilterContainer.module.scss';
-import { fetchSchManagementData } from '@/api/fms001Api';
+
+import { fetchSchManagementData } from '@/api/scheduleApi';
 import { ConstraintInsertionDTO, PriorityDTO } from '@/config/management/DTO';
 
 interface PropsType {
@@ -44,14 +45,14 @@ const FilterContainer = ({
   setInsertion,
 }: PropsType) => {
   const [processCode, setProcessCode] = useState('');
-  const [materialUnitCode, setMaterialUnitCode] = useState('');
+  const [rollUnit, setRollUnit] = useState('');
 
   const handleSearch = async () => {
-    // EX. processCode: '1cal', materialUnitCode: 'A'
-    if (processCode !== '' && materialUnitCode !== '') {
+    // EX. processCode: '1cal', rollUnit: 'A'
+    if (processCode !== '' && rollUnit !== '') {
       const data = await fetchSchManagementData({
         processCode,
-        materialUnitCode,
+        rollUnit,
       });
       console.log(data);
 
@@ -91,7 +92,7 @@ const FilterContainer = ({
       <Dropdown
         title="롤 단위"
         options={rollOptions}
-        onChange={(value) => setMaterialUnitCode(value ? value[0] : '')}
+        onChange={(value) => setRollUnit(value ? value[0] : '')}
       />
       {/* TODO: searchbar 함수 받게! */}
       <Button text="검색" onClick={handleSearch} />
