@@ -40,11 +40,16 @@ export const fetchSchManagementData = async ({
 export const fetchScheduleData = async ({
   pageCode,
   processCode = 'schedule',
-  requestParams,
+  requestParams = '',
 }: SchMParams) => {
   try {
     const response = await scheduleApiClient.get(
       `${SCH_API_BASE_URL}/${pageCode}/${processCode}${requestParams}`,
+    );
+    console.log(
+      `PATH URL : ${SCH_API_BASE_URL}/${pageCode}/${processCode}${requestParams}`,
+      'RESPONSE DATA : ',
+      response.data,
     );
     return response.data;
   } catch (error) {

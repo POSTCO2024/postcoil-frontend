@@ -17,7 +17,6 @@ interface OptionType {
   label: string;
 }
 
-// TODO: fetch DATA
 const mockOptions: OptionType[] = [
   {
     value: '1CAL',
@@ -73,8 +72,6 @@ const FilterContainer = ({
       return;
     }
   };
-  // const handleFilter = useState;
-  // TODO: filtering
 
   return (
     <div className={styles.filterContainer}>
@@ -86,16 +83,13 @@ const FilterContainer = ({
             setProcessCode(value ? value[0].toLowerCase() : '');
           }}
         />
-        {/* TODO: Dropdown 데이터 변경, 함수 받게 */}
       </div>
-      {/* <Button text="조회" onClick={handleSearch} /> */}
       <Dropdown
         title="롤 단위"
         options={rollOptions}
         onChange={(value) => setRollUnit(value ? value[0] : '')}
       />
-      {/* TODO: searchbar 함수 받게! */}
-      <Button text="검색" onClick={handleSearch} />
+      <Button text="조회" onClick={handleSearch} />
     </div>
   );
 };
