@@ -1,5 +1,5 @@
 import { Table as AntTable, ConfigProvider, TablePaginationConfig } from 'antd';
-import React, { useState } from 'react';
+import React from 'react';
 
 import styles from './Table.module.scss';
 import { DataType, ColumnDataType } from '../../config/TableConfig';
