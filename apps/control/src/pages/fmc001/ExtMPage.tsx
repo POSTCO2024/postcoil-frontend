@@ -1,5 +1,7 @@
+import { url } from '@postcoil/ui/config/UrlConfig';
 import { Table, ConfigProvider } from 'antd';
-import { useState } from 'react';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
 
 import styles from './ExtMPage.module.scss';
 import Result from './extraction/Result';
@@ -8,9 +10,8 @@ import {
   columnData,
   columnsData,
   facilityData,
-  standardData,
+  columnMapping,
 } from '@/config/management/ExtMConfig';
-
 // // TODO: fetch data from API
 // const extractions: DataType = {
 //   공장코드: 100,
@@ -31,9 +32,51 @@ import {
 // //   constraints: DataType;
 // // }
 // // { extractions, errorCriteria }: PropsType
+async function getExtraction(facility: string) {
+  try {
+    const response = await axios.get(
+      url + '/control/management/extraction/' + facility,
+    );
+    return response.data.criteriaDetails;
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 const ExtMPage = () => {
+  // 처음 페이지 로딩시 기본값 1PCM
+  useEffect(() => {
+    const initialData = async () => {
+      try {
+        const fetchData = await getExtraction('1PCM');
+        console.log('Fetched Data:', fetchData); // 실제 데이터를 로그로 확인
+        transformedData(fetchData); // 데이터를 변환
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    initialData(); // async 함수 호출
+  }, []);
+
+  // DTO를 첫번째 테이블에 맞게 데이터 변환
+  function transformedData(fetchData: any) {
+    console.log(fetchData);
+    const standardData = fetchData.map((item: any, index: any) => ({
+      key: (index + 1).toString(),
+      id: (index + 1).toString(),
+      columnName: columnMapping[item.columnName],
+      value: item.columnValue,
+      mapperId: item.id,
+    }));
+    console.log('standardData   ' + JSON.stringify(standardData));
+    setStandardDatas(standardData);
+  }
+
+  const setPostedData = (newData: any) => {
+    setStandardDatas(newData);
+  };
   const [selectedRowIndex, setSelectedRowIndex] = useState(facilityData[0]);
+  const [standardDatas, setStandardDatas] = useState([]);
   const setClassName = (record: any) => {
     // console.log(
     //   JSON.stringify(record) + index + JSON.stringify(selectedRowIndex),
@@ -45,14 +88,10 @@ const ExtMPage = () => {
     return result;
   };
 
-  const handleRowClick = (index: any) => {
+  const handleRowClick = async (index: any) => {
     setSelectedRowIndex(index);
-    // console.log(
-    //   '선택된 행의 index' +
-    //     JSON.stringify(selectedRowIndex) +
-    //     '    ' +
-    //     rowIndex,
-    // );
+    const fetchData = await getExtraction(index.facilityId);
+    transformedData(fetchData);
   };
   return (
     <div className={styles.page}>
@@ -85,12 +124,17 @@ const ExtMPage = () => {
           <div className={styles.modifyTable}>
             <Table
               columns={columnsData}
-              dataSource={standardData}
+              dataSource={standardDatas}
               tableLayout="fixed"
               pagination={false}
             />
           </div>
-          <Result title="추출기준 관리" data={standardData} />
+          <Result
+            title="추출기준 관리"
+            data={standardDatas}
+            facility={selectedRowIndex.facilityId}
+            setPostedData={setPostedData}
+          />
         </div>
       </div>
     </div>
