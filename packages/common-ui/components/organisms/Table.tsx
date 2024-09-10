@@ -1,5 +1,5 @@
 import { Table as AntTable, ConfigProvider, TablePaginationConfig } from 'antd';
-import React, { useState } from 'react';
+import React from 'react';
 
 import styles from './Table.module.scss';
 import { DataType, ColumnDataType } from '../../config/TableConfig';
@@ -40,7 +40,7 @@ interface TableComponentProps<T extends DataType> {
   columns: ColumnDataType<T>[];
   data: T[];
   handleRowClick?: (record?: any, rowIndex?: number) => void; // Row click event handler
-  handleRowsClick?: (selectedRows: T[]) => void; // useCheckBox event handler, 데이터를 가지고 다룰 정보 처리 함수
+  handleRowsClick?: (selectedRows: any[]) => void; // useCheckBox event handler, 데이터를 가지고 다룰 정보 처리 함수
   scroll?: { x?: number | string; y?: number | string }; // 스크롤 설정
   size?: string;
   tableLayout?: string | undefined;
@@ -48,6 +48,7 @@ interface TableComponentProps<T extends DataType> {
   rowClassName?: (record: any) => string;
   rowKey?: string | ((record: T) => string);
   components?: any;
+  setSelectedMaterials?: any;
 }
 
 export const Table = <T extends DataType>({
@@ -64,14 +65,14 @@ export const Table = <T extends DataType>({
   rowClassName,
   rowKey,
   components,
+  setSelectedMaterials,
 }: TableComponentProps<T>) => {
   const processedColumns = [...createColumns(columns)];
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  // const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   const rowSelection = {
-    selectedRowKeys,
     onChange: (newSelectedRowKeys: React.Key[], selectedRows: T[]) => {
-      setSelectedRowKeys(newSelectedRowKeys);
+      setSelectedMaterials(newSelectedRowKeys);
       if (handleRowsClick) {
         handleRowsClick(selectedRows);
       }
