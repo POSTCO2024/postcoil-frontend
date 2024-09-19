@@ -25,10 +25,10 @@ const cubeCollingChangeTime: number = 14.5;
 
 const duration: number = 1;
 const startColor: any = new THREE.Color(0x000000);
-const endColor: any = new THREE.Color(0x9c0c27);
+const endColor: any = new THREE.Color(0xff0000);
 let lerpProgress: number = 0;
 
-const endCoolColor = new THREE.Color(0x0a22c2);
+const endCoolColor = new THREE.Color(0x0000ff);
 
 class App {
   private divContainer: HTMLDivElement | null;
@@ -94,6 +94,7 @@ class App {
 
     requestAnimationFrame(this.render.bind(this));
   }
+
   // 선택된 메쉬 정보를 표시하는 함수
   private showMeshInfo(mesh: THREE.Mesh) {
     if (this.infoDiv) {
@@ -101,7 +102,7 @@ class App {
       this.infoDiv.innerHTML = `
         <strong>Mesh Name:</strong> ${mesh.name}<br>
         <strong>Position:</strong> x=${mesh.position.x.toFixed(2)}, y=${mesh.position.y.toFixed(2)}, z=${mesh.position.z.toFixed(2)}<br>
-        <strong>Material:</strong> ${mesh.material.type}
+        <strong>Material:</strong> ${mesh.material}
       `;
       this.infoDiv.style.display = 'block'; // 정보를 화면에 표시
     }
@@ -129,10 +130,10 @@ class App {
     const pmremGenerator = new PMREMGenerator(this.renderer);
     pmremGenerator.compileEquirectangularShader();
 
-    new RGBELoader().load('image7.hdr', (texture) => {
+    new RGBELoader().load('image5.hdr', (texture) => {
       const envMap = pmremGenerator.fromEquirectangular(texture).texture;
       this.scene.environment = envMap;
-      this.scene.background = new THREE.Color(0x9c0c27);
+      this.scene.background = new THREE.Color(0x565657);
 
       texture.dispose();
       pmremGenerator.dispose();
@@ -168,7 +169,7 @@ class App {
   }
 
   private setupModel() {
-    new GLTFLoader().load('./cold_factory_final.glb', (gltf) => {
+    new GLTFLoader().load('./postco_ani.glb', (gltf) => {
       const model = gltf.scene;
       this.scene.add(model);
 
@@ -183,13 +184,25 @@ class App {
               metalness: child.material.metalness,
               roughness: child.material.roughness,
               envMap: this.scene.environment,
-              envMapIntensity: 1.5,
+              envMapIntensity: 1,
               side: THREE.DoubleSide,
             });
-          } else {
-            child.material = new THREE.MeshBasicMaterial({
-              color: child.material.color || 0xffffff,
-              side: THREE.DoubleSide,
+          }
+          // else {
+          //   child.material = new THREE.MeshBasicMaterial({
+          //     color: child.material.color || 0xffffff,
+          //     side: THREE.DoubleSide,
+          //   });
+          // }
+
+          if (child.name === 'Plane001') {
+            console.log('find!');
+            // 바닥 Mesh에 대한 특수 처리
+            child.material = new THREE.MeshStandardMaterial({
+              color: 0x000000, // 바닥의 색상을 명시적으로 설정
+              roughness: 0.8,
+              metalness: 0,
+              side: THREE.DoubleSide, // 양면 렌더링
             });
           }
 
@@ -203,7 +216,7 @@ class App {
               200,
               0xff0000,
             );
-            this.scene.add(planeHelper);
+            //this.scene.add(planeHelper);
           }
           if (child.name === 'Plane002') {
             // 클리핑 플레인 설정 (X축 기준으로 왼쪽에서부터 메쉬를 잘라냄)
@@ -216,7 +229,7 @@ class App {
               200,
               0xff0000,
             ); // 클리핑 플레인을 시각적으로 확인
-            this.scene.add(planeHelper2);
+            //this.scene.add(planeHelper2);
           }
           if (child.name === 'Plane003') {
             // 클리핑 플레인 설정 (X축 기준으로 왼쪽에서부터 메쉬를 잘라냄)
@@ -229,7 +242,7 @@ class App {
               200,
               0xff0000,
             ); // 클리핑 플레인을 시각적으로 확인
-            this.scene.add(planeHelper3);
+            // this.scene.add(planeHelper3);
           }
 
           if (child.name === 'Cube017') {
@@ -247,10 +260,10 @@ class App {
 
       const box = new THREE.Box3().setFromObject(model);
       const axisHelper = new THREE.AxesHelper(500);
-      this.scene.add(axisHelper);
+      //this.scene.add(axisHelper);
 
       const boxHelper = new THREE.BoxHelper(model);
-      this.scene.add(boxHelper);
+      //this.scene.add(boxHelper);
 
       this.boxHelper = boxHelper;
       this.model = model;
@@ -309,7 +322,7 @@ class App {
 
   private addPointLight(x: number, y: number, z: number, helperColor: number) {
     const color = 0xffffff;
-    const intensity = 1.5;
+    const intensity = 2;
     const pointLight = new THREE.PointLight(color, intensity, 2000);
     pointLight.position.set(x, y, z);
     this.scene.add(pointLight);
@@ -319,27 +332,27 @@ class App {
       10,
       helperColor,
     );
-    this.scene.add(pointLightHelper);
+    //this.scene.add(pointLightHelper);
   }
 
   private setupLight() {
-    const ambientLight = new THREE.AmbientLight(0xffffff, 2);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 8);
     this.scene.add(ambientLight);
     this.addPointLight(350, 30, 50, 0xff0000);
     this.addPointLight(-10, 30, 50, 0xffff00);
     this.addPointLight(-10, 30, -80, 0x00ff00);
     this.addPointLight(350, 30, -80, 0x0000ff);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 5);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 10);
     directionalLight.position.set(150, 30, 50).normalize();
     this.scene.add(directionalLight);
     const directionalLightHelper = new THREE.DirectionalLightHelper(
       directionalLight,
       10,
     );
-    this.scene.add(directionalLightHelper);
+    //this.scene.add(directionalLightHelper);
 
-    const additionalLight = new THREE.DirectionalLight(0xffffff, 3);
+    const additionalLight = new THREE.DirectionalLight(0xffffff, 10);
     additionalLight.position.set(-1, 1, 0).normalize();
     this.scene.add(additionalLight);
   }
@@ -382,27 +395,27 @@ class App {
   update(time: number) {
     time *= 0.001;
     const deltaTime = this.clock.getDelta();
-
+    time += 1;
     if (this.mixer) {
       this.mixer.update(deltaTime);
     }
 
     if (clipPlaneX && clipPlaneX.constant < 300) {
-      clipPlaneX.constant += deltaTime * clipSpeed * clipDirection * 0.5;
+      clipPlaneX.constant += deltaTime * clipSpeed * clipDirection;
     }
 
-    if (clipPlaneX2 && time > 24) {
-      const timeInCycle = (time - 24) % 36;
-      if (timeInCycle <= 18 && clipPlaneX2.constant < 20) {
+    if (clipPlaneX2 && time > 19) {
+      const timeInCycle = (time - 20) % 40;
+      if (timeInCycle <= 20 && clipPlaneX2.constant < 20) {
         clipPlaneX2.constant += deltaTime * clipSpeed;
       } else if (clipPlaneX2.constant > 5) {
         clipPlaneX2.constant -= deltaTime * clipSpeed;
       }
     }
 
-    if (clipPlaneX3 && time > 47) {
-      const timeInCycle = (time - 47) % 36;
-      if (timeInCycle <= 18 && clipPlaneX3.constant < 320) {
+    if (clipPlaneX3 && time > 44) {
+      const timeInCycle = (time - 47) % 32;
+      if (timeInCycle <= 16 && clipPlaneX3.constant < 320) {
         clipPlaneX3.constant += deltaTime * clipSpeed;
       } else if (clipPlaneX3.constant > 290) {
         clipPlaneX3.constant -= deltaTime * clipSpeed;
@@ -518,7 +531,7 @@ const ThreeDMonitoring = () => {
     }
 
     // WebSocket 연결 설정
-    const ws = new WebSocket('ws://your-websocket-server');
+    const ws = new WebSocket('ws://localhost:8080');
     ws.onmessage = (event) => {
       // 서버에서 메시지를 받으면 setMeshInfo로 상태를 업데이트
       setMeshInfo(event.data);
