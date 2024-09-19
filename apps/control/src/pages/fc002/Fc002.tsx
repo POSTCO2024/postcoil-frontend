@@ -2,6 +2,10 @@ import { Table } from '@postcoil/ui';
 import { Button } from 'antd';
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import {
+  transformData,
+  ApiResponseItem,
+} from '../../utils/control/transformData';
 
 import styles from './Fc002.module.scss';
 import { TopBar } from './topBar/TopBar';
@@ -10,13 +14,25 @@ import CommonModal from '@/components/common/CommonModal';
 import { columnsData } from '@/config/control/Fc002Utils';
 
 // API
+// API
+export interface ApiResponse {
+  status: number;
+  result: ApiResponseItem[];
+  resultMsg?: string;
+}
+
 // 1. 에러재 목록 조회
-async function getErrorMaterialData(processCode: string) {
-  const url = `http://localhost:8086/control/error/${processCode}`;
+async function getErrorMaterialData(processCode: string): Promise<any[]> {
+  const url = `http://localhost:8086/api/v1/target-materials/error-by-curr-proc?currProc=${processCode}`;
   try {
-    const response = await axios.get(url);
-    console.log(response.data);
-    return response.data;
+    const response = await axios.get<ApiResponse>(url);
+    if (response.data.status === 200) {
+      console.log(response.data.result);
+      return transformData(response.data.result);
+    } else {
+      console.log('Error: ', response.data.resultMsg);
+      return [];
+    }
   } catch (error) {
     console.log(error);
     return [];
@@ -90,7 +106,10 @@ export const Fc002: React.FC = () => {
           <Table
             useCheckBox={true}
             columns={columnsData}
-            data={dataList.map((item: any) => ({ ...item, key: item.id }))}
+            data={dataList.map((item: any) => ({
+              ...item,
+              key: item.targetId,
+            }))}
             scroll={{ x: 'max-content', y: 600 }}
             tableLayout={'fixed'}
             handleRowsClick={setSelectedRows}

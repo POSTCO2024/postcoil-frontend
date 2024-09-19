@@ -7,7 +7,7 @@ export const columnsList = [
     fixed: true,
   },
   {
-    title: '코일 번호',
+    title: '코일 ID',
     dataIndex: 'materialNo',
     key: 'material_no',
     fixed: true,
@@ -28,7 +28,7 @@ export const columnsList = [
     key: 'op_code',
   },
   {
-    title: '재료 진행 상태',
+    title: '재료 진도',
     dataIndex: 'progress',
     key: 'progress',
   },
