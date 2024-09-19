@@ -63,7 +63,7 @@ export const Fc002: React.FC = () => {
   const handleModalOpen = () => setIsModalOpen(true);
   const handleOk = async () => {
     if (selectedRows.length > 0) {
-      const materialIdsSelected = selectedRows.map((r, _) => r.materialId);
+      const materialIdsSelected = selectedRows.map((r, _) => r.targetId);
       // const selectedMaterialIds = dataList.filter((row) => materialIdsSelected.includes(row.materialId));
 
       console.log('Filtering ... ');
