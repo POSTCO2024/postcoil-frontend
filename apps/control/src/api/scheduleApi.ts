@@ -31,8 +31,17 @@ export const fetchSchManagementData = async ({
     const response = await scheduleApiClient.get(
       `${SCHM_API_BASE_URL}/${processCode}/${rollUnit}`,
     );
-    return response.data;
-  } catch (error) {
+    // response.data와 response.data.result가 존재하는지 확인
+    if (response.data && response.data.result) {
+      return response.data.result;
+    } else {
+      throw new Error('Invalid response structure');
+    }
+  } catch (error: any) {
+    console.error(
+      'Error fetching data:',
+      error.response ? error.response.data : error.message,
+    );
     throw new Error('Failed to fetch Management-Schedule data');
   }
 };
@@ -46,13 +55,17 @@ export const fetchScheduleData = async ({
     const response = await scheduleApiClient.get(
       `${SCH_API_BASE_URL}/${pageCode}/${processCode}${requestParams}`,
     );
-    console.log(
-      `PATH URL : ${SCH_API_BASE_URL}/${pageCode}/${processCode}${requestParams}`,
-      'RESPONSE DATA : ',
-      response.data,
+    // response.data와 response.data.result가 존재하는지 확인
+    if (response.data && response.data.result) {
+      return response.data.result;
+    } else {
+      throw new Error('Invalid response structure');
+    }
+  } catch (error: any) {
+    console.error(
+      'Error fetching data:',
+      error.response ? error.response.data : error.message,
     );
-    return response.data;
-  } catch (error) {
     throw new Error('Failed to fetch Schedule data');
   }
 };

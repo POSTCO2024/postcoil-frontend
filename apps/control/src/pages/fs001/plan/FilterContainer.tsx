@@ -7,8 +7,11 @@ interface OptionType {
   label: string;
 }
 
-const FilterContainer = () => {
-  // TODO: fetch DATA
+interface PropsType {
+  handleChange: (value?: string[]) => Promise<void>; // Dropdown change event handler function
+}
+
+const FilterContainer = ({ handleChange }: PropsType) => {
   const mockOptions: OptionType[] = [
     {
       value: '1CAL',
@@ -18,13 +21,16 @@ const FilterContainer = () => {
       value: '2CAL',
       label: '2CAL',
     },
-    // Add more options...
   ];
 
   return (
     <div className={styles.filterContainer}>
       <div className={styles.dropdown}>
-        <Dropdown title="공정명" options={mockOptions} />
+        <Dropdown
+          title="공정명"
+          options={mockOptions}
+          onChange={handleChange}
+        />
       </div>
     </div>
   );
