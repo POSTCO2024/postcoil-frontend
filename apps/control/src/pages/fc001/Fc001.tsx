@@ -2,6 +2,10 @@ import { Table, Tab } from '@postcoil/ui';
 import React, { useState, useEffect } from 'react';
 
 import axios from 'axios';
+import {
+  transformData,
+  ApiResponseItem,
+} from '../../utils/control/transformData'; // transformData를 import
 
 import styles from './Fc001.module.scss';
 import { RowheaderTable } from './rowheadertable/RowheaderTable';
@@ -10,25 +14,36 @@ import { TopBar } from './topBar/TopBar';
 import { columnsList, columnsTableConfig } from '@/config/control/Fc001Utils';
 
 // 작업대상재 추출 및 저장
-async function fetchTargetMaerialData() {
-  const url = `http://localhost:8086/control/target`;
-  try {
-    const response = await axios.get(url);
-    console.log('작업 대상재 등록: ' + response.data);
-    return response.data;
-  } catch (error) {
-    console.log(error);
-    return [];
-  }
+// async function fetchTargetMaerialData() {
+//   const url = `http://localhost:8086/control/target`;
+//   try {
+//     const response = await axios.get(url);
+//     console.log('작업 대상재 등록: ' + response.data);
+//     return response.data;
+//   } catch (error) {
+//     console.log(error);
+//     return [];
+//   }
+// }
+
+export interface ApiResponse {
+  status: number;
+  result: ApiResponseItem[];
+  resultMsg?: string;
 }
 
 // 작업대상재 목록(List) 조회
-async function getTable(processCode: string) {
-  const url = `http://localhost:8086/control/fc001a/list/${processCode}`;
+async function getTable(processCode: string): Promise<any[]> {
+  const url = `http://localhost:8086/api/v1/target-materials/normal-by-curr-proc?currProc=${processCode}`;
   try {
-    const response = await axios.get(url);
-    console.log(response.data);
-    return response.data;
+    const response = await axios.get<ApiResponse>(url);
+    if (response.data.status === 200) {
+      console.log(response.data.result);
+      return transformData(response.data.result);
+    } else {
+      console.log('Error: ', response.data.resultMsg);
+      return [];
+    }
   } catch (error) {
     console.log(error);
     return [];
@@ -77,12 +92,12 @@ export const Fc001: React.FC = () => {
 
   // Effect: 컴포넌트가 마운트될 때 API로부터 데이터를 가져옴
   // 1) 작업대상재 추출
-  useEffect(() => {
-    const fetchData = async () => {
-      await fetchTargetMaerialData();
-    };
-    fetchData(); // 함수 호출
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     await fetchTargetMaerialData();
+  //   };
+  //   fetchData(); // 함수 호출
+  // }, []);
 
   // 2) 작업대상재 목록 조회
   useEffect(() => {
@@ -118,7 +133,7 @@ export const Fc001: React.FC = () => {
           <div className={styles.table}>
             <Table
               columns={columnsList}
-              data={dataList.map((item) => ({ ...item, key: item.id }))}
+              data={dataList.map((item) => ({ ...item, key: item.targetId }))}
               scroll={{ x: 'max-content', y: 500 }}
             />
           </div>
@@ -128,7 +143,7 @@ export const Fc001: React.FC = () => {
               columns={rowTableColumns}
               data={rowTableData.map((item, index) => ({
                 ...item,
-                key: index,
+                key: item.targetId || index,
               }))}
             />
           </div>

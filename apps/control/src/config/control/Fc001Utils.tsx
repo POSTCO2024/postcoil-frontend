@@ -2,38 +2,33 @@
 export const columnsList = [
   {
     title: '번호',
-    dataIndex: 'id',
-    key: 'id',
+    dataIndex: 'targetId',
+    key: 'targetId',
     fixed: true,
   },
   {
     title: '코일 번호',
     dataIndex: 'materialNo',
-    key: 'no',
+    key: 'material_no',
     fixed: true,
   },
   {
     title: '공장 코드',
-    dataIndex: 'fcode',
-    key: 'f_code',
+    dataIndex: 'factoryCode',
+    key: 'factory_code',
   },
   {
     title: '재료 유형',
-    dataIndex: 'type',
-    key: 'type',
+    dataIndex: 'materialType',
+    key: 'material_type',
   },
   {
     title: '조업 코드',
-    dataIndex: 'op_code',
+    dataIndex: 'opCode',
     key: 'op_code',
   },
   {
     title: '재료 진행 상태',
-    dataIndex: 'status',
-    key: 'status',
-  },
-  {
-    title: '진행 진도',
     dataIndex: 'progress',
     key: 'progress',
   },
@@ -60,22 +55,22 @@ export const columnsList = [
   {
     title: '통과 공정',
     dataIndex: 'passProc',
-    key: 'pass_proc',
+    key: 'passProc',
   },
   {
     title: '잔공정',
     dataIndex: 'remProc',
-    key: 'rem_proc',
+    key: 'remProc',
   },
   {
     title: '전공정',
     dataIndex: 'preProc',
-    key: 'pre_proc',
+    key: 'preProc',
   },
   {
     title: '차공정',
     dataIndex: 'nextProc',
-    key: 'next_proc',
+    key: 'nextProc',
   },
   {
     title: '저장 위치',
@@ -99,7 +94,7 @@ export const columnsList = [
   },
   {
     title: '고객사',
-    dataIndex: 'customerName',
+    dataIndex: 'goalCustomer',
     key: 'customer_name',
   },
   {
@@ -115,7 +110,7 @@ export const columnsList = [
   {
     title: '주문 길이',
     dataIndex: 'goalLength',
-    key: 'goal_lngth',
+    key: 'goal_length',
   },
   {
     title: '납기일',
@@ -124,7 +119,7 @@ export const columnsList = [
   },
   {
     title: '비고',
-    dataIndex: 'remarks',
+    dataIndex: 'order.remarks',
     key: 'remarks',
   },
 ];
