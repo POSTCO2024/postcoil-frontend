@@ -531,7 +531,7 @@ const ThreeDMonitoring = () => {
     }
 
     // WebSocket 연결 설정
-    const ws = new WebSocket('ws://localhost:8080');
+    const ws = new WebSocket('ws://localhost:8088');
     ws.onmessage = (event) => {
       // 서버에서 메시지를 받으면 setMeshInfo로 상태를 업데이트
       setMeshInfo(event.data);
@@ -563,6 +563,7 @@ const ThreeDMonitoring = () => {
         }}>
         Mesh Information
       </div>
+      <div> {meshInfo}</div>
     </div>
   );
 };
