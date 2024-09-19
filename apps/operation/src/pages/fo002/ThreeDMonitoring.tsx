@@ -561,7 +561,6 @@ const ThreeDMonitoring = () => {
           pointerEvents: 'none', // 마우스 이벤트를 무시하여 클릭이 제대로 동작하도록 함
           zIndex: 10, // 다른 요소 위로 표시되도록 설정
         }}>
-        {meshInfo} {/* WebSocket으로 받은 데이터를 표시 */}
         Mesh Information
       </div>
     </div>
