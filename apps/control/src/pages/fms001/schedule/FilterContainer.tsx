@@ -47,7 +47,7 @@ const FilterContainer = ({
   const [rollUnit, setRollUnit] = useState('');
 
   const handleSearch = async () => {
-    // EX. processCode: '1cal', rollUnit: 'A'
+    // EX. processCode: '1CAL', rollUnit: 'A'
     if (processCode !== '' && rollUnit !== '') {
       const data = await fetchSchManagementData({
         processCode,
@@ -80,7 +80,7 @@ const FilterContainer = ({
           title="공정명"
           options={mockOptions}
           onChange={(value) => {
-            setProcessCode(value ? value[0].toLowerCase() : '');
+            setProcessCode(value ? value[0] : '');
           }}
         />
       </div>
