@@ -83,7 +83,7 @@ export const columnsList = [
     key: 'yard',
   },
   {
-    title: '코일 품종 코드',
+    title: '품종',
     dataIndex: 'coilTypeCode',
     key: 'coil_type_code',
   },

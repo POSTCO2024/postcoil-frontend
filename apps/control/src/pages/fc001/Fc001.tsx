@@ -28,7 +28,7 @@ import { columnsList, columnsTableConfig } from '@/config/control/Fc001Utils';
 
 export interface ApiResponse {
   status: number;
-  result: ApiResponseItem[];
+  result: ApiResponseItem[] | any[];
   resultMsg?: string;
 }
 
@@ -51,11 +51,14 @@ async function getTable(processCode: string): Promise<any[]> {
 }
 
 // 작업대상재 표(table) 조회
-async function getRowTable() {
-  const url = `http://localhost:8086/control/fc001a/table`;
+async function getRowTable(): Promise<any[]> {
+  const url = `http://localhost:8086/api/v1/target-materials/nextProcTable`;
   try {
-    const response = await axios.get(url);
-    console.log(response.data);
+    const response = await axios.get<ApiResponse>(url);
+    if (response.data.status == 200) {
+      console.log(response.data.result);
+      return response.data.result;
+    }
     return response.data;
   } catch (error) {
     console.log(error);
