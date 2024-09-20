@@ -4,7 +4,11 @@ import { useNavigate } from 'react-router-dom';
 
 import styles from './SchPPage.module.scss';
 
-import { fetchScheduleData } from '@/api/scheduleApi';
+import {
+  fetchScheduleData,
+  SCH_API_BASE_URL,
+  scheduleApiClient,
+} from '@/api/scheduleApi';
 import CommonModal from '@/components/common/CommonModal';
 import RollSuccessModal from '@/components/common/RollSuccessModal';
 import RollWarnModal from '@/components/common/RollWarnModal';
@@ -17,6 +21,30 @@ const SchPPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModal2Open, setIsModal2Open] = useState(false);
   const [isModal3Open, setIsModal3Open] = useState(false);
+  const [materialData, setMaterialData] = useState<MaterialDTO[]>([]);
+  const [selectedRows, setSelectedRows] = useState<MaterialDTO[]>([]); // checkbox로 선택된 행 데이터를 저장하는 상태
+  const [processCode, setProcessCode] = useState('');
+
+  // selectedRows 상태가 변경될 때마다 실행되는 useEffect
+  useEffect(() => {
+    console.log('선택된 Rows:', selectedRows);
+  }, [selectedRows]); // selectedRows가 변경될 때마다 실행
+
+  const handleChange = async (value?: string[]) => {
+    if (value && value[0] !== '') {
+      // 데이터 로딩 전에 상태를 초기화 (reset)
+      setMaterialData([]); // materialData 초기화
+      setSelectedRows([]); // selectedRows 초기화
+      setProcessCode(value[0]); // processCode 초기화
+
+      const data = await fetchScheduleData({
+        pageCode: 'plan',
+        processCode: value[0],
+      });
+
+      setMaterialData(data); // API 호출 후 데이터 설정
+    }
+  };
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -27,9 +55,27 @@ const SchPPage = () => {
     navigate('/schedule2');
   };
 
-  const handleApply2 = () => {
-    setIsModalOpen(true);
-    setIsModal2Open(false);
+  const handleApply2 = async () => {
+    try {
+      // 선택된 rows의 id만 추출하여 배열로 생성
+      const selectedIds = selectedRows.map((row) => row.key);
+      console.log(selectedIds);
+
+      // 백엔드로 POST 요청 (selectedIds 전달)
+      await scheduleApiClient
+        .post(`${SCH_API_BASE_URL}/plan/${processCode}`, selectedIds, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+        .then((response) => console.log(response.data)); // 결과 console에서 보려고
+
+      // 성공적으로 요청이 완료되면 모달을 닫고 success 모달을 열기
+      setIsModalOpen(true);
+      setIsModal2Open(false);
+    } catch (error) {
+      console.error('Error during plan execution:', error);
+    }
   };
 
   const handleCancel2 = () => {
@@ -48,30 +94,6 @@ const SchPPage = () => {
 
     setIsModal2Open(true);
   };
-
-  const [materialData, setMaterialData] = useState<MaterialDTO[]>([]);
-
-  const [selectedRows, setSelectedRows] = useState<MaterialDTO[]>([]); // checkbox로 선택된 행 데이터를 저장하는 상태
-
-  const handleChange = async (value?: string[]) => {
-    if (value && value[0] !== '') {
-      // 데이터 로딩 전에 상태를 초기화 (reset)
-      setMaterialData([]); // materialData 초기화
-      setSelectedRows([]); // selectedRows 초기화
-
-      const data = await fetchScheduleData({
-        pageCode: 'plan',
-        processCode: value[0],
-      });
-
-      setMaterialData(data); // API 호출 후 데이터 설정
-    }
-  };
-
-  // selectedRows 상태가 변경될 때마다 실행되는 useEffect
-  useEffect(() => {
-    console.log('선택된 Rows:', selectedRows);
-  }, [selectedRows]); // selectedRows가 변경될 때마다 실행
 
   return (
     <div className={styles.page}>

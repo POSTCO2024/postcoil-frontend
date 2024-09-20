@@ -11,10 +11,10 @@ const createApiClient = (baseURL: string) => {
   });
 };
 
-const scheduleApiClient = createApiClient('http://localhost:8084');
+export const scheduleApiClient = createApiClient('http://localhost:8084');
 
 const SCHM_API_BASE_URL = '/management/schedule';
-const SCH_API_BASE_URL = '/schedule';
+export const SCH_API_BASE_URL = '/api/v2/schedule';
 
 interface SchMParams {
   pageCode?: string;

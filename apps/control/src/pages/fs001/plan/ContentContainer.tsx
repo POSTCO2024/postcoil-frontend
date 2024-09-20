@@ -17,7 +17,6 @@ const ContentContainer = ({ data, setSelectedRows }: PropsType) => {
   // handleRowsClick 함수: 선택된 행 데이터를 상태로 저장하고, 콘솔에 출력
   const handleRowsClick = (selectedRows: MaterialDTO[]) => {
     setSelectedRows(selectedRows); // 선택된 데이터를 상태에 저장
-    console.log('Selected Rows:', selectedRows); // 선택된 행을 콘솔에 출력
   };
 
   return (
@@ -30,6 +29,7 @@ const ContentContainer = ({ data, setSelectedRows }: PropsType) => {
             columns={mockcolumns}
             data={transformedData(data)}
             handleRowsClick={handleRowsClick}
+            setSelectedMaterials={setSelectedRows}
           />
         </div>
       </section>

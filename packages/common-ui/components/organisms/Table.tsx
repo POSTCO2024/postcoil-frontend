@@ -1,5 +1,5 @@
 import { Table as AntTable, ConfigProvider, TablePaginationConfig } from 'antd';
-import React, { useState } from 'react';
+import React from 'react';
 
 import styles from './Table.module.scss';
 import { DataType, ColumnDataType } from '../../config/TableConfig';
@@ -68,16 +68,13 @@ export const Table = <T extends DataType>({
   setSelectedMaterials,
 }: TableComponentProps<T>) => {
   const processedColumns = [...createColumns(columns)];
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]); // 선택된 키 값을 저장
+  // const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   const rowSelection = {
     onChange: (newSelectedRowKeys: React.Key[], selectedRows: T[]) => {
-      setSelectedRowKeys(newSelectedRowKeys); // 선택된 키값을 상태에 저장
-      if (setSelectedMaterials) {
-        setSelectedMaterials(newSelectedRowKeys); // 부모 컴포넌트에서 사용하려는 경우
-      }
+      setSelectedMaterials(newSelectedRowKeys);
       if (handleRowsClick) {
-        handleRowsClick(selectedRows); // 선택된 행의 데이터를 처리
+        handleRowsClick(selectedRows);
       }
     },
   };
@@ -113,7 +110,6 @@ export const Table = <T extends DataType>({
           rowKey={rowKey}
           components={components}
         />
-        <div>선택된 키값: {selectedRowKeys.join(', ')}</div>
       </ConfigProvider>
     </div>
   );
