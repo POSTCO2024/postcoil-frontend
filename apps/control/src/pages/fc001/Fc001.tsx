@@ -59,7 +59,7 @@ async function getRowTable(): Promise<any[]> {
       console.log(response.data.result);
       return response.data.result;
     }
-    return response.data;
+    return [];
   } catch (error) {
     console.log(error);
     return [];
