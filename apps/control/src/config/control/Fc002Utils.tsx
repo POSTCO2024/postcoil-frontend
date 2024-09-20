@@ -2,8 +2,8 @@
 export const columnsData = [
   {
     title: '번호',
-    dataIndex: 'id',
-    key: 'id',
+    dataIndex: 'targetId',
+    key: 'targetId',
     fixed: true,
   },
   {
@@ -26,29 +26,29 @@ export const columnsData = [
   },
   {
     title: '공장 코드',
-    dataIndex: 'fcode',
-    key: 'f_code',
+    dataIndex: 'factoryCode',
+    key: 'factory_code',
   },
   {
     title: '재료 유형',
-    dataIndex: 'type',
-    key: 'type',
+    dataIndex: 'materialType',
+    key: 'material_type',
   },
   {
     title: '조업 코드',
-    dataIndex: 'op_code',
+    dataIndex: 'opCode',
     key: 'op_code',
   },
   {
-    title: '재료 진행 상태',
-    dataIndex: 'status',
-    key: 'status',
-  },
-  {
-    title: '진행 진도',
+    title: '재료 진도',
     dataIndex: 'progress',
     key: 'progress',
   },
+  // {
+  //   title: '진행 진도',
+  //   dataIndex: 'progress',
+  //   key: 'progress',
+  // },
   {
     title: '두께',
     dataIndex: 'thickness',
@@ -100,7 +100,7 @@ export const columnsData = [
     key: 'yard',
   },
   {
-    title: '코일 품종 코드',
+    title: '품종',
     dataIndex: 'coilTypeCode',
     key: 'coil_type_code',
   },
