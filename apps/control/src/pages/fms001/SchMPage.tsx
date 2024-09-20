@@ -1,7 +1,9 @@
 import { Table } from '@postcoil/ui';
+import { useState } from 'react';
 
 import styles from './SchMpage.module.scss';
 
+import { PriorityDTO, ConstraintInsertionDTO } from '@/config/management/DTO';
 import {
   priority as priorityColumn,
   constraints,
@@ -9,8 +11,6 @@ import {
 } from '@/config/management/SchMConfig';
 import FilterContainer from '@/pages/fms001/schedule/FilterContainer';
 import Result from '@/pages/fms001/schedule/Result';
-import { useState } from 'react';
-import { PriorityDTO, ConstraintInsertionDTO } from '@/config/management/DTO';
 import {
   TransformedConstraintDataType,
   transformedData,

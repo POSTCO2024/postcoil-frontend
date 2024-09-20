@@ -2,7 +2,8 @@ import { Button, Dropdown } from '@postcoil/ui';
 import React, { useState } from 'react';
 
 import styles from './FilterContainer.module.scss';
-import { fetchSchManagementData } from '@/api/fms001Api';
+
+import { fetchSchManagementData } from '@/api/scheduleApi';
 import { ConstraintInsertionDTO, PriorityDTO } from '@/config/management/DTO';
 
 interface PropsType {
@@ -16,7 +17,6 @@ interface OptionType {
   label: string;
 }
 
-// TODO: fetch DATA
 const mockOptions: OptionType[] = [
   {
     value: '1CAL',
@@ -44,14 +44,14 @@ const FilterContainer = ({
   setInsertion,
 }: PropsType) => {
   const [processCode, setProcessCode] = useState('');
-  const [materialUnitCode, setMaterialUnitCode] = useState('');
+  const [rollUnit, setRollUnit] = useState('');
 
   const handleSearch = async () => {
-    // EX. processCode: '1cal', materialUnitCode: 'A'
-    if (processCode !== '' && materialUnitCode !== '') {
+    // EX. processCode: '1CAL', rollUnit: 'A'
+    if (processCode !== '' && rollUnit !== '') {
       const data = await fetchSchManagementData({
         processCode,
-        materialUnitCode,
+        rollUnit,
       });
       console.log(data);
 
@@ -72,8 +72,6 @@ const FilterContainer = ({
       return;
     }
   };
-  // const handleFilter = useState;
-  // TODO: filtering
 
   return (
     <div className={styles.filterContainer}>
@@ -82,19 +80,16 @@ const FilterContainer = ({
           title="공정명"
           options={mockOptions}
           onChange={(value) => {
-            setProcessCode(value ? value[0].toLowerCase() : '');
+            setProcessCode(value ? value[0] : '');
           }}
         />
-        {/* TODO: Dropdown 데이터 변경, 함수 받게 */}
       </div>
-      {/* <Button text="조회" onClick={handleSearch} /> */}
       <Dropdown
         title="롤 단위"
         options={rollOptions}
-        onChange={(value) => setMaterialUnitCode(value ? value[0] : '')}
+        onChange={(value) => setRollUnit(value ? value[0] : '')}
       />
-      {/* TODO: searchbar 함수 받게! */}
-      <Button text="검색" onClick={handleSearch} />
+      <Button text="조회" onClick={handleSearch} />
     </div>
   );
 };

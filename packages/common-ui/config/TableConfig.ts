@@ -2,7 +2,7 @@ import { ColumnType } from 'antd/es/table';
 
 // Dataset Type
 export interface DataType {
-  key?: string;
+  key?: string | number;
   no?: string | number;
   id?: string;
   [key: string]: unknown;
