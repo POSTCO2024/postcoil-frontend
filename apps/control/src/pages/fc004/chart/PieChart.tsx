@@ -1,23 +1,93 @@
 import * as echarts from 'echarts';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import styles from './PieChart.module.scss';
+import axios from 'axios';
 
-// Props 타입 정의
-interface PiechartProps {
-  option: echarts.EChartsOption;
+interface ApiResponse<T = any> {
+  status: number;
+  resultMsg: string;
+  result: T;
 }
 
-export const Piechart: React.FC<PiechartProps> = ({ option }) => {
+interface DataType {
+  errorCount: number;
+  normalCount: number;
+}
+
+export const Piechart: React.FC = () => {
   const chartRef = useRef<HTMLDivElement | null>(null);
+  const [data, setData] = useState<DataType | null>(null); // API response
+
+  // useEffect(() => {
+  //   if (chartRef.current) {
+  //     const myChart = echarts.init(chartRef.current);
+
+  //     option && myChart.setOption(option);
+  //   }
+  // }, [option]);
+
+  // API 호출 함수
+  const fetchErrorNormalCount = async () => {
+    const url = `http://localhost:8086/api/v1/dashboard/error_count`;
+    try {
+      const response = await axios.get<ApiResponse<DataType>>(url);
+      if (response.data.status === 200) {
+        setData(response.data.result);
+      } else {
+        console.error('Error:', response.data.resultMsg);
+      }
+    } catch (error) {
+      console.error('Fetch error:', error);
+    }
+  };
+
+  // 차트 초기화 및 옵션 설정 함수
+  const initializeChart = () => {
+    if (chartRef.current && data) {
+      const myChart = echarts.init(chartRef.current);
+      const newOption = {
+        color: ['#fa8383', '#68E399'],
+        tooltip: {
+          trigger: 'item',
+        },
+        series: [
+          {
+            type: 'pie',
+            data: [
+              { value: data.errorCount, name: '에러재' },
+              { value: data.normalCount, name: '정상재' },
+            ],
+          },
+        ],
+        legend: {
+          orient: 'vertical',
+          bottom: '0px',
+          right: '15px',
+          data: ['에러재', '정상재'],
+          textStyle: {
+            fontSize: 12,
+          },
+        },
+      };
+      myChart.setOption(newOption);
+      return myChart; // 차트 인스턴스 반환
+    }
+    return null;
+  };
 
   useEffect(() => {
-    if (chartRef.current) {
-      const myChart = echarts.init(chartRef.current);
+    fetchErrorNormalCount(); // 컴포넌트 마운트 시 API 호출
+  }, []);
 
-      option && myChart.setOption(option);
-    }
-  }, [option]);
+  useEffect(() => {
+    const myChart = initializeChart(); // 데이터가 변경될 때 차트 업데이트
+    return () => {
+      if (myChart) {
+        myChart.dispose(); // 차트 인스턴스 파기
+      }
+    };
+  }, [data]);
 
   return (
     <div className={styles.piechartContainer}>
