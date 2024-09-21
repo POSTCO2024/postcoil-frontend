@@ -59,7 +59,7 @@ const DashBoard: React.FC = () => {
         {/* <h4>재료 정보</h4> */}
         <div className={styles.line2}>
           <div className={styles.smallCard}>
-            <Piechart option={piechartOption} />
+            <Piechart />
           </div>
           <div className={styles.smallCard}>
             <DoubleBarChart

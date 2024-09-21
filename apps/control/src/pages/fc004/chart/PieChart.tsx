@@ -19,14 +19,6 @@ export const Piechart: React.FC = () => {
   const chartRef = useRef<HTMLDivElement | null>(null);
   const [data, setData] = useState<DataType | null>(null); // API response
 
-  // useEffect(() => {
-  //   if (chartRef.current) {
-  //     const myChart = echarts.init(chartRef.current);
-
-  //     option && myChart.setOption(option);
-  //   }
-  // }, [option]);
-
   // API 호출 함수
   const fetchErrorNormalCount = async () => {
     const url = `http://localhost:8086/api/v1/dashboard/error_count`;
@@ -47,7 +39,7 @@ export const Piechart: React.FC = () => {
     if (chartRef.current && data) {
       const myChart = echarts.init(chartRef.current);
       const newOption = {
-        color: ['#fa8383', '#68E399'],
+        color: ['#fb8383', '#7fdb85'],
         tooltip: {
           trigger: 'item',
         },
@@ -58,16 +50,19 @@ export const Piechart: React.FC = () => {
               { value: data.errorCount, name: '에러재' },
               { value: data.normalCount, name: '정상재' },
             ],
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)',
+              },
+            },
           },
         ],
         legend: {
           orient: 'vertical',
           bottom: '0px',
           right: '15px',
-          data: ['에러재', '정상재'],
-          textStyle: {
-            fontSize: 12,
-          },
         },
       };
       myChart.setOption(newOption);
