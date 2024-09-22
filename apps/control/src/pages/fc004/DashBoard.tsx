@@ -10,16 +10,20 @@ import RowbarChart from './chart/RowbarChart';
 import Status from './chart/Status';
 import styles from './DashBoard.module.scss';
 
+import { useChartData } from './useChartData'; //'@/hooks/useChartData';
+
 import {
   barchartV2Option,
-  piechartOption,
-  donutchartOption,
+  // piechartOption,
+  // donutchartOption,
   rowbarchartOption,
   doublebarchartOption1,
   doublebarchartOption2,
 } from '@/config/DashBoard/DashBoardConfig';
 
 const DashBoard: React.FC = () => {
+  const { coilTypeOption, customerNameOption } = useChartData();
+
   return (
     <div className={styles.parentDiv}>
       <h1>공정별 작업대상재 분석</h1>
@@ -68,10 +72,10 @@ const DashBoard: React.FC = () => {
             />
           </div>
           <div className={styles.smallCard}>
-            <DonutChart title="품종" option={donutchartOption} />
+            <DonutChart title="품종" option={coilTypeOption} />
           </div>
           <div className={styles.smallCard}>
-            <DonutChart title="고객사" option={donutchartOption} />
+            <DonutChart title="고객사" option={customerNameOption} />
           </div>
         </div>
       </div>
