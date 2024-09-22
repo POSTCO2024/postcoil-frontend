@@ -10,19 +10,22 @@ import RowbarChart from './chart/RowbarChart';
 import Status from './chart/Status';
 import styles from './DashBoard.module.scss';
 
-import { useChartData } from './useChartData'; //'@/hooks/useChartData';
+import { useOrderData, useMaterialData } from './useChartData'; //'@/hooks/useChartData';
 
 import {
   barchartV2Option,
   // piechartOption,
   // donutchartOption,
   rowbarchartOption,
-  doublebarchartOption1,
-  doublebarchartOption2,
+  // doublebarchartOption1,
+  // doublebarchartOption2,
 } from '@/config/DashBoard/DashBoardConfig';
 
 const DashBoard: React.FC = () => {
-  const { coilTypeOption, customerNameOption } = useChartData();
+  const { coilTypeOption, customerNameOption } = useOrderData();
+  const { chartOptions } = useMaterialData();
+  const widthOptions = chartOptions?.width;
+  const thicknessOptions = chartOptions?.thickness;
 
   return (
     <div className={styles.parentDiv}>
@@ -66,10 +69,7 @@ const DashBoard: React.FC = () => {
             <Piechart />
           </div>
           <div className={styles.smallCard}>
-            <DoubleBarChart
-              option1={doublebarchartOption1}
-              option2={doublebarchartOption2}
-            />
+            <DoubleBarChart option1={widthOptions} option2={thicknessOptions} />
           </div>
           <div className={styles.smallCard}>
             <DonutChart title="품종" option={coilTypeOption} />
