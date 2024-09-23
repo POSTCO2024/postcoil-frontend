@@ -93,11 +93,6 @@ export const useOrderData = () => {
 
 // 폭/두께 분포(DoubleBarChart)
 export const useMaterialData = () => {
-  // const [materialData, setMaterialData] = useState<{
-  //   width: number[];
-  //   thickness: number[];
-  // }>({ width: [], thickness: [] });
-
   return async (currProc: string) => {
     try {
       const response = await axios.get(
@@ -107,16 +102,18 @@ export const useMaterialData = () => {
       const { widthDistribution, thicknessDistribution } = response.data.result;
 
       // widthDistribution과 thicknessDistribution의 라벨과 데이터를 배열로 변환
+      // 값이 없을 경우, [0] 반환
       const widthLabels = Object.keys(widthDistribution);
-      const widthValues = Object.values(widthDistribution) as number[];
+      const widthValues =
+        Object.values(widthDistribution).length > 0
+          ? Object.values(widthDistribution)
+          : [0];
 
       const thicknessLabels = Object.keys(thicknessDistribution);
-      const thicknessValues = Object.values(thicknessDistribution) as number[];
-
-      // setMaterialData({
-      //   width: widthValues,
-      //   thickness: thicknessValues,
-      // });
+      const thicknessValues =
+        Object.values(thicknessDistribution).length > 0
+          ? Object.values(thicknessDistribution)
+          : [0];
 
       // 차트 옵션 설정
       return {
