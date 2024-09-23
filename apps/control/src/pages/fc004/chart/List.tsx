@@ -2,15 +2,7 @@ import { Table, Tag } from 'antd';
 import type { TableProps } from 'antd';
 import React, { useEffect, useState } from 'react';
 
-import axios from 'axios';
-
 import styles from './List.module.scss';
-
-interface ApiResponse<T = any> {
-  status: number;
-  resultMsg: string;
-  result: T[];
-}
 
 interface DataType {
   key: string;
@@ -21,12 +13,10 @@ interface DataType {
 }
 
 interface ListProps {
-  currProc: string;
+  data: DataType[];
 }
 
-export const List: React.FC<ListProps> = ({ currProc }) => {
-  const [data, setData] = useState<DataType[]>([]);
-
+export const List: React.FC<ListProps> = ({ data }) => {
   const columns: TableProps<DataType>['columns'] = [
     {
       title: '',
@@ -54,50 +44,6 @@ export const List: React.FC<ListProps> = ({ currProc }) => {
       render: (_, { tags }) => <Tag color="red">{tags}</Tag>,
     },
   ];
-
-  async function getDueDateTable(): Promise<DataType[]> {
-    const url =
-      `http://localhost:8086/api/v1/dashboard/dueDate?currProc=` + currProc;
-    try {
-      const response = await axios.get<ApiResponse>(url);
-      if (response.data.status === 200) {
-        console.log(response.data.result);
-        return response.data.result.map((item, index) => ({
-          key: String(index + 1),
-          no: String(index + 1),
-          materialNo: item.materialNo, // API 응답의 materialNo를 name으로 매핑
-          dueDate: formatDate(item.dueDate), // API 응답의 dueDate를 age로 매핑
-          tags: [`D-${calculateDaysLeft(item.dueDate)}`], // 남은 일수 계산
-        }));
-      } else {
-        console.log('Error: ', response.data.resultMsg);
-        return [];
-      }
-    } catch (error) {
-      console.log(error);
-      return [];
-    }
-  }
-
-  // 남은 일수 계산 함수
-  const calculateDaysLeft = (dueDate: string) => {
-    const today = new Date();
-    const due = new Date(dueDate);
-    const timeDiff = due.getTime() - today.getTime();
-    return Math.ceil(timeDiff / (1000 * 3600 * 24));
-  };
-
-  const formatDate = (dueDate: string) => {
-    return new Date(dueDate).toISOString().split('T')[0]; // '2024-12-26' 형식으로 반환
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const tableData = await getDueDateTable();
-      setData(tableData);
-    };
-    fetchData();
-  }, []);
 
   return (
     <div className={styles.listContainer}>

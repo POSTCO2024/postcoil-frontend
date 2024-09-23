@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 // 그래프
 import BarChartV2 from './chart/BarChartV2';
@@ -41,6 +42,78 @@ const DashBoard: React.FC = () => {
   } | null>(null);
   const fetchMaterialData = useMaterialData();
 
+  // 에러 비율
+  interface ApiResponse<T = any> {
+    status: number;
+    resultMsg: string;
+    result: T;
+  }
+
+  interface DataType {
+    errorCount: number;
+    normalCount: number;
+  }
+  const [errorNormalData, setErrorNormalData] = useState<DataType | null>(null);
+
+  // 생산 마감일
+  interface DueDataType {
+    key: string;
+    no: string;
+    materialNo: string;
+    dueDate: string;
+    tags: string[];
+  }
+
+  const [dueDate, setDueDate] = useState<DueDataType[]>([]);
+
+  // API 호출
+  // 에러재 비율
+  const fetchErrorNormalCount = async () => {
+    const url = `http://localhost:8086/api/v1/dashboard/error_count?currProc=${selectedProc}`;
+    try {
+      const response = await axios.get<ApiResponse<DataType>>(url);
+      if (response.data.status === 200) {
+        setErrorNormalData(response.data.result); // API 결과를 상태에 저장
+      }
+    } catch (error) {
+      console.error('Fetch error:', error);
+    }
+  };
+
+  //생산 마감일
+  const fetchDueDateTable = async () => {
+    const url = `http://localhost:8086/api/v1/dashboard/dueDate?currProc=${selectedProc}`;
+    try {
+      const response = await axios.get<ApiResponse>(url);
+      if (response.data.status === 200) {
+        return response.data.result.map((item: any, index: any) => ({
+          key: String(index + 1),
+          no: String(index + 1),
+          materialNo: item.materialNo,
+          dueDate: formatDate(item.dueDate),
+          tags: [`D-${calculateDaysLeft(item.dueDate)}`],
+        }));
+      } else {
+        console.log('Error:', response.data.resultMsg);
+        return [];
+      }
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
+  };
+
+  const calculateDaysLeft = (dueDate: string) => {
+    const today = new Date();
+    const due = new Date(dueDate);
+    const timeDiff = due.getTime() - today.getTime();
+    return Math.ceil(timeDiff / (1000 * 3600 * 24));
+  };
+
+  const formatDate = (dueDate: string) => {
+    return new Date(dueDate).toISOString().split('T')[0];
+  };
+
   // const { chartOptions } = useMaterialData(selectedProc);
   // const widthOptions = chartOptions?.width;
   // const thicknessOptions = chartOptions?.thickness;
@@ -58,6 +131,13 @@ const DashBoard: React.FC = () => {
     setChartOptions(
       materialResult?.setChartOptions ?? { width: null, thickness: null },
     );
+
+    // 에러 비율
+    await fetchErrorNormalCount();
+
+    // 마감일 정보
+    const tableData = await fetchDueDateTable();
+    setDueDate(tableData);
   };
 
   useEffect(() => {
@@ -97,13 +177,13 @@ const DashBoard: React.FC = () => {
             <Status />
           </div>
           <div className={styles.smallCard}>
-            <List currProc={selectedProc} />
+            <List data={dueDate} />
           </div>
         </div>
         {/* <h4>재료 정보</h4> */}
         <div className={styles.line2}>
           <div className={styles.smallCard}>
-            <Piechart currProc={selectedProc} />
+            <Piechart data={errorNormalData} />
           </div>
           <div className={styles.smallCard}>
             <DoubleBarChart
