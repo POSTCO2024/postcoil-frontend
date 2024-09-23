@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-
+import React, { useEffect, useState } from 'react';
 // 그래프
+import { useLocation } from 'react-router-dom';
+
 import BarChartV2 from './chart/BarChartV2';
 import DonutChart from './chart/DonutChart';
 import DoubleBarChart from './chart/DoubleBarChart';
@@ -11,9 +12,6 @@ import RowbarChart from './chart/RowbarChart';
 import Status from './chart/Status';
 import styles from './DashBoard.module.scss';
 
-import { useOrderData, useMaterialData } from '@/pages/fc004/useChartData';
-import { useLocation } from 'react-router-dom';
-
 import {
   barchartV2Option,
   // piechartOption,
@@ -22,6 +20,7 @@ import {
   // doublebarchartOption1,
   // doublebarchartOption2,
 } from '@/config/DashBoard/DashBoardConfig';
+import { useOrderData, useMaterialData } from '@/pages/fc004/useChartData';
 
 const DashBoard: React.FC = () => {
   // 선택한 공정
@@ -29,21 +28,25 @@ const DashBoard: React.FC = () => {
   const selectedProc = location.pathname.split('/')[2];
 
   // 품종/고객사
-  const [coilTypeOption, setCoilTypeOption] = useState<any | null>(null);
-  const [customerNameOption, setCustomerNameOption] = useState<any | null>(
-    null,
-  );
+  const [coilTypeOption, setCoilTypeOption] = useState<Record<
+    string,
+    unknown
+  > | null>(null);
+  const [customerNameOption, setCustomerNameOption] = useState<Record<
+    string,
+    unknown
+  > | null>(null);
   const fetchOrderData = useOrderData();
 
   // 폭/두께
   const [chartOptions, setChartOptions] = useState<{
-    width: any;
-    thickness: any;
+    width: number;
+    thickness: number;
   } | null>(null);
   const fetchMaterialData = useMaterialData();
 
   // 에러 비율
-  interface ApiResponse<T = any> {
+  interface ApiResponse<T> {
     status: number;
     resultMsg: string;
     result: T;

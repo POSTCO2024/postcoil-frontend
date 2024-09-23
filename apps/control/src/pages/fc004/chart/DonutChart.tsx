@@ -15,13 +15,13 @@ const DonutChart: React.FC<ChartProps> = ({ option, title }) => {
     if (chartRef.current && option) {
       const myChart = echarts.init(chartRef.current);
       myChart.setOption(option);
-    }
 
-    return () => {
-      if (chartRef.current) {
-        echarts.dispose(chartRef.current);
-      }
-    };
+      return () => {
+        if (myChart) {
+          myChart.dispose();
+        }
+      };
+    }
   }, [option]);
 
   return (
