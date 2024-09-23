@@ -12,16 +12,18 @@ const DonutChart: React.FC<ChartProps> = ({ option, title }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (chartRef.current && option) {
-      const myChart = echarts.init(chartRef.current);
-      myChart.setOption(option);
+    let myChart: echarts.ECharts | null = null;
 
-      return () => {
-        if (myChart) {
-          myChart.dispose();
-        }
-      };
+    if (chartRef.current && option) {
+      myChart = echarts.init(chartRef.current);
+      myChart.setOption(option);
     }
+
+    return () => {
+      if (myChart) {
+        myChart.dispose();
+      }
+    };
   }, [option]);
 
   return (

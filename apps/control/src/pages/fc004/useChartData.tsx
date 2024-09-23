@@ -87,118 +87,218 @@ export const useOrderData = () => {
     } catch (error) {
       console.error('API 요청 중 오류 발생', error);
     }
+    return null;
   };
 };
 
-// 폭/두께 분포(DoubleBarChart)
-export const useMaterialData = () => {
-  return async (currProc: string) => {
+// // 폭/두께 분포(DoubleBarChart)
+// export const useMaterialData = () => {
+//   return async (currProc: string) => {
+//     try {
+//       const response = await axios.get(
+//         'http://localhost:8086/api/v1/dashboard/distribution?currProc=' +
+//         currProc,
+//       );
+//       const { widthDistribution, thicknessDistribution } = response.data.result;
+
+//       // widthDistribution과 thicknessDistribution의 라벨과 데이터를 배열로 변환
+//       // 값이 없을 경우, [0] 반환
+//       const widthLabels = Object.keys(widthDistribution);
+//       const widthValues =
+//         Object.values(widthDistribution).length > 0
+//           ? Object.values(widthDistribution)
+//           : [0];
+
+//       const thicknessLabels = Object.keys(thicknessDistribution);
+//       const thicknessValues =
+//         Object.values(thicknessDistribution).length > 0
+//           ? Object.values(thicknessDistribution)
+//           : [0];
+
+//       // 차트 옵션 설정
+//       return {
+//         setChartOptions: {
+//           width:
+//             widthValues.length > 0
+//               ? {
+//                 tooltip: {
+//                   trigger: 'axis',
+//                   axisPointer: {
+//                     type: 'shadow',
+//                   },
+//                 },
+//                 grid: {
+//                   left: '10%',
+//                   right: '5%',
+//                   bottom: '3%',
+//                   top: '10%', // 그래프 위쪽 간격 넓히기
+//                   containLabel: true,
+//                 },
+//                 xAxis: {
+//                   type: 'category',
+//                   data: widthLabels, // API 응답에서 받은 폭 라벨
+//                   axisTick: {
+//                     alignWithLabel: true,
+//                   },
+//                 },
+//                 yAxis: {
+//                   type: 'value',
+//                   name: '폭(mm)',
+
+//                   nameLocation: 'middle', // 라벨 위치를 중간에 설정
+//                   nameGap: 25, // y축 라벨과 y축 사이의 간격 설정
+//                   minInterval: 5, // y축 최소 간격 설정
+//                 },
+//                 series: [
+//                   {
+//                     data: widthValues, // API 응답에서 받은 폭 데이터
+//                     type: 'bar',
+//                   },
+//                 ],
+//               }
+//               : null,
+//           thickness:
+//             thicknessValues.length > 0
+//               ? {
+//                 tooltip: {
+//                   trigger: 'axis',
+//                   axisPointer: {
+//                     type: 'shadow',
+//                   },
+//                 },
+//                 grid: {
+//                   left: '10%',
+//                   right: '5%',
+//                   bottom: '3%',
+//                   top: '10%', // 그래프 위쪽 간격 넓히기
+//                   containLabel: true,
+//                 },
+//                 xAxis: {
+//                   type: 'category',
+//                   data: thicknessLabels, // API 응답에서 받은 두께 라벨
+//                   axisTick: {
+//                     alignWithLabel: true,
+//                   },
+//                 },
+//                 yAxis: {
+//                   type: 'value',
+//                   name: '두께(mm)',
+
+//                   nameLocation: 'middle', // 라벨 위치를 중간에 설정
+//                   nameGap: 25, // y축 라벨과 y축 사이의 간격 설정
+//                   minInterval: 5, // y축 최소 간격 설정
+//                 },
+//                 series: [
+//                   {
+//                     data: thicknessValues, // API 응답에서 받은 두께 데이터
+//                     type: 'bar',
+//                   },
+//                 ],
+//               }
+//               : null,
+//         },
+//       };
+//     } catch (error) {
+//       console.error('Error fetching material distribution data', error);
+//     }
+//   };
+// };
+export const useWidthThicknessData = () => {
+  return async (selectedProc: string) => {
     try {
       const response = await axios.get(
         'http://localhost:8086/api/v1/dashboard/distribution?currProc=' +
-          currProc,
+          selectedProc,
       );
-      const { widthDistribution, thicknessDistribution } = response.data.result;
+      if (response.status === 200) {
+        const result = response.data.result;
 
-      // widthDistribution과 thicknessDistribution의 라벨과 데이터를 배열로 변환
-      // 값이 없을 경우, [0] 반환
-      const widthLabels = Object.keys(widthDistribution);
-      const widthValues =
-        Object.values(widthDistribution).length > 0
-          ? Object.values(widthDistribution)
-          : [0];
+        // width 데이터를 차트에 맞게 변환
+        const widthCategories = Object.keys(result.widthDistribution);
+        const widthData = Object.values(result.widthDistribution);
 
-      const thicknessLabels = Object.keys(thicknessDistribution);
-      const thicknessValues =
-        Object.values(thicknessDistribution).length > 0
-          ? Object.values(thicknessDistribution)
-          : [0];
+        // thickness 데이터를 차트에 맞게 변환
+        const thicknessCategories = Object.keys(result.thicknessDistribution);
+        const thicknessData = Object.values(result.thicknessDistribution);
 
-      // 차트 옵션 설정
-      return {
-        setChartOptions: {
-          width:
-            widthValues.length > 0
-              ? {
-                  tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {
-                      type: 'shadow',
-                    },
-                  },
-                  grid: {
-                    left: '10%',
-                    right: '5%',
-                    bottom: '3%',
-                    top: '10%', // 그래프 위쪽 간격 넓히기
-                    containLabel: true,
-                  },
-                  xAxis: {
-                    type: 'category',
-                    data: widthLabels, // API 응답에서 받은 폭 라벨
-                    axisTick: {
-                      alignWithLabel: true,
-                    },
-                  },
-                  yAxis: {
-                    type: 'value',
-                    name: '폭(mm)',
+        // width 차트 옵션 설정
+        const widthOptionResult = {
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'shadow',
+            },
+          },
+          grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            top: '10%',
+            containLabel: true,
+          },
+          xAxis: {
+            type: 'category',
+            data: widthCategories,
+            axisTick: {
+              alignWithLabel: true,
+            },
+          },
+          yAxis: {
+            type: 'value',
+          },
+          series: [
+            {
+              name: 'Width',
+              type: 'bar',
+              barWidth: '60%',
+              data: widthData,
+            },
+          ],
+        };
 
-                    nameLocation: 'middle', // 라벨 위치를 중간에 설정
-                    nameGap: 25, // y축 라벨과 y축 사이의 간격 설정
-                    minInterval: 5, // y축 최소 간격 설정
-                  },
-                  series: [
-                    {
-                      data: widthValues, // API 응답에서 받은 폭 데이터
-                      type: 'bar',
-                    },
-                  ],
-                }
-              : null,
-          thickness:
-            thicknessValues.length > 0
-              ? {
-                  tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {
-                      type: 'shadow',
-                    },
-                  },
-                  grid: {
-                    left: '10%',
-                    right: '5%',
-                    bottom: '3%',
-                    top: '10%', // 그래프 위쪽 간격 넓히기
-                    containLabel: true,
-                  },
-                  xAxis: {
-                    type: 'category',
-                    data: thicknessLabels, // API 응답에서 받은 두께 라벨
-                    axisTick: {
-                      alignWithLabel: true,
-                    },
-                  },
-                  yAxis: {
-                    type: 'value',
-                    name: '두께(mm)',
+        // thickness 차트 옵션 설정
+        const thicknessOptionResult = {
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'shadow',
+            },
+          },
+          grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            top: '10%',
+            containLabel: true,
+          },
+          xAxis: {
+            type: 'category',
+            data: thicknessCategories,
+            axisTick: {
+              alignWithLabel: true,
+            },
+          },
+          yAxis: {
+            type: 'value',
+          },
+          series: [
+            {
+              name: 'Thickness',
+              type: 'bar',
+              barWidth: '60%',
+              data: thicknessData,
+            },
+          ],
+        };
 
-                    nameLocation: 'middle', // 라벨 위치를 중간에 설정
-                    nameGap: 25, // y축 라벨과 y축 사이의 간격 설정
-                    minInterval: 5, // y축 최소 간격 설정
-                  },
-                  series: [
-                    {
-                      data: thicknessValues, // API 응답에서 받은 두께 데이터
-                      type: 'bar',
-                    },
-                  ],
-                }
-              : null,
-        },
-      };
+        return {
+          widthOptionResult,
+          thicknessOptionResult,
+        };
+      }
     } catch (error) {
-      console.error('Error fetching material distribution data', error);
+      console.error('API 요청 중 오류 발생', error);
     }
+    return null;
   };
 };

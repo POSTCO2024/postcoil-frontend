@@ -20,7 +20,10 @@ import {
   // doublebarchartOption1,
   // doublebarchartOption2,
 } from '@/config/DashBoard/DashBoardConfig';
-import { useOrderData, useMaterialData } from '@/pages/fc004/useChartData';
+import {
+  useOrderData,
+  useWidthThicknessData,
+} from '@/pages/fc004/useChartData';
 
 const DashBoard: React.FC = () => {
   // 선택한 공정
@@ -39,14 +42,19 @@ const DashBoard: React.FC = () => {
   const fetchOrderData = useOrderData();
 
   // 폭/두께
-  const [chartOptions, setChartOptions] = useState<{
-    width: number;
-    thickness: number;
-  } | null>(null);
-  const fetchMaterialData = useMaterialData();
+  // const [chartOptions, setChartOptions] = useState<{
+  //   width: number;
+  //   thickness: number;
+  // } | null>(null);
+  // const fetchMaterialData = useMaterialData();
+  const fetchChartData = useWidthThicknessData();
+  const [widthOption, setWidthOption] =
+    useState<echarts.EChartsCoreOption | null>(null);
+  const [thicknessOption, setThicknessOption] =
+    useState<echarts.EChartsCoreOption | null>(null);
 
   // 에러 비율
-  interface ApiResponse<T> {
+  interface ApiResponse<T = any> {
     status: number;
     resultMsg: string;
     result: T;
@@ -123,17 +131,22 @@ const DashBoard: React.FC = () => {
 
   const render = async () => {
     // 품종/고객사
-    console.log(selectedProc);
+    console.log('selectedProc: ' + selectedProc);
     const orderResult = await fetchOrderData(selectedProc);
 
-    setCoilTypeOption(orderResult?.coilTypeOptionResult);
-    setCustomerNameOption(orderResult?.customerNameOptionResult);
+    setCoilTypeOption(orderResult?.coilTypeOptionResult ?? null);
+    setCustomerNameOption(orderResult?.customerNameOptionResult ?? null);
 
     // 폭/두께
-    const materialResult = await fetchMaterialData(selectedProc);
-    setChartOptions(
-      materialResult?.setChartOptions ?? { width: null, thickness: null },
-    );
+    // const materialResult = await fetchMaterialData(selectedProc);
+    // setChartOptions(
+    //   materialResult?.setChartOptions ?? { width: {}, thickness: {} }
+    // );
+    const materialResult = await fetchChartData(selectedProc);
+    if (materialResult) {
+      setWidthOption(materialResult.widthOptionResult);
+      setThicknessOption(materialResult.thicknessOptionResult);
+    }
 
     // 에러 비율
     await fetchErrorNormalCount();
@@ -189,10 +202,7 @@ const DashBoard: React.FC = () => {
             <Piechart data={errorNormalData} />
           </div>
           <div className={styles.smallCard}>
-            <DoubleBarChart
-              option1={chartOptions?.width}
-              option2={chartOptions?.thickness}
-            />
+            <DoubleBarChart option1={widthOption} option2={thicknessOption} />
           </div>
           <div className={styles.smallCard}>
             <DonutChart title="품종" option={coilTypeOption} />
