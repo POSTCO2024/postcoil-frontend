@@ -18,7 +18,7 @@ import {
 async function getErrorStandard(facility: string) {
   try {
     const response = await axios.get(
-      url + '/control/management/error/' + facility,
+      url + '/api/v1/management/error/' + facility,
     );
     return response.data.criteriaDetails;
   } catch (error) {

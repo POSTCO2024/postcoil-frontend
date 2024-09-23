@@ -52,7 +52,7 @@ const Result = ({
   const postStandard = async (data: any) => {
     console.log(data);
     await axios
-      .post(url + '/control/management/error/' + facility, data)
+      .post(url + '/api/v1/management/error/' + facility, data)
       .then((response) => {
         console.log(response);
       })
