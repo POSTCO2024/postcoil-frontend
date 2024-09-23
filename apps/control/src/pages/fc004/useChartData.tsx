@@ -1,6 +1,5 @@
 // src/hooks/useChartData.ts
 import axios from 'axios';
-import { useEffect, useState } from 'react';
 
 // 품종/고객사 비율(DonutChart)
 export const useOrderData = () => {
