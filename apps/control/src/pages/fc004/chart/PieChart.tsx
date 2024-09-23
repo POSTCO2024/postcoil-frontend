@@ -15,13 +15,18 @@ interface DataType {
   normalCount: number;
 }
 
-export const Piechart: React.FC = () => {
+interface PiechartProps {
+  currProc: string;
+}
+
+export const Piechart: React.FC<PiechartProps> = ({ currProc }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
   const [data, setData] = useState<DataType | null>(null); // API response
 
   // API 호출 함수
   const fetchErrorNormalCount = async () => {
-    const url = `http://localhost:8086/api/v1/dashboard/error_count`;
+    const url =
+      `http://localhost:8086/api/v1/dashboard/error_count?currProc=` + currProc;
     try {
       const response = await axios.get<ApiResponse<DataType>>(url);
       if (response.data.status === 200) {

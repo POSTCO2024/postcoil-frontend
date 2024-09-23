@@ -4,7 +4,7 @@ import axios from 'axios';
 import * as echarts from 'echarts';
 
 // 품종/고객사 비율(DonutChart)
-export const useOrderData = () => {
+export const useOrderData = (currProc: string) => {
   const [coilTypeOption, setCoilTypeOption] =
     useState<echarts.EChartsOption | null>(null);
   const [customerNameOption, setCustomerNameOption] =
@@ -14,7 +14,7 @@ export const useOrderData = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          'http://localhost:8086/api/v1/dashboard/order',
+          'http://localhost:8086/api/v1/dashboard/order?currProc=' + currProc,
         );
         if (response.status === 200) {
           const result = response.data.result;
@@ -103,7 +103,7 @@ export const useOrderData = () => {
 };
 
 // 폭/두께 분포(DoubleBarChart)
-export const useMaterialData = () => {
+export const useMaterialData = (currProc: string) => {
   const [materialData, setMaterialData] = useState<{
     width: number[];
     thickness: number[];
@@ -117,7 +117,8 @@ export const useMaterialData = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          'http://localhost:8086/api/v1/dashboard/distribution',
+          'http://localhost:8086/api/v1/dashboard/distribution?currProc=' +
+            currProc,
         ); // 폭과 두께 분포 API
         const { widthDistribution, thicknessDistribution } =
           response.data.result;

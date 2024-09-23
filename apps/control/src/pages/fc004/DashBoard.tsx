@@ -11,6 +11,7 @@ import Status from './chart/Status';
 import styles from './DashBoard.module.scss';
 
 import { useOrderData, useMaterialData } from './useChartData'; //'@/hooks/useChartData';
+import { useLocation } from 'react-router-dom';
 
 import {
   barchartV2Option,
@@ -22,8 +23,12 @@ import {
 } from '@/config/DashBoard/DashBoardConfig';
 
 const DashBoard: React.FC = () => {
-  const { coilTypeOption, customerNameOption } = useOrderData();
-  const { chartOptions } = useMaterialData();
+  // 공정 선택
+  const location = useLocation();
+  const selectedProc = location.pathname.split('/')[2];
+
+  const { coilTypeOption, customerNameOption } = useOrderData(selectedProc);
+  const { chartOptions } = useMaterialData(selectedProc);
   const widthOptions = chartOptions?.width;
   const thicknessOptions = chartOptions?.thickness;
 
@@ -60,13 +65,13 @@ const DashBoard: React.FC = () => {
             <Status />
           </div>
           <div className={styles.smallCard}>
-            <List />
+            <List currProc={selectedProc} />
           </div>
         </div>
         {/* <h4>재료 정보</h4> */}
         <div className={styles.line2}>
           <div className={styles.smallCard}>
-            <Piechart />
+            <Piechart currProc={selectedProc} />
           </div>
           <div className={styles.smallCard}>
             <DoubleBarChart option1={widthOptions} option2={thicknessOptions} />
