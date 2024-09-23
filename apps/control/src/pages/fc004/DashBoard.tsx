@@ -11,7 +11,7 @@ import RowbarChart from './chart/RowbarChart';
 import Status from './chart/Status';
 import styles from './DashBoard.module.scss';
 
-import { useOrderData, useMaterialData } from './useChartData'; //'@/hooks/useChartData';
+import { useOrderData, useMaterialData } from '@/pages/fc004/useChartData';
 import { useLocation } from 'react-router-dom';
 
 import {
