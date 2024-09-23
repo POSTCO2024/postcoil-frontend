@@ -43,7 +43,7 @@ function updateValues(dataArray: any, newValues: any) {
 const Result = ({ title, data, facility, setPostedData }: PropsType) => {
   const postStandard = async (data: any) => {
     await axios
-      .post(url + '/control/management/extraction/' + facility, data)
+      .post(url + '/api/v1/management/extraction' + facility, data)
       .then((response) => {
         console.log(response);
       })

@@ -35,7 +35,7 @@ import {
 async function getExtraction(facility: string) {
   try {
     const response = await axios.get(
-      url + '/control/management/extraction/' + facility,
+      url + '/api/v1/management/extraction' + facility,
     );
     return response.data.criteriaDetails;
   } catch (error) {
