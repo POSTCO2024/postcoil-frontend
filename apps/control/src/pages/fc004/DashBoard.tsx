@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 // 그래프
 import BarChartV2 from './chart/BarChartV2';
@@ -23,14 +23,46 @@ import {
 } from '@/config/DashBoard/DashBoardConfig';
 
 const DashBoard: React.FC = () => {
-  // 공정 선택
+  // 선택한 공정
   const location = useLocation();
   const selectedProc = location.pathname.split('/')[2];
 
-  const { coilTypeOption, customerNameOption } = useOrderData(selectedProc);
-  const { chartOptions } = useMaterialData(selectedProc);
-  const widthOptions = chartOptions?.width;
-  const thicknessOptions = chartOptions?.thickness;
+  // 품종/고객사
+  const [coilTypeOption, setCoilTypeOption] = useState<any | null>(null);
+  const [customerNameOption, setCustomerNameOption] = useState<any | null>(
+    null,
+  );
+  const fetchOrderData = useOrderData();
+
+  // 폭/두께
+  const [chartOptions, setChartOptions] = useState<{
+    width: any;
+    thickness: any;
+  } | null>(null);
+  const fetchMaterialData = useMaterialData();
+
+  // const { chartOptions } = useMaterialData(selectedProc);
+  // const widthOptions = chartOptions?.width;
+  // const thicknessOptions = chartOptions?.thickness;
+
+  const render = async () => {
+    // 품종/고객사
+    console.log(selectedProc);
+    const orderResult = await fetchOrderData(selectedProc);
+
+    setCoilTypeOption(orderResult?.coilTypeOptionResult);
+    setCustomerNameOption(orderResult?.customerNameOptionResult);
+
+    // 폭/두께
+    const materialResult = await fetchMaterialData(selectedProc);
+    setChartOptions(
+      materialResult?.setChartOptions ?? { width: null, thickness: null },
+    );
+  };
+
+  useEffect(() => {
+    render();
+  }, [selectedProc]); // selectedProc이 변경될 때마다 실행
 
   return (
     <div className={styles.parentDiv}>
@@ -74,7 +106,10 @@ const DashBoard: React.FC = () => {
             <Piechart currProc={selectedProc} />
           </div>
           <div className={styles.smallCard}>
-            <DoubleBarChart option1={widthOptions} option2={thicknessOptions} />
+            <DoubleBarChart
+              option1={chartOptions?.width}
+              option2={chartOptions?.thickness}
+            />
           </div>
           <div className={styles.smallCard}>
             <DonutChart title="품종" option={coilTypeOption} />
