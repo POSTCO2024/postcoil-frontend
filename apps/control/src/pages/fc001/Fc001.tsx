@@ -5,10 +5,7 @@ import React, { useState, useEffect } from 'react';
 import styles from './Fc001.module.scss';
 import { RowheaderTable } from './rowheadertable/RowheaderTable';
 import { TopBar } from './topBar/TopBar';
-import {
-  transformData,
-  ApiResponseItem,
-} from '../../utils/control/transformData';
+import { transformData, ApiResponseItem } from '@/utils/control/transformData';
 
 import { columnsList, columnsTableConfig } from '@/config/control/Fc001Utils';
 
