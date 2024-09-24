@@ -1,15 +1,14 @@
 import { Table, Tab } from '@postcoil/ui';
-import React, { useState, useEffect } from 'react';
-
 import axios from 'axios';
-import {
-  transformData,
-  ApiResponseItem,
-} from '../../utils/control/transformData'; // transformData를 import
+import React, { useState, useEffect } from 'react';
 
 import styles from './Fc001.module.scss';
 import { RowheaderTable } from './rowheadertable/RowheaderTable';
 import { TopBar } from './topBar/TopBar';
+import {
+  transformData,
+  ApiResponseItem,
+} from '../../utils/control/transformData'; // transformData를 import
 
 import { columnsList, columnsTableConfig } from '@/config/control/Fc001Utils';
 
@@ -30,6 +29,11 @@ export interface ApiResponse {
   status: number;
   result: ApiResponseItem[] | any[];
   resultMsg?: string;
+}
+
+export interface RowTableData {
+  targetId: string; // targetId를 사용하므로 string으로 타입 지정
+  [key: string]: any; // 그 외 동적 키에 대해서는 any로 지정
 }
 
 // 작업대상재 목록(List) 조회

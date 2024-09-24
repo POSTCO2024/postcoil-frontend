@@ -3,21 +3,61 @@ import React, { useEffect, useRef } from 'react';
 
 import styles from './PieChart.module.scss';
 
-// Props 타입 정의
-interface PiechartProps {
-  option: echarts.EChartsOption;
+interface DataType {
+  errorCount: number;
+  normalCount: number;
 }
 
-export const Piechart: React.FC<PiechartProps> = ({ option }) => {
+interface PiechartProps {
+  data: DataType | null;
+}
+
+export const Piechart: React.FC<PiechartProps> = ({ data }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
+  const initializeChart = () => {
+    if (chartRef.current && data) {
+      const myChart = echarts.init(chartRef.current);
+      const newOption = {
+        color: ['#fb8383', '#7fdb85'],
+        tooltip: {
+          trigger: 'item',
+        },
+        series: [
+          {
+            type: 'pie',
+            data: [
+              { value: data.errorCount, name: '에러재' },
+              { value: data.normalCount, name: '정상재' },
+            ],
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)',
+              },
+            },
+          },
+        ],
+        legend: {
+          orient: 'vertical',
+          bottom: '0px',
+          right: '15px',
+        },
+      };
+      myChart.setOption(newOption);
+      return myChart;
+    }
+    return null;
+  };
 
   useEffect(() => {
-    if (chartRef.current) {
-      const myChart = echarts.init(chartRef.current);
-
-      option && myChart.setOption(option);
-    }
-  }, [option]);
+    const myChart = initializeChart();
+    return () => {
+      if (myChart) {
+        myChart.dispose();
+      }
+    };
+  }, [data]);
 
   return (
     <div className={styles.piechartContainer}>

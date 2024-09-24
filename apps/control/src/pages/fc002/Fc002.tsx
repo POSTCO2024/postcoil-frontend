@@ -2,13 +2,13 @@ import { Table } from '@postcoil/ui';
 import { Button } from 'antd';
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+
+import styles from './Fc002.module.scss';
+import { TopBar } from './topBar/TopBar';
 import {
   transformData,
   ApiResponseItem,
 } from '../../utils/control/transformData';
-
-import styles from './Fc002.module.scss';
-import { TopBar } from './topBar/TopBar';
 
 import CommonModal from '@/components/common/CommonModal';
 import { columnsData } from '@/config/control/Fc002Utils';
