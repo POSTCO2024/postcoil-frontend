@@ -31,8 +31,8 @@ export const optionsDropdown1 = [
 // for Searchbar
 export const optionsDropdown2 = [
   {
-    value: 'coil_number',
-    label: '코일 번호',
+    value: 'material_id',
+    label: '코일 ID',
   },
   {
     value: 'order_no',
