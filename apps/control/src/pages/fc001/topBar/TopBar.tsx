@@ -2,50 +2,10 @@ import { SearchBar, Dropdown, Input, SearchButton } from '@postcoil/ui';
 import React, { useState } from 'react';
 
 import styles from './TopBar.module.scss';
-
-// Dropdown 데이터
-const optionsDropdown1 = [
-  {
-    value: '1PCM',
-    label: '1PCM',
-  },
-  {
-    value: '2PCM',
-    label: '2PCM',
-  },
-  {
-    value: '1CAL',
-    label: '1CAL',
-  },
-  {
-    value: '2CAL',
-    label: '2CAL',
-  },
-  {
-    value: 'EGL',
-    label: 'EGL',
-  },
-  {
-    value: 'CGL',
-    label: 'CGL',
-  },
-];
-
-// for Searchbar
-const optionsDropdown2 = [
-  {
-    value: 'coil_number',
-    label: '코일 번호',
-  },
-  {
-    value: 'width',
-    label: '두께',
-  },
-  {
-    value: 'thickness',
-    label: '폭',
-  },
-];
+import {
+  optionsDropdown1,
+  optionsDropdown2,
+} from '@/config/control/TopBarUtils';
 
 interface TopBarProps {
   onProcessChange: (processCode: string) => void;
@@ -73,6 +33,13 @@ export const TopBar: React.FC<TopBarProps> = ({ onProcessChange }) => {
   const handleSearchDropdownChange = (selectedValues: any) => {
     // 검색 기준에 대한 처리
     console.log('Selected Search Criteria:', selectedValues);
+
+    if (selectedValues && selectedValues.length > 0) {
+      const searchCriteria = selectedValues[0];
+      setSelectedOption(searchCriteria);
+    } else {
+      setSelectedOption(null);
+    }
   };
 
   return (
@@ -89,7 +56,9 @@ export const TopBar: React.FC<TopBarProps> = ({ onProcessChange }) => {
         options={optionsDropdown2}
         onChange={handleSearchDropdownChange}
       />
-      {selectedOption == 'width' || selectedOption == 'thickness' ? (
+      {selectedOption &&
+      (selectedOption.indexOf('width') > -1 ||
+        selectedOption.indexOf('thickness') > -1) ? (
         <div className={styles.rangeSearchCotainer}>
           <Input />
           <span> (mm) ~ </span>

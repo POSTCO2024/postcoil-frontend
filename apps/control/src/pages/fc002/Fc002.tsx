@@ -4,7 +4,7 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 
 import styles from './Fc002.module.scss';
-import { TopBar } from './topBar/TopBar';
+import { TopBar } from '../fc001/topBar/TopBar';
 import {
   transformData,
   ApiResponseItem,
