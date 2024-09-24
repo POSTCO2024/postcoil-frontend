@@ -1,7 +1,11 @@
 import { Tab } from '@postcoil/ui';
 import { Client } from '@stomp/stompjs';
+<<<<<<< HEAD
 // import axios from 'axios';
 import { useEffect, useState } from 'react';
+=======
+import { useEffect, useState, useRef } from 'react';
+>>>>>>> 4923591 (Feat: 웹소켓 통신)
 import SockJS from 'sockjs-client';
 
 import AnalyzeChart from './result/AnalyzeChart';
@@ -76,6 +80,7 @@ export const TaskInstruction = () => {
     <div className={styles.page}>
       {/* <h1 onClick={getTest}>작업 지시 전문</h1> */}
       <h1>작업 지시 전문</h1>
+      <h1 onClick={sendMessage}>작업 지시 전문</h1>
       <h1>{message}</h1>
       <FilterContainer />
       <section className={styles.tab}>
