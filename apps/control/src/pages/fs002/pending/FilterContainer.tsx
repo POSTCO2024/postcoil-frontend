@@ -15,7 +15,6 @@ const FilterContainer = () => {
   const scheduleData = useScheduleStore(
     (state) => state.data as ScheduleInfoDTO[],
   ); // Schedule data 세팅
-  const processCode = useScheduleStore((state) => state.processCode); // processCode 세팅
   const cleanScheduleData = useScheduleStore((state) => state.cleanData); // cleanData 함수 추가
   const cleanMaterialData = useMaterialStore((state) => state.cleanData); // cleanData 함수 추가
   const fetchScheduleData = useScheduleStore((state) => state.fetchData); // fetch Schedule data
@@ -72,7 +71,7 @@ const FilterContainer = () => {
     }
     setSelectedRollUnit([]);
     cleanMaterialData(); // materialData를 null로 변경
-  }, [scheduleData]);
+  }, [cleanMaterialData, scheduleData]);
 
   return (
     <div className={styles.filterContainer}>
