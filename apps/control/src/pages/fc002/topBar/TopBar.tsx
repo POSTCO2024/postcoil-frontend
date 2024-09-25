@@ -19,11 +19,15 @@ export const TopBar: React.FC<TopBarProps> = ({
   onProcessChange,
   onSearch,
 }) => {
+  // 공정
   const [selectedProcess, setSelectedProcess] = useState<string | string>(
     '1PCM',
   );
+  // 검색 기준
   const [selectedSearch, setSelectedSearch] = useState<string | null>(null);
-
+  // 검색 값
+  const [minValue, setMinValue] = useState<string>('');
+  const [maxValue, setMaxValue] = useState<string>('');
   const [searchValue, setSearchValue] = useState<string | null>(null);
 
   // 공정 선택
@@ -50,9 +54,22 @@ export const TopBar: React.FC<TopBarProps> = ({
     if (selectedValues && selectedValues.length > 0) {
       const searchCriteria = selectedValues[0];
       setSelectedSearch(searchCriteria);
+      // 값 초기화
+      setMaxValue('');
+      setMinValue('');
     } else {
       setSelectedSearch(null);
     }
+  };
+
+  // 범위 검색 시, 입력값(min,max) 처리
+  const handleMinValueChange = (value: string) => {
+    console.log('min' + value);
+    setMinValue(value);
+  };
+  const handleMaxValueChange = (value: string) => {
+    console.log('max' + value);
+    setMaxValue(value);
   };
 
   // API 요청을 처리하는 함수
@@ -61,13 +78,20 @@ export const TopBar: React.FC<TopBarProps> = ({
     console.log('Search Keyword: ' + value);
     try {
       const url =
-        `http://localhost:8086/api/v1/error-materials/error-by-curr-proc/search?` +
+        `http://localhost:8086/api/v1/target-materials/search?` +
         `currProc=` +
-        selectedProcess + // selectedOption이 없으면 1PCM 전달하도록
+        selectedProcess +
         `&searchCriteria=` +
-        selectedSearch +
+        (selectedSearch || '') +
         `&searchValue=` +
-        value;
+        (value || '') +
+        `&minValue=` +
+        (minValue || '') +
+        `&maxValue=` +
+        (maxValue || '') +
+        `&isError=` +
+        'Y'; // 에러재
+
       const response = await axios.get(url);
       console.log(url);
       console.log('API Response:', response.data);
@@ -98,11 +122,11 @@ export const TopBar: React.FC<TopBarProps> = ({
       (selectedSearch.indexOf('width') > -1 ||
         selectedSearch.indexOf('thickness') > -1) ? (
         <div className={styles.rangeSearchCotainer}>
-          <Input />
+          <Input onChange={handleMinValueChange} value={minValue} />
           <span> (mm) ~ </span>
-          <Input />
+          <Input onChange={handleMaxValueChange} value={maxValue} />
           <span> (mm)</span>
-          <SearchButton />
+          <SearchButton onClick={() => handleSearch()} />
         </div>
       ) : (
         <SearchBar onSearch={handleSearch} />

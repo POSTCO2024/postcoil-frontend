@@ -78,7 +78,7 @@ export const TopBar: React.FC<TopBarProps> = ({
     console.log('Search Keyword: ' + value);
     try {
       const url =
-        `http://localhost:8086/api/v1/target-materials/normal-by-curr-proc/search?` +
+        `http://localhost:8086/api/v1/target-materials/search?` +
         `currProc=` +
         selectedProcess +
         `&searchCriteria=` +
@@ -90,7 +90,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         `&maxValue=` +
         (maxValue || '') +
         `&isError=` +
-        'N';
+        'N'; // 정상재
 
       const response = await axios.get(url);
       console.log(url);
