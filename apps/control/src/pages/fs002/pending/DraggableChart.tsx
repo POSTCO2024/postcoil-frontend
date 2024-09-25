@@ -1,43 +1,46 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
 import { Button } from 'antd';
-import Highcharts, { PointDragDropObject } from 'highcharts';
-import draggablePoints from 'highcharts/modules/draggable-points';
-import variwide from 'highcharts/modules/variwide';
+import { PointDragDropObject } from 'highcharts';
 import React, { useState, useEffect } from 'react';
 
 import styles from './DraggableChart.module.scss';
 
-// 모듈 로드
-draggablePoints(Highcharts);
-variwide(Highcharts);
+import { MaterialDTO } from '@/config/scheduling/DTO';
+import Highcharts from '@/config/scheduling/highchartsSetup';
+import { useMaterialStore } from '@/store/fs002store';
+import { transformedDataToChartData } from '@/utils/scheduling/chartUtils';
 
 interface DataPoint {
   name: string;
-  y: number; // length에 해당하는 값
-  z: number; // width에 해당하는 값
+  y: number; // width 에 해당하는 값
+  z: number; // working time 에 해당하는 값
   x: number; // sequence number
+  id: string;
+  changed?: boolean; // is the point changed by user?
+  color?: string; // chart point color
 }
 
 interface NewPointDragDropObject extends PointDragDropObject {
   x: number;
 }
 
-const initialData: DataPoint[] = [
-  { name: '1', y: 50.2, z: 20, x: 1 },
-  { name: '2', y: 42, z: 30, x: 2 },
-  { name: '3', y: 39.2, z: 40, x: 3 },
-  { name: '4', y: 38, z: 35, x: 4 },
-  { name: '5', y: 35.6, z: 25, x: 5 },
-];
+const DraggableChart: React.FC = () => {
+  const materialData = useMaterialStore((state) => state.data);
+  const title = useMaterialStore((state) => state.scheduleNo);
+  const updateData = useMaterialStore((state) => state.updateData!);
+  const resetData = useMaterialStore((state) => state.resetData!);
 
-interface PropsType {
-  filteredData?: DataPoint[] | undefined;
-}
+  const [data, setData] = useState<DataPoint[]>([]);
 
-const DraggableChart: React.FC = ({ filteredData }: PropsType) => {
-  const clonedData = filteredData ? filteredData : initialData;
-
-  const [data, setData] = useState(clonedData.map((point) => ({ ...point })));
+  useEffect(() => {
+    if (materialData && materialData.length > 0) {
+      const transformed = transformedDataToChartData(materialData, 'width');
+      setData(transformed);
+    } else {
+      setData([]);
+    }
+    console.log('data', data);
+  }, [materialData]); // materialData가 변경될 때마다 실행
 
   useEffect(() => {
     const chartOptions: Highcharts.Options = {
@@ -45,8 +48,10 @@ const DraggableChart: React.FC = ({ filteredData }: PropsType) => {
         type: 'variwide',
       },
       title: {
-        text: 'Draggable Variwide Chart',
-        style: { display: 'none' },
+        text: data.length > 0 ? title : '',
+        // style: { display: 'none' },
+        style: { fontFamily: 'Helvetica Neue', fontWeight: '500' },
+        verticalAlign: 'bottom',
       },
       xAxis: {
         type: 'category',
@@ -114,7 +119,7 @@ const DraggableChart: React.FC = ({ filteredData }: PropsType) => {
                 // 변경되었다면
                 if (pointIndex != selectedX - 1) {
                   this.update({
-                    color: 'rgba(0, 0, 256, 0.6)', // 반투명 보라색으로 변경
+                    color: '#6464ff', // 반투명 보라색으로 변경
                   });
                 }
 
@@ -131,6 +136,7 @@ const DraggableChart: React.FC = ({ filteredData }: PropsType) => {
                 updatedData.splice(newX - 1, 0, {
                   ...movedPoint,
                   x: newX,
+                  changed: true,
                 });
 
                 // x 값을 1부터 순서대로 재정렬
@@ -141,6 +147,20 @@ const DraggableChart: React.FC = ({ filteredData }: PropsType) => {
 
                 // 상태 업데이트
                 setData(sortedData);
+
+                // 기존의 materialData 유지하면서, 필요한 값만 업데이트
+                const updatedMaterialData = sortedData.map((sortedPoint) => {
+                  const originalPoint = materialData!.find(
+                    (p: MaterialDTO) => p.id === sortedPoint.id,
+                  );
+
+                  return {
+                    ...originalPoint, // 기존 materialData 값 유지
+                    changed: sortedPoint.changed, // sortedData에서 changed 가져옴
+                  };
+                });
+
+                updateData(updatedMaterialData); // Zustand를 이용한 데이터 업데이트
               },
             },
           },
@@ -158,27 +178,35 @@ const DraggableChart: React.FC = ({ filteredData }: PropsType) => {
               },
             },
           },
+          dataLabels: {
+            // enabled: true,
+            format: '{point.y:.0f} mm / {point.z:.0f} mins',
+            style: {
+              fontSize: '1.2rem', // 데이터 레이블의 글씨 크기
+            },
+          },
+          tooltip: {
+            pointFormat:
+              'Width: <b> {point.y} mm</b><br>' +
+              'Working Time: <b> {point.z} mins</b><br>',
+          },
         },
       },
     };
 
-    Highcharts.chart('container', chartOptions);
+    Highcharts.chart('draggableChart', chartOptions);
   }, [data]);
 
-  const resetData = () => {
-    setData(
-      clonedData.map((point) => ({
-        ...point,
-      })),
-    );
+  const handleReset = () => {
+    resetData(); // 원본 데이터로 복원
   };
 
   return (
     <div className={styles.graph}>
-      <Button className={styles.btn} onClick={resetData}>
+      <Button className={styles.btn} onClick={handleReset}>
         Reset
       </Button>
-      <div id="container"></div>
+      <div id="draggableChart"></div>
     </div>
   );
 };
