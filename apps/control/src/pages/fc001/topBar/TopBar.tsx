@@ -88,7 +88,9 @@ export const TopBar: React.FC<TopBarProps> = ({
         `&minValue=` +
         (minValue || '') +
         `&maxValue=` +
-        (maxValue || '');
+        (maxValue || '') +
+        `&isError=` +
+        'N';
 
       const response = await axios.get(url);
       console.log(url);
