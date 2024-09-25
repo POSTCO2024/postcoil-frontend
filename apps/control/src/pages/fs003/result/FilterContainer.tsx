@@ -95,7 +95,7 @@ const FilterContainer = () => {
         <Dropdown title="공정명" options={mockOptions} />
         {/* TODO: Dropdown 데이터 변경, 함수 받게 */}
       </div>
-      <Dropdown title="롤단위명" options={mockRollUnitName} />
+      <Dropdown title="스케줄명" options={mockRollUnitName} />
       {/* <Button type="primary" onClick={handleSearch}>
         조회
       </Button> */}
