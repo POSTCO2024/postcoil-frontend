@@ -6,6 +6,13 @@
   width: 100%;
   height: 100%;
 
+  .btn {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: 15px;
+    margin-bottom: 10px;
+  }
+
   .tableWrapper {
     overflow-x: scroll;
     overflow-y: scroll;
@@ -14,5 +21,17 @@
     .table {
       width: 100%;
     }
+  }
+}
+
+.changedBg {
+  background-color: #e2e1fc;
+}
+
+.changedBg:hover,
+.changedBg:focus,
+.changedBg:active {
+  td {
+    background-color: rgba(156, 132, 254, 0.29) !important; // hover 시 배경색
   }
 }

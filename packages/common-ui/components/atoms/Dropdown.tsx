@@ -11,8 +11,9 @@ import styles from './Dropdown.module.scss';
 
 interface DropdownProps {
   title: string; // dropdown 구분 텍스트
-  options: OptionType[];
+  options: OptionType[] | undefined; //
   onChange?: (value?: string[]) => void | Promise<void>;
+  value?: string[]; // dropdown value
 }
 
 interface OptionType {
@@ -44,6 +45,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
   title,
   options,
   onChange,
+  value,
 }) => {
   return (
     <div className={styles.dropdownContainer}>
@@ -54,13 +56,15 @@ export const Dropdown: React.FC<DropdownProps> = ({
         onChange={
           onChange
             ? (value) => {
-                onChange(value); // `undefined`를 허용
+                // 선택된 값이 없을 때 (x 버튼 클릭 시) onChange에 undefined 전달
+                onChange(value);
               }
             : () => {
                 console.log('Dropdown Click');
               }
         }
         placeholder="선택"
+        value={value}
       />
       <span className={styles.spacer}></span>
     </div>

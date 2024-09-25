@@ -94,7 +94,7 @@ export const columnsList = [
   },
   {
     title: '고객사',
-    dataIndex: 'goalCustomer',
+    dataIndex: 'customerName',
     key: 'customer_name',
   },
   {

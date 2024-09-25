@@ -1,6 +1,6 @@
 import { Tab } from '@postcoil/ui';
 import { Button } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import SchListModal from './pending/SchListModal';
 import styles from './SchPePage.module.scss';
@@ -8,8 +8,18 @@ import styles from './SchPePage.module.scss';
 import ContentContainer from '@/pages/fs002/pending/ContentContainer';
 import DraggableChart from '@/pages/fs002/pending/DraggableChart';
 import FilterContainer from '@/pages/fs002/pending/FilterContainer';
+import { useMaterialStore, useScheduleStore } from '@/store/fs002store';
 
 const SchPePage = () => {
+  const data = useMaterialStore((state) => state.data);
+  useEffect(() => {
+    return () => {
+      // Fetch한 data 초기화
+      useScheduleStore.setState({ data: null });
+      useMaterialStore.setState({ data: null });
+    };
+  }, []);
+
   const [isGraphVisible, setIsGraphVisible] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleModal = () => {
@@ -20,7 +30,6 @@ const SchPePage = () => {
   };
   const handleApply = () => {
     setIsModalOpen(false);
-    // TODO: 다음 결과보는 페이지로 갈 것
   };
 
   const handleTabChange = () => {
@@ -37,9 +46,11 @@ const SchPePage = () => {
       <div className={styles.result}>
         {isGraphVisible ? <DraggableChart /> : <ContentContainer />}
       </div>
-      <Button className={styles.btn} type="primary" onClick={handleModal}>
-        스케줄 등록
-      </Button>
+      {data && (
+        <Button className={styles.btn} type="primary" onClick={handleModal}>
+          스케줄 등록
+        </Button>
+      )}
       <SchListModal
         isModalOpen={isModalOpen}
         onApply={handleApply}

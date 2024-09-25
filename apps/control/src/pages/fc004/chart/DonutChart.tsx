@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from 'react';
 import styles from './DonutChart.module.scss';
 
 interface ChartProps {
-  option: echarts.EChartsOption;
+  option: echarts.EChartsOption | null;
   title?: string;
 }
 
@@ -12,15 +12,18 @@ const DonutChart: React.FC<ChartProps> = ({ option, title }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (chartRef.current) {
-      const myChart = echarts.init(chartRef.current);
+    let myChart: echarts.ECharts | null = null;
 
-      option && myChart.setOption(option);
+    if (chartRef.current && option) {
+      myChart = echarts.init(chartRef.current);
+      myChart.setOption(option);
     }
 
-    // return () => {
-    //     myChart.dispose();
-    // };
+    return () => {
+      if (myChart) {
+        myChart.dispose();
+      }
+    };
   }, [option]);
 
   return (

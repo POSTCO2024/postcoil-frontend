@@ -1,72 +1,107 @@
 import { Dropdown, SearchBar, Input, SearchButton } from '@postcoil/ui';
 import React, { useState } from 'react';
 
+import axios from 'axios';
+
 import styles from './TopBar.module.scss';
-
-// Dropdown 임의 데이터
-const optionsDropdown1 = [
-  {
-    value: '1PCM',
-    label: '1PCM',
-  },
-  {
-    value: '2PCM',
-    label: '2PCM',
-  },
-  {
-    value: '1CAL',
-    label: '1CAL',
-  },
-  {
-    value: '2CAL',
-    label: '2CAL',
-  },
-  {
-    value: 'EGL',
-    label: 'EGL',
-  },
-  {
-    value: 'CGL',
-    label: 'CGL',
-  },
-];
-
-// for Searchbar
-const optionsDropdown2 = [
-  {
-    value: 'coil_number',
-    label: '코일 번호',
-  },
-  {
-    value: 'width',
-    label: '두께',
-  },
-  {
-    value: 'thickness',
-    label: '폭',
-  },
-];
+import {
+  optionsDropdown1,
+  optionsDropdown2,
+} from '@/config/control/TopBarUtils';
+import { transformData } from '@/utils/control/transformData';
 
 interface TopBarProps {
   onProcessChange: (processCode: string) => void;
+  onSearch: (searchResults: any[]) => void;
 }
 
-export const TopBar: React.FC<TopBarProps> = ({ onProcessChange }) => {
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+export const TopBar: React.FC<TopBarProps> = ({
+  onProcessChange,
+  onSearch,
+}) => {
+  // 공정
+  const [selectedProcess, setSelectedProcess] = useState<string | string>(
+    '1PCM',
+  );
+  // 검색 기준
+  const [selectedSearch, setSelectedSearch] = useState<string | null>(null);
+  // 검색 값
+  const [minValue, setMinValue] = useState<string>('');
+  const [maxValue, setMaxValue] = useState<string>('');
+  const [searchValue, setSearchValue] = useState<string | null>(null);
 
-  const handleDropdownChange = (selectedValues: any) => {
+  // 공정 선택
+  const handleProcessDropdownChange = (selectedValues: any) => {
     // console.log(e.target.value);
     // 배열이 비어있지 않다면 첫 번째 값을 사용하도록 설정
     if (selectedValues && selectedValues.length > 0) {
       const processCode = selectedValues[0];
-      setSelectedOption(processCode);
-      console.log(processCode);
+      setSelectedProcess(processCode);
+      console.log('Selected Process: ' + processCode);
 
       onProcessChange(processCode); // 선택된 공정명을 부모 컴포넌트로 전달
     } else {
-      setSelectedOption(null);
-      onProcessChange('1PCM'); // default values
-      console.log('-');
+      // setSelectedOption(null);
+      // onProcessChange('1PCM'); // default values
+      // console.log('-');
+    }
+  };
+
+  // 검색 기준(컬럼) 선택
+  const handleSearchDropdownChange = (selectedValues: any) => {
+    console.log('Selected Search Criteria ', selectedValues);
+
+    if (selectedValues && selectedValues.length > 0) {
+      const searchCriteria = selectedValues[0];
+      setSelectedSearch(searchCriteria);
+      // 값 초기화
+      setMaxValue('');
+      setMinValue('');
+    } else {
+      setSelectedSearch(null);
+    }
+  };
+
+  // 범위 검색 시, 입력값(min,max) 처리
+  const handleMinValueChange = (value: string) => {
+    console.log('min' + value);
+    setMinValue(value);
+  };
+  const handleMaxValueChange = (value: string) => {
+    console.log('max' + value);
+    setMaxValue(value);
+  };
+
+  // API 요청을 처리하는 함수
+  const handleSearch = async (value?: string) => {
+    setSearchValue(value || null); // 검색어 상태 업데이트
+    console.debug(searchValue);
+    console.log('Search Keyword: ' + value);
+    try {
+      const url =
+        `http://localhost:8086/api/v1/target-materials/search?` +
+        `currProc=` +
+        selectedProcess +
+        `&searchCriteria=` +
+        (selectedSearch || '') +
+        `&searchValue=` +
+        (value || '') +
+        `&minValue=` +
+        (minValue || '') +
+        `&maxValue=` +
+        (maxValue || '') +
+        `&isError=` +
+        'Y'; // 에러재
+
+      const response = await axios.get(url);
+      console.log(url);
+      console.log('API Response:', response.data);
+
+      if (response.status == 200) {
+        onSearch(transformData(response.data.result));
+      }
+    } catch (error) {
+      console.error('API 호출 중 오류 발생:', error);
     }
   };
 
@@ -76,24 +111,26 @@ export const TopBar: React.FC<TopBarProps> = ({ onProcessChange }) => {
         <Dropdown
           title={'공정명'}
           options={optionsDropdown1}
-          onChange={handleDropdownChange}
+          onChange={handleProcessDropdownChange}
         />
       </div>
       <Dropdown
         title={'검색 기준'}
         options={optionsDropdown2}
-        onChange={handleDropdownChange}
+        onChange={handleSearchDropdownChange}
       />
-      {selectedOption == 'width' || selectedOption == 'thickness' ? (
+      {selectedSearch &&
+      (selectedSearch.indexOf('width') > -1 ||
+        selectedSearch.indexOf('thickness') > -1) ? (
         <div className={styles.rangeSearchCotainer}>
-          <Input />
+          <Input onChange={handleMinValueChange} value={minValue} />
           <span> (mm) ~ </span>
-          <Input />
+          <Input onChange={handleMaxValueChange} value={maxValue} />
           <span> (mm)</span>
-          <SearchButton />
+          <SearchButton onClick={() => handleSearch()} />
         </div>
       ) : (
-        <SearchBar />
+        <SearchBar onSearch={handleSearch} />
       )}
     </div>
   );

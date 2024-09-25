@@ -5,8 +5,8 @@ import styles from './DoubleBarChart.module.scss';
 
 // Props 타입 정의
 interface DoubleBarChartProps {
-  option1: echarts.EChartsCoreOption;
-  option2: echarts.EChartsCoreOption;
+  option1: echarts.EChartsCoreOption | null;
+  option2: echarts.EChartsCoreOption | null;
 }
 
 export const DoubleBarChart: React.FC<DoubleBarChartProps> = ({
@@ -17,13 +17,13 @@ export const DoubleBarChart: React.FC<DoubleBarChartProps> = ({
   const chartRef2 = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (chartRef1.current) {
+    if (chartRef1.current && option1) {
       const myChart1 = echarts.init(chartRef1.current);
-      option1 && myChart1.setOption(option1);
+      myChart1.setOption(option1); // option1이 null이 아닐 때만 호출
     }
-    if (chartRef2.current) {
+    if (chartRef2.current && option2) {
       const myChart2 = echarts.init(chartRef2.current);
-      option2 && myChart2.setOption(option2);
+      myChart2.setOption(option2); // option2가 null이 아닐 때만 호출
     }
   }, [option1, option2]);
 

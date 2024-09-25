@@ -1,4 +1,3 @@
-import { url } from '@postcoil/ui/config/UrlConfig';
 import { Table, ConfigProvider } from 'antd';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
@@ -12,6 +11,7 @@ import {
   facilityData,
   columnMapping,
 } from '@/config/management/ExtMConfig';
+import { url } from '@/config/UrlConfig';
 // // TODO: fetch data from API
 // const extractions: DataType = {
 //   공장코드: 100,

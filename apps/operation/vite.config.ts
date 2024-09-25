@@ -36,4 +36,8 @@ export default defineConfig({
     exclude: ['@postcoil/ui'],
   },
   logLevel: 'info',
+
+  define: {
+    global: 'window',
+  },
 });

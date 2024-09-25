@@ -17,14 +17,7 @@ const { Search } = Input;
 
 // options
 interface SearchBarProps {
-  options?: OptionType[];
-  onChange?: (value?: string[]) => void;
   onSearch?: (value?: string) => void;
-}
-
-interface OptionType {
-  value: string;
-  label: string;
 }
 
 // // Dropbar Event
@@ -35,27 +28,11 @@ interface OptionType {
 // // Searchbar Event
 // const onSearch = (value: string) => console.log(value);
 
-export const SearchBar: React.FC<SearchBarProps> = ({
-  // options,
-  // onChange,
-  onSearch,
-}) => {
+export const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   return (
     <div className={styles.searchbarContainer}>
       {/* <span> 검색 기준 </span> */}
       <span className={styles.spacer}></span>
-
-      {/* <Cascader
-        options={options}
-        onChange={
-          onChange
-            ? onChange
-            : () => {
-              console.log('Dropdown Click');
-            }
-        }
-        placeholder="선택"
-      /> */}
       <span className={styles.spacer}></span>
       <Space direction="vertical">
         <Search

@@ -1,6 +1,8 @@
-import React from 'react';
-
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 // 그래프
+import { useLocation } from 'react-router-dom';
+
 import BarChartV2 from './chart/BarChartV2';
 import DonutChart from './chart/DonutChart';
 import DoubleBarChart from './chart/DoubleBarChart';
@@ -12,14 +14,152 @@ import styles from './DashBoard.module.scss';
 
 import {
   barchartV2Option,
-  piechartOption,
-  donutchartOption,
+  // piechartOption,
+  // donutchartOption,
   rowbarchartOption,
-  doublebarchartOption1,
-  doublebarchartOption2,
+  // doublebarchartOption1,
+  // doublebarchartOption2,
 } from '@/config/DashBoard/DashBoardConfig';
+import {
+  useOrderData,
+  useWidthThicknessData,
+} from '@/pages/fc004/useChartData';
 
 const DashBoard: React.FC = () => {
+  // 선택한 공정
+  const location = useLocation();
+  const selectedProc = location.pathname.split('/')[2];
+
+  // 품종/고객사
+  const [coilTypeOption, setCoilTypeOption] = useState<Record<
+    string,
+    unknown
+  > | null>(null);
+  const [customerNameOption, setCustomerNameOption] = useState<Record<
+    string,
+    unknown
+  > | null>(null);
+  const fetchOrderData = useOrderData();
+
+  // 폭/두께
+  // const [chartOptions, setChartOptions] = useState<{
+  //   width: number;
+  //   thickness: number;
+  // } | null>(null);
+  // const fetchMaterialData = useMaterialData();
+  const fetchChartData = useWidthThicknessData();
+  const [widthOption, setWidthOption] =
+    useState<echarts.EChartsCoreOption | null>(null);
+  const [thicknessOption, setThicknessOption] =
+    useState<echarts.EChartsCoreOption | null>(null);
+
+  // 에러 비율
+  interface ApiResponse<T = any> {
+    status: number;
+    resultMsg: string;
+    result: T;
+  }
+
+  interface DataType {
+    errorCount: number;
+    normalCount: number;
+  }
+  const [errorNormalData, setErrorNormalData] = useState<DataType | null>(null);
+
+  // 생산 마감일
+  interface DueDataType {
+    key: string;
+    no: string;
+    materialNo: string;
+    dueDate: string;
+    tags: string[];
+  }
+
+  const [dueDate, setDueDate] = useState<DueDataType[]>([]);
+
+  // API 호출
+  // 에러재 비율
+  const fetchErrorNormalCount = async () => {
+    const url = `http://localhost:8086/api/v1/dashboard/error_count?currProc=${selectedProc}`;
+    try {
+      const response = await axios.get<ApiResponse<DataType>>(url);
+      if (response.data.status === 200) {
+        setErrorNormalData(response.data.result); // API 결과를 상태에 저장
+      }
+    } catch (error) {
+      console.error('Fetch error:', error);
+    }
+  };
+
+  //생산 마감일
+  const fetchDueDateTable = async () => {
+    const url = `http://localhost:8086/api/v1/dashboard/dueDate?currProc=${selectedProc}`;
+    try {
+      const response = await axios.get<ApiResponse>(url);
+      if (response.data.status === 200) {
+        return response.data.result.map((item: any, index: any) => ({
+          key: String(index + 1),
+          no: String(index + 1),
+          materialNo: item.materialNo,
+          dueDate: formatDate(item.dueDate),
+          tags: [`D-${calculateDaysLeft(item.dueDate)}`],
+        }));
+      } else {
+        console.log('Error:', response.data.resultMsg);
+        return [];
+      }
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
+  };
+
+  const calculateDaysLeft = (dueDate: string) => {
+    const today = new Date();
+    const due = new Date(dueDate);
+    const timeDiff = due.getTime() - today.getTime();
+    return Math.ceil(timeDiff / (1000 * 3600 * 24));
+  };
+
+  const formatDate = (dueDate: string) => {
+    return new Date(dueDate).toISOString().split('T')[0];
+  };
+
+  // const { chartOptions } = useMaterialData(selectedProc);
+  // const widthOptions = chartOptions?.width;
+  // const thicknessOptions = chartOptions?.thickness;
+
+  const render = async () => {
+    // 품종/고객사
+    console.log('selectedProc: ' + selectedProc);
+    const orderResult = await fetchOrderData(selectedProc);
+
+    setCoilTypeOption(orderResult?.coilTypeOptionResult ?? null);
+    setCustomerNameOption(orderResult?.customerNameOptionResult ?? null);
+
+    // 폭/두께
+    // const materialResult = await fetchMaterialData(selectedProc);
+    // setChartOptions(
+    //   materialResult?.setChartOptions ?? { width: {}, thickness: {} }
+    // );
+    const materialResult = await fetchChartData(selectedProc);
+    if (materialResult) {
+      setWidthOption(materialResult.widthOptionResult);
+      setThicknessOption(materialResult.thicknessOptionResult);
+    }
+
+    // 에러 비율
+    await fetchErrorNormalCount();
+
+    // 마감일 정보
+    const tableData = await fetchDueDateTable();
+    setDueDate(tableData);
+  };
+
+  useEffect(() => {
+    render();
+  }, [selectedProc]); // selectedProc이 변경될 때마다 실행
+
   return (
     <div className={styles.parentDiv}>
       <h1>공정별 작업대상재 분석</h1>
@@ -53,25 +193,22 @@ const DashBoard: React.FC = () => {
             <Status />
           </div>
           <div className={styles.smallCard}>
-            <List />
+            <List data={dueDate} />
           </div>
         </div>
         {/* <h4>재료 정보</h4> */}
         <div className={styles.line2}>
           <div className={styles.smallCard}>
-            <Piechart option={piechartOption} />
+            <Piechart data={errorNormalData} />
           </div>
           <div className={styles.smallCard}>
-            <DoubleBarChart
-              option1={doublebarchartOption1}
-              option2={doublebarchartOption2}
-            />
+            <DoubleBarChart option1={widthOption} option2={thicknessOption} />
           </div>
           <div className={styles.smallCard}>
-            <DonutChart title="품종" option={donutchartOption} />
+            <DonutChart title="품종" option={coilTypeOption} />
           </div>
           <div className={styles.smallCard}>
-            <DonutChart title="고객사" option={donutchartOption} />
+            <DonutChart title="고객사" option={customerNameOption} />
           </div>
         </div>
       </div>
