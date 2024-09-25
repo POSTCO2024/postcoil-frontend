@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { PMREMGenerator } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -319,7 +319,7 @@ class App {
     this.smallCameras = [this.camera2, this.camera3, this.camera4];
   }
 
-  private addPointLight(x: number, y: number, z: number, helperColor: any) {
+  private addPointLight(x: number, y: number, z: number) {
     const color = 0xffffff;
     const intensity = 2;
     const pointLight = new THREE.PointLight(color, intensity, 2000);
@@ -337,10 +337,10 @@ class App {
   private setupLight() {
     const ambientLight = new THREE.AmbientLight(0xffffff, 8);
     this.scene.add(ambientLight);
-    this.addPointLight(350, 30, 50, 0xff0000);
-    this.addPointLight(-10, 30, 50, 0xffff00);
-    this.addPointLight(-10, 30, -80, 0x00ff00);
-    this.addPointLight(350, 30, -80, 0x0000ff);
+    this.addPointLight(350, 30, 50);
+    this.addPointLight(-10, 30, 50);
+    this.addPointLight(-10, 30, -80);
+    this.addPointLight(350, 30, -80);
 
     const directionalLight = new THREE.DirectionalLight(0xffffff, 10);
     directionalLight.position.set(150, 30, 50).normalize();
@@ -388,7 +388,7 @@ class App {
     this.controls4.enabled = false;
 
     controls.enabled = true;
-    this.smallCameras = this.cameras.filter((cam, i) => i !== index);
+    this.smallCameras = this.cameras.filter((_, i) => i !== index);
   }
 
   update(time: number) {
