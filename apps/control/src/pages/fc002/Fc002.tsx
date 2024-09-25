@@ -50,6 +50,8 @@ async function updateIsError(data: React.Key[]) {
 
 export const Fc002: React.FC = () => {
   // 조회
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isRecommendModalOpen, setIsRecommendModalOpen] = React.useState(false);
   const [dataList, setDataList] = useState<any[]>([]); // API로부터 받을 데이터 상태
 
   // 필터링
@@ -63,7 +65,7 @@ export const Fc002: React.FC = () => {
   };
 
   // Modal
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  // 1) 에러패스 적용 확인
 
   const handleModalOpen = () => setIsModalOpen(true);
   const handleOk = async () => {
@@ -82,6 +84,16 @@ export const Fc002: React.FC = () => {
     setIsModalOpen(false);
   };
   const handleCancel = () => setIsModalOpen(false);
+
+  // 2) 에러패스 추천
+  const handleRecommendModalOpen = () => {
+    setIsRecommendModalOpen(true);
+  };
+  const handleRecommendModalOk = async () => {
+    // 추천 모달에서 '사용' 버튼을 눌렀을 때 기존 에러패스 확인 모달을 띄움
+    setIsRecommendModalOpen(false); // 추천 모달 닫기
+    setIsModalOpen(true); // 기존 에러패스 확인 모달 열기
+  };
 
   // Checked Row 상태 변환
   function setSelectedMaterials(selectedRows: any) {
@@ -125,6 +137,49 @@ export const Fc002: React.FC = () => {
           />
         </div>
       </div>
+      <Button
+        type="default"
+        className={styles.btn}
+        onClick={handleRecommendModalOpen}>
+        에러패스 추천
+      </Button>
+      <CommonModal
+        title="에러패스 추천 재료"
+        isModalOpen={isRecommendModalOpen}
+        onCancel={() => setIsRecommendModalOpen(false)} // 추천 모달 닫기
+        onApply={handleRecommendModalOk} // '사용' 버튼을 눌렀을 때 실행
+        isButtonNeeded={false}
+        width={1200}>
+        <div className={styles.table}>
+          <Table
+            useCheckBox={true}
+            columns={columnsData}
+            data={dataList.map((item: any) => ({
+              ...item,
+              key: item.targetId,
+            }))}
+            scroll={{ x: 'max-content', y: 600 }}
+            tableLayout={'fixed'}
+            handleRowsClick={setSelectedRows}
+            setSelectedMaterials={setSelectedMaterials}
+          />
+        </div>
+        <p
+          style={{
+            fontSize: '1.5rem',
+            textAlign: 'center',
+            marginTop: '10px',
+          }}>
+          추천 재료를 사용하시겠습니까?
+        </p>
+        <Button type="primary" onClick={handleRecommendModalOk}>
+          사용
+        </Button>
+        <Button type="default" onClick={() => setIsRecommendModalOpen(false)}>
+          미사용
+        </Button>
+      </CommonModal>
+
       <Button type="primary" className={styles.btn} onClick={handleModalOpen}>
         에러패스
       </Button>
