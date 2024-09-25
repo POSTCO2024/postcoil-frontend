@@ -1,6 +1,6 @@
 import { Tab } from '@postcoil/ui';
 import { Client } from '@stomp/stompjs';
-import axios from 'axios';
+// import axios from 'axios';
 import { useEffect, useState } from 'react';
 import SockJS from 'sockjs-client';
 
