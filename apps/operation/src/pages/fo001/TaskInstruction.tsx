@@ -1,7 +1,7 @@
 import { Tab } from '@postcoil/ui';
 import { Client } from '@stomp/stompjs';
-import axios from 'axios';
-import { useEffect, useState, useRef } from 'react';
+// import axios from 'axios';
+import { useEffect, useState } from 'react';
 import SockJS from 'sockjs-client';
 
 import AnalyzeChart from './result/AnalyzeChart';
@@ -16,16 +16,16 @@ export const TaskInstruction = () => {
   const [client, setClient] = useState<Client | null>(null);
 
   // 테스트용 url, url 로 요청하면 결과값을 웹소켓으로 쏴주도록 함
-  const getTest = async () => {
-    try {
-      const response = await axios.get(
-        'http://localhost:8087/api/v1/materials/websocketTest',
-      );
-      setMessage(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const getTest = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       'http://localhost:8087/api/v1/materials/websocketTest',
+  //     );
+  //     setMessage(response.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   useEffect(() => {
     const socket = new SockJS('http://localhost:8087/coil');
