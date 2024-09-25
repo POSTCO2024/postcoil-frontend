@@ -75,6 +75,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   // API 요청을 처리하는 함수
   const handleSearch = async (value?: string) => {
     setSearchValue(value || null); // 검색어 상태 업데이트
+    console.debug(searchValue);
     console.log('Search Keyword: ' + value);
     try {
       const url =
