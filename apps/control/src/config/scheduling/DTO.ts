@@ -2,26 +2,10 @@ export interface MaterialDTO {
   [x: string]: any;
   id: number | string;
   materialNo?: string;
-  status?: string;
-  // fCode?: string;
-  // opCode?: string;
   currProc?: string;
-  // type?: string;
-  // progress?: string;
-  // outerDia?: number | string;
-  // innerDia?: number | string;
   width?: number | string;
   thickness?: number | string;
-  // length?: number | string;
-  // weight?: number | string;
-  // totalWeight?: number | string;
-  // passProc?: string | null;
-  // remProc?: string | null;
-  // preProc?: string | null;
   nextProc?: string | null;
-  storageLoc?: string;
-  // yard?: number | string;
-  // coilTypeCode?: string;
 
   // 작업대상재 필드
   goalWidth?: number | string;
@@ -29,18 +13,18 @@ export interface MaterialDTO {
   goalLength?: number | string;
   temperature?: number | string;
   rollUnit?: string;
-  // targetId?: number | string;
 
   // 스케줄 필드
-  // workTime?: number | string;
-  // scheduleId?: number | string;
-  // scheduleNo?: string;
-  // sequence?: number[] | string[];
+  schedulePlanId?: string;
+  isScheduled?: string;
+  sequence?: number | string;
+  isRejected?: string;
+  expectedDuration?: number | string;
 }
 
 export interface ScheduleInfoDTO {
-  id?: number | string;
-  no?: string;
+  id: string;
+  scheduleNo: string;
 }
 
 export interface WorkScheduleDTO {
@@ -53,4 +37,15 @@ export interface WorkScheduleDTO {
   endTime?: string;
   expectedDuration?: number | string;
   actualDuration?: number | string;
+}
+
+interface UpdateMaterial {
+  materialId: number; // 각 자재의 ID
+  sequence: number; // 자재의 순서
+}
+
+export interface ConfirmScheduleDTO {
+  planId: number; // 각 계획의 ID
+  confirmBy: string; // 확인자
+  updateMaterials: UpdateMaterial[]; // 업데이트할 자재 배열
 }

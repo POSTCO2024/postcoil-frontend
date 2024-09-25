@@ -86,29 +86,33 @@ export const mockcolumns: ColumnDataType<MaterialDataType>[] = [
 ];
 
 export const transformedData = (data: MaterialDTO[]): MaterialDataType[] => {
+  // sequence가 null이 아닌 항목만 필터링하고, 정렬
+  if (
+    data.length > 0 &&
+    data[0].sequence !== null &&
+    (data[0].sequence as number) > 0
+  ) {
+    data.sort((a, b) => (a.sequence as number) - (b.sequence as number)); // type assertion 사용
+  }
+
   return data.map((item) => ({
     key: item.id,
+    id: item.id as string,
     materialNo: item.materialNo,
-    status: item.status,
-    // opCode: item.opCode,
     currProc: item.currProc,
     temperature: item.temperature,
-    // type: item.type,
-    // progress: item.progress,
     rollUnit: item.rollUnit,
-    // outerDia: item.outerDia,
-    // innerDia: item.innerDia,
     width: item.width,
-    // length: item.length,
     thickness: item.thickness,
-    // weight: item.weight,
-    // passProc: item.passProc,
-    // preProc: item.preProc,
     nextProc: item.nextProc,
-    // storageLoc: item.storageLoc,
-    // yard: item.yard,
     goalWidth: item.goalWidth,
     goalThickness: item.goalThickness,
+    sequence: item.sequence,
+    isScheduled: item.isScheduled,
+    isRejected: item.isRejected,
+    expectedDuration: item.expectedDuration,
+    schedulePlanId: item.schedulePlanId,
+    changed: item.changed,
   }));
 };
 
