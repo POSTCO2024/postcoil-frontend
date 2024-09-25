@@ -1,5 +1,4 @@
 import { Button } from '@postcoil/ui';
-import { url } from '@postcoil/ui/config/UrlConfig';
 import { Input, Form } from 'antd';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
@@ -8,6 +7,7 @@ import styles from './Result.module.scss';
 
 import CommonModal from '@/components/common/CommonModal';
 import { keyMapping } from '@/config/management/ErrMConfig';
+import { url } from '@/config/UrlConfig';
 
 interface PropsType {
   title: string;

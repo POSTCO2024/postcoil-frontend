@@ -2,18 +2,14 @@ import { Table } from '@postcoil/ui';
 import { Button } from 'antd';
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
-import {
-  transformData,
-  ApiResponseItem,
-} from '../../utils/control/transformData';
 
 import styles from './Fc002.module.scss';
 import { TopBar } from './topBar/TopBar';
+import { transformData, ApiResponseItem } from '@/utils/control/transformData';
 
 import CommonModal from '@/components/common/CommonModal';
 import { columnsData } from '@/config/control/Fc002Utils';
 
-// API
 // API
 export interface ApiResponse {
   status: number;
@@ -23,7 +19,7 @@ export interface ApiResponse {
 
 // 1. 에러재 목록 조회
 async function getErrorMaterialData(processCode: string): Promise<any[]> {
-  const url = `http://localhost:8086/api/v1/target-materials/error-by-curr-proc?currProc=${processCode}`;
+  const url = `http://localhost:8086/api/v1/error-materials/error-by-curr-proc?currProc=${processCode}`;
   try {
     const response = await axios.get<ApiResponse>(url);
     if (response.data.status === 200) {
@@ -53,13 +49,22 @@ async function updateIsError(data: React.Key[]) {
 }
 
 export const Fc002: React.FC = () => {
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  // 조회
   const [dataList, setDataList] = useState<any[]>([]); // API로부터 받을 데이터 상태
+
+  // 필터링
   const [selectedProcessCode, setSelectedProcessCode] =
     useState<string>('1PCM');
   const [selectedRows, setSelectedRows] = useState<any[]>([]); // Checked Rows
 
+  // 검색 결과 처리
+  const handleSearchResults = (searchResults: any[]) => {
+    setDataList(searchResults); // 검색 결과로 dataList 업데이트
+  };
+
   // Modal
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+
   const handleModalOpen = () => setIsModalOpen(true);
   const handleOk = async () => {
     if (selectedRows.length > 0) {
@@ -100,7 +105,10 @@ export const Fc002: React.FC = () => {
   return (
     <div className={styles.boardContainer}>
       <h1>공정별 에러재 관리</h1>
-      <TopBar onProcessChange={handleDropdownChange} />
+      <TopBar
+        onProcessChange={handleDropdownChange}
+        onSearch={handleSearchResults}
+      />
       <div className={styles.result}>
         <div className={styles.table}>
           <Table

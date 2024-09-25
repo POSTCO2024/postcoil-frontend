@@ -23,7 +23,6 @@ const SchPPage = () => {
   const [isModal3Open, setIsModal3Open] = useState(false);
   const [materialData, setMaterialData] = useState<MaterialDTO[]>([]);
   const [selectedRows, setSelectedRows] = useState<MaterialDTO[]>([]); // checkbox로 선택된 행 데이터를 저장하는 상태
-  const [processCode, setProcessCode] = useState('');
 
   // selectedRows 상태가 변경될 때마다 실행되는 useEffect
   useEffect(() => {
@@ -35,7 +34,6 @@ const SchPPage = () => {
       // 데이터 로딩 전에 상태를 초기화 (reset)
       setMaterialData([]); // materialData 초기화
       setSelectedRows([]); // selectedRows 초기화
-      setProcessCode(value[0]); // processCode 초기화
 
       const data = await fetchScheduleData({
         pageCode: 'plan',
@@ -63,7 +61,7 @@ const SchPPage = () => {
 
       // 백엔드로 POST 요청 (selectedIds 전달)
       await scheduleApiClient
-        .post(`${SCH_API_BASE_URL}/plan/${processCode}`, selectedIds, {
+        .post(`${SCH_API_BASE_URL}/plan/execute`, selectedIds, {
           headers: {
             'Content-Type': 'application/json',
           },

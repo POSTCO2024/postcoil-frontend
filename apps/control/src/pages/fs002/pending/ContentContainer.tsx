@@ -12,16 +12,14 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { Table } from '@postcoil/ui';
 import { ColumnDataType } from '@postcoil/ui/config/TableConfig';
-import { Button } from 'antd';
-import React, { useContext, useMemo } from 'react';
+import { Button, ConfigProvider } from 'antd';
+import React, { useState, useContext, useMemo, useEffect } from 'react';
 
 import styles from './ContentContainer.module.scss';
 
 import { MaterialDataType } from '@/config/scheduling/ContentConfig';
-import { mockcolumns, mockdata } from '@/utils/scheduling/MaterialTableUtils';
-// interface PropsType{
-//   data?: TODO: props로 데이터 받기
-// }
+import { useMaterialStore } from '@/store/fs002store';
+import { mockcolumns, transformedData } from '@/utils/scheduling/tableUtils';
 
 interface RowProps extends React.HTMLAttributes<HTMLTableRowElement> {
   'data-row-key': string;
@@ -91,8 +89,22 @@ const Row: React.FC<RowProps> = (props) => {
 };
 
 const ContentContainer = () => {
-  const [dataSource, setDataSource] =
-    React.useState<MaterialDataType[]>(mockdata);
+  const materialData = useMaterialStore((state) => state.data);
+  const updateData = useMaterialStore((state) => state.updateData!);
+
+  const [dataSource, setDataSource] = useState<MaterialDataType[]>([]);
+
+  // materialData가 변경될 때마다 dataSource 업데이트 및 재렌더링
+  useEffect(() => {
+    if (materialData && materialData.length > 0) {
+      const transformed = transformedData(materialData);
+      setDataSource(transformed);
+    } else {
+      setDataSource([]);
+    }
+    console.log('Material', materialData);
+    console.log('Updated dataSource:', dataSource);
+  }, [materialData]); // materialData가 변경될 때마다 실행
 
   const onDragEnd = ({ active, over }: DragEndEvent) => {
     if (active.id !== over?.id) {
@@ -103,13 +115,26 @@ const ContentContainer = () => {
         const overIndex = prevState.findIndex(
           (record) => record.key === over?.id,
         );
-        return arrayMove(prevState, activeIndex, overIndex);
+        const newData = arrayMove(prevState, activeIndex, overIndex);
+
+        // 드래그된 항목에 대해 changed 값을 true로 설정
+        const updatedData = newData.map((record) =>
+          record.key === active?.id ? { ...record, changed: true } : record,
+        );
+
+        updateData(updatedData);
+        return updatedData;
       });
     }
   };
 
+  const resetData = useMaterialStore((state) => state.resetData)!;
+
   return (
     <div className={styles.contentContainer}>
+      <Button className={styles.btn} onClick={() => resetData()}>
+        Reset
+      </Button>
       <section className={styles.tableWrapper}>
         <div className={styles.table}>
           <DndContext
@@ -118,12 +143,24 @@ const ContentContainer = () => {
             <SortableContext
               items={dataSource.map((i) => i.key!)}
               strategy={verticalListSortingStrategy}>
-              <Table
-                rowKey="key"
-                components={{ body: { row: Row } }}
-                columns={dragColumns}
-                data={dataSource}
-              />
+              <ConfigProvider
+                theme={{
+                  components: {
+                    Table: {
+                      rowHoverBg: '#eff4ff',
+                    },
+                  },
+                }}>
+                <Table
+                  rowKey="key"
+                  components={{ body: { row: Row } }}
+                  columns={dragColumns}
+                  data={dataSource}
+                  rowClassName={(record) =>
+                    record.changed ? `${styles.changedBg}` : ''
+                  }
+                />
+              </ConfigProvider>
             </SortableContext>
           </DndContext>
         </div>

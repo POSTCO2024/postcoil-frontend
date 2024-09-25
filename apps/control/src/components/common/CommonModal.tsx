@@ -7,6 +7,8 @@ interface PropsType {
   isModalOpen: boolean;
   isConfirmation?: boolean;
   isButtonNeeded?: boolean;
+  width?: number | undefined; // Modal width
+  style?: React.CSSProperties | undefined; // Modal style
   onCancel: () => void;
   onApply?: () => void;
   children: React.ReactNode;
@@ -17,6 +19,8 @@ const CommonModal = ({
   isModalOpen,
   isConfirmation = false,
   isButtonNeeded = true,
+  width,
+  style,
   onCancel,
   onApply,
   children,
@@ -27,6 +31,8 @@ const CommonModal = ({
       title={title}
       open={isModalOpen}
       onCancel={onCancel}
+      width={width}
+      style={style}
       footer={
         isButtonNeeded && (
           <div className="modal-btns">
