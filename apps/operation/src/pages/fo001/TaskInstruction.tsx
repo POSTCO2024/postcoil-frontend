@@ -56,15 +56,15 @@ export const TaskInstruction = () => {
     };
   }, []);
 
-  const sendMessage = () => {
-    if (client) {
-      // 서버의 '/app/send'로 메시지 발행
-      client.publish({
-        destination: '/app/send', // 서버의 @MessageMapping("/send")에 발행
-        body: 'Test Message from Client', // 발행할 메시지
-      });
-    }
-  };
+  // const sendMessage = () => {
+  //   if (client) {
+  //     // 서버의 '/app/send'로 메시지 발행
+  //     client.publish({
+  //       destination: '/app/send', // 서버의 @MessageMapping("/send")에 발행
+  //       body: 'Test Message from Client', // 발행할 메시지
+  //     });
+  //   }
+  // };
 
   const [isGraphVisible, setIsGraphVisible] = useState(true);
 
