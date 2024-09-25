@@ -47,19 +47,19 @@ export const optionsDropdown2 = [
     label: '고객사',
   },
   {
-    value: 'thickness',
+    value: 'width',
     label: '폭',
   },
   {
-    value: 'width',
+    value: 'thickness',
     label: '두께',
   },
   {
-    value: 'goal_thickness',
+    value: 'goal_width',
     label: '주문 폭',
   },
   {
-    value: 'goal_width',
+    value: 'goal_thickness',
     label: '주문 두께',
   },
 ];
