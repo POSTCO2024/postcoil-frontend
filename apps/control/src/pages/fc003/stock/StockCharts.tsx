@@ -5,52 +5,81 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import styles from './StockCharts.module.scss';
 
+import { url } from '@/config/UrlConfig';
+
 const StockCharts: React.FC = () => {
-  // const [treemapData, setTreemapData] = useState([{ name: '', value: 0 }]);
+  const [treemapData, setTreemapData] = useState<any[]>([]);
 
-  const treemapData = [
-    { name: '1PCM', value: 7840 },
-    { name: '2PCM', value: 5731 },
-    { name: '1CAL', value: 5914 },
-    { name: '2CAL', value: 3534 },
-    { name: '1EGL', value: 3416 },
-    { name: '2EGL', value: 6714 },
-    { name: '1CGL', value: 7074 },
-    { name: '2CGL', value: 3938 },
-    { name: '포장', value: 3812 },
-  ];
-  treemapData.sort(function (a, b) {
-    const firstCharA = b.name[0];
-    const firstCharB = a.name[0];
+  const transformFetchData = (data: { [key: string]: number }) => {
+    const treemapData = Object.keys(data).map((key) => ({
+      name: key,
+      value: data[key],
+    }));
+    // treemapData.sort(function (a, b) {
+    //   return a.value - b.value;
+    // });
+    return treemapData;
+  };
 
-    if (firstCharA !== firstCharB) {
-      return firstCharA.localeCompare(firstCharB);
-    } else {
-      // If the first characters are the same, sort by value
-      return a.value - b.value;
+  const fetchTreemapData = async () => {
+    try {
+      const response = await axios.get(url + '/api/v1/monitoring/materials');
+      const fetchData = transformFetchData(response.data.result);
+      setTreemapData(fetchData);
+    } catch (error) {
+      console.error(error);
     }
-  });
+  };
+
+  useEffect(() => {
+    fetchTreemapData();
+  }, []);
+
+  const chartInstanceRef = useRef<echarts.EChartsType | null>(null);
+  const [isTreemap, setIsTreemap] = useState(true);
+  const chartRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (chartRef.current && treemapData.length > 0) {
+      const instance = echarts.init(chartRef.current);
+      chartInstanceRef.current = instance;
+      instance.setOption(treemapOption);
+
+      return () => {
+        instance.dispose();
+      };
+    }
+    return undefined;
+  }, [treemapData]);
+
+  useEffect(() => {
+    if (chartInstanceRef.current && treemapData.length > 0) {
+      chartInstanceRef.current.setOption(
+        isTreemap ? treemapOption : barOption,
+        true,
+      );
+    }
+  }, [isTreemap, treemapData]);
 
   const treemapOption: echarts.EChartsOption = {
     series: [
       {
         type: 'treemap',
-        data: treemapData.map((item, index) => ({
-          name: item.name,
+        data: treemapData.map((item: any, index: any) => ({
+          name: item.name + ' 동',
           value: item.value,
           itemStyle: {
             // 색상 지정 후 하나씩 가져오기
             color: [
-              '#FFADAD',
-              '#FFD6A5',
-              '#FDFFB6',
-              '#CAFFBF',
-              '#9BF6FF',
-              '#A0C4FF',
-              '#BDB2FF',
-              '#FFC6FF',
-              '#FFFFFE',
-            ][8 - (index % 9)],
+              '#EDF2FB',
+              '#E2EAFC',
+              '#D7E3FC',
+              '#CCDBFD',
+              '#C1D3FE',
+              '#A5C0FF',
+              '#8CAEFF',
+              '#83A8FF',
+              '#719CFF',
+            ][index % 9],
           },
         })),
         label: {
@@ -67,7 +96,7 @@ const StockCharts: React.FC = () => {
             show: true,
             // 해당 표에 손을 놓으면 개수 표시
             formatter: function (graph) {
-              return `${graph.name} : ${graph.value} 개`;
+              return `${graph.name} 동 : ${graph.value} 개`;
             },
           },
         },
@@ -81,12 +110,18 @@ const StockCharts: React.FC = () => {
     ],
   };
   const barOption: echarts.EChartsOption = {
+    tooltip: {
+      trigger: 'item',
+      formatter: (params: any) => {
+        return `${params.name} : ${params.value} 개`;
+      },
+    },
     xAxis: {
       type: 'value',
     },
     yAxis: {
       type: 'category',
-      data: treemapData.map((item) => item.name),
+      data: treemapData.map((item) => item.name + '동'),
     },
     series: [
       {
@@ -96,31 +131,6 @@ const StockCharts: React.FC = () => {
       },
     ],
   };
-
-  const chartInstanceRef = useRef<echarts.EChartsType | null>(null);
-  const [isTreemap, setIsTreemap] = useState(true);
-  const chartRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (chartRef.current) {
-      const instance = echarts.init(chartRef.current);
-      chartInstanceRef.current = instance;
-      instance.setOption(treemapOption);
-
-      return () => {
-        instance.dispose();
-      };
-    }
-    return undefined;
-  }, []);
-
-  useEffect(() => {
-    if (chartInstanceRef.current) {
-      chartInstanceRef.current.setOption(
-        isTreemap ? treemapOption : barOption,
-        true,
-      );
-    }
-  }, [isTreemap]);
 
   const toggleChart = () => {
     setIsTreemap((prev) => !prev);

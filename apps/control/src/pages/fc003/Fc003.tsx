@@ -1,5 +1,5 @@
 import { Tab } from '@postcoil/ui';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import DashBoard from './dashBoard/DashBoard';
 import styles from './Fc003.module.scss';
@@ -15,7 +15,7 @@ const Fc003: React.FC = () => {
       <h1>공장별 작업대상재 현황</h1>
       <div className={styles.tab}>
         <Tab
-          labels={['작업 현황 모니터링', '공장별 수급량 조회']}
+          labels={['작업 현황 모니터링', '저장위치별 수급량 조회']}
           onChange={changeTab}
         />
       </div>
