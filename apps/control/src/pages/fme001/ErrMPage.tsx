@@ -1,4 +1,3 @@
-import { url } from '@postcoil/ui/config/UrlConfig';
 import { Table, ConfigProvider } from 'antd';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
@@ -14,6 +13,7 @@ import {
   infoErrColumn,
   columnMapping,
 } from '@/config/management/ErrMConfig';
+import { url } from '@/config/UrlConfig';
 
 async function getErrorStandard(facility: string) {
   try {
