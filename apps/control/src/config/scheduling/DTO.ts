@@ -25,6 +25,7 @@ export interface MaterialDTO {
 export interface ScheduleInfoDTO {
   id: string;
   scheduleNo: string;
+  workStatus?: 'SCHEDULED' | 'IN_PROGRESS' | 'COMPLETED';
 }
 
 export interface WorkScheduleDTO {
