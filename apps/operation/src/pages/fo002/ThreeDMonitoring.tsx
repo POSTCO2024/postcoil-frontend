@@ -130,11 +130,10 @@ class App {
     const pmremGenerator = new PMREMGenerator(this.renderer);
     pmremGenerator.compileEquirectangularShader();
 
-    new RGBELoader().load('image5.hdr', (texture) => {
+    new RGBELoader().load('image12.hdr', (texture) => {
       const envMap = pmremGenerator.fromEquirectangular(texture).texture;
       this.scene.environment = envMap;
       this.scene.background = new THREE.Color(0x565657);
-
       texture.dispose();
       pmremGenerator.dispose();
     });
@@ -147,7 +146,7 @@ class App {
     this.controls2.update();
     this.controls3.target = new THREE.Vector3(210, 0, 0);
     this.controls3.update();
-    this.controls4.target = new THREE.Vector3(250, 0, 0);
+    this.controls4.target = new THREE.Vector3(300, 0, 0);
     this.controls4.update();
   }
 
@@ -169,7 +168,7 @@ class App {
   }
 
   private setupModel() {
-    new GLTFLoader().load('./postco_ani.glb', (gltf) => {
+    new GLTFLoader().load('./postco.glb', (gltf) => {
       const model = gltf.scene;
       this.scene.add(model);
 
@@ -289,7 +288,7 @@ class App {
       1,
       5000,
     );
-    this.camera1.position.set(-10, 30, 50);
+    this.camera1.position.set(0, 30, 30);
 
     this.camera2 = new THREE.PerspectiveCamera(
       60,
@@ -297,7 +296,7 @@ class App {
       1,
       5000,
     );
-    this.camera2.position.set(70, 50, 70);
+    this.camera2.position.set(70, 50, 50);
 
     this.camera3 = new THREE.PerspectiveCamera(
       60,
@@ -305,7 +304,7 @@ class App {
       1,
       5000,
     );
-    this.camera3.position.set(250, 50, 70);
+    this.camera3.position.set(250, 50, 50);
 
     this.camera4 = new THREE.PerspectiveCamera(
       60,
@@ -313,7 +312,7 @@ class App {
       1,
       5000,
     );
-    this.camera4.position.set(330, 40, 50);
+    this.camera4.position.set(330, 30, 40);
 
     this.cameras = [this.camera1, this.camera2, this.camera3, this.camera4];
     this.selectedCamera = this.camera1;
@@ -404,9 +403,9 @@ class App {
       clipPlaneX.constant += deltaTime * clipSpeed * clipDirection;
     }
 
-    if (clipPlaneX2 && time > 19) {
-      const timeInCycle = (time - 20) % 40;
-      if (timeInCycle <= 20 && clipPlaneX2.constant < 20) {
+    if (clipPlaneX2 && time > 21) {
+      const timeInCycle = (time - 21) % 40;
+      if (timeInCycle <= 21 && clipPlaneX2.constant < 20) {
         clipPlaneX2.constant += deltaTime * clipSpeed;
       } else if (clipPlaneX2.constant > 5) {
         clipPlaneX2.constant -= deltaTime * clipSpeed;
@@ -414,8 +413,8 @@ class App {
     }
 
     if (clipPlaneX3 && time > 44) {
-      const timeInCycle = (time - 47) % 32;
-      if (timeInCycle <= 16 && clipPlaneX3.constant < 320) {
+      const timeInCycle = (time - 44) % 40;
+      if (timeInCycle <= 20 && clipPlaneX3.constant < 320) {
         clipPlaneX3.constant += deltaTime * clipSpeed;
       } else if (clipPlaneX3.constant > 290) {
         clipPlaneX3.constant -= deltaTime * clipSpeed;
@@ -522,49 +521,122 @@ class App {
 }
 
 const ThreeDMonitoring = () => {
-  const [meshInfo, setMeshInfo] = useState(''); // WebSocket으로 받은 데이터를 저장
+  const [meshInfo, setMeshInfo] = useState(null); // JSON 데이터를 저장하는 상태
+  const [messageCount, setMessageCount] = useState(0); // 메시지 카운트를 위한 상태
 
   useEffect(() => {
     const container = document.querySelector('#webgl-container');
     if (container && container.children.length === 0) {
-      new App();
+      new App(); // 3D 렌더링을 위한 함수
     }
 
     // WebSocket 연결 설정
     const ws = new WebSocket('ws://localhost:8088');
+
     ws.onmessage = (event) => {
-      // 서버에서 메시지를 받으면 setMeshInfo로 상태를 업데이트
-      setMeshInfo(event.data);
+      const data = JSON.parse(event.data); // 수신한 메시지를 JSON으로 파싱
+      setMeshInfo(data[messageCount]); // 현재 메시지 인덱스에 해당하는 데이터만 출력
+      setMessageCount((prevCount) => (prevCount + 1) % data.length); // 메시지 카운트 업데이트
     };
+
+    const interval = setInterval(() => {
+      ws.send('request-next-data'); // 서버에 다음 데이터를 요청하는 메시지 전송
+    }, 30000); // 30초마다 메시지를 서버에 요청
 
     return () => {
       ws.close(); // 컴포넌트가 언마운트될 때 WebSocket 연결 종료
+      clearInterval(interval); // 타이머 제거
     };
-  }, []);
+  }, [messageCount]);
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleString(); // 현재 시간 포맷으로 변환
+  };
+
+  // 데이터가 있을 경우 렌더링
   return (
     <div className={styles.page}>
-      <h1>3D 모니터링 작업 화면</h1>
+      <h1>3D Monitoring 작업 화면</h1>
       <div
         id="webgl-container"
-        style={{ width: '100%', height: '70vh', position: 'relative' }}></div>
-      <div
-        id="mesh-info"
-        style={{
-          display: 'none',
-          position: 'relative',
-          width: '100%',
-          padding: '10px',
-          background: 'rgba(0, 0, 0, 0.7)',
-          color: '#fff',
-          borderRadius: '5px',
-          pointerEvents: 'none', // 마우스 이벤트를 무시하여 클릭이 제대로 동작하도록 함
-          zIndex: 10, // 다른 요소 위로 표시되도록 설정
-        }}>
-        Mesh Information
-      </div>
-      <div> {meshInfo}</div>
+        style={{ width: '100%', height: '65vh', position: 'relative' }}></div>
+
+      {meshInfo && (
+        <div
+          style={{
+            display: 'block',
+            position: 'relative',
+            width: '100%',
+            padding: '10px',
+            background: 'rgba(0, 0, 0, 0.7)',
+            color: '#fff',
+            borderRadius: '10px',
+            marginTop: '5px',
+            fontFamily: 'Arial, sans-serif',
+            lineHeight: '1.6',
+          }}>
+          <div
+            style={{
+              marginBottom: '10px',
+              fontSize: '18px',
+              fontWeight: 'bold',
+            }}>
+            작업 정보
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+            }}>
+            <div style={{ flex: '1 1 30%', marginBottom: '10px' }}>
+              <strong>롤 유닛:</strong> {meshInfo.rollUnit}
+            </div>
+            <div style={{ flex: '1 1 30%', marginBottom: '10px' }}>
+              <strong>현재 공정:</strong> {meshInfo.currProc}
+            </div>
+            <div style={{ flex: '1 1 30%', marginBottom: '10px' }}>
+              <strong>온도:</strong> {meshInfo.temperature} °C
+            </div>
+            <div style={{ flex: '1 1 30%', marginBottom: '10px' }}>
+              <strong>폭:</strong> {meshInfo.width} mm
+            </div>
+            <div style={{ flex: '1 1 30%', marginBottom: '10px' }}>
+              <strong>두께:</strong> {meshInfo.thickness} mm
+            </div>
+            <div style={{ flex: '1 1 30%', marginBottom: '10px' }}>
+              <strong>스케줄 ID:</strong> {meshInfo.schedulePlanId}
+            </div>
+            <div style={{ flex: '1 1 30%', marginBottom: '10px' }}>
+              <strong>편성 여부:</strong> {meshInfo.isScheduled}
+            </div>
+            <div style={{ flex: '1 1 30%', marginBottom: '10px' }}>
+              <strong>순서:</strong> {meshInfo.sequence}
+            </div>
+            <div style={{ flex: '1 1 30%', marginBottom: '10px' }}>
+              <strong>리젝 여부:</strong> {meshInfo.isRejected}
+            </div>
+            <div style={{ flex: '1 1 30%', marginBottom: '10px' }}>
+              <strong>예상 작업 시간:</strong> {meshInfo.expectedDuration} 초
+            </div>
+            <div style={{ flex: '1 1 30%', marginBottom: '10px' }}>
+              <strong>작업 상태:</strong> {meshInfo.workStatus}
+            </div>
+            <div style={{ flex: '1 1 30%', marginBottom: '10px' }}>
+              <strong>목표 폭:</strong> {meshInfo.goalWidth} mm
+            </div>
+            <div style={{ flex: '1 1 30%', marginBottom: '10px' }}>
+              <strong>목표 두께:</strong> {meshInfo.goalThickness} mm
+            </div>
+            <div style={{ flex: '1 1 30%', marginBottom: '10px' }}>
+              <strong>다음 공정:</strong> {meshInfo.nextProc}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
+
 export default ThreeDMonitoring;
