@@ -59,15 +59,15 @@ export const TaskInstruction = () => {
     };
   }, []);
 
-  // const sendMessage = () => {
-  //   if (client) {
-  //     // 서버의 '/app/send'로 메시지 발행
-  //     client.publish({
-  //       destination: '/app/send', // 서버의 @MessageMapping("/send")에 발행
-  //       body: 'Test Message from Client', // 발행할 메시지
-  //     });
-  //   }
-  // };
+  const sendMessage = () => {
+    if (client) {
+      // 서버의 '/app/send'로 메시지 발행
+      client.publish({
+        destination: '/app/send', // 서버의 @MessageMapping("/send")에 발행
+        body: 'Test Message from Client', // 발행할 메시지
+      });
+    }
+  };
 
   const [isGraphVisible, setIsGraphVisible] = useState(true);
 
@@ -79,7 +79,6 @@ export const TaskInstruction = () => {
       {/* <h1 onClick={getTest}>작업 지시 전문</h1> */}
       <h1>작업 지시 전문</h1>
       <h1 onClick={sendMessage}>작업 지시 전문</h1>
-      <h1 onClick={getTest}>작업 지시 전문</h1>
       <h1>{message}</h1>
       <FilterContainer />
       <section className={styles.tab}>

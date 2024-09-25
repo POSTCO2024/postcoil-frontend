@@ -232,12 +232,9 @@ importers:
       sass:
         specifier: 1.77.8
         version: 1.77.8
-<<<<<<< HEAD
       three:
         specifier: ^0.132.2
         version: 0.132.2
-=======
->>>>>>> 5be25af (Feat: 웹소켓 백엔드와 연결 후 백엔드 로직 테스트 통신)
       sockjs-client:
         specifier: ^1.6.1
         version: 1.6.1
@@ -260,12 +257,9 @@ importers:
       '@types/react-dom':
         specifier: ^18.3.0
         version: 18.3.0
-<<<<<<< HEAD
       '@types/three':
         specifier: ^0.168.0
         version: 0.168.0
-=======
->>>>>>> 5be25af (Feat: 웹소켓 백엔드와 연결 후 백엔드 로직 테스트 통신)
       '@types/sockjs-client':
         specifier: ^1.5.4
         version: 1.5.4
@@ -1322,7 +1316,6 @@ packages:
   '@types/react@18.3.3':
     resolution: {integrity: sha512-hti/R0pS0q1/xx+TsI73XIqk26eBsISZ2R0wUijXIngRK9R/e7Xw/cXVxQK7R5JjW+SV4zGcn5hXjudkN/pLIw==}
 
-<<<<<<< HEAD
   '@types/stats.js@0.17.3':
     resolution: {integrity: sha512-pXNfAD3KHOdif9EQXZ9deK82HVNaXP5ZIF5RP2QG6OQFNTaY2YIetfrE9t528vEreGQvEPRDDc8muaoYeK0SxQ==}
 
@@ -1332,8 +1325,6 @@ packages:
   '@types/webxr@0.5.20':
     resolution: {integrity: sha512-JGpU6qiIJQKUuVSKx1GtQnHJGxRjtfGIhzO2ilq43VZZS//f1h1Sgexbdk+Lq+7569a6EYhOWrUpIruR/1Enmg==}
 
-=======
->>>>>>> 5be25af (Feat: 웹소켓 백엔드와 연결 후 백엔드 로직 테스트 통신)
   '@types/sockjs-client@1.5.4':
     resolution: {integrity: sha512-zk+uFZeWyvJ5ZFkLIwoGA/DfJ+pYzcZ8eH4H/EILCm2OBZyHH6Hkdna1/UWL/CFruh5wj6ES7g75SvUB0VsH5w==}
 
@@ -2007,12 +1998,9 @@ packages:
   fastq@1.17.1:
     resolution: {integrity: sha512-sRVD3lWVIXWg6By68ZN7vho9a1pQcN/WBFaAAsDDFzlJjvoGx0P8z7V1t72grFJfJhu3YPZBuu25f7Kaw2jN1w==}
 
-<<<<<<< HEAD
   fflate@0.8.2:
     resolution: {integrity: sha512-cPJU47OaAoCbg0pBvzsgpTPhmhqI5eJjh/JIu8tPj5q+T7iLvW/JAYUqmE7KOB4R1ZyEhzBaIQpQpardBF5z8A==}
 
-=======
->>>>>>> 5be25af (Feat: 웹소켓 백엔드와 연결 후 백엔드 로직 테스트 통신)
   faye-websocket@0.11.4:
     resolution: {integrity: sha512-CzbClwlXAuiRQAlUyfqPgvPoNKTckTPGfwZV4ZdAhVcP2lh9KUxJg2b5GkE7XbjKQ3YJnQ9z6D9ntLAlB+tP8g==}
     engines: {node: '>=0.8.0'}
@@ -4861,7 +4849,6 @@ snapshots:
       '@types/prop-types': 15.7.12
       csstype: 3.1.3
 
-<<<<<<< HEAD
   '@types/stats.js@0.17.3': {}
 
   '@types/three@0.168.0':
@@ -4875,8 +4862,6 @@ snapshots:
 
   '@types/webxr@0.5.20': {}
   
-=======
->>>>>>> 5be25af (Feat: 웹소켓 백엔드와 연결 후 백엔드 로직 테스트 통신)
   '@types/sockjs-client@1.5.4': {}
 
   '@typescript-eslint/eslint-plugin@7.18.0(@typescript-eslint/parser@7.18.0(eslint@8.57.0)(typescript@5.5.4))(eslint@8.57.0)(typescript@5.5.4)':
@@ -5807,11 +5792,8 @@ snapshots:
     dependencies:
       reusify: 1.0.4
 
-<<<<<<< HEAD
   fflate@0.8.2: {}
   
-=======
->>>>>>> 5be25af (Feat: 웹소켓 백엔드와 연결 후 백엔드 로직 테스트 통신)
   faye-websocket@0.11.4:
     dependencies:
       websocket-driver: 0.7.4
