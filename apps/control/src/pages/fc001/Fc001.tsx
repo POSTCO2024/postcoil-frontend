@@ -5,25 +5,9 @@ import React, { useState, useEffect } from 'react';
 import styles from './Fc001.module.scss';
 import { RowheaderTable } from './rowheadertable/RowheaderTable';
 import { TopBar } from './topBar/TopBar';
-import {
-  transformData,
-  ApiResponseItem,
-} from '../../utils/control/transformData'; // transformData를 import
+import { transformData, ApiResponseItem } from '@/utils/control/transformData';
 
 import { columnsList, columnsTableConfig } from '@/config/control/Fc001Utils';
-
-// 작업대상재 추출 및 저장
-// async function fetchTargetMaerialData() {
-//   const url = `http://localhost:8086/control/target`;
-//   try {
-//     const response = await axios.get(url);
-//     console.log('작업 대상재 등록: ' + response.data);
-//     return response.data;
-//   } catch (error) {
-//     console.log(error);
-//     return [];
-//   }
-// }
 
 export interface ApiResponse {
   status: number;
@@ -36,7 +20,7 @@ export interface RowTableData {
   [key: string]: any; // 그 외 동적 키에 대해서는 any로 지정
 }
 
-// 작업대상재 목록(List) 조회
+// 1) 작업대상재 목록(List) 조회
 async function getTable(processCode: string): Promise<any[]> {
   const url = `http://localhost:8086/api/v1/target-materials/normal-by-curr-proc?currProc=${processCode}`;
   try {
@@ -54,7 +38,7 @@ async function getTable(processCode: string): Promise<any[]> {
   }
 }
 
-// 작업대상재 표(table) 조회
+// 2) 작업대상재 표(table) 조회
 async function getRowTable(): Promise<any[]> {
   const url = `http://localhost:8086/api/v1/target-materials/nextProcTable`;
   try {
@@ -72,14 +56,23 @@ async function getRowTable(): Promise<any[]> {
 
 export const Fc001: React.FC = () => {
   const label = ['리스트', '표']; // Tab
+  // 조회
   const [isValue, setIsValue] = useState(true); // 기본값을 true로 설정(첫페이지)
   const [dataList, setDataList] = useState<any[]>([]); // API로부터 받을 데이터 상태
-  const [selectedProcessCode, setSelectedProcessCode] =
-    useState<string>('1PCM'); // 선택된 공정
+
   const [rowTableColumns, setRowTableColumns] = useState(
-    columnsTableConfig['default'], // 1PCM
+    columnsTableConfig['default'],
   );
   const [rowTableData, setRowTableData] = useState<any[]>([]);
+
+  // 필터링
+  const [selectedProcessCode, setSelectedProcessCode] =
+    useState<string>('1PCM'); // 선택된 공정
+
+  // 검색 결과 처리
+  const handleSearchResults = (searchResults: any[]) => {
+    setDataList(searchResults); // 검색 결과로 dataList 업데이트
+  };
 
   // Select Tab
   const changeTab = () => {
@@ -97,16 +90,7 @@ export const Fc001: React.FC = () => {
     );
   };
 
-  // Effect: 컴포넌트가 마운트될 때 API로부터 데이터를 가져옴
-  // 1) 작업대상재 추출
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     await fetchTargetMaerialData();
-  //   };
-  //   fetchData(); // 함수 호출
-  // }, []);
-
-  // 2) 작업대상재 목록 조회
+  // 1) 작업대상재 목록 조회
   useEffect(() => {
     const fetchListData = async () => {
       const data = await getTable(selectedProcessCode);
@@ -115,7 +99,7 @@ export const Fc001: React.FC = () => {
     fetchListData();
   }, [selectedProcessCode]);
 
-  // 3) 작업대상재 표 조회
+  // 2) 작업대상재 표 조회
   useEffect(() => {
     if (!isValue) {
       const fetchData = async () => {
@@ -131,7 +115,10 @@ export const Fc001: React.FC = () => {
   return (
     <div className={styles.boardContainer}>
       <h1>공정별 작업대상재 관리</h1>
-      <TopBar onProcessChange={handleDropdownChange} />
+      <TopBar
+        onProcessChange={handleDropdownChange}
+        onSearch={handleSearchResults}
+      />
       <div className={styles.tab}>
         <Tab labels={label} onChange={changeTab} />
       </div>
