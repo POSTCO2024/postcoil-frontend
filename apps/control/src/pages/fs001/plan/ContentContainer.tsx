@@ -3,10 +3,7 @@ import { Table } from '@postcoil/ui';
 import styles from './ContentContainer.module.scss';
 
 import { MaterialDTO } from '@/config/scheduling/DTO';
-import {
-  mockcolumns,
-  transformedData,
-} from '@/utils/scheduling/MaterialTableUtils';
+import { mockcolumns, transformedData } from '@/utils/scheduling/tableUtils';
 
 interface PropsType {
   data: MaterialDTO[];

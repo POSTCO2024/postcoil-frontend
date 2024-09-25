@@ -2,7 +2,7 @@ import { Table } from '@postcoil/ui';
 
 import styles from './ContentContainer.module.scss';
 
-import { mockcolumns, mockdata } from '@/utils/scheduling/MaterialTableUtils';
+import { mockcolumns, mockdata } from '@/utils/scheduling/tableUtils';
 
 // interface PropsType{
 //   data?: TODO: props로 데이터 받기

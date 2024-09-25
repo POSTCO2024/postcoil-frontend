@@ -63,7 +63,7 @@ const SchPPage = () => {
 
       // 백엔드로 POST 요청 (selectedIds 전달)
       await scheduleApiClient
-        .post(`${SCH_API_BASE_URL}/plan/${processCode}`, selectedIds, {
+        .post(`${SCH_API_BASE_URL}/plan/execute`, selectedIds, {
           headers: {
             'Content-Type': 'application/json',
           },
