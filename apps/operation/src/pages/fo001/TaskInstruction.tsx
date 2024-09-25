@@ -1,11 +1,7 @@
 import { Tab } from '@postcoil/ui';
 import { Client } from '@stomp/stompjs';
-<<<<<<< HEAD
-// import axios from 'axios';
-import { useEffect, useState } from 'react';
-=======
+import axios from 'axios';
 import { useEffect, useState, useRef } from 'react';
->>>>>>> 4923591 (Feat: 웹소켓 통신)
 import SockJS from 'sockjs-client';
 
 import AnalyzeChart from './result/AnalyzeChart';
@@ -18,17 +14,19 @@ import styles from './TaskInstruction.module.scss';
 export const TaskInstruction = () => {
   const [message, setMessage] = useState<string>('');
   const [client, setClient] = useState<Client | null>(null);
+
   // 테스트용 url, url 로 요청하면 결과값을 웹소켓으로 쏴주도록 함
-  // const getTest = async () => {
-  //   try {
-  //     const response = await axios.get(
-  //       'http://localhost:8087/api/v1/materials/websocketTest',
-  //     );
-  //     setMessage(response.data);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  const getTest = async () => {
+    try {
+      const response = await axios.get(
+        'http://localhost:8087/api/v1/materials/websocketTest',
+      );
+      setMessage(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     const socket = new SockJS('http://localhost:8087/coil');
     const stompClient = new Client({
@@ -61,15 +59,15 @@ export const TaskInstruction = () => {
     };
   }, []);
 
-  // const sendMessage = () => {
-  //   if (client) {
-  //     // 서버의 '/app/send'로 메시지 발행
-  //     client.publish({
-  //       destination: '/app/send', // 서버의 @MessageMapping("/send")에 발행
-  //       body: 'Test Message from Client', // 발행할 메시지
-  //     });
-  //   }
-  // };
+  const sendMessage = () => {
+    if (client) {
+      // 서버의 '/app/send'로 메시지 발행
+      client.publish({
+        destination: '/app/send', // 서버의 @MessageMapping("/send")에 발행
+        body: 'Test Message from Client', // 발행할 메시지
+      });
+    }
+  };
 
   const [isGraphVisible, setIsGraphVisible] = useState(true);
 
@@ -81,6 +79,7 @@ export const TaskInstruction = () => {
       {/* <h1 onClick={getTest}>작업 지시 전문</h1> */}
       <h1>작업 지시 전문</h1>
       <h1 onClick={sendMessage}>작업 지시 전문</h1>
+      <h1 onClick={getTest}>작업 지시 전문</h1>
       <h1>{message}</h1>
       <FilterContainer />
       <section className={styles.tab}>
