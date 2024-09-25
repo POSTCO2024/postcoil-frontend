@@ -21,6 +21,9 @@ export default defineConfig({
         console.warn(warning);
       },
     },
+    commonjsOptions: {
+      include: [/node_modules/], // CommonJS 모듈 포함
+    },
   },
   resolve: {
     alias: {
@@ -28,8 +31,8 @@ export default defineConfig({
       '@postcoil/ui': path.resolve(__dirname, '../../packages/common-ui'),
     },
   },
-
   optimizeDeps: {
+    include: ['three'],
     exclude: ['@postcoil/ui'],
   },
   logLevel: 'info',
