@@ -1,8 +1,10 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { Client } from '@stomp/stompjs';
+import SocketJS from 'sockjs-client';
+
 // 그래프
 import { useLocation } from 'react-router-dom';
-
 import BarChartV2 from './chart/BarChartV2';
 import DonutChart from './chart/DonutChart';
 import DoubleBarChart from './chart/DoubleBarChart';
@@ -24,6 +26,46 @@ import {
   useOrderData,
   useWidthThicknessData,
 } from '@/pages/fc004/useChartData';
+import { ConsoleSqlOutlined } from '@ant-design/icons';
+
+export const TaskInstruction = () => {
+  const [message, setMessage] = useState<string>('');
+  const [client, setClient] = useState<Client | null>(null);
+
+  useEffect(() => {
+    const socket = new SocketJS('http://localhost:8087/coil');
+    const stompClient = new Client({
+      webSocketFactory: () => socket as any,
+      debug: (str) => {
+        console.log(str);
+      },
+      onConnect: () => {
+        console.log('Conneted Socket! ');
+        stompClient.subscribe('/topic/coilData', (msg) => {
+          setMessage(msg.body); // 웹소켓으로 받은 데이터를 상태에 저장
+          console.log(msg.body);
+        });
+      },
+      onDisconnect: () => {
+        console.log('Disconnected from WebSocket');
+      },
+      onStompError: (error) => {
+        console.error('STOMP error: ', error);
+      },
+    });
+
+    // WebSocket 연결 활성화
+    stompClient.activate();
+    setClient(stompClient);
+    console.log(client);
+
+    return () => {
+      if (stompClient) {
+        stompClient.deactivate();
+      }
+    };
+  }, []);
+};
 
 const DashBoard: React.FC = () => {
   // 선택한 공정

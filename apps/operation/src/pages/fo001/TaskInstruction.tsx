@@ -1,6 +1,6 @@
 import { Tab } from '@postcoil/ui';
 import { Client } from '@stomp/stompjs';
-// import axios from 'axios';
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import SockJS from 'sockjs-client';
 
@@ -15,18 +15,18 @@ export const TaskInstruction = () => {
   const [client, setClient] = useState<Client | null>(null);
 
   // 테스트용 url, url 로 요청하면 결과값을 웹소켓으로 쏴주도록 함
-  // const getTest = async () => {
-  //   try {
-  //     const response = await axios.get(
-  //       'http://localhost:8087/api/v1/materials/websocketTest',
-  //     );
-  //     setMessage(response.data);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  const getTest = async () => {
+    try {
+      const response = await axios.get(
+        'http://localhost:9090/api/v1/materials/websocketTest',
+      );
+      setMessage(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
-    const socket = new SockJS('http://localhost:8087/coil');
+    const socket = new SockJS('http://localhost:9090/coil');
     const stompClient = new Client({
       webSocketFactory: () => socket as any,
       debug: (str) => {
@@ -74,8 +74,7 @@ export const TaskInstruction = () => {
   };
   return (
     <div className={styles.page}>
-      {/* <h1 onClick={getTest}>작업 지시 전문</h1> */}
-      <h1>작업 지시 전문</h1>
+      <h1 onClick={getTest}>작업 지시 전문</h1>
       <h1>{message}</h1>
       <FilterContainer />
       <section className={styles.tab}>
