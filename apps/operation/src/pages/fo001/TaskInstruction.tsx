@@ -14,16 +14,17 @@ import styles from './TaskInstruction.module.scss';
 export const TaskInstruction = () => {
   const [message, setMessage] = useState<string>('');
   const [client, setClient] = useState<Client | null>(null);
-  const getTest = async () => {
-    try {
-      const response = await axios.get(
-        'http://localhost:8087/api/v1/materials/websocketTest',
-      );
-      setMessage(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // 테스트용 url, url 로 요청하면 결과값을 웹소켓으로 쏴주도록 함
+  // const getTest = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       'http://localhost:8087/api/v1/materials/websocketTest',
+  //     );
+  //     setMessage(response.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   useEffect(() => {
     const socket = new SockJS('http://localhost:8087/coil');
     const stompClient = new Client({
@@ -47,7 +48,7 @@ export const TaskInstruction = () => {
     });
     stompClient.activate();
     setClient(stompClient);
-
+    console.log(client);
     // 컴포넌트 언마운트 시 WebSocket 연결 해제
     return () => {
       if (stompClient) {
@@ -73,7 +74,8 @@ export const TaskInstruction = () => {
   };
   return (
     <div className={styles.page}>
-      <h1 onClick={getTest}>작업 지시 전문</h1>
+      {/* <h1 onClick={getTest}>작업 지시 전문</h1> */}
+      <h1>작업 지시 전문</h1>
       <h1>{message}</h1>
       <FilterContainer />
       <section className={styles.tab}>
