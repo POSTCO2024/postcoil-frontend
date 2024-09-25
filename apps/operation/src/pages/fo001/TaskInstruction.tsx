@@ -1,6 +1,7 @@
 import { Tab } from '@postcoil/ui';
 import { Client } from '@stomp/stompjs';
-import { useEffect, useState, useRef } from 'react';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import SockJS from 'sockjs-client';
 
 import AnalyzeChart from './result/AnalyzeChart';
@@ -13,9 +14,18 @@ import styles from './TaskInstruction.module.scss';
 export const TaskInstruction = () => {
   const [message, setMessage] = useState<string>('');
   const [client, setClient] = useState<Client | null>(null);
-
+  const getTest = async () => {
+    try {
+      const response = await axios.get(
+        'http://localhost:8087/api/v1/materials/websocketTest',
+      );
+      setMessage(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
-    const socket = new SockJS('http://localhost:8080/coil');
+    const socket = new SockJS('http://localhost:8087/coil');
     const stompClient = new Client({
       webSocketFactory: () => socket as any,
       debug: (str) => {
@@ -63,7 +73,7 @@ export const TaskInstruction = () => {
   };
   return (
     <div className={styles.page}>
-      <h1 onClick={sendMessage}>작업 지시 전문</h1>
+      <h1 onClick={getTest}>작업 지시 전문</h1>
       <h1>{message}</h1>
       <FilterContainer />
       <section className={styles.tab}>
