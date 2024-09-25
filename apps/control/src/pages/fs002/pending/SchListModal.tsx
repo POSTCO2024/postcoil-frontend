@@ -38,7 +38,7 @@ const SchListModal = ({ isModalOpen, onApply, onCancel }: PropsType) => {
   };
   const handleCancel = () => {
     setIsModal2Open(false);
-    // cleanScheduleData();
+    cleanScheduleData();
     navigate('/schedule3');
   };
 
