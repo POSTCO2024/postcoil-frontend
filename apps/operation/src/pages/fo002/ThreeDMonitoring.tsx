@@ -51,10 +51,10 @@ class App {
   private controls2!: OrbitControls;
   private controls3!: OrbitControls;
   private controls4!: OrbitControls;
-  private boxHelper: THREE.BoxHelper | null = null;
-  private model: THREE.Object3D | null = null;
-  private box: THREE.Box3 | null = null;
-  private selectedMeshInfo: string = ''; // 클릭된 메쉬 정보를 저장
+  // private boxHelper: THREE.BoxHelper | null = null;
+  // private model: THREE.Object3D | null = null;
+  // private box: THREE.Box3 | null = null;
+  // private selectedMeshInfo: string = ''; // 클릭된 메쉬 정보를 저장
 
   constructor() {
     this.divContainer = document.querySelector('#webgl-container');
@@ -210,11 +210,11 @@ class App {
             child.material.clippingPlanes = [clipPlaneX];
             child.material.clipShadows = true;
 
-            const planeHelper = new THREE.PlaneHelper(
-              clipPlaneX,
-              200,
-              0xff0000,
-            );
+            // const planeHelper = new THREE.PlaneHelper(
+            //   clipPlaneX,
+            //   200,
+            //   0xff0000,
+            // );
             //this.scene.add(planeHelper);
           }
           if (child.name === 'Plane002') {
@@ -223,12 +223,12 @@ class App {
             child.material.clippingPlanes = [clipPlaneX2]; // 메쉬에 클리핑 플레인 적용
             child.material.clipShadows = true; // 그림자에도 클리핑 플레인을 적용
 
-            const planeHelper2 = new THREE.PlaneHelper(
-              clipPlaneX2,
-              200,
-              0xff0000,
-            ); // 클리핑 플레인을 시각적으로 확인
-            //this.scene.add(planeHelper2);
+            // const planeHelper2 = new THREE.PlaneHelper(
+            //   clipPlaneX2,
+            //   200,
+            //   0xff0000,
+            // ); // 클리핑 플레인을 시각적으로 확인
+            // //this.scene.add(planeHelper2);
           }
           if (child.name === 'Plane003') {
             // 클리핑 플레인 설정 (X축 기준으로 왼쪽에서부터 메쉬를 잘라냄)
@@ -236,11 +236,11 @@ class App {
             child.material.clippingPlanes = [clipPlaneX3]; // 메쉬에 클리핑 플레인 적용
             child.material.clipShadows = true; // 그림자에도 클리핑 플레인을 적용
 
-            const planeHelper3 = new THREE.PlaneHelper(
-              clipPlaneX3,
-              200,
-              0xff0000,
-            ); // 클리핑 플레인을 시각적으로 확인
+            // const planeHelper3 = new THREE.PlaneHelper(
+            //   clipPlaneX3,
+            //   200,
+            //   0xff0000,
+            // ); // 클리핑 플레인을 시각적으로 확인
             // this.scene.add(planeHelper3);
           }
 
@@ -257,16 +257,16 @@ class App {
         }
       });
 
-      const box = new THREE.Box3().setFromObject(model);
-      const axisHelper = new THREE.AxesHelper(500);
-      //this.scene.add(axisHelper);
+      // const box = new THREE.Box3().setFromObject(model);
+      // const axisHelper = new THREE.AxesHelper(500);
+      // //this.scene.add(axisHelper);
 
-      const boxHelper = new THREE.BoxHelper(model);
-      //this.scene.add(boxHelper);
+      // const boxHelper = new THREE.BoxHelper(model);
+      // //this.scene.add(boxHelper);
 
-      this.boxHelper = boxHelper;
-      this.model = model;
-      this.box = box;
+      // this.boxHelper = boxHelper;
+      // this.model = model;
+      // this.box = box;
 
       this.mixer = new THREE.AnimationMixer(model);
 
@@ -319,18 +319,18 @@ class App {
     this.smallCameras = [this.camera2, this.camera3, this.camera4];
   }
 
-  private addPointLight(x: number, y: number, z: number, helperColor: number) {
+  private addPointLight(x: number, y: number, z: number, helperColor: any) {
     const color = 0xffffff;
     const intensity = 2;
     const pointLight = new THREE.PointLight(color, intensity, 2000);
     pointLight.position.set(x, y, z);
     this.scene.add(pointLight);
 
-    const pointLightHelper = new THREE.PointLightHelper(
-      pointLight,
-      10,
-      helperColor,
-    );
+    // const pointLightHelper = new THREE.PointLightHelper(
+    //   pointLight,
+    //   10,
+    //   helperColor,
+    // );
     //this.scene.add(pointLightHelper);
   }
 
@@ -345,10 +345,10 @@ class App {
     const directionalLight = new THREE.DirectionalLight(0xffffff, 10);
     directionalLight.position.set(150, 30, 50).normalize();
     this.scene.add(directionalLight);
-    const directionalLightHelper = new THREE.DirectionalLightHelper(
-      directionalLight,
-      10,
-    );
+    // const directionalLightHelper = new THREE.DirectionalLightHelper(
+    //   directionalLight,
+    //   10,
+    // );
     //this.scene.add(directionalLightHelper);
 
     const additionalLight = new THREE.DirectionalLight(0xffffff, 10);
@@ -549,10 +549,10 @@ const ThreeDMonitoring = () => {
     };
   }, [messageCount]);
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleString(); // 현재 시간 포맷으로 변환
-  };
+  // const formatDate = (dateString) => {
+  //   const date = new Date(dateString);
+  //   return date.toLocaleString(); // 현재 시간 포맷으로 변환
+  // };
 
   // 데이터가 있을 경우 렌더링
   return (
@@ -590,7 +590,7 @@ const ThreeDMonitoring = () => {
               justifyContent: 'space-between',
               flexWrap: 'wrap',
             }}>
-            <div style={{ flex: '1 1 30%', marginBottom: '10px' }}>
+            {/* <div style={{ flex: '1 1 30%', marginBottom: '10px' }}>
               <strong>롤 유닛:</strong> {meshInfo.rollUnit}
             </div>
             <div style={{ flex: '1 1 30%', marginBottom: '10px' }}>
@@ -631,7 +631,7 @@ const ThreeDMonitoring = () => {
             </div>
             <div style={{ flex: '1 1 30%', marginBottom: '10px' }}>
               <strong>다음 공정:</strong> {meshInfo.nextProc}
-            </div>
+            </div> */}
           </div>
         </div>
       )}
