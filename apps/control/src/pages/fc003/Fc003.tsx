@@ -1,5 +1,5 @@
 import { Tab } from '@postcoil/ui';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import DashBoard from './dashBoard/DashBoard';
 import styles from './Fc003.module.scss';
