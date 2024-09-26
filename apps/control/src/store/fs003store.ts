@@ -2,12 +2,7 @@ import { create } from 'zustand';
 
 import { fetchScheduleData } from '@/api/scheduleApi';
 import { MaterialDTO, ScheduleInfoDTO } from '@/config/scheduling/DTO';
-import {
-  DragState,
-  HoverState,
-  ScrollState,
-  StoreType,
-} from '@/config/scheduling/storeConfig';
+import { StoreType } from '@/config/scheduling/storeConfig';
 
 export const useScheduleStore = create<StoreType>((set) => ({
   data: null, // 데이터 상태 초기화
@@ -18,7 +13,7 @@ export const useScheduleStore = create<StoreType>((set) => ({
     set({ loading: true, error: null }); // 로딩 시작
     try {
       const result: ScheduleInfoDTO[] = await fetchScheduleData({
-        pageCode: 'pending',
+        pageCode: 'result',
         processCode: value,
       }); // 데이터 fetch
       set({ data: result, processCode: value, loading: false }); // 데이터 상태 업데이트 및 로딩 종료
@@ -31,16 +26,17 @@ export const useScheduleStore = create<StoreType>((set) => ({
   },
 }));
 
+// TODO: useMaterialStore변경!! sequence 바꾸기!!
 export const useMaterialStore = create<StoreType>((set) => ({
   data: null, // 현재 화면에 보여줄 데이터 상태
   loading: false, // 로딩 상태
   error: null, // 에러 상태
-  cache: {}, // 원본 데이터를 저장할 상태
-  originalCache: {},
-  scheduleNo: '', // 선택된 schedule 이름 저장
-  scExpectedDuration: null, // 선택된 schedule의 예상 시간
+  // cache: {}, // 원본 데이터를 저장할 상태
+  // originalCache: {},
+  // scheduleNo: '', // schedule 이름 저장
   fetchData: async (value: string) => {
     set({ loading: true, error: null }); // 로딩 시작
+
     // 먼저 캐시에서 데이터 확인
     const cache = useMaterialStore.getState().cache!;
     if (cache[value]) {
@@ -56,7 +52,6 @@ export const useMaterialStore = create<StoreType>((set) => ({
         data: cache[value],
         loading: false,
         scheduleNo: matchedSchedule!.scheduleNo,
-        scExpectedDuration: matchedSchedule!.scExpectedDuration,
       });
 
       return;
@@ -64,7 +59,7 @@ export const useMaterialStore = create<StoreType>((set) => ({
 
     try {
       const result: MaterialDTO[] = await fetchScheduleData({
-        pageCode: 'pending',
+        pageCode: 'result',
         processCode: 'schedule',
         requestParams: `?id=${value}`, // requestParams 추가 (schedule id에 해당하는 materials 받아오기)
       }); // 데이터 fetch
@@ -88,7 +83,6 @@ export const useMaterialStore = create<StoreType>((set) => ({
         originalCache: { ...state.originalCache, [value]: initialData }, // 원본 데이터 저장
         loading: false,
         scheduleNo: matchedSchedule!.scheduleNo,
-        scExpectedDuration: matchedSchedule!.scExpectedDuration,
       }));
     } catch (error) {
       set({ error: 'Failed to fetch material data in FS002', loading: false }); // 에러 발생 시 처리
@@ -130,27 +124,6 @@ export const useMaterialStore = create<StoreType>((set) => ({
       return state; // 해당 `schedulePlanId`에 맞는 데이터를 찾지 못한 경우 상태를 그대로 유지
     }),
   cleanData: () => {
-    set((state) => ({
-      ...state,
-      data: null,
-      scheduleNo: '',
-      scExpectedDuration: null,
-    })); // 데이터 상태를 null로 변경
+    set((state) => ({ ...state, data: null, scheduleNo: '' })); // 데이터 상태를 null로 변경
   },
-}));
-
-export const useDragStore = create<DragState>((set) => ({
-  isDragging: false,
-  startDragging: () => set({ isDragging: true }),
-  stopDragging: () => set({ isDragging: false }),
-}));
-
-export const useScrollStore = create<ScrollState>((set) => ({
-  scrollLeft: 0,
-  setScrollLeft: (position) => set({ scrollLeft: position }),
-}));
-
-export const useHoverStore = create<HoverState>((set) => ({
-  hoveredPoint: null,
-  setHoveredPoint: (point) => set({ hoveredPoint: point }),
 }));

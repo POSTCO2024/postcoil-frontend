@@ -4,11 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import styles from './SchPPage.module.scss';
 
-import {
-  fetchScheduleData,
-  SCH_API_BASE_URL,
-  scheduleApiClient,
-} from '@/api/scheduleApi';
+import { fetchScheduleData, scheduleApiClient } from '@/api/scheduleApi';
 import CommonModal from '@/components/common/CommonModal';
 import RollSuccessModal from '@/components/common/RollSuccessModal';
 import RollWarnModal from '@/components/common/RollWarnModal';
@@ -61,11 +57,15 @@ const SchPPage = () => {
 
       // 백엔드로 POST 요청 (selectedIds 전달)
       await scheduleApiClient
-        .post(`${SCH_API_BASE_URL}/plan/execute`, selectedIds, {
-          headers: {
-            'Content-Type': 'application/json',
+        .post(
+          `${import.meta.env.VITE_APP_SCHEDULE_API_URL}/plan/execute`,
+          selectedIds,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
           },
-        })
+        )
         .then((response) => console.log(response.data)); // 결과 console에서 보려고
 
       // 성공적으로 요청이 완료되면 모달을 닫고 success 모달을 열기

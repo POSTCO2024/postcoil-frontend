@@ -2,7 +2,7 @@ import { Checkbox, Form } from 'antd';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { SCH_API_BASE_URL, scheduleApiClient } from '@/api/scheduleApi';
+import { scheduleApiClient } from '@/api/scheduleApi';
 import CommonModal from '@/components/common/CommonModal';
 import RollSuccessModal from '@/components/common/RollSuccessModal';
 import { ScheduleInfoDTO } from '@/config/scheduling/DTO';
@@ -91,11 +91,15 @@ const SchListModal = ({ isModalOpen, onApply, onCancel }: PropsType) => {
 
     try {
       await scheduleApiClient
-        .post(`${SCH_API_BASE_URL}/confirm`, confirmPlans, {
-          headers: {
-            'Content-Type': 'application/json',
+        .post(
+          `${import.meta.env.VITE_APP_SCHEDULE_API_URL}/confirm`,
+          confirmPlans,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
           },
-        })
+        )
         .then((response) => {
           console.log(response.data);
 

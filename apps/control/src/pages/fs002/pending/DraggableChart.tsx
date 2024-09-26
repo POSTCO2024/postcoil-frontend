@@ -1,18 +1,21 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
-import { Button } from 'antd';
 import { PointDragDropObject } from 'highcharts';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import styles from './DraggableChart.module.scss';
 
 import { MaterialDTO } from '@/config/scheduling/DTO';
 import Highcharts from '@/config/scheduling/highchartsSetup';
-import { useMaterialStore } from '@/store/fs002store';
+import {
+  useHoverStore,
+  useMaterialStore,
+  useScrollStore,
+} from '@/store/fs002store';
 import { transformedDataToChartData } from '@/utils/scheduling/chartUtils';
 
 interface DataPoint {
   name: string;
-  y: number; // width 에 해당하는 값
+  y: number; // width | thickness 에 해당하는 값
   z: number; // working time 에 해당하는 값
   x: number; // sequence number
   id: string;
@@ -24,17 +27,26 @@ interface NewPointDragDropObject extends PointDragDropObject {
   x: number;
 }
 
-const DraggableChart: React.FC = () => {
+interface PropsType {
+  chartName: 'width' | 'thickness';
+}
+
+const DraggableChart = ({ chartName }: PropsType) => {
+  const id = 'draggableChart-' + chartName;
   const materialData = useMaterialStore((state) => state.data);
   const title = useMaterialStore((state) => state.scheduleNo);
   const updateData = useMaterialStore((state) => state.updateData!);
-  const resetData = useMaterialStore((state) => state.resetData!);
+  const { hoveredPoint, setHoveredPoint } = useHoverStore();
+
+  const expectedDuration = useMaterialStore(
+    (state) => state.scExpectedDuration,
+  );
 
   const [data, setData] = useState<DataPoint[]>([]);
 
   useEffect(() => {
     if (materialData && materialData.length > 0) {
-      const transformed = transformedDataToChartData(materialData, 'width');
+      const transformed = transformedDataToChartData(materialData, chartName);
       setData(transformed);
     } else {
       setData([]);
@@ -46,20 +58,48 @@ const DraggableChart: React.FC = () => {
     const chartOptions: Highcharts.Options = {
       chart: {
         type: 'variwide',
+        width: (expectedDuration as number) * 3,
+        height: 200, // (9 / 16) * 100 + '%', // 16:9 ratio
+        // scrollablePlotArea: {
+        //   minWidth: 700, // Minimum width of the plot area
+        //   scrollPositionX: 1, // Start scrolling at the right side
+        // },
+        marginTop: chartName === 'width' ? 30 : 0,
+        marginBottom: chartName === 'width' ? 0 : 50,
       },
       title: {
         text: data.length > 0 ? title : '',
-        // style: { display: 'none' },
-        style: { fontFamily: 'Helvetica Neue', fontWeight: '500' },
+        style: { display: 'none' },
+        // style: { fontFamily: 'Helvetica Neue', fontWeight: '500' },
         verticalAlign: 'bottom',
       },
       xAxis: {
         type: 'category',
+        labels: {
+          enabled: true, // 라벨을 표시하도록 설정
+          formatter: function (): string {
+            // 첫 번째와 마지막 인덱스일 때만 라벨을 표시
+            const index = this.pos; // 현재 포인트의 인덱스
+            const dataLength = data.length; // 데이터의 길이
+
+            if (index === 0 || index === dataLength - 1) {
+              return this.value as string; // 첫 번째 또는 마지막 인덱스일 때 라벨 표시
+            }
+            return ''; // 다른 인덱스는 빈 문자열로 설정하여 표시하지 않음
+          },
+        },
+        categories: data.map(() =>
+          ((expectedDuration as number) / 60).toString(),
+        ), // x축 라벨로 사용할 값
       },
       yAxis: {
         title: {
-          text: 'Width',
+          text: chartName,
         },
+        labels: {
+          enabled: false,
+        },
+        reversed: chartName === 'width' ? false : true, // Y축 반전 여부
       },
       legend: {
         enabled: false,
@@ -75,6 +115,12 @@ const DraggableChart: React.FC = () => {
           },
           point: {
             events: {
+              mouseOver: function () {
+                setHoveredPoint(this); // 상태에 현재 포인터 정보를 저장
+              },
+              mouseOut: function () {
+                setHoveredPoint(null); // 상태 초기화
+              },
               dragStart: function () {
                 // 드래그된 막대의 그래픽 요소
                 const draggedGraphic = this.graphic!;
@@ -107,7 +153,13 @@ const DraggableChart: React.FC = () => {
               drop: function (e) {
                 const draggedPoint = this as Highcharts.Point;
                 const updatedData = [...data];
-                const newPoint = e.newPoint! as NewPointDragDropObject;
+                const newPoint = e.newPoint as NewPointDragDropObject;
+
+                // Check if the drop position is the same as the original position
+                if (draggedPoint.x === newPoint.x) {
+                  // Do nothing if the position hasn't changed
+                  return;
+                }
 
                 const selectedX = newPoint.x;
 
@@ -117,7 +169,7 @@ const DraggableChart: React.FC = () => {
                 );
 
                 // 변경되었다면
-                if (pointIndex != selectedX - 1) {
+                if (pointIndex !== selectedX - 1) {
                   this.update({
                     color: '#6464ff', // 반투명 보라색으로 변경
                   });
@@ -186,28 +238,64 @@ const DraggableChart: React.FC = () => {
             },
           },
           tooltip: {
+            distance: 8,
+            headerFormat: '<b>{point.key}</b> <br/>',
             pointFormat:
-              'Width: <b> {point.y} mm</b><br>' +
-              'Working Time: <b> {point.z} mins</b><br>',
+              chartName +
+              ': <b> {point.y} mm</b> <br/>' +
+              'working Time: <b> {point.z} mins</b> <br/>',
           },
+        },
+      },
+      tooltip: {
+        shared: true,
+        formatter: function () {
+          // 상태에 저장된 hoveredPoint와 현재 포인터를 비교하여 두 차트에서 동시 호버 구현
+          const point = hoveredPoint || this.point;
+          return `<b>${point.name}</b><br/>${chartName}: <b>${point.y} mm</b><br/>작업 시간: <b>${point.z} 분</b>`;
         },
       },
     };
 
-    Highcharts.chart('draggableChart', chartOptions);
+    const chart = Highcharts.chart(id, chartOptions);
+
+    return () => {
+      // 컴포넌트 언마운트 시 차트를 해제
+      if (chart) {
+        chart.destroy();
+      }
+    };
   }, [data]);
 
-  const handleReset = () => {
-    resetData(); // 원본 데이터로 복원
+  const { scrollLeft, setScrollLeft } = useScrollStore();
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleScroll = () => {
+    if (containerRef.current) {
+      setScrollLeft(containerRef.current.scrollLeft);
+    }
   };
 
+  // x축 스크롤 동기화
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollLeft = scrollLeft;
+    }
+  }, [scrollLeft]);
+
+  // useEffect(() => {
+  //   if (hoveredPoint) {
+  //     console.log(`Hovered point: ${hoveredPoint}`);
+  //     // You can add logic to highlight or handle hover state across charts here
+  //   }
+  // }, [hoveredPoint]);
+
   return (
-    <div className={styles.graph}>
-      <Button className={styles.btn} onClick={handleReset}>
-        Reset
-      </Button>
-      <div id="draggableChart"></div>
-    </div>
+    <div
+      id={id}
+      className={styles.draggableChart}
+      ref={containerRef}
+      onScroll={handleScroll}></div>
   );
 };
 

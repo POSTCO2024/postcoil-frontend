@@ -11,7 +11,10 @@ export const transformedDataToChartData = (
 
   return sortedData.map((item) => ({
     name: item.materialNo as string,
-    y: name === 'width' ? (item.width as number) : (item.thickness as number),
+    y:
+      name === 'width'
+        ? (item.goalWidth as number)
+        : (item.thickness as number),
     z: item.expectedDuration as number,
     x: item.sequence as number,
     id: item.id as string,

@@ -11,10 +11,10 @@ const createApiClient = (baseURL: string) => {
   });
 };
 
-export const scheduleApiClient = createApiClient('http://localhost:8084');
+const scheduleApiUrl = import.meta.env.VITE_SCHEDULE_API_URL;
+console.log(scheduleApiUrl);
 
-const SCHM_API_BASE_URL = '/management/schedule';
-export const SCH_API_BASE_URL = '/api/v2/schedule';
+export const scheduleApiClient = createApiClient(scheduleApiUrl!);
 
 interface SchMParams {
   pageCode?: string;
@@ -29,7 +29,7 @@ export const fetchSchManagementData = async ({
 }: SchMParams) => {
   try {
     const response = await scheduleApiClient.get(
-      `${SCHM_API_BASE_URL}/${processCode}/${rollUnit}`,
+      `${import.meta.env.VITE_SCHEDULE_MANAGEMENT_BASE_URL}/${processCode}/${rollUnit}`,
     );
     // response.data와 response.data.result가 존재하는지 확인
     if (response.data && response.data.result) {
@@ -53,7 +53,7 @@ export const fetchScheduleData = async ({
 }: SchMParams) => {
   try {
     const response = await scheduleApiClient.get(
-      `${SCH_API_BASE_URL}/${pageCode}/${processCode}${requestParams}`,
+      `${import.meta.env.VITE_SCHEDULE_BASE_URL}/${pageCode}/${processCode}${requestParams}`,
     );
     // response.data와 response.data.result가 존재하는지 확인
     if (response.data && response.data.result) {

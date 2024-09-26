@@ -1,0 +1,19 @@
+.charts {
+  width: 100%;
+  height: 100%;
+  margin: 10px auto;
+
+  &:nth-child(1) {
+    // highchart.com 가리기용
+    &::after {
+      content: '';
+      display: block;
+      height: 10px;
+      width: 100%;
+      background-color: red;
+      position: relative;
+      top: -30px;
+      right: 0px;
+    }
+  }
+}
