@@ -128,13 +128,8 @@ const ContentContainer = () => {
     }
   };
 
-  const resetData = useMaterialStore((state) => state.resetData)!;
-
   return (
     <div className={styles.contentContainer}>
-      <Button className={styles.btn} onClick={() => resetData()}>
-        Reset
-      </Button>
       <section className={styles.tableWrapper}>
         <div className={styles.table}>
           <DndContext

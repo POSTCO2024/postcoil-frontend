@@ -2,16 +2,17 @@ import { Tab } from '@postcoil/ui';
 import { Button } from 'antd';
 import { useEffect, useState } from 'react';
 
+import Charts from './pending/Charts';
 import SchListModal from './pending/SchListModal';
 import styles from './SchPePage.module.scss';
 
 import ContentContainer from '@/pages/fs002/pending/ContentContainer';
-import DraggableChart from '@/pages/fs002/pending/DraggableChart';
 import FilterContainer from '@/pages/fs002/pending/FilterContainer';
 import { useMaterialStore, useScheduleStore } from '@/store/fs002store';
 
 const SchPePage = () => {
   const data = useMaterialStore((state) => state.data);
+  const resetData = useMaterialStore((state) => state.resetData)!;
   useEffect(() => {
     return () => {
       // Fetch한 data 초기화
@@ -36,6 +37,10 @@ const SchPePage = () => {
     setIsGraphVisible((prevState) => !prevState);
   };
 
+  const handleReset = () => {
+    resetData();
+  };
+
   return (
     <div className={styles.page}>
       <h1>Schedule 편성 관리</h1>
@@ -44,7 +49,15 @@ const SchPePage = () => {
         <Tab labels={['그래프', '리스트']} onChange={handleTabChange} />
       </section>
       <div className={styles.result}>
-        {isGraphVisible ? <DraggableChart /> : <ContentContainer />}
+        <div className={styles.graph}>
+          <Button
+            style={data ? { visibility: 'visible' } : { visibility: 'hidden' }}
+            className={styles.resetBtn}
+            onClick={handleReset}>
+            Reset
+          </Button>
+          {isGraphVisible ? <Charts /> : <ContentContainer />}
+        </div>
       </div>
       {data && (
         <Button className={styles.btn} type="primary" onClick={handleModal}>
