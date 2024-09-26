@@ -32,6 +32,7 @@ export interface OrderDTO {
 
 export interface ApiResponseItem {
   targetId: string;
+  errorType: string;
   material: MaterialDTO;
   order: OrderDTO;
 }
@@ -47,6 +48,7 @@ export const transformData = (apiData: ApiResponseItem[]): any[] => {
   return apiData.map((item) => ({
     targetId: item.targetId,
     materialNo: item.material.no,
+    errorType: item.errorType,
     factoryCode: item.material.factoryCode,
     materialType: item.material.materialType,
     opCode: item.material.opCode,
@@ -67,7 +69,11 @@ export const transformData = (apiData: ApiResponseItem[]): any[] => {
     goalWidth: item.order.width,
     goalThickness: item.order.thickness,
     goalLength: item.order.length,
-    dueDate: item.order.dueDate,
+    dueDate: formatDate(item.order.dueDate),
     remarks: item.order.remarks,
   }));
+};
+
+const formatDate = (dueDate: string) => {
+  return new Date(dueDate).toISOString().split('T')[0];
 };

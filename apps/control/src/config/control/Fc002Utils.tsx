@@ -12,12 +12,12 @@ export const columnsData = [
     key: 'material_no',
     fixed: true,
   },
-  {
-    title: '에러 코드',
-    dataIndex: 'errorCode',
-    key: 'error_code',
-    fixed: true,
-  },
+  // {
+  //   title: '에러 코드',
+  //   dataIndex: 'errorCode',
+  //   key: 'error_code',
+  //   fixed: true,
+  // },
   {
     title: '에러 이유',
     dataIndex: 'errorType',
