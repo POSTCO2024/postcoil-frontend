@@ -40,7 +40,7 @@ async function updateIsError(data: React.Key[]) {
   const url = `http://localhost:8086/control/errorpass`;
   try {
     const response = await axios.put(url, data);
-    console.log(response.data);
+    console.log(response.data.result);
     return response.data;
   } catch (error) {
     console.error('PUT 요청 중 오류 발생:', error);
@@ -50,13 +50,19 @@ async function updateIsError(data: React.Key[]) {
 
 // 3. 에러패스 추천
 async function getErrorPassRecommend(data: any) {
-  const url = `http://192.168.219.105:8000/errorpass`;
+  const url = `http://192.168.0.8:8000/errorpass`;
   try {
-    const response = await axios.post(url, data);
-    console.log(response.data);
-    return response.data;
+    const response = await axios.post(url, data, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (response.status == 200) {
+      console.log(response.data.result);
+      return response.data.result;
+    }
   } catch (error) {
-    console.error('PUT 요청 중 오류 발생:', error);
+    console.error('POST 요청 중 오류 발생:', error);
     return [];
   }
 }
@@ -65,8 +71,8 @@ export const Fc002: React.FC = () => {
   // 조회
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [isRecommendModalOpen, setIsRecommendModalOpen] = React.useState(false);
-  const [errorMaterials, setErrorMaterials] = useState<any[]>([]); // API로부터 받을 데이터 상태
-  const [errorPassMaterials, setErrorPassMaterials] = useState<any[]>([]);
+  const [errorMaterials, setErrorMaterials] = useState<any[]>([]); // 에러재
+  const [errorPassMaterials, setErrorPassMaterials] = useState<any[]>([]); // 에러패스 추천재
   const [selectedProcessCode, setSelectedProcessCode] =
     useState<string>('1PCM');
   const [selectedRows, setSelectedRows] = useState<any[]>([]); // Checked Rows
@@ -100,7 +106,14 @@ export const Fc002: React.FC = () => {
   // 2) 에러패스 추천
   const handleRecommendModalOpen = async () => {
     setIsRecommendModalOpen(true); // To do: API 연결하고 제거
-    const data = await getErrorPassRecommend(errorMaterials);
+
+    // API 요청
+    console.log('에러패스 대상: ' + JSON.stringify(errorMaterials, null, 1));
+    const data = await getErrorPassRecommend(
+      JSON.stringify(errorMaterials, null, 1),
+    );
+
+    setErrorPassMaterials(data);
     if (data.length > 0) {
       setErrorPassMaterials(data);
       // setIsRecommendModalOpen(true);   // API 요청 후, 모달 창 열기
@@ -108,6 +121,7 @@ export const Fc002: React.FC = () => {
       console.error('추천 데이터가 없습니다. ');
     }
   };
+
   const handleRecommendModalOk = async () => {
     // 추천 모달에서 '사용' 버튼을 눌렀을 때 기존 에러패스 확인 모달을 띄움
     setIsRecommendModalOpen(false); // 추천 모달 닫기
