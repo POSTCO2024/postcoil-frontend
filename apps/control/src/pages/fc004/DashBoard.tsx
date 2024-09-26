@@ -26,6 +26,7 @@ import {
   useOrderData,
   useWidthThicknessData,
 } from '@/pages/fc004/useChartData';
+
 import { ConsoleSqlOutlined } from '@ant-design/icons';
 
 export const TaskInstruction = () => {
@@ -209,15 +210,15 @@ const DashBoard: React.FC = () => {
         <div className={styles.line1}>
           <div className={styles.smallCard}>
             <h6>스케줄 작업 진행량</h6>
-            <h3>30/50</h3>
+            <h3>30/message.StatisticsInfo.workTotalCoils</h3>
           </div>
           <div className={styles.smallCard}>
-            <h6>예정 작업량</h6>
-            <h3>20</h3>
+            <h6>작업 예정</h6>
+            <h3>message.StatisticsInfo.workScheduledCoils</h3>
           </div>
           <div className={styles.smallCard}>
             <h6>작업 시간</h6>
-            <h3>00:30:22</h3>
+            <h3>message.StatisticsInfo.workStartTime</h3>
           </div>
           <div className={styles.smallCard}>
             <h6>설비 이상</h6>
@@ -231,7 +232,7 @@ const DashBoard: React.FC = () => {
             <RowbarChart option={rowbarchartOption} />
           </div>
           <div className={styles.smallCard}>
-            <Status />
+            <Status status={message.equipmentStatus} />
           </div>
           <div className={styles.smallCard}>
             <List data={dueDate} />
