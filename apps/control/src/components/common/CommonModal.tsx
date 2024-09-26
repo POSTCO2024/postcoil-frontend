@@ -19,11 +19,10 @@ const CommonModal = ({
   isModalOpen,
   isConfirmation = false,
   isButtonNeeded = true,
-  width,
-  style,
   onCancel,
   onApply,
   children,
+  width = undefined,
 }: PropsType) => {
   return (
     <Modal
@@ -32,7 +31,6 @@ const CommonModal = ({
       open={isModalOpen}
       onCancel={onCancel}
       width={width}
-      style={style}
       footer={
         isButtonNeeded && (
           <div className="modal-btns">

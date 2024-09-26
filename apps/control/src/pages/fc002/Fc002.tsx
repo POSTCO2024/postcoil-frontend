@@ -48,28 +48,42 @@ async function updateIsError(data: React.Key[]) {
   }
 }
 
+// 3. 에러패스 추천
+async function getErrorPassRecommend(data: any) {
+  const url = `http://192.168.219.105:8000/errorpass`;
+  try {
+    const response = await axios.post(url, data);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error('PUT 요청 중 오류 발생:', error);
+    return [];
+  }
+}
+
 export const Fc002: React.FC = () => {
   // 조회
-  const [dataList, setDataList] = useState<any[]>([]); // API로부터 받을 데이터 상태
-
-  // 필터링
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isRecommendModalOpen, setIsRecommendModalOpen] = React.useState(false);
+  const [errorMaterials, setErrorMaterials] = useState<any[]>([]); // API로부터 받을 데이터 상태
+  const [errorPassMaterials, setErrorPassMaterials] = useState<any[]>([]);
   const [selectedProcessCode, setSelectedProcessCode] =
     useState<string>('1PCM');
   const [selectedRows, setSelectedRows] = useState<any[]>([]); // Checked Rows
 
   // 검색 결과 처리
   const handleSearchResults = (searchResults: any[]) => {
-    setDataList(searchResults); // 검색 결과로 dataList 업데이트
+    setErrorMaterials(searchResults); // 검색 결과로 dataList 업데이트
   };
 
   // Modal
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  // 1) 에러패스 적용 확인
 
   const handleModalOpen = () => setIsModalOpen(true);
   const handleOk = async () => {
     if (selectedRows.length > 0) {
       const materialIdsSelected = selectedRows.map((r, _) => r.targetId);
-      // const selectedMaterialIds = dataList.filter((row) => materialIdsSelected.includes(row.materialId));
+      // const selectedMaterialIds = errorMaterials.filter((row) => materialIdsSelected.includes(row.materialId));
 
       console.log('Filtering ... ');
       console.log(materialIdsSelected); // 선택된 materialId
@@ -77,11 +91,28 @@ export const Fc002: React.FC = () => {
 
       await updateIsError(materialIdsSelected); // Error Pass API 요청
       const data = await getErrorMaterialData(selectedProcessCode); // 리랜더링
-      setDataList(data);
+      setErrorMaterials(data);
     }
     setIsModalOpen(false);
   };
   const handleCancel = () => setIsModalOpen(false);
+
+  // 2) 에러패스 추천
+  const handleRecommendModalOpen = async () => {
+    setIsRecommendModalOpen(true); // To do: API 연결하고 제거
+    const data = await getErrorPassRecommend(errorMaterials);
+    if (data.length > 0) {
+      setErrorPassMaterials(data);
+      // setIsRecommendModalOpen(true);   // API 요청 후, 모달 창 열기
+    } else {
+      console.error('추천 데이터가 없습니다. ');
+    }
+  };
+  const handleRecommendModalOk = async () => {
+    // 추천 모달에서 '사용' 버튼을 눌렀을 때 기존 에러패스 확인 모달을 띄움
+    setIsRecommendModalOpen(false); // 추천 모달 닫기
+    setIsModalOpen(true); // 기존 에러패스 확인 모달 열기
+  };
 
   // Checked Row 상태 변환
   function setSelectedMaterials(selectedRows: any) {
@@ -93,11 +124,12 @@ export const Fc002: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       const data = await getErrorMaterialData(selectedProcessCode);
-      setDataList(data);
+      setErrorMaterials(data);
     };
     fetchData();
   }, [selectedProcessCode]);
 
+  // DropBox
   const handleDropdownChange = (processCode: string) => {
     setSelectedProcessCode(processCode);
   };
@@ -114,7 +146,7 @@ export const Fc002: React.FC = () => {
           <Table
             useCheckBox={true}
             columns={columnsData}
-            data={dataList.map((item: any) => ({
+            data={errorMaterials.map((item: any) => ({
               ...item,
               key: item.targetId,
             }))}
@@ -125,10 +157,59 @@ export const Fc002: React.FC = () => {
           />
         </div>
       </div>
+
+      <Button
+        type="default"
+        className={styles.btn}
+        onClick={handleRecommendModalOpen}>
+        에러패스 추천
+      </Button>
+      <CommonModal
+        title="에러패스 추천 재료"
+        isModalOpen={isRecommendModalOpen}
+        onCancel={() => setIsRecommendModalOpen(false)} // 추천 모달 닫기
+        onApply={handleRecommendModalOk} // '사용' 버튼을 눌렀을 때 실행
+        isButtonNeeded={false}
+        width={1500}>
+        <div className={styles.table}>
+          <Table
+            useCheckBox={true}
+            columns={columnsData}
+            data={errorPassMaterials.map((item: any) => ({
+              ...item,
+              key: item.targetId,
+            }))}
+            scroll={{ x: 'max-content', y: 600 }}
+            tableLayout={'fixed'}
+            handleRowsClick={setSelectedRows}
+            setSelectedMaterials={setSelectedMaterials}
+          />
+        </div>
+        <p
+          style={{
+            fontSize: '1.7rem',
+            textAlign: 'center',
+            marginTop: '20px',
+          }}>
+          추천 재료를 사용하시겠습니까?
+        </p>
+        <Button
+          type="primary"
+          className={styles.modalFooter}
+          onClick={handleRecommendModalOk}>
+          사용
+        </Button>
+        <Button
+          type="default"
+          className={styles.modalFooter}
+          onClick={() => setIsRecommendModalOpen(false)}>
+          미사용
+        </Button>
+      </CommonModal>
+
       <Button type="primary" className={styles.btn} onClick={handleModalOpen}>
         에러패스
       </Button>
-
       <CommonModal
         title="에러패스"
         isModalOpen={isModalOpen}
