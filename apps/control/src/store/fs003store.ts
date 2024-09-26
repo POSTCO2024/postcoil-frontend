@@ -31,9 +31,9 @@ export const useMaterialStore = create<StoreType>((set) => ({
   data: null, // 현재 화면에 보여줄 데이터 상태
   loading: false, // 로딩 상태
   error: null, // 에러 상태
-  cache: {}, // 원본 데이터를 저장할 상태
-  originalCache: {},
-  scheduleNo: '', // schedule 이름 저장
+  // cache: {}, // 원본 데이터를 저장할 상태
+  // originalCache: {},
+  // scheduleNo: '', // schedule 이름 저장
   fetchData: async (value: string) => {
     set({ loading: true, error: null }); // 로딩 시작
 

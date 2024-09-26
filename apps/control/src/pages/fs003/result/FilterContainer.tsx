@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import styles from './FilterContainer.module.scss';
 
 import { ScheduleInfoDTO } from '@/config/scheduling/DTO';
-import { useMaterialStore, useScheduleStore } from '@/store/fs003store';
+import { useScheduleStore } from '@/store/fs003store';
 
 interface dropDownOptionType {
   value: string;
