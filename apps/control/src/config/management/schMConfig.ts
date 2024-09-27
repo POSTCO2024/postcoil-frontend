@@ -19,6 +19,7 @@ export const constraints = [
     dataIndex: 'value',
   },
 ];
+
 export const unInsConstraints = [
   {
     title: '항목',
