@@ -12,7 +12,6 @@ const createApiClient = (baseURL: string) => {
 };
 
 const scheduleApiUrl = import.meta.env.VITE_SCHEDULE_API_URL;
-console.log(scheduleApiUrl);
 
 export const scheduleApiClient = createApiClient(scheduleApiUrl!);
 
@@ -29,7 +28,7 @@ export const fetchSchManagementData = async ({
 }: SchMParams) => {
   try {
     const response = await scheduleApiClient.get(
-      `${import.meta.env.VITE_SCHEDULE_MANAGEMENT_BASE_URL}/${processCode}/${rollUnit}`,
+      `${import.meta.env.VITE_MANAGEMENT_SCHEDULE_BASE_URL}/${processCode}/${rollUnit}`,
     );
     // response.data와 response.data.result가 존재하는지 확인
     if (response.data && response.data.result) {

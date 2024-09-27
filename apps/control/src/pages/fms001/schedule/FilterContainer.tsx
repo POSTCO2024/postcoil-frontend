@@ -53,7 +53,6 @@ const FilterContainer = ({
         processCode,
         rollUnit,
       });
-      console.log(data);
 
       setPriority(data.priorities);
 
