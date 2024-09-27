@@ -6,7 +6,7 @@ interface TableComponentProps<T extends DataType> {
     columns: ColumnDataType<T>[];
     data: T[];
     handleRowClick?: (record?: any, rowIndex?: number) => void;
-    handleRowsClick?: (selectedRows: T[]) => void;
+    handleRowsClick?: (selectedRows: any[]) => void;
     scroll?: {
         x?: number | string;
         y?: number | string;
@@ -15,7 +15,10 @@ interface TableComponentProps<T extends DataType> {
     tableLayout?: string | undefined;
     className?: string;
     rowClassName?: (record: any) => string;
+    rowKey?: string | ((record: T) => string);
+    components?: any;
+    setSelectedMaterials?: any;
 }
-export declare const Table: <T extends DataType>({ pagination, useCheckBox, columns, data, handleRowClick, handleRowsClick, scroll, size, tableLayout, className, rowClassName, }: TableComponentProps<T>) => import("react/jsx-runtime").JSX.Element;
+export declare const Table: <T extends DataType>({ pagination, useCheckBox, columns, data, handleRowClick, handleRowsClick, scroll, size, tableLayout, className, rowClassName, rowKey, components, setSelectedMaterials, }: TableComponentProps<T>) => import("react/jsx-runtime").JSX.Element;
 export default Table;
 //# sourceMappingURL=Table.d.ts.map

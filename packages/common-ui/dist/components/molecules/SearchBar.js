@@ -16,10 +16,7 @@ const { Search } = Input;
 // };
 // // Searchbar Event
 // const onSearch = (value: string) => console.log(value);
-export const SearchBar = ({ 
-// options,
-// onChange,
-onSearch, }) => {
+export const SearchBar = ({ onSearch }) => {
     return (_jsxs("div", { className: styles.searchbarContainer, children: [_jsx("span", { className: styles.spacer }), _jsx("span", { className: styles.spacer }), _jsx(Space, { direction: "vertical", children: _jsx(Search, { className: styles.searchbar, placeholder: "\uAC80\uC0C9", onSearch: onSearch
                         ? onSearch
                         : () => {

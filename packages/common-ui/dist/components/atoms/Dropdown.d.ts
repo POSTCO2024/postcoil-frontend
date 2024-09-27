@@ -1,8 +1,9 @@
 import React from 'react';
 interface DropdownProps {
     title: string;
-    options: OptionType[];
-    onChange?: (value?: string[]) => void;
+    options: OptionType[] | undefined;
+    onChange?: (value?: string[]) => void | Promise<void>;
+    value?: string[];
 }
 interface OptionType {
     value: string;

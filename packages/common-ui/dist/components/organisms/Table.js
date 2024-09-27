@@ -1,15 +1,13 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import { Table as AntTable, ConfigProvider } from 'antd';
-import { useState } from 'react';
 import styles from './Table.module.css';
 import { createColumns } from '../../utils/TableUtils';
-export const Table = ({ pagination = false, useCheckBox = false, columns, data, handleRowClick, handleRowsClick, scroll, size, tableLayout, className, rowClassName, }) => {
+export const Table = ({ pagination = false, useCheckBox = false, columns, data, handleRowClick, handleRowsClick, scroll, size, tableLayout, className, rowClassName, rowKey, components, setSelectedMaterials, }) => {
     const processedColumns = [...createColumns(columns)];
-    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    // const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
     const rowSelection = {
-        selectedRowKeys,
         onChange: (newSelectedRowKeys, selectedRows) => {
-            setSelectedRowKeys(newSelectedRowKeys);
+            setSelectedMaterials(newSelectedRowKeys);
             if (handleRowsClick) {
                 handleRowsClick(selectedRows);
             }
@@ -26,7 +24,7 @@ export const Table = ({ pagination = false, useCheckBox = false, columns, data, 
                     ? (record, rowIndex) => ({
                         onClick: () => handleRowClick(record, rowIndex),
                     })
-                    : undefined, scroll: scroll ? scroll : undefined, size: size ? 'small' : 'large', tableLayout: tableLayout ? 'fixed' : undefined, rowClassName: rowClassName }) }) }));
+                    : undefined, scroll: scroll ? scroll : undefined, size: size ? 'small' : 'large', tableLayout: tableLayout ? 'fixed' : undefined, rowClassName: rowClassName, rowKey: rowKey, components: components }) }) }));
 };
 export default Table;
 //# sourceMappingURL=Table.js.map
