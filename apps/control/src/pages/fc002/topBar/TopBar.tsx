@@ -112,6 +112,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           title={'공정명'}
           options={optionsDropdown1}
           onChange={handleProcessDropdownChange}
+          value={[selectedProcess]}
         />
       </div>
       <Dropdown
