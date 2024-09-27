@@ -17,7 +17,7 @@ import React, { useState, useContext, useMemo, useEffect } from 'react';
 
 import styles from './ContentContainer.module.scss';
 
-import { MaterialDataType } from '@/config/scheduling/ContentConfig';
+import { MaterialDataType } from '@/config/scheduling/contentConfig';
 import { useMaterialStore } from '@/store/fs002store';
 import { mockcolumns, transformedData } from '@/utils/scheduling/tableUtils';
 

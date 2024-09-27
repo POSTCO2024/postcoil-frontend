@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import styles from './Result.module.scss';
 
 import CommonModal from '@/components/common/CommonModal';
-import { keyMapping } from '@/config/management/ErrMConfig';
+import { keyMapping } from '@/config/management/errMConfig';
 import { url } from '@/config/UrlConfig';
 
 interface PropsType {

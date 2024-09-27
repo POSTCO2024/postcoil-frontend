@@ -1,4 +1,4 @@
-import { MaterialDTO } from '@/config/scheduling/DTO';
+import { MaterialDTO } from '@/config/scheduling/dto';
 
 export const transformedDataToChartData = (
   data: MaterialDTO[],

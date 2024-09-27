@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 
 import styles from './FilterContainer.module.scss';
 
-import { ScheduleInfoDTO } from '@/config/scheduling/DTO';
+import { ScheduleInfoDTO } from '@/config/scheduling/dto';
 import { useScheduleStore, useMaterialStore } from '@/store/fs002store';
 
 interface OptionType {

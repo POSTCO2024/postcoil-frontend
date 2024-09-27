@@ -1,4 +1,4 @@
-import { MaterialDTO, ScheduleInfoDTO } from './DTO';
+import { MaterialDTO, ScheduleInfoDTO } from './dto';
 
 export interface StoreType {
   data: MaterialDTO[] | ScheduleInfoDTO[] | null; // 받아온 데이터

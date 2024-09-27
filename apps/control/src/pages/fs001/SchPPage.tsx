@@ -8,7 +8,7 @@ import { fetchScheduleData, scheduleApiClient } from '@/api/scheduleApi';
 import CommonModal from '@/components/common/CommonModal';
 import RollSuccessModal from '@/components/common/RollSuccessModal';
 import RollWarnModal from '@/components/common/RollWarnModal';
-import { MaterialDTO } from '@/config/scheduling/DTO';
+import { MaterialDTO } from '@/config/scheduling/dto';
 import ContentContainer from '@/pages/fs001/plan/ContentContainer';
 import FilterContainer from '@/pages/fs001/plan/FilterContainer';
 

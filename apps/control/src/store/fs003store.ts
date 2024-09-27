@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 import { fetchScheduleData } from '@/api/scheduleApi';
-import { MaterialDTO, ScheduleInfoDTO } from '@/config/scheduling/DTO';
+import { MaterialDTO, ScheduleInfoDTO } from '@/config/scheduling/dto';
 import { StoreType } from '@/config/scheduling/storeConfig';
 
 export const useScheduleStore = create<StoreType>((set) => ({
