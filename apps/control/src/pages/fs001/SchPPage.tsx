@@ -58,7 +58,7 @@ const SchPPage = () => {
       // 백엔드로 POST 요청 (selectedIds 전달)
       await scheduleApiClient
         .post(
-          `${import.meta.env.VITE_APP_SCHEDULE_API_URL}/plan/execute`,
+          `${import.meta.env.VITE_SCHEDULE_API_URL}${import.meta.env.VITE_SCHEDULE_BASE_URL}/plan/execute`,
           selectedIds,
           {
             headers: {

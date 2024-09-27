@@ -92,7 +92,7 @@ const SchListModal = ({ isModalOpen, onApply, onCancel }: PropsType) => {
     try {
       await scheduleApiClient
         .post(
-          `${import.meta.env.VITE_APP_SCHEDULE_API_URL}/confirm`,
+          `${import.meta.env.VITE_SCHEDULE_API_URL}${import.meta.env.VITE_SCHEDULE_BASE_URL}/confirm`,
           confirmPlans,
           {
             headers: {
