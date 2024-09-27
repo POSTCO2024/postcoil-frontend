@@ -8,7 +8,7 @@ import { TopBar } from './topBar/TopBar';
 import { transformData, ApiResponseItem } from '@/utils/control/transformData';
 
 import CommonModal from '@/components/common/CommonModal';
-import { columnsData } from '@/utils/control/Fc002Utils';
+import { columnsData } from '@/utils/control/fc002Utils';
 
 // API
 export interface ApiResponse {

@@ -1,5 +1,5 @@
 import { ColumnDataType } from '@postcoil/ui/config/TableConfig';
-import { Fc002DataType } from '@/config/control/Fc002Config';
+import { Fc002DataType } from '@/config/control/fc002Config';
 
 // Table Columns
 export const columnsData: ColumnDataType<Fc002DataType>[] = [
