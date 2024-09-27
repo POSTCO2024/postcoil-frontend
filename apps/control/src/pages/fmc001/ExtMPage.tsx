@@ -10,7 +10,7 @@ import {
   columnsData,
   facilityData,
   columnMapping,
-} from '@/config/management/ExtMConfig';
+} from '@/config/management/extMConfig';
 import { url } from '@/config/UrlConfig';
 // // TODO: fetch data from API
 // const extractions: DataType = {

@@ -3,12 +3,12 @@ import { useState } from 'react';
 
 import styles from './SchMpage.module.scss';
 
-import { PriorityDTO, ConstraintInsertionDTO } from '@/config/management/DTO';
+import { PriorityDTO, ConstraintInsertionDTO } from '@/config/management/dto';
 import {
   priority as priorityColumn,
   constraints,
   unInsConstraints,
-} from '@/config/management/SchMConfig';
+} from '@/config/management/schMConfig';
 import FilterContainer from '@/pages/fms001/schedule/FilterContainer';
 import Result from '@/pages/fms001/schedule/Result';
 import {

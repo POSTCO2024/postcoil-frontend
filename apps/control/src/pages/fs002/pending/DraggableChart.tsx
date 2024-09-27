@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 
 import styles from './DraggableChart.module.scss';
 
-import { MaterialDTO } from '@/config/scheduling/DTO';
+import { MaterialDTO } from '@/config/scheduling/dto';
 import Highcharts from '@/config/scheduling/highchartsSetup';
 import {
   useHoverStore,

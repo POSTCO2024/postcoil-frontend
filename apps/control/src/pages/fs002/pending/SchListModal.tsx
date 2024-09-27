@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { scheduleApiClient } from '@/api/scheduleApi';
 import CommonModal from '@/components/common/CommonModal';
 import RollSuccessModal from '@/components/common/RollSuccessModal';
-import { ScheduleInfoDTO } from '@/config/scheduling/DTO';
+import { ScheduleInfoDTO } from '@/config/scheduling/dto';
 import { useMaterialStore, useScheduleStore } from '@/store/fs002store';
 
 interface PropsType {

@@ -63,8 +63,8 @@ export const Navigation = ({ logo, human, menuItems, mappingKeys, isOperationSys
                         width: '90%',
                         margin: '20px auto auto',
                         border: 0,
-                        maxHeight: '80%',
-                        overflowY: 'scroll',
+                        maxHeight: '70%',
+                        overflowY: 'auto',
                     }, items: menuItems }) }), _jsx("div", { className: styles.loginContainer, children: _jsxs("div", { className: styles.loginDiv, children: [_jsx("img", { src: human }), _jsxs("div", { className: styles.loginInfo, children: ["\uC2E0\uCC2C\uADDC \uC0AC\uC6D0", _jsx("br", {}), "\uBD80\uC11C : \uAD00\uC81C\uD300"] })] }) })] }));
 };
 export default Navigation;

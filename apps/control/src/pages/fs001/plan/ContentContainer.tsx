@@ -2,7 +2,7 @@ import { Table } from '@postcoil/ui';
 
 import styles from './ContentContainer.module.scss';
 
-import { MaterialDTO } from '@/config/scheduling/DTO';
+import { MaterialDTO } from '@/config/scheduling/dto';
 import { mockcolumns, transformedData } from '@/utils/scheduling/tableUtils';
 
 interface PropsType {

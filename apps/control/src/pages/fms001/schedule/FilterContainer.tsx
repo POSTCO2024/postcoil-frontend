@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import styles from './FilterContainer.module.scss';
 
 import { fetchSchManagementData } from '@/api/scheduleApi';
-import { ConstraintInsertionDTO, PriorityDTO } from '@/config/management/DTO';
+import { ConstraintInsertionDTO, PriorityDTO } from '@/config/management/dto';
 
 interface PropsType {
   setPriority: React.Dispatch<React.SetStateAction<PriorityDTO[]>>;

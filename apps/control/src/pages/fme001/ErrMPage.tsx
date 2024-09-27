@@ -12,7 +12,7 @@ import {
   ManageColumn,
   infoErrColumn,
   columnMapping,
-} from '@/config/management/ErrMConfig';
+} from '@/config/management/errMConfig';
 import { url } from '@/config/UrlConfig';
 
 async function getErrorStandard(facility: string) {

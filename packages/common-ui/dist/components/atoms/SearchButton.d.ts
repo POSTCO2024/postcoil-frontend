@@ -1,4 +1,7 @@
 import React from 'react';
-export declare const SearchButton: React.FC;
+interface SearchBottonProps {
+    onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+}
+export declare const SearchButton: React.FC<SearchBottonProps>;
 export default SearchButton;
 //# sourceMappingURL=SearchButton.d.ts.map

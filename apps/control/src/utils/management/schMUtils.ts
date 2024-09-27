@@ -1,6 +1,6 @@
 import { DataType } from '@postcoil/ui/config/TableConfig';
 
-import { PriorityDTO, ConstraintInsertionDTO } from '@/config/management/DTO';
+import { PriorityDTO, ConstraintInsertionDTO } from '@/config/management/dto';
 
 export interface TransformedPriorityDataType extends DataType {
   key: string;
