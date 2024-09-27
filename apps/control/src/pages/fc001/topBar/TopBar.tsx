@@ -7,7 +7,7 @@ import styles from './TopBar.module.scss';
 import {
   optionsDropdown1,
   optionsDropdown2,
-} from '@/config/control/TopBarUtils';
+} from '@/utils/control/TopBarUtils';
 import { transformData } from '@/utils/control/transformData';
 
 interface TopBarProps {

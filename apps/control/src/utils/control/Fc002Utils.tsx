@@ -1,5 +1,8 @@
+import { ColumnDataType } from '@postcoil/ui/config/TableConfig';
+import { Fc002DataType } from '@/config/control/Fc002Config';
+
 // Table Columns
-export const columnsData = [
+export const columnsData: ColumnDataType<Fc002DataType>[] = [
   {
     title: '번호',
     dataIndex: 'targetId',
@@ -140,7 +143,7 @@ export const columnsData = [
 ];
 
 // Table Date
-export const tableData = [
+export const tableData: Fc002DataType[] = [
   {
     key: '1',
     id: '1',
