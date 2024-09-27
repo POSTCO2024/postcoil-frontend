@@ -56,6 +56,7 @@ export const columnsList = [
     title: '통과 공정',
     dataIndex: 'passProc',
     key: 'passProc',
+    render: (text: string) => (text === 'null' ? '' : text),
   },
   {
     title: '잔공정',
@@ -66,6 +67,7 @@ export const columnsList = [
     title: '전공정',
     dataIndex: 'preProc',
     key: 'preProc',
+    render: (text: string) => (text === 'null' ? '' : text),
   },
   {
     title: '차공정',
@@ -116,11 +118,6 @@ export const columnsList = [
     title: '납기일',
     dataIndex: 'dueDate',
     key: 'due_date',
-  },
-  {
-    title: '비고',
-    dataIndex: 'order.remarks',
-    key: 'remarks',
   },
 ];
 

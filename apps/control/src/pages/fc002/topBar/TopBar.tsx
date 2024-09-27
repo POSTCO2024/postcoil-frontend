@@ -7,7 +7,7 @@ import styles from './TopBar.module.scss';
 import {
   optionsDropdown1,
   optionsDropdown2,
-} from '@/config/control/TopBarUtils';
+} from '@/utils/control/topBarUtils';
 import { transformData } from '@/utils/control/transformData';
 
 interface TopBarProps {
@@ -112,6 +112,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           title={'공정명'}
           options={optionsDropdown1}
           onChange={handleProcessDropdownChange}
+          value={[selectedProcess]}
         />
       </div>
       <Dropdown

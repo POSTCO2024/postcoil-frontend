@@ -7,7 +7,7 @@ import { RowheaderTable } from './rowheadertable/RowheaderTable';
 import { TopBar } from './topBar/TopBar';
 import { transformData, ApiResponseItem } from '@/utils/control/transformData';
 
-import { columnsList, columnsTableConfig } from '@/config/control/Fc001Utils';
+import { columnsList, columnsTableConfig } from '@/utils/control/fc001Utils';
 
 export interface ApiResponse {
   status: number;
