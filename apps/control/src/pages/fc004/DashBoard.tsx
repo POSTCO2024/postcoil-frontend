@@ -186,7 +186,7 @@ const DashBoard: React.FC = () => {
         </div>
         <div className={styles.line2}>
           <div className={styles.smallCard}>
-            {/* <BarChartV2 title="차공정" data={barchartV2Option1} /> */}
+            <BarChartV2 title="차공정" option={barchartV2Option1} />
           </div>
           <div className={styles.smallCard}>
             <BarChartV2 title="롤 단위" option={rollUnitOption} />

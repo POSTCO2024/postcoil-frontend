@@ -227,7 +227,7 @@ export const rowbarchartOption: echarts.EChartsOption = {
 };
 
 // Bar Chart 2
-export const barchartV2Option: echarts.EChartsOption = {
+export const barchartV2Option1: echarts.EChartsOption = {
   title: {
     text: '스케줄',
     left: 'center',
@@ -260,11 +260,58 @@ export const barchartV2Option: echarts.EChartsOption = {
       name: '1CAL',
       type: 'bar',
       data: [30],
+      itemStyle: { color: '#FABC3F' },
     },
     {
       name: '2CAL',
       type: 'bar',
       data: [21],
+      itemStyle: { color: '#87A2FF' },
+    },
+  ],
+};
+
+// Bar Chart 3
+export const barchartV2Option2: echarts.EChartsOption = {
+  title: {
+    text: '스케줄',
+    left: 'center',
+    show: false,
+  },
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: {
+      type: 'shadow',
+    },
+  },
+  legend: { bottom: '0%', left: 'center' },
+  grid: {
+    left: '5%',
+    right: '5%',
+    top: '15%',
+    bottom: '20%',
+    containLabel: true,
+  },
+  xAxis: {
+    type: 'value',
+    boundaryGap: [0, 0.01],
+  },
+  yAxis: {
+    type: 'category',
+    data: ['롤 단위'],
+  },
+  series: [
+    {
+      name: 'A',
+      type: 'bar',
+      data: [50],
+      itemStyle: { color: '#FF8A8A' },
+    },
+    {
+      name: 'B',
+      type: 'bar',
+      data: [55],
+      itemStyle: { color: '#AEDEFC' },
     },
   ],
 };
