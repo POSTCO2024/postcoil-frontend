@@ -91,123 +91,12 @@ export const useOrderData = () => {
   };
 };
 
-// // 폭/두께 분포(DoubleBarChart)
-// export const useMaterialData = () => {
-//   return async (currProc: string) => {
-//     try {
-//       const response = await axios.get(
-//         'http://localhost:8086/api/v1/dashboard/distribution?currProc=' +
-//         currProc,
-//       );
-//       const { widthDistribution, thicknessDistribution } = response.data.result;
-
-//       // widthDistribution과 thicknessDistribution의 라벨과 데이터를 배열로 변환
-//       // 값이 없을 경우, [0] 반환
-//       const widthLabels = Object.keys(widthDistribution);
-//       const widthValues =
-//         Object.values(widthDistribution).length > 0
-//           ? Object.values(widthDistribution)
-//           : [0];
-
-//       const thicknessLabels = Object.keys(thicknessDistribution);
-//       const thicknessValues =
-//         Object.values(thicknessDistribution).length > 0
-//           ? Object.values(thicknessDistribution)
-//           : [0];
-
-//       // 차트 옵션 설정
-//       return {
-//         setChartOptions: {
-//           width:
-//             widthValues.length > 0
-//               ? {
-//                 tooltip: {
-//                   trigger: 'axis',
-//                   axisPointer: {
-//                     type: 'shadow',
-//                   },
-//                 },
-//                 grid: {
-//                   left: '10%',
-//                   right: '5%',
-//                   bottom: '3%',
-//                   top: '10%', // 그래프 위쪽 간격 넓히기
-//                   containLabel: true,
-//                 },
-//                 xAxis: {
-//                   type: 'category',
-//                   data: widthLabels, // API 응답에서 받은 폭 라벨
-//                   axisTick: {
-//                     alignWithLabel: true,
-//                   },
-//                 },
-//                 yAxis: {
-//                   type: 'value',
-//                   name: '폭(mm)',
-
-//                   nameLocation: 'middle', // 라벨 위치를 중간에 설정
-//                   nameGap: 25, // y축 라벨과 y축 사이의 간격 설정
-//                   minInterval: 5, // y축 최소 간격 설정
-//                 },
-//                 series: [
-//                   {
-//                     data: widthValues, // API 응답에서 받은 폭 데이터
-//                     type: 'bar',
-//                   },
-//                 ],
-//               }
-//               : null,
-//           thickness:
-//             thicknessValues.length > 0
-//               ? {
-//                 tooltip: {
-//                   trigger: 'axis',
-//                   axisPointer: {
-//                     type: 'shadow',
-//                   },
-//                 },
-//                 grid: {
-//                   left: '10%',
-//                   right: '5%',
-//                   bottom: '3%',
-//                   top: '10%', // 그래프 위쪽 간격 넓히기
-//                   containLabel: true,
-//                 },
-//                 xAxis: {
-//                   type: 'category',
-//                   data: thicknessLabels, // API 응답에서 받은 두께 라벨
-//                   axisTick: {
-//                     alignWithLabel: true,
-//                   },
-//                 },
-//                 yAxis: {
-//                   type: 'value',
-//                   name: '두께(mm)',
-
-//                   nameLocation: 'middle', // 라벨 위치를 중간에 설정
-//                   nameGap: 25, // y축 라벨과 y축 사이의 간격 설정
-//                   minInterval: 5, // y축 최소 간격 설정
-//                 },
-//                 series: [
-//                   {
-//                     data: thicknessValues, // API 응답에서 받은 두께 데이터
-//                     type: 'bar',
-//                   },
-//                 ],
-//               }
-//               : null,
-//         },
-//       };
-//     } catch (error) {
-//       console.error('Error fetching material distribution data', error);
-//     }
-//   };
-// };
+// 폭/두께 분포(DoubleBarChart)
 export const useWidthThicknessData = () => {
   return async (selectedProc: string) => {
     try {
       const response = await axios.get(
-        'http://localhost:8086/api/v1/dashboard/distribution?currProc=' +
+        `http://localhost:8086/api/v1/dashboard/distribution?currProc=` +
           selectedProc,
       );
       if (response.status === 200) {
@@ -298,6 +187,79 @@ export const useWidthThicknessData = () => {
       }
     } catch (error) {
       console.error('API 요청 중 오류 발생', error);
+    }
+    return null;
+  };
+};
+
+// 롤 단위(BarChartV2)
+export const useRollUnitData = () => {
+  return async (selectedProc: string) => {
+    try {
+      const response = await axios.get(
+        'http://localhost:8086/api/v1/dashboard/rollUnit?currProc=' +
+          selectedProc,
+      );
+
+      // console.log('API 응답 데이터:', response.data); // API 응답 확인
+
+      if (response.status === 200) {
+        const aData = response.data.result.acount ?? 0;
+        const bData = response.data.result.bcount ?? 0;
+
+        const rollUnitOptionResult = {
+          title: {
+            text: '스케줄',
+            left: 'center',
+            show: false,
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'shadow',
+            },
+          },
+          legend: { bottom: '0%', left: 'center' },
+          grid: {
+            left: '5%',
+            right: '5%',
+            top: '15%',
+            bottom: '20%',
+            containLabel: true,
+          },
+          xAxis: {
+            type: 'value',
+            boundaryGap: [0, 0.01],
+          },
+          yAxis: {
+            type: 'category',
+            data: ['롤 단위'],
+          },
+          series: [
+            {
+              name: 'A',
+              type: 'bar',
+              data: [aData],
+              itemStyle: { color: '#FF8A8A' },
+            },
+            {
+              name: 'B',
+              type: 'bar',
+              data: [bData],
+              itemStyle: { color: '#AEDEFC' },
+            },
+          ],
+        };
+
+        return rollUnitOptionResult; // Data + Option
+      } else {
+        console.log(
+          '응답 상태가 200이거나 result가 없습니다:',
+          response.status,
+        );
+      }
+    } catch (error) {
+      console.error('API 요청 중 오류 발생: ', error);
     }
     return null;
   };

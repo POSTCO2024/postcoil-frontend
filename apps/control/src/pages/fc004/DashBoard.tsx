@@ -21,12 +21,12 @@ import {
   // doublebarchartOption2,
   rowbarchartOption,
   barchartV2Option1,
-  barchartV2Option2,
+  // barchartV2Option2,
 } from '@/config/DashBoard/DashBoardConfig';
 import {
   useOrderData,
   useWidthThicknessData,
-  // useRollUnitData,
+  useRollUnitData,
 } from '@/pages/fc004/useChartData';
 
 // Interface
@@ -52,86 +52,31 @@ interface DueDateDataType {
   tags: string[];
 }
 
-// 롤 단위
-interface rollUnitDataType {
-  aCount: number;
-  bCount: number;
-}
-
-// 웹소켓 연결
-export const TaskInstruction = () => {
-  const [message, setMessage] = useState<string>('');
-  const [client, setClient] = useState<Client | null>(null);
-
-  // useEffect(() => {
-  //   const socket = new SocketJS('http://localhost:8087/coil');
-  //   const stompClient = new Client({
-  //     webSocketFactory: () => socket as any,
-  //     debug: (str) => {
-  //       console.log(str);
-  //     },
-  //     onConnect: () => {
-  //       console.log('Conneted Socket! ');
-  //       stompClient.subscribe('/topic/coilData', (msg) => {
-  //         setMessage(msg.body); // 웹소켓으로 받은 데이터를 상태에 저장
-  //         console.log(msg.body);
-  //       });
-  //     },
-  //     onDisconnect: () => {
-  //       console.log('Disconnected from WebSocket');
-  //     },
-  //     onStompError: (error) => {
-  //       console.error('STOMP error: ', error);
-  //     },
-  //   });
-
-  //   // WebSocket 연결 활성화
-  //   stompClient.activate();
-  //   setClient(stompClient);
-  //   console.log(client);
-
-  //   return () => {
-  //     if (stompClient) {
-  //       stompClient.deactivate();
-  //     }
-  //   };
-  // }, []);
-};
-
 const DashBoard: React.FC = () => {
   // 선택한 공정
   const location = useLocation();
   const selectedProc = location.pathname.split('/')[2];
 
   // State 관리
-  // 품종/고객사
-  const [coilTypeOption, setCoilTypeOption] = useState<Record<
-    string,
-    unknown
-  > | null>(null);
-  const [customerNameOption, setCustomerNameOption] = useState<Record<
-    string,
-    unknown
-  > | null>(null);
-  const fetchOrderData = useOrderData();
-  // 폭/두께
+  const [coilTypeOption, setCoilTypeOption] =
+    useState<echarts.EChartsOption | null>(null); // 품종
+  const [customerNameOption, setCustomerNameOption] =
+    useState<echarts.EChartsOption | null>(null); // 고객사
   const [widthOption, setWidthOption] =
-    useState<echarts.EChartsCoreOption | null>(null);
+    useState<echarts.EChartsCoreOption | null>(null); // 폭
   const [thicknessOption, setThicknessOption] =
-    useState<echarts.EChartsCoreOption | null>(null);
-  // 롤 단위
-  const [rollUnitOption, setRollUnitOption] =
-    useState<echarts.EChartsCoreOption | null>(null);
-  // 에러
+    useState<echarts.EChartsCoreOption | null>(null); // 두께
   const [errorNormalData, setErrorNormalData] = useState<ErrorDataType | null>(
     null,
-  );
-  // 생산 기한일
-  const [dueDate, setDueDate] = useState<DueDateDataType[]>([]);
+  ); // 에러재
+  const [dueDate, setDueDate] = useState<DueDateDataType[]>([]); // 생산 기한일
+  const [rollUnitOption, setRollUnitOption] =
+    useState<echarts.EChartsCoreOption | null>(null); // 롤 단위
 
   // API 호출
-  // 폭/두께
-  const fetchWidthThicknessData = useWidthThicknessData();
+  const fetchWidthThicknessData = useWidthThicknessData(); // 폭/두께
+  const fetchOrderData = useOrderData(); // 품종/고객사
+  const fetchRollUnitData = useRollUnitData(); // 롤 단위
 
   // 에러재 비율
   const fetchErrorNormalCount = async () => {
@@ -171,6 +116,7 @@ const DashBoard: React.FC = () => {
   };
 
   const calculateDaysLeft = (dueDate: string) => {
+    // for D-DAY
     const today = new Date();
     const due = new Date(dueDate);
     const timeDiff = due.getTime() - today.getTime();
@@ -181,36 +127,17 @@ const DashBoard: React.FC = () => {
     return new Date(dueDate).toISOString().split('T')[0];
   };
 
-  //
-  const useRollUnitData = async () => {
-    const url = `http://localhost:8086/api/v1/dashboard/rollUnit?currProc=${selectedProc}`;
-    try {
-      const response = await axios.get<ApiResponse>(url);
-
-      // 응답 상태 확인
-      console.log('====Response status:', response.status);
-      console.log('Response data:', response.data);
-
-      if (response.status == 200) {
-        // setRollUnitOption(response.data.result);
-        const transformedData = {
-          ACount: response.data.result.acount ?? 0,
-          BCount: response.data.result.bcount ?? 0,
-        };
-        setRollUnitOption(transformedData); // 올바른 데이터 구조로 상태 설정
-      }
-    } catch (error) {
-      console.error('Fetch error:', error);
-    }
-  };
-
   // Rendering
   const render = async () => {
     // 품종/고객사
     console.log('selectedProc: ' + selectedProc);
     const orderResult = await fetchOrderData(selectedProc);
-    setCoilTypeOption(orderResult?.coilTypeOptionResult ?? null);
-    setCustomerNameOption(orderResult?.customerNameOptionResult ?? null);
+    setCoilTypeOption(
+      (orderResult?.coilTypeOptionResult as echarts.EChartsOption) ?? null,
+    );
+    setCustomerNameOption(
+      (orderResult?.customerNameOptionResult as echarts.EChartsOption) ?? null,
+    );
 
     // 폭/두께
     const materialResult = await fetchWidthThicknessData(selectedProc);
@@ -226,8 +153,9 @@ const DashBoard: React.FC = () => {
     const tableData = await fetchDueDateTable();
     setDueDate(tableData);
 
-    // 롤 단위 데이터 추가
-    await useRollUnitData();
+    // 롤 단위
+    const rollUnitResult = await fetchRollUnitData(selectedProc);
+    setRollUnitOption(rollUnitResult);
   };
 
   useEffect(() => {
@@ -261,7 +189,7 @@ const DashBoard: React.FC = () => {
             {/* <BarChartV2 title="차공정" data={barchartV2Option1} /> */}
           </div>
           <div className={styles.smallCard}>
-            <BarChartV2 title="롤 단위" data={rollUnitOption} />
+            <BarChartV2 title="롤 단위" option={rollUnitOption} />
           </div>
           <div className={styles.smallCard}>
             <RowbarChart option={rowbarchartOption} />
