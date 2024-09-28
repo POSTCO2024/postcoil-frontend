@@ -1,36 +1,20 @@
-import axios from 'axios';
+import { ApiParams, createApiClient } from './apiClient';
 
-const createApiClient = (baseURL: string) => {
-  return axios.create({
-    baseURL: baseURL,
-    timeout: 3000,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    withCredentials: true,
-  });
-};
-
-const scheduleApiUrl = import.meta.env.VITE_SCHEDULE_API_URL;
+export const scheduleApiUrl = import.meta.env.VITE_SCHEDULE_API_URL;
+export const managementSchBaseUrl = import.meta.env
+  .VITE_MANAGEMENT_SCHEDULE_BASE_URL;
+export const scheduleBaseUrl = import.meta.env.VITE_SCHEDULE_BASE_URL;
 
 export const scheduleApiClient = createApiClient(scheduleApiUrl!);
-
-interface SchMParams {
-  pageCode?: string;
-  processCode?: string;
-  rollUnit?: string;
-  requestParams?: string;
-}
 
 export const fetchSchManagementData = async ({
   processCode,
   rollUnit,
-}: SchMParams) => {
+}: ApiParams) => {
   try {
     const response = await scheduleApiClient.get(
-      `${import.meta.env.VITE_MANAGEMENT_SCHEDULE_BASE_URL}/${processCode}/${rollUnit}`,
+      `${managementSchBaseUrl}/${processCode}/${rollUnit}`,
     );
-    // response.data와 response.data.result가 존재하는지 확인
     if (response.data && response.data.result) {
       return response.data.result;
     } else {
@@ -49,12 +33,11 @@ export const fetchScheduleData = async ({
   pageCode,
   processCode = 'schedule',
   requestParams = '',
-}: SchMParams) => {
+}: ApiParams) => {
   try {
     const response = await scheduleApiClient.get(
-      `${import.meta.env.VITE_SCHEDULE_BASE_URL}/${pageCode}/${processCode}${requestParams}`,
+      `${scheduleBaseUrl}/${pageCode}/${processCode}${requestParams}`,
     );
-    // response.data와 response.data.result가 존재하는지 확인
     if (response.data && response.data.result) {
       return response.data.result;
     } else {

@@ -1,35 +1,18 @@
-import axios from 'axios';
+import { ApiParams, createApiClient } from './apiClient';
 
-const createApiClient = (baseURL: string) => {
-  return axios.create({
-    baseURL: baseURL,
-    timeout: 3000,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    withCredentials: true,
-  });
-};
-
-const operationApiUrl = import.meta.env.VITE_OPERATION_API_URL;
+export const operationApiUrl = import.meta.env.VITE_OPERATION_API_URL;
+export const operationBaseUrl = import.meta.env.VITE_OPERATION_BASE_URL;
 
 export const operationApiClient = createApiClient(operationApiUrl!);
 
-interface OpParams {
-  pageCode?: string;
-  processCode?: string;
-  rollUnit?: string;
-  requestParams?: string;
-}
-
 export const fetchOperationData = async ({
+  pageCode,
   processCode,
-  rollUnit,
-}: OpParams) => {
+}: ApiParams) => {
   try {
     const response = await operationApiClient.get(
-      `${import.meta.env.VITE_MANAGEMENT_SCHEDULE_BASE_URL}/${processCode}/${rollUnit}`,
-    ); // TODO: API style 수정
+      `${operationBaseUrl}/${pageCode}?process=${processCode}`,
+    );
     if (response.data && response.data.result) {
       return response.data.result;
     } else {
