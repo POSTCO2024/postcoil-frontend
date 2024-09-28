@@ -17,5 +17,23 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
+
+  }
+
+  .result {
+    size: 10%;
+    height: 150px;
+
+    // .anticon {
+    //   width: 150px !important;
+    //   height: 150px !important;
+
+
+    svg {
+      height: 60px !important;
+    }
+
+    // }
   }
 }
