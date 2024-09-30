@@ -138,7 +138,8 @@ export const useWidthThicknessData = () => {
             type: 'value',
             name: '폭(mm)',
             nameLocation: 'middle',
-            nameGap: 30,
+            nameGap: 25,
+            minInterval: 1,
           },
           series: [
             {
@@ -176,7 +177,8 @@ export const useWidthThicknessData = () => {
             type: 'value',
             name: '두께(mm)',
             nameLocation: 'middle',
-            nameGap: 20,
+            nameGap: 25,
+            minInterval: 1,
           },
           series: [
             {
