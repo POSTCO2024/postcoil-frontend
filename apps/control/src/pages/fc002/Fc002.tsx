@@ -78,7 +78,6 @@ export const Fc002: React.FC = () => {
   const [selectedProcessCode, setSelectedProcessCode] =
     useState<string>('1PCM');
   const [selectedRows, setSelectedRows] = useState<any[]>([]); // Checked Rows
-  const [message, setMessage] = useState<string>('');
   const [client, setClient] = useState<Client | null>(null);
 
   // 검색 결과 처리
@@ -165,7 +164,6 @@ export const Fc002: React.FC = () => {
         stompClient.subscribe('/topic/errorMessage', (msg) => {
           const paredMessage = JSON.parse(msg.body);
           console.log('paredMessage : ' + JSON.stringify(paredMessage));
-          setMessage(paredMessage);
           console.log('errorMaterials : ' + JSON.stringify(errorMaterials));
           const newMaterials = errorMaterials.map((item) =>
             item.materialNo === paredMessage.materialNo
