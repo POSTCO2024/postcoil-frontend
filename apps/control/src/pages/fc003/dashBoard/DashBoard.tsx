@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { Client } from '@stomp/stompjs';
+import SocketJS from 'sockjs-client';
 
 import Board from './board/Board';
 import styles from './DashBoard.module.scss';
@@ -97,6 +99,44 @@ const tabDataCGL = [
 ];
 
 export const DashBoard: React.FC = () => {
+  // 웹소켓
+  const [message, setMessage] = useState<string>('');
+  const [client, setClient] = useState<Client | null>(null);
+
+  useEffect(() => {
+    const socket = new SocketJS('http://localhost:9090/ws/control');
+    const stompClient = new Client({
+      webSocketFactory: () => socket as any,
+      debug: (str) => {
+        console.log(str);
+      },
+      onConnect: () => {
+        console.log('Conneted Socket! ');
+        stompClient.subscribe('/topic/coilData', (msg) => {
+          setMessage(msg.body); // 웹소켓으로 받은 데이터를 상태에 저장
+          console.log(msg.body);
+        });
+      },
+      onDisconnect: () => {
+        console.log('Disconnected from WebSocket');
+      },
+      onStompError: (error) => {
+        console.error('STOMP error: ', error);
+      },
+    });
+
+    // WebSocket 연결 활성화
+    stompClient.activate();
+    setClient(stompClient);
+    console.log(client);
+
+    return () => {
+      if (stompClient) {
+        stompClient.deactivate();
+      }
+    };
+  }, []);
+
   return (
     <div className={styles.dashboardContainer}>
       <h3>작업 현황 모니터링</h3>
