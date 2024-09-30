@@ -14,14 +14,14 @@ export const useScheduleStore = create<StoreType>((set) => ({
   loading: false, // 로딩 상태
   error: null, // 에러 상태
   processCode: '', // 현재 process Code
-  fetchData: async (value: string) => {
+  fetchData: async (value: string[]) => {
     set({ loading: true, error: null }); // 로딩 시작
     try {
       const result: ScheduleInfoDTO[] = await fetchScheduleData({
         pageCode: 'pending',
-        processCode: value,
+        processCode: value[0],
       }); // 데이터 fetch
-      set({ data: result, processCode: value, loading: false }); // 데이터 상태 업데이트 및 로딩 종료
+      set({ data: result, processCode: value[0], loading: false }); // 데이터 상태 업데이트 및 로딩 종료
     } catch (error) {
       set({ error: 'Failed to fetch schedule data in FS002', loading: false }); // 에러 발생 시 처리
     }
@@ -39,21 +39,21 @@ export const useMaterialStore = create<StoreType>((set) => ({
   originalCache: {},
   scheduleNo: '', // 선택된 schedule 이름 저장
   scExpectedDuration: null, // 선택된 schedule의 예상 시간
-  fetchData: async (value: string) => {
+  fetchData: async (value: string[]) => {
     set({ loading: true, error: null }); // 로딩 시작
     // 먼저 캐시에서 데이터 확인
     const cache = useMaterialStore.getState().cache!;
-    if (cache[value]) {
+    if (cache[value[0]]) {
       // 캐시에 데이터가 있다면, 캐시된 데이터를 사용
       // scheduleId에 해당하는 scheduleNo를 찾아서 displayTitle에 설정
-      const scheduleId = cache[value][0]?.schedulePlanId;
-      const scheduleData = useScheduleStore.getState().data;
+      const scheduleId = cache[value[0]][0]?.schedulePlanId;
+      const scheduleData = useScheduleStore.getState().data as MaterialDTO[];
       const matchedSchedule = scheduleData?.find(
         (item) => item.id === scheduleId,
       );
 
       set({
-        data: cache[value],
+        data: cache[value[0]],
         loading: false,
         scheduleNo: matchedSchedule!.scheduleNo,
         scExpectedDuration: matchedSchedule!.scExpectedDuration,
@@ -77,15 +77,15 @@ export const useMaterialStore = create<StoreType>((set) => ({
 
       // scheduleId에 해당하는 scheduleNo를 찾아서 displayTitle에 설정
       const scheduleId = result[0]?.schedulePlanId;
-      const scheduleData = useScheduleStore.getState().data;
+      const scheduleData = useScheduleStore.getState().data as MaterialDTO[];
       const matchedSchedule = scheduleData?.find(
         (item) => item.id === scheduleId,
       );
 
       set((state) => ({
         data: initialData,
-        cache: { ...state.cache, [value]: initialData }, // 캐시에 데이터 저장
-        originalCache: { ...state.originalCache, [value]: initialData }, // 원본 데이터 저장
+        cache: { ...state.cache, [value[0]]: initialData }, // 캐시에 데이터 저장
+        originalCache: { ...state.originalCache, [value[0]]: initialData }, // 원본 데이터 저장
         loading: false,
         scheduleNo: matchedSchedule!.scheduleNo,
         scExpectedDuration: matchedSchedule!.scExpectedDuration,

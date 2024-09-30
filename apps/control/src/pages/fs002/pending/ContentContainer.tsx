@@ -19,7 +19,10 @@ import styles from './ContentContainer.module.scss';
 
 import { MaterialDataType } from '@/config/scheduling/contentConfig';
 import { useMaterialStore } from '@/store/fs002store';
-import { mockcolumns, transformedData } from '@/utils/scheduling/tableUtils';
+import {
+  materialColumnData,
+  transformedData,
+} from '@/utils/scheduling/tableUtils';
 
 interface RowProps extends React.HTMLAttributes<HTMLTableRowElement> {
   'data-row-key': string;
@@ -39,7 +42,7 @@ const dragColumns: ColumnDataType<MaterialDataType>[] = [
     dataIndex: 'dragHandle',
     render: () => <DragHandle />,
   },
-  ...mockcolumns,
+  ...materialColumnData,
 ];
 
 const RowContext = React.createContext<RowContextProps>({});

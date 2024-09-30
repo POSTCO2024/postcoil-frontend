@@ -40,7 +40,7 @@ const FilterContainer = () => {
   const handleProcessCode = (value?: string[]) => {
     if (value && value[0] !== '') {
       setRollUnitOptions([]); // rollUnitName 초기화
-      fetchScheduleData(value[0]); // fetchData 함수 호출
+      fetchScheduleData(value); // fetchData 함수 호출
     } else {
       cleanScheduleData();
     }
@@ -48,7 +48,7 @@ const FilterContainer = () => {
 
   const handleScheduleId = (value?: string[]) => {
     if (value && value[0] !== '') {
-      fetchMaterialData(value[0]); // fetchData 함수 호출
+      fetchMaterialData(value); // fetchData 함수 호출
       setSelectedRollUnit(value); // 선택된 롤 단위명 초기화
     } else {
       setSelectedRollUnit([]);

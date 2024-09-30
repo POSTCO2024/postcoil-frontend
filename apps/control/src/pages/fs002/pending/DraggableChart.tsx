@@ -11,10 +11,11 @@ import {
   useMaterialStore,
   useScrollStore,
 } from '@/store/fs002store';
-import { transformedDataToChartData } from '@/utils/scheduling/chartUtils';
+import { transformedDataToDraggableChartData } from '@/utils/scheduling/chartUtils';
 
 interface DataPoint {
   name: string;
+  description?: string;
   y: number; // width | thickness 에 해당하는 값
   z: number; // working time 에 해당하는 값
   x: number; // sequence number
@@ -41,12 +42,34 @@ const DraggableChart = ({ chartName }: PropsType) => {
   const expectedDuration = useMaterialStore(
     (state) => state.scExpectedDuration,
   );
+  // const categories: string[] = [];
+  // const interval = 0.5; // 간격
+
+  // // 0부터 expectedDuration까지 interval 간격으로 라벨 생성
+  // for (let i = 0; i <= (expectedDuration as number); i += interval) {
+  //   categories.push(i.toFixed(1)); // 소수점 1자리까지 표시
+  // }
+  // z 값의 총합 계산
+  const totalWorkingTime =
+    materialData?.reduce((sum, item: MaterialDTO) => sum + item.z, 0) || 0;
+  const totalHours = Math.floor(totalWorkingTime / 60); // 60분을 기준으로 시간 단위로 변환
+
+  const categories: string[] = [];
+  const interval = 1; // 1시간 간격
+
+  // 0부터 totalHours까지 1시간 간격으로 라벨 생성
+  for (let i = 0; i <= totalHours; i += interval) {
+    categories.push(`${i}시간`);
+  }
 
   const [data, setData] = useState<DataPoint[]>([]);
 
   useEffect(() => {
     if (materialData && materialData.length > 0) {
-      const transformed = transformedDataToChartData(materialData, chartName);
+      const transformed = transformedDataToDraggableChartData(
+        materialData,
+        chartName,
+      );
       setData(transformed);
     } else {
       setData([]);
@@ -58,7 +81,7 @@ const DraggableChart = ({ chartName }: PropsType) => {
     const chartOptions: Highcharts.Options = {
       chart: {
         type: 'variwide',
-        width: (expectedDuration as number) * 3,
+        width: 72 + (expectedDuration as number) * 3, // 72: y축 라벨 너비
         height: 200, // (9 / 16) * 100 + '%', // 16:9 ratio
         // scrollablePlotArea: {
         //   minWidth: 700, // Minimum width of the plot area
@@ -74,30 +97,51 @@ const DraggableChart = ({ chartName }: PropsType) => {
         verticalAlign: 'bottom',
       },
       xAxis: {
-        type: 'category',
+        // TODO: label 고치기
+        tickInterval: 1, // 틱 간격 설정
+        // type: 'category',
         labels: {
           enabled: true, // 라벨을 표시하도록 설정
-          formatter: function (): string {
-            // 첫 번째와 마지막 인덱스일 때만 라벨을 표시
-            const index = this.pos; // 현재 포인트의 인덱스
-            const dataLength = data.length; // 데이터의 길이
-
-            if (index === 0 || index === dataLength - 1) {
-              return this.value as string; // 첫 번째 또는 마지막 인덱스일 때 라벨 표시
-            }
-            return ''; // 다른 인덱스는 빈 문자열로 설정하여 표시하지 않음
+          useHTML: true, // HTML로 렌더링
+          style: {
+            fontSize: '11px', // 글꼴 크기 조정
           },
+          // formatter: function () {
+          //   // const index = this.pos as number; // 현재 라벨의 x축 위치 값
+          //   // if (index % 1 === 0) {
+          //   //   return categories[Math.floor(index)] || ''; // 1의 배수에 해당하는 카테고리 라벨 표시
+          //   // } else {
+          //   return (this.value as number).toFixed(1); // 나머지 부분은 빈 라벨로 처리
+          // },
         },
-        categories: data.map(() =>
-          ((expectedDuration as number) / 60).toString(),
-        ), // x축 라벨로 사용할 값
+        type: 'category', // x축을 category 타입으로 유지
+        categories: categories, // 카테고리를 배열로 전달
+        gridLineWidth: 1, // Add gridlines
+        gridLineDashStyle: 'Dash',
       },
       yAxis: {
         title: {
-          text: chartName,
+          text: chartName === 'width' ? 'Width' : 'Thickness',
+          useHTML: true,
+          style: {
+            fontWeight: 'bold',
+            fontSize: '11px',
+          },
         },
         labels: {
-          enabled: false,
+          enabled: true,
+          useHTML: true, // HTML로 렌더링
+          style: {
+            textAlign: 'right', // 정렬 설정
+            fontSize: '10px', // 글꼴 크기 조정
+          },
+          formatter: function () {
+            const strValue = this.value.toString();
+            if (strValue.length > 5) {
+              return Math.floor(this.value as number).toString();
+            }
+            return `<span style="width: 25px; display: inline-block;">${strValue.padStart(5, ' ')}</span>`;
+          },
         },
         reversed: chartName === 'width' ? false : true, // Y축 반전 여부
       },
@@ -217,6 +261,20 @@ const DraggableChart = ({ chartName }: PropsType) => {
             },
           },
         },
+        // {
+        //   type: 'line',
+        //   data: [
+        //     // x값과 기준 y값을 설정
+        //     [1, 2],
+        //     [20, 9],
+        //   ],
+        //   lineWidth: 2, // 선 두께
+        //   color: '#FF0000', // 선 색상
+        //   dashStyle: 'Dash', // 선 스타일을 점선으로 설정
+        //   marker: {
+        //     enabled: false, // 마커 비활성화
+        //   },
+        // },
       ],
       plotOptions: {
         series: {
@@ -252,7 +310,7 @@ const DraggableChart = ({ chartName }: PropsType) => {
         formatter: function () {
           // 상태에 저장된 hoveredPoint와 현재 포인터를 비교하여 두 차트에서 동시 호버 구현
           const point = hoveredPoint || this.point;
-          return `<b>${point.name}</b><br/>${chartName}: <b>${point.y} mm</b><br/>작업 시간: <b>${point.z} 분</b>`;
+          return `<b>${point.description}</b><br/>${chartName}: <b>${point.y} mm</b><br/>작업 시간: <b>${point.z} 분</b>`;
         },
       },
     };
