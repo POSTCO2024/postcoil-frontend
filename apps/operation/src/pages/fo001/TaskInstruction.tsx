@@ -10,7 +10,6 @@ import DraggableChart from './result/DraggableChart';
 import DraggableChart2 from './result/DraggableChart2';
 import FilterContainer from './result/FilterContainer';
 import styles from './TaskInstruction.module.scss';
-
 export const TaskInstruction = () => {
   const [message, setMessage] = useState<string>('');
   const [client, setClient] = useState<Client | null>(null);
@@ -26,7 +25,6 @@ export const TaskInstruction = () => {
   //     console.log(error);
   //   }
   // };
-
   useEffect(() => {
     const socket = new SockJS('http://localhost:8087/coil');
     const stompClient = new Client({
@@ -59,15 +57,15 @@ export const TaskInstruction = () => {
     };
   }, []);
 
-  const sendMessage = () => {
-    if (client) {
-      // 서버의 '/app/send'로 메시지 발행
-      client.publish({
-        destination: '/app/send', // 서버의 @MessageMapping("/send")에 발행
-        body: 'Test Message from Client', // 발행할 메시지
-      });
-    }
-  };
+  // const sendMessage = () => {
+  //   if (client) {
+  //     // 서버의 '/app/send'로 메시지 발행
+  //     client.publish({
+  //       destination: '/app/send', // 서버의 @MessageMapping("/send")에 발행
+  //       body: 'Test Message from Client', // 발행할 메시지
+  //     });
+  //   }
+  // };
 
   const [isGraphVisible, setIsGraphVisible] = useState(true);
 
@@ -78,7 +76,6 @@ export const TaskInstruction = () => {
     <div className={styles.page}>
       {/* <h1 onClick={getTest}>작업 지시 전문</h1> */}
       <h1>작업 지시 전문</h1>
-      <h1 onClick={sendMessage}>작업 지시 전문</h1>
       <h1>{message}</h1>
       <FilterContainer />
       <section className={styles.tab}>
