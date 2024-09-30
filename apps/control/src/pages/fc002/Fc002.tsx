@@ -111,7 +111,7 @@ export const Fc002: React.FC = () => {
 
   // 2) 에러패스 추천
   const handleRecommendModalOpen = async () => {
-    setIsRecommendModalOpen(true); // To do: API 연결하고 제거
+    // setIsRecommendModalOpen(true); // To do: API 연결하고 제거
 
     // API 요청
     console.log('에러패스 대상: ' + JSON.stringify(errorMaterials, null, 1));
@@ -122,7 +122,7 @@ export const Fc002: React.FC = () => {
     setErrorPassMaterials(data);
     if (data.length > 0) {
       setErrorPassMaterials(data);
-      // setIsRecommendModalOpen(true);   // API 요청 후, 모달 창 열기
+      setIsRecommendModalOpen(true); // API 요청 후, 모달 창 열기
     } else {
       console.error('추천 데이터가 없습니다. ');
     }
