@@ -88,7 +88,7 @@ export const Fc001: React.FC = () => {
 
     setRowTableColumns(
       // 공정에 따라 컬럼 수정
-      columnsTableConfig[processCode] || columnsTableConfig['default'],
+      columnsTableConfig[processCode], //|| columnsTableConfig['default'],
     );
   };
 
