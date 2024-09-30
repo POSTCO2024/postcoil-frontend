@@ -39,6 +39,7 @@ export const fetchScheduleData = async ({
       `${scheduleBaseUrl}/${pageCode}/${processCode}${requestParams}`,
     );
     if (response.data && response.data.result) {
+      console.log('fetchData: ', response.data.result);
       return response.data.result;
     } else {
       throw new Error('Invalid response structure');

@@ -4,7 +4,7 @@ import { ColumnType } from 'antd/es/table';
 export interface DataType {
   key?: string | number;
   no?: string | number;
-  id?: string;
+  id?: string | number;
   [key: string]: unknown;
 }
 

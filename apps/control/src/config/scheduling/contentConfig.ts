@@ -27,4 +27,27 @@ export interface MaterialDataType extends DataType {
   goalWidth?: number | string;
   goalThickness?: number | string;
   changed?: boolean;
+  // workInstructionItem 필요 컬럼 추가 240930 by ASH
+  startTime?: string | null;
+  endTime?: string | null;
+  initialWidth?: number | string;
+  initialThickness?: number | string;
+  processedWidth?: number | string;
+  processedThickness?: number | string;
+}
+
+export interface ScheduleDataType extends DataType {
+  key?: string | number;
+  id?: number | string;
+  no?: number | string;
+  workNo: string;
+  scheduleId: number;
+  scheduleNo: string;
+  process: string;
+  rollUnit: string;
+  totalQuantity: number;
+  expectedDuration: number; // schedule 예상 소요 시간
+  startTime: string | null; // ISO 8601 형식의 날짜 문자열
+  endTime: string | null; // 종료 시간은 null일 수 있음
+  schStatus: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED'; // 스케줄 상태
 }

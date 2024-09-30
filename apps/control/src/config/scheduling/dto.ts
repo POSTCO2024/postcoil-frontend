@@ -10,7 +10,6 @@ export interface MaterialDTO {
   // 작업대상재 필드
   goalWidth?: number | string;
   goalThickness?: number | string;
-  goalLength?: number | string;
   temperature?: number | string;
   rollUnit?: string;
 
@@ -40,35 +39,27 @@ export interface ConfirmScheduleDTO {
   updateMaterials: UpdateMaterial[]; // 업데이트할 자재 배열
 }
 
-export interface WorkScheduleDTO {
-  id?: number | string;
-  scheduleNo?: string;
-  workStatus?: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED';
-  rejectQuantity?: number;
-  planDateTime?: string;
-  startTime?: string;
-  endTime?: string;
-  expectedDuration?: number | string;
-  actualDuration?: number | string;
-}
-
-interface WorkItem {
-  workItemId: number;
+export interface WorkItemDTO {
+  id: number | string;
   materialId: number;
+  materialNo: string;
   targetId: number;
   workItemStatus: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'REJECTED'; // 가능한 상태 추가
   sequence: number;
   isRejected: 'Y' | 'N';
   expectedItemDuration: number;
-  goalWidth: number;
-  thickness: number;
-  materialNo: string; // 추가
-  startTime: string; // ISO 8601 형식의 날짜 문자열
-  endTime: string | null; // 종료 시간은 null일 수 있음
+  startTime: string | null;
+  endTime: string | null;
+  initialWidth?: number;
+  initialThickness: number;
+  initialGoalWidth: number;
+  initialGoalThickness?: number;
+  processedWidth?: number;
+  processedThickness?: number;
 }
 
-interface WorkInstructionsDTO {
-  workInstructionId: number;
+export interface WorkInstructionsDTO {
+  id: number;
   workNo: string;
   scheduleId: number;
   scheduleNo: string;
@@ -79,7 +70,7 @@ interface WorkInstructionsDTO {
   startTime: string | null; // ISO 8601 형식의 날짜 문자열
   endTime: string | null; // 종료 시간은 null일 수 있음
   schStatus: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED'; // 스케줄 상태
-  items: WorkItem[]; // WorkItem 배열
+  items: WorkItemDTO[]; // WorkItem 배열
 }
 
 interface CoilSupplyDTO {
