@@ -121,8 +121,8 @@ export const useWidthThicknessData = () => {
             },
           },
           grid: {
-            left: '3%',
-            right: '4%',
+            left: '10%',
+            right: '7%',
             bottom: '3%',
             top: '10%',
             containLabel: true,
@@ -136,6 +136,9 @@ export const useWidthThicknessData = () => {
           },
           yAxis: {
             type: 'value',
+            name: '폭(mm)',
+            nameLocation: 'middle',
+            nameGap: 30,
           },
           series: [
             {
@@ -156,8 +159,8 @@ export const useWidthThicknessData = () => {
             },
           },
           grid: {
-            left: '3%',
-            right: '4%',
+            left: '10%',
+            right: '7%',
             bottom: '3%',
             top: '10%',
             containLabel: true,
@@ -171,6 +174,9 @@ export const useWidthThicknessData = () => {
           },
           yAxis: {
             type: 'value',
+            name: '두께(mm)',
+            nameLocation: 'middle',
+            nameGap: 20,
           },
           series: [
             {
