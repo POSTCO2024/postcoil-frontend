@@ -23,6 +23,7 @@
     "@dnd-kit/sortable": "^8.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@postcoil/ui": "workspace:*",
+    "@stomp/stompjs": "^7.0.0",
     "@swc/core": "1.7.10",
     "@tanstack/react-query": "5.51.23",
     "@types/antd": "1.0.0",
@@ -38,6 +39,8 @@
     "react-router-dom": "6.26.0",
     "react-transition-group": "^4.4.5",
     "sass": "1.77.8",
+    "sockjs-client": "^1.6.1",
+    "stompjs": "^2.3.3",
     "zustand": "5.0.0-rc.2"
   },
   "devDependencies": {
@@ -48,6 +51,7 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@types/react-transition-group": "^4.4.11",
+    "@types/sockjs-client": "^1.5.4",
     "@vitejs/plugin-react": "4.3.1",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "globals": "^15.9.0",
