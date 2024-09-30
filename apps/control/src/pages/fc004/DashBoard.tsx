@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Client } from '@stomp/stompjs';
-import SocketJS from 'sockjs-client';
+// import { Client } from '@stomp/stompjs';
+// import SocketJS from 'sockjs-client';
 
 // 그래프
 import { useLocation } from 'react-router-dom';
@@ -101,13 +101,15 @@ const DashBoard: React.FC = () => {
       const response = await axios.get<ApiResponse>(url);
 
       if (response.data.status === 200) {
-        return response.data.result.map((item: any, index: any) => ({
-          key: String(index + 1),
-          no: String(index + 1),
-          materialNo: item.materialNo,
-          dueDate: formatDate(item.dueDate),
-          tags: [`D-${calculateDaysLeft(item.dueDate)}`],
-        }));
+        return response.data.result
+          .slice(0, 20) // 상위 20개만 보이도록
+          .map((item: any, index: any) => ({
+            key: String(index + 1),
+            no: String(index + 1),
+            materialNo: item.materialNo,
+            dueDate: formatDate(item.dueDate),
+            tags: [`D-${calculateDaysLeft(item.dueDate)}`],
+          }));
       } else {
         console.log('Error:', response.data.resultMsg);
         return [];
@@ -167,11 +169,11 @@ const DashBoard: React.FC = () => {
 
   return (
     <div className={styles.parentDiv}>
-      <h1>공정별 작업대상재 분석</h1>
+      <h1>실시간 스케줄 모니터링</h1>
       <div className={styles.page}>
         <div className={styles.line1}>
           <div className={styles.smallCard}>
-            <h6>스케줄 작업 진행량</h6>
+            <h6>스케줄 작업 진행율</h6>
             <h3>30/50</h3>
           </div>
           <div className={styles.smallCard}>
@@ -179,7 +181,7 @@ const DashBoard: React.FC = () => {
             <h3>20</h3>
           </div>
           <div className={styles.smallCard}>
-            <h6>작업 시간</h6>
+            <h6>현재 작업 시간</h6>
             <h3>00:30:22</h3>
           </div>
           <div className={styles.smallCard}>
@@ -187,6 +189,7 @@ const DashBoard: React.FC = () => {
             <Status status="RUNNING" />
           </div>
         </div>
+        <h2>작업대상재 분석</h2>
         <div className={styles.line2}>
           <div className={styles.smallCard}>
             <BarChartV2 title="차공정" option={barchartV2Option1} />
