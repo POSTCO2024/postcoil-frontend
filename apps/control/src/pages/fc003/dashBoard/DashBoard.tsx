@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Client } from '@stomp/stompjs';
 import SocketJS from 'sockjs-client';
 
@@ -29,7 +30,8 @@ const tabDataPCM = [
   },
 ];
 
-const tabDataCAL = [
+// 데이터 받기
+const initialTabDataCAL = [
   {
     key: '1',
     label: '1CAL',
@@ -103,6 +105,8 @@ export const DashBoard: React.FC = () => {
   const [message, setMessage] = useState<string>('');
   const [client, setClient] = useState<Client | null>(null);
 
+  const [tabDataCAL, setTabDataCAL] = useState(initialTabDataCAL);
+
   useEffect(() => {
     const socket = new SocketJS('http://localhost:9090/ws/control');
     const stompClient = new Client({
@@ -115,6 +119,46 @@ export const DashBoard: React.FC = () => {
         stompClient.subscribe('/topic/coilData', (msg) => {
           setMessage(msg.body); // 웹소켓으로 받은 데이터를 상태에 저장
           console.log(msg.body);
+
+          const data = JSON.parse(msg.body);
+          setMessage(msg.body);
+          console.log(data);
+
+          // Process
+          const process = data?.TotalSuplly?.process;
+
+          if (process === '1CAL' || process === '2CAL') {
+            const updatedTabData = tabDataCAL.map((item) => {
+              if (item.label === process) {
+                return {
+                  ...item,
+                  percent:
+                    (data.TotalSuplly.totalCompleteCoils /
+                      data.TotalSuplly.totalGoalCoils) *
+                    100,
+                  tableData: [
+                    {
+                      key: '2',
+                      column: '목표 수량',
+                      value: data.TotalSupply.totalGoalCoils.toString(),
+                    },
+                    {
+                      key: '3',
+                      column: '작업 완료',
+                      value: data.TotalSupply.totalCompleteCoils.toString(),
+                    },
+                    {
+                      key: '4',
+                      column: '작업 예정',
+                      value: data.TotalSupply.totalScheduledCoils.toString(),
+                    },
+                  ],
+                };
+              }
+              return item;
+            });
+            return setTabDataCAL(updatedTabData); // 업데이트된 값으로 상태 변경
+          }
         });
       },
       onDisconnect: () => {
