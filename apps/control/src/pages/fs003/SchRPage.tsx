@@ -1,16 +1,25 @@
 import { Tab } from '@postcoil/ui';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import AnalyzeChart from './result/AnalyzeChart';
+import Chart from './result/Chart';
 import styles from './SchRPage.module.scss';
 
 import ContentContainer from '@/pages/fs003/result/ContentContainer';
-import DraggableChart from '@/pages/fs003/result/DraggableChart';
-import DraggableChart2 from '@/pages/fs003/result/DraggableChart2';
 import FilterContainer from '@/pages/fs003/result/FilterContainer';
+import {
+  initializeWebSocket,
+  useWorkInstructionStore,
+} from '@/store/fs003store';
 
 const SchRPage = () => {
   const [isGraphVisible, setIsGraphVisible] = useState(true);
+  const fetchData = useWorkInstructionStore((state) => state.fetchData!);
+
+  useEffect(() => {
+    initializeWebSocket(); // 웹소켓 초기화
+    fetchData(['1CAL']);
+  }, []);
 
   const handleTabChange = () => {
     setIsGraphVisible((prevState) => !prevState);
@@ -26,8 +35,8 @@ const SchRPage = () => {
       <div className={styles.result}>
         {isGraphVisible ? (
           <div className={styles.charts}>
-            <DraggableChart2 />
-            <DraggableChart />
+            <Chart chartName="width" />
+            <Chart chartName="thickness" />
           </div>
         ) : (
           <ContentContainer />

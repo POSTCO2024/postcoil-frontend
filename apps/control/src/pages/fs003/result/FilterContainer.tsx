@@ -1,149 +1,92 @@
 import { RedoOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { Dropdown } from '@postcoil/ui';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import styles from './FilterContainer.module.scss';
 
-import { ScheduleInfoDTO } from '@/config/scheduling/dto';
-import { useScheduleStore } from '@/store/fs003store';
-
-interface dropDownOptionType {
-  value: string;
-  // label을 ReactNode로 지정하여 jsx형식 return이 가능케함
-  label: React.ReactNode;
-  icon?: React.ReactNode;
-}
-
-interface OptionType {
-  value: string;
-  label: string;
-  icon?: React.ReactNode;
-}
+import { dropDownOptionType } from '@/config/scheduling/dropdownConfig';
+import { ClientDTO } from '@/config/scheduling/dto';
+import { useWorkInstructionStore } from '@/store/fs003store';
+import { options } from '@/utils/scheduling/dropdownUtils';
+import { mockRollUnitName } from '@/utils/scheduling/MockDropdown';
 
 const FilterContainer = () => {
-  const scheduleData = useScheduleStore(
-    (state) => state.data as ScheduleInfoDTO[],
-  ); // Schedule data 세팅
-  const cleanScheduleData = useScheduleStore((state) => state.cleanData); // cleanData 함수 추가
-  const fetchScheduleData = useScheduleStore((state) => state.fetchData); // fetch Schedule data
-  // const fetchMaterialData = useMaterialStore((state) => state.fetchData); // fetch Material data
-
-  // rollUnitName을 관리할 state 추가
-  const [rollUnitOptions, setRollUnitOptions] = useState<dropDownOptionType[]>(
-    [],
+  const fetchData = useWorkInstructionStore((state) => state.fetchData!);
+  const selectedProcessCode = useWorkInstructionStore(
+    (state) => state.processCode!,
   );
-  const [selectedRollUnit, setSelectedRollUnit] = useState<
-    string[] | undefined
-  >([]); // 선택된 롤 단위명 상태 추가
+  const setData = useWorkInstructionStore(
+    (state) => state.setData!, // processCode 업데이트 함수
+  );
+  const selectedData = useWorkInstructionStore((state) =>
+    selectedProcessCode === '1CAL'
+      ? (state.data as ClientDTO[])
+      : (state.data2 as ClientDTO[]),
+  );
 
-  const options: OptionType[] = [
-    {
-      value: '1CAL',
-      label: '1CAL',
-    },
-    {
-      value: '2CAL',
-      label: '2CAL',
-    },
-  ];
+  const generateDynamicRollUnitOptions = (
+    data: ClientDTO[],
+  ): dropDownOptionType[] => {
+    return data.map((client) => {
+      const scheduleNo = client.workInstructions.scheduleNo;
+      const schStatus = client.workInstructions.schStatus;
+
+      return {
+        value: scheduleNo,
+        label: (
+          <div>
+            {schStatus === 'IN_PROGRESS' ? (
+              <RedoOutlined spin style={{ color: '#1677ff' }} />
+            ) : (
+              <ClockCircleOutlined style={{ color: '#1677ff' }} />
+            )}
+            <span style={{ marginLeft: 10 }}>{scheduleNo}</span>
+          </div>
+        ),
+        icon:
+          schStatus === 'IN_PROGRESS' ? (
+            <RedoOutlined />
+          ) : (
+            <ClockCircleOutlined />
+          ),
+      };
+    });
+  };
+
+  // 선택된 processCode에 따라 fetch 해 온 옵션 생성
+  const scheduleNoList = selectedData
+    ? generateDynamicRollUnitOptions(selectedData)
+    : [];
+
+  const [processCode, setProcessCode] = useState<string[]>([
+    selectedProcessCode,
+  ]);
+
+  const [selectedRollUnitName, setSelectedRollUnitName] = useState<string[]>([
+    scheduleNoList[0].value,
+  ]);
 
   const handleProcessCode = (value?: string[]) => {
-    if (value && value[0] !== '') {
-      setRollUnitOptions([]); // rollUnitName 초기화
-      fetchScheduleData(value[0]); // fetchData 함수 호출
+    if (value && value[0] !== '' && value[0] !== selectedProcessCode) {
+      setProcessCode(value); // rollUnitName 초기화
+      fetchData(value); // fetchData 함수 호출
     } else {
-      cleanScheduleData();
+      setProcessCode([]);
     }
   };
 
-  // 스케줄 데이터 변경 시 rollUnitName을 업데이트
-  useEffect(() => {
-    if (scheduleData && scheduleData.length > 0) {
-      const newRollUnitOptions = scheduleData.map(
-        (d: { id: string; scheduleNo: string; workStatus?: string }) => {
-          let icon = null;
-          const color = '#1677ff'; // 공통 색상
-
-          // workStatus에 따라 아이콘 설정
-          if (d.workStatus === 'IN_PROGRESS') {
-            icon = <RedoOutlined spin style={{ color }} />;
-          } else if (d.workStatus === 'PENDING') {
-            icon = <ClockCircleOutlined style={{ color }} />;
-          }
-
-          return {
-            value: d.id,
-            label: (
-              <div>
-                {icon}
-                <span style={{ marginLeft: 10 }}>{d.scheduleNo}</span>
-              </div>
-            ),
-            icon,
-          };
-        },
+  const handleRollUnitChange = (value?: string[]) => {
+    if (value && value[0] !== '') {
+      setSelectedRollUnitName(value);
+      setData(
+        selectedData.filter(
+          (item) => item.workInstructions.scheduleNo === value[0],
+        )[0],
       );
-      setRollUnitOptions(newRollUnitOptions);
     } else {
-      setRollUnitOptions([]);
+      setSelectedRollUnitName([]);
     }
-    setSelectedRollUnit([]);
-  }, [scheduleData]);
-
-  const mockRollUnitName: dropDownOptionType[] = [
-    {
-      value: '1CAL001A',
-      label: (
-        <div>
-          {/* 아이콘추가 부분 */}
-          <RedoOutlined spin style={{ color: '#1677ff' }} />
-          <span style={{ marginLeft: 10 }}>{'1CAL001A'}</span>
-        </div>
-      ),
-      icon: <RedoOutlined />,
-    },
-    {
-      value: '1CAL001B',
-      label: (
-        <div>
-          <ClockCircleOutlined style={{ color: '#1677ff' }} />
-          <span style={{ marginLeft: 10 }}>{'1CAL001B'}</span>
-        </div>
-      ),
-      icon: <ClockCircleOutlined />,
-    },
-    {
-      value: '1CAL002A',
-      label: (
-        <div>
-          <ClockCircleOutlined style={{ color: '#1677ff' }} />
-          <span style={{ marginLeft: 10 }}>{'1CAL002A'}</span>
-        </div>
-      ),
-      icon: <ClockCircleOutlined />,
-    },
-    {
-      value: '1CAL002B',
-      label: (
-        <div>
-          <ClockCircleOutlined style={{ color: '#1677ff' }} />
-          <span style={{ marginLeft: 10 }}>{'1CAL002B'}</span>
-        </div>
-      ),
-      icon: <ClockCircleOutlined />,
-    },
-    {
-      value: '1CAL003B',
-      label: (
-        <div>
-          <ClockCircleOutlined style={{ color: '#1677ff' }} />
-          <span style={{ marginLeft: 10 }}>{'1CAL003B'}</span>
-        </div>
-      ),
-      icon: <ClockCircleOutlined />,
-    },
-    // Add more options...
-  ];
+  };
 
   return (
     <div className={styles.filterContainer}>
@@ -152,13 +95,14 @@ const FilterContainer = () => {
           title="공정명"
           options={options}
           onChange={handleProcessCode}
+          value={processCode}
         />
-        {/* TODO: Dropdown 데이터 변경, 함수 받게 */}
       </div>
       <Dropdown
         title="스케줄명"
-        options={rollUnitOptions ? rollUnitOptions : mockRollUnitName}
-        value={selectedRollUnit}
+        options={selectedData?.length > 0 ? scheduleNoList : mockRollUnitName}
+        value={selectedRollUnitName}
+        onChange={handleRollUnitChange} // 스케줄 선택 시 데이터 매핑 처리
       />
     </div>
   );
