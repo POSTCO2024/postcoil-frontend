@@ -19,12 +19,20 @@ export const optionsDropdown1 = [
     label: '2CAL',
   },
   {
-    value: 'EGL',
-    label: 'EGL',
+    value: '1EGL',
+    label: '1EGL',
   },
   {
-    value: 'CGL',
-    label: 'CGL',
+    value: '2EGL',
+    label: '2EGL',
+  },
+  {
+    value: '1CGL',
+    label: '1CGL',
+  },
+  {
+    value: '2CGL',
+    label: '2CGL',
   },
 ];
 

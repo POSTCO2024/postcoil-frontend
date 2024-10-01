@@ -3,7 +3,7 @@ import React from 'react';
 import './CommonModal.scss';
 
 interface PropsType {
-  title?: string;
+  title?: string | React.ReactNode;
   isModalOpen: boolean;
   isConfirmation?: boolean;
   isButtonNeeded?: boolean;

@@ -25,11 +25,11 @@ interface DataType {
 // Table Columns 설정
 const columns: TableColumnsType<DataType> = [
   {
-    title: 'col',
+    title: '작업 현황',
     dataIndex: 'column',
   },
   {
-    title: 'val',
+    title: '작업량(개)',
     dataIndex: 'value',
   },
 ];

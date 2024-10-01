@@ -307,6 +307,114 @@ export const columnsTableConfig: {
       key: '2packing',
     },
   ],
+  '1EGL': [
+    {
+      title: '품명', // Row Header Title
+      dataIndex: 'coilTypeCode',
+      key: 'key',
+    },
+    {
+      title: '총 합계',
+      dataIndex: 'totalCnt',
+      key: 'total',
+    },
+    {
+      title: '1CGL',
+      dataIndex: 'proc1EGL',
+      key: 'egl1',
+    },
+    {
+      title: '2EGL',
+      dataIndex: 'proc2EGL',
+      key: 'egl2',
+    },
+    {
+      title: '1냉연 포장',
+      dataIndex: 'proc1Packing',
+      key: '1packing',
+    },
+    {
+      title: '2냉연 포장',
+      dataIndex: 'proc2Packing',
+      key: '2packing',
+    },
+  ],
+  '2EGL': [
+    {
+      title: '품명', // Row Header Title
+      dataIndex: 'coilTypeCode',
+      key: 'key',
+    },
+    {
+      title: '총 합계',
+      dataIndex: 'totalCnt',
+      key: 'total',
+    },
+    {
+      title: '1CGL',
+      dataIndex: 'proc1EGL',
+      key: 'egl1',
+    },
+    {
+      title: '2EGL',
+      dataIndex: 'proc2EGL',
+      key: 'egl2',
+    },
+    {
+      title: '1냉연 포장',
+      dataIndex: 'proc1Packing',
+      key: '1packing',
+    },
+    {
+      title: '2냉연 포장',
+      dataIndex: 'proc2Packing',
+      key: '2packing',
+    },
+  ],
+  '1CGL': [
+    {
+      title: '품명', // Row Header Title
+      dataIndex: 'coilTypeCode',
+      key: 'key',
+    },
+    {
+      title: '총 합계',
+      dataIndex: 'totalCnt',
+      key: 'total',
+    },
+    {
+      title: '1냉연 포장',
+      dataIndex: 'proc1Packing',
+      key: '1packing',
+    },
+    {
+      title: '2냉연 포장',
+      dataIndex: 'proc2Packing',
+      key: '2packing',
+    },
+  ],
+  '2CGL': [
+    {
+      title: '품명', // Row Header Title
+      dataIndex: 'coilTypeCode',
+      key: 'key',
+    },
+    {
+      title: '총 합계',
+      dataIndex: 'totalCnt',
+      key: 'total',
+    },
+    {
+      title: '1냉연 포장',
+      dataIndex: 'proc1Packing',
+      key: '1packing',
+    },
+    {
+      title: '2냉연 포장',
+      dataIndex: 'proc2Packing',
+      key: '2packing',
+    },
+  ],
   default: [
     // Default
     {

@@ -1,14 +1,17 @@
 import { Dropdown, SearchBar, Input, SearchButton } from '@postcoil/ui';
+import axios from 'axios';
 import React, { useState } from 'react';
 
-import axios from 'axios';
-
 import styles from './TopBar.module.scss';
+
 import {
   optionsDropdown1,
   optionsDropdown2,
 } from '@/utils/control/topBarUtils';
 import { transformData } from '@/utils/control/transformData';
+
+const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
+const controlBaseUrl = import.meta.env.VITE_CONTROL_BASE_URL;
 
 interface TopBarProps {
   onProcessChange: (processCode: string) => void;
@@ -79,9 +82,7 @@ export const TopBar: React.FC<TopBarProps> = ({
     console.log('Search Keyword: ' + value);
     try {
       const url =
-        `http://localhost:8086/api/v1/target-materials/search?` +
-        `currProc=` +
-        selectedProcess +
+        `${controlApiUrl}${controlBaseUrl}/target-materials/search?currProc=${selectedProcess}` +
         `&searchCriteria=` +
         (selectedSearch || '') +
         `&searchValue=` +

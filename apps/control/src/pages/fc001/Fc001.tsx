@@ -5,9 +5,12 @@ import React, { useState, useEffect } from 'react';
 import styles from './Fc001.module.scss';
 import { RowheaderTable } from './rowheadertable/RowheaderTable';
 import { TopBar } from './topBar/TopBar';
-import { transformData, ApiResponseItem } from '@/utils/control/transformData';
 
 import { columnsList, columnsTableConfig } from '@/utils/control/fc001Utils';
+import { transformData, ApiResponseItem } from '@/utils/control/transformData';
+
+const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
+const controlBaseUrl = import.meta.env.VITE_CONTROL_BASE_URL;
 
 export interface ApiResponse {
   status: number;
@@ -22,7 +25,7 @@ export interface RowTableData {
 
 // 1) 작업대상재 목록(List) 조회
 async function getTable(processCode: string): Promise<any[]> {
-  const url = `http://localhost:8086/api/v1/target-materials/normal-by-curr-proc?currProc=${processCode}`;
+  const url = `${controlApiUrl}${controlBaseUrl}/target-materials/normal-by-curr-proc?currProc=${processCode}`;
   try {
     const response = await axios.get<ApiResponse>(url);
     if (response.data.status === 200) {
@@ -40,7 +43,7 @@ async function getTable(processCode: string): Promise<any[]> {
 
 // 2) 작업대상재 표(table) 조회
 async function getRowTable(): Promise<any[]> {
-  const url = `http://localhost:8086/api/v1/target-materials/nextProcTable`;
+  const url = `${controlApiUrl}${controlBaseUrl}/target-materials/nextProcTable`;
   try {
     const response = await axios.get<ApiResponse>(url);
     if (response.data.status == 200) {
@@ -86,7 +89,7 @@ export const Fc001: React.FC = () => {
 
     setRowTableColumns(
       // 공정에 따라 컬럼 수정
-      columnsTableConfig[processCode] || columnsTableConfig['default'],
+      columnsTableConfig[processCode], //|| columnsTableConfig['default'],
     );
   };
 

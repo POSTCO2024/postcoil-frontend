@@ -1,7 +1,10 @@
+import { Client } from '@stomp/stompjs';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-// 그래프
 import { useLocation } from 'react-router-dom';
+import SocketJS from 'sockjs-client';
+
+// 그래프
 
 import BarChartV2 from './chart/BarChartV2';
 import DonutChart from './chart/DonutChart';
@@ -13,76 +16,79 @@ import Status from './chart/Status';
 import styles from './DashBoard.module.scss';
 
 import {
-  barchartV2Option,
   // piechartOption,
   // donutchartOption,
-  rowbarchartOption,
   // doublebarchartOption1,
   // doublebarchartOption2,
+  rowbarchartOption,
+  barchartV2Option1,
+  // barchartV2Option2,
 } from '@/config/DashBoard/DashBoardConfig';
 import {
   useOrderData,
   useWidthThicknessData,
+  useRollUnitData,
 } from '@/pages/fc004/useChartData';
+
+const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
+const controlBaseUrl = import.meta.env.VITE_CONTROL_BASE_URL;
+// const websocketApiUrl = import.meta.env.VIEE_WEBSOCKET_API_URL;
+// const websocketBaseUrl = import.meta.env.VITE_WEBSOCKET_CONTROL_BASE;
+
+// Interface
+// API response
+interface ApiResponse<T = any> {
+  status: number;
+  resultMsg: string;
+  result: T;
+}
+
+// 에러 비율
+interface ErrorDataType {
+  errorCount: number;
+  normalCount: number;
+}
+
+// 생산 마감일
+interface DueDateDataType {
+  key: string;
+  no: string;
+  materialNo: string;
+  dueDate: string;
+  tags: string[];
+}
 
 const DashBoard: React.FC = () => {
   // 선택한 공정
   const location = useLocation();
   const selectedProc = location.pathname.split('/')[2];
 
-  // 품종/고객사
-  const [coilTypeOption, setCoilTypeOption] = useState<Record<
-    string,
-    unknown
-  > | null>(null);
-  const [customerNameOption, setCustomerNameOption] = useState<Record<
-    string,
-    unknown
-  > | null>(null);
-  const fetchOrderData = useOrderData();
-
-  // 폭/두께
-  // const [chartOptions, setChartOptions] = useState<{
-  //   width: number;
-  //   thickness: number;
-  // } | null>(null);
-  // const fetchMaterialData = useMaterialData();
-  const fetchChartData = useWidthThicknessData();
+  // State 관리
+  const [coilTypeOption, setCoilTypeOption] =
+    useState<echarts.EChartsOption | null>(null); // 품종
+  const [customerNameOption, setCustomerNameOption] =
+    useState<echarts.EChartsOption | null>(null); // 고객사
   const [widthOption, setWidthOption] =
-    useState<echarts.EChartsCoreOption | null>(null);
+    useState<echarts.EChartsCoreOption | null>(null); // 폭
   const [thicknessOption, setThicknessOption] =
-    useState<echarts.EChartsCoreOption | null>(null);
-
-  // 에러 비율
-  interface ApiResponse<T = any> {
-    status: number;
-    resultMsg: string;
-    result: T;
-  }
-
-  interface DataType {
-    errorCount: number;
-    normalCount: number;
-  }
-  const [errorNormalData, setErrorNormalData] = useState<DataType | null>(null);
-
-  // 생산 마감일
-  interface DueDataType {
-    key: string;
-    no: string;
-    materialNo: string;
-    dueDate: string;
-    tags: string[];
-  }
-
-  const [dueDate, setDueDate] = useState<DueDataType[]>([]);
+    useState<echarts.EChartsCoreOption | null>(null); // 두께
+  const [errorNormalData, setErrorNormalData] = useState<ErrorDataType | null>(
+    null,
+  ); // 에러재
+  const [dueDate, setDueDate] = useState<DueDateDataType[]>([]); // 생산 기한일
+  const [rollUnitOption, setRollUnitOption] =
+    useState<echarts.EChartsCoreOption | null>(null); // 롤 단위
 
   // API 호출
+  const fetchWidthThicknessData = useWidthThicknessData(); // 폭/두께
+  const fetchOrderData = useOrderData(); // 품종/고객사
+  const fetchRollUnitData = useRollUnitData(); // 롤 단위
+
   // 에러재 비율
   const fetchErrorNormalCount = async () => {
-    const url = `http://localhost:8086/api/v1/dashboard/error_count?currProc=${selectedProc}`;
+    const url = `${controlApiUrl}${controlBaseUrl}/dashboard/error_count?currProc=${selectedProc}`;
     try {
-      const response = await axios.get<ApiResponse<DataType>>(url);
+      const response = await axios.get<ApiResponse<ErrorDataType>>(url);
       if (response.data.status === 200) {
         setErrorNormalData(response.data.result); // API 결과를 상태에 저장
       }
@@ -93,17 +99,20 @@ const DashBoard: React.FC = () => {
 
   //생산 마감일
   const fetchDueDateTable = async () => {
-    const url = `http://localhost:8086/api/v1/dashboard/dueDate?currProc=${selectedProc}`;
+    const url = `${controlApiUrl}${controlBaseUrl}/dashboard/dueDate?currProc=${selectedProc}`;
     try {
       const response = await axios.get<ApiResponse>(url);
+
       if (response.data.status === 200) {
-        return response.data.result.map((item: any, index: any) => ({
-          key: String(index + 1),
-          no: String(index + 1),
-          materialNo: item.materialNo,
-          dueDate: formatDate(item.dueDate),
-          tags: [`D-${calculateDaysLeft(item.dueDate)}`],
-        }));
+        return response.data.result
+          .slice(0, 20) // 상위 20개만 보이도록
+          .map((item: any, index: any) => ({
+            key: String(index + 1),
+            no: String(index + 1),
+            materialNo: item.materialNo,
+            dueDate: formatDate(item.dueDate),
+            tags: [`D-${calculateDaysLeft(item.dueDate)}`],
+          }));
       } else {
         console.log('Error:', response.data.resultMsg);
         return [];
@@ -115,6 +124,7 @@ const DashBoard: React.FC = () => {
   };
 
   const calculateDaysLeft = (dueDate: string) => {
+    // for D-DAY
     const today = new Date();
     const due = new Date(dueDate);
     const timeDiff = due.getTime() - today.getTime();
@@ -125,24 +135,20 @@ const DashBoard: React.FC = () => {
     return new Date(dueDate).toISOString().split('T')[0];
   };
 
-  // const { chartOptions } = useMaterialData(selectedProc);
-  // const widthOptions = chartOptions?.width;
-  // const thicknessOptions = chartOptions?.thickness;
-
+  // Rendering
   const render = async () => {
     // 품종/고객사
     console.log('selectedProc: ' + selectedProc);
     const orderResult = await fetchOrderData(selectedProc);
-
-    setCoilTypeOption(orderResult?.coilTypeOptionResult ?? null);
-    setCustomerNameOption(orderResult?.customerNameOptionResult ?? null);
+    setCoilTypeOption(
+      (orderResult?.coilTypeOptionResult as echarts.EChartsOption) ?? null,
+    );
+    setCustomerNameOption(
+      (orderResult?.customerNameOptionResult as echarts.EChartsOption) ?? null,
+    );
 
     // 폭/두께
-    // const materialResult = await fetchMaterialData(selectedProc);
-    // setChartOptions(
-    //   materialResult?.setChartOptions ?? { width: {}, thickness: {} }
-    // );
-    const materialResult = await fetchChartData(selectedProc);
+    const materialResult = await fetchWidthThicknessData(selectedProc);
     if (materialResult) {
       setWidthOption(materialResult.widthOptionResult);
       setThicknessOption(materialResult.thicknessOptionResult);
@@ -154,42 +160,87 @@ const DashBoard: React.FC = () => {
     // 마감일 정보
     const tableData = await fetchDueDateTable();
     setDueDate(tableData);
+
+    // 롤 단위
+    const rollUnitResult = await fetchRollUnitData(selectedProc);
+    setRollUnitOption(rollUnitResult);
   };
 
   useEffect(() => {
     render();
   }, [selectedProc]); // selectedProc이 변경될 때마다 실행
 
+  // 웹소켓
+  const [message, setMessage] = useState<string>('');
+  const [client, setClient] = useState<Client | null>(null);
+
+  useEffect(() => {
+    const socket = new SocketJS('http://localhost:9090/ws/control');
+    const stompClient = new Client({
+      webSocketFactory: () => socket as any,
+      debug: (str) => {
+        console.log(str);
+      },
+      onConnect: () => {
+        console.log('Conneted Socket! ');
+        stompClient.subscribe('/topic/coilData', (msg) => {
+          setMessage(msg.body); // 웹소켓으로 받은 데이터를 상태에 저장
+          console.log(message); // 수정
+        });
+      },
+      onDisconnect: () => {
+        console.log('Disconnected from WebSocket');
+      },
+      onStompError: (error) => {
+        console.error('STOMP error: ', error);
+      },
+    });
+
+    // WebSocket 연결 활성화
+    stompClient.activate();
+    setClient(stompClient);
+    console.log(client);
+
+    return () => {
+      if (stompClient) {
+        stompClient.deactivate();
+      }
+    };
+  }, []);
+
   return (
     <div className={styles.parentDiv}>
-      <h1>공정별 작업대상재 분석</h1>
+      <h1>실시간 스케줄 모니터링</h1>
       <div className={styles.page}>
         <div className={styles.line1}>
           <div className={styles.smallCard}>
-            <h6>스케줄 작업 진행량</h6>
+            <h6>스케줄 작업 진행율</h6>
             <h3>30/50</h3>
           </div>
           <div className={styles.smallCard}>
-            <h6>예정 작업량</h6>
+            <h6>작업 예정</h6>
             <h3>20</h3>
           </div>
           <div className={styles.smallCard}>
-            <h6>작업 시간</h6>
+            <h6>현재 작업 시간</h6>
             <h3>00:30:22</h3>
           </div>
           <div className={styles.smallCard}>
-            <h6>설비 이상</h6>
+            {/* <h6>설비 이상</h6> */}
+            <Status status="RUNNING" />
           </div>
         </div>
+        <h2>작업대상재 분석</h2>
         <div className={styles.line2}>
           <div className={styles.smallCard}>
-            <BarChartV2 option={barchartV2Option} />
+            <BarChartV2 title="차공정" option={barchartV2Option1} />
+          </div>
+          <div className={styles.smallCard}>
+            <BarChartV2 title="롤 단위" option={rollUnitOption} />
           </div>
           <div className={styles.smallCard}>
             <RowbarChart option={rowbarchartOption} />
-          </div>
-          <div className={styles.smallCard}>
-            <Status />
+            {/* <Status status={message.equipmentStatus} /> */}
           </div>
           <div className={styles.smallCard}>
             <List data={dueDate} />

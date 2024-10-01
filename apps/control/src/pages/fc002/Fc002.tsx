@@ -12,6 +12,10 @@ import CommonModal from '@/components/common/CommonModal';
 import { columnsData } from '@/utils/control/fc002Utils';
 import { transformData, ApiResponseItem } from '@/utils/control/transformData';
 
+const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
+const controlBaseUrl = import.meta.env.VITE_CONTROL_BASE_URL;
+const modelApiUrl = import.meta.env.VITE_MODEL_API_URL;
+
 // API
 export interface ApiResponse {
   status: number;
@@ -21,7 +25,7 @@ export interface ApiResponse {
 
 // 1. 에러재 목록 조회
 async function getErrorMaterialData(processCode: string): Promise<any[]> {
-  const url = `http://localhost:8086/api/v1/control/error-materials/error-by-curr-proc?currProc=${processCode}`;
+  const url = `${controlApiUrl}${controlBaseUrl}/error-materials/error-by-curr-proc?currProc=${processCode}`;
   try {
     const response = await axios.get<ApiResponse>(url);
     if (response.data.status === 200) {
@@ -39,7 +43,7 @@ async function getErrorMaterialData(processCode: string): Promise<any[]> {
 
 // 2. 에러패스
 async function updateIsError(data: React.Key[]) {
-  const url = `http://localhost:8086//api/v1/control/error-materials/errorpass`;
+  const url = `${controlApiUrl}${controlBaseUrl}/error-materials/errorpass`;
   try {
     const response = await axios.put(url, data);
     console.log(response.data.result);
@@ -52,7 +56,7 @@ async function updateIsError(data: React.Key[]) {
 
 // 3. 에러패스 추천
 async function getErrorPassRecommend(data: any) {
-  const url = `http://192.168.0.8:8000/errorpass`;
+  const url = `${modelApiUrl}/errorpass/recomend`;
   try {
     const response = await axios.post(url, data, {
       headers: {
@@ -108,7 +112,7 @@ export const Fc002: React.FC = () => {
 
   // 2) 에러패스 추천
   const handleRecommendModalOpen = async () => {
-    setIsRecommendModalOpen(true); // To do: API 연결하고 제거
+    // setIsRecommendModalOpen(true); // To do: API 연결하고 제거
 
     // API 요청
     console.log('에러패스 대상: ' + JSON.stringify(errorMaterials, null, 1));
@@ -119,7 +123,7 @@ export const Fc002: React.FC = () => {
     setErrorPassMaterials(data);
     if (data.length > 0) {
       setErrorPassMaterials(data);
-      // setIsRecommendModalOpen(true);   // API 요청 후, 모달 창 열기
+      setIsRecommendModalOpen(true); // API 요청 후, 모달 창 열기
     } else {
       console.error('추천 데이터가 없습니다. ');
     }
@@ -221,14 +225,19 @@ export const Fc002: React.FC = () => {
         onClick={handleRecommendModalOpen}>
         에러패스 추천
       </Button>
+
       <CommonModal
-        title="에러패스 추천 재료"
+        title={
+          <span style={{ fontSize: '1.3em', fontWeight: 'bold' }}>
+            에러패스 추천 재료
+          </span>
+        }
         isModalOpen={isRecommendModalOpen}
         onCancel={() => setIsRecommendModalOpen(false)} // 추천 모달 닫기
         onApply={handleRecommendModalOk} // '사용' 버튼을 눌렀을 때 실행
         isButtonNeeded={false}
         width={1500}>
-        <div className={styles.table}>
+        <div className={styles.table} style={{ margin: '20px 0' }}>
           <Table
             useCheckBox={true}
             columns={columnsData}
@@ -244,24 +253,36 @@ export const Fc002: React.FC = () => {
         </div>
         <p
           style={{
-            fontSize: '1.7rem',
+            fontSize: '1.8rem',
             textAlign: 'center',
             marginTop: '20px',
           }}>
           추천 재료를 사용하시겠습니까?
         </p>
-        <Button
-          type="primary"
-          className={styles.modalFooter}
-          onClick={handleRecommendModalOk}>
-          사용
-        </Button>
-        <Button
-          type="default"
-          className={styles.modalFooter}
-          onClick={() => setIsRecommendModalOpen(false)}>
-          미사용
-        </Button>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            marginTop: '20px',
+            margin: '20px',
+          }}>
+          <Button
+            type="primary"
+            style={{ borderRadius: '5px', padding: '10px 20px' }}
+            onClick={handleRecommendModalOk}>
+            사용
+          </Button>
+          <Button
+            type="default"
+            style={{
+              marginLeft: '5px',
+              borderRadius: '5px',
+              padding: '10px 20px',
+            }}
+            onClick={() => setIsRecommendModalOpen(false)}>
+            미사용
+          </Button>
+        </div>
       </CommonModal>
 
       <Button type="primary" className={styles.btn} onClick={handleModalOpen}>
