@@ -18,6 +18,7 @@ import React, { useState, useContext, useMemo, useEffect } from 'react';
 import styles from './ContentContainer.module.scss';
 
 import { MaterialDataType } from '@/config/scheduling/contentConfig';
+import { MaterialDTO } from '@/config/scheduling/dto';
 import { useMaterialStore } from '@/store/fs002store';
 import {
   materialColumnData,
@@ -92,7 +93,7 @@ const Row: React.FC<RowProps> = (props) => {
 };
 
 const ContentContainer = () => {
-  const materialData = useMaterialStore((state) => state.data);
+  const materialData = useMaterialStore((state) => state.data as MaterialDTO[]);
   const updateData = useMaterialStore((state) => state.updateData!);
 
   const [dataSource, setDataSource] = useState<MaterialDataType[]>([]);

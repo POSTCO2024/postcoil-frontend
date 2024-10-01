@@ -40,7 +40,8 @@ export interface ConfirmScheduleDTO {
 }
 
 export interface WorkItemDTO {
-  id: number | string;
+  id?: number | string;
+  workItemId?: number | string;
   materialId: number;
   materialNo: string;
   targetId: number;
@@ -54,12 +55,17 @@ export interface WorkItemDTO {
   initialThickness: number;
   initialGoalWidth: number;
   initialGoalThickness?: number;
-  processedWidth?: number;
-  processedThickness?: number;
+  temperature: number;
+  preProc?: string;
+  nextProc?: string;
+  width?: number;
+  thickness?: number;
+  coilTypeCode?: string;
 }
 
 export interface WorkInstructionsDTO {
-  id: number;
+  id?: number;
+  workInstructionId?: number;
   workNo: string;
   scheduleId: number;
   scheduleNo: string;
@@ -73,7 +79,7 @@ export interface WorkInstructionsDTO {
   items: WorkItemDTO[]; // WorkItem 배열
 }
 
-interface CoilSupplyDTO {
+export interface CoilSupplyDTO {
   coilSupplyId: number | null;
   workInstructionId: number;
   workStatus: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED';
@@ -84,10 +90,12 @@ interface CoilSupplyDTO {
 }
 
 export interface ClientDTO {
-  WorkInfo: {
-    workInstructions: WorkInstructionsDTO;
-  };
-  CoilSupply: {
-    coilSupply: CoilSupplyDTO;
-  };
+  workInstructions: WorkInstructionsDTO;
+  coilSupply: CoilSupplyDTO;
+  countCoilTypeCode: any; // 품종을 몰라서~
+}
+
+interface CoilTypeCode {
+  HTS400?: number;
+  HTS300?: number;
 }

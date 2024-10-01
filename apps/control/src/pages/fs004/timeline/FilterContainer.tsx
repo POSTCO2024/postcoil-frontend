@@ -4,17 +4,7 @@ import { useState } from 'react';
 import styles from './FilterContainer.module.scss';
 
 import { useWorkInstructionStore } from '@/store/fs004store';
-
-// interface PropsType {
-//   process: {
-//     title: string; // 공정명
-//     options: string[]; // ['1CAL', '2CAL', 'EGL']
-//   };
-
-interface OptionType {
-  value: string;
-  label: string;
-}
+import { options } from '@/utils/scheduling/dropdownUtils';
 
 const FilterContainer = () => {
   const selectedProcessCode = useWorkInstructionStore(
@@ -22,7 +12,7 @@ const FilterContainer = () => {
   );
 
   const fetchWorkInstructionData = useWorkInstructionStore(
-    (state) => state.fetchData,
+    (state) => state.fetchData!,
   ); // fetch Schedule data
 
   const [processCode, setProcessCode] = useState<string[] | undefined>();
@@ -35,16 +25,6 @@ const FilterContainer = () => {
     }
   };
 
-  const options: OptionType[] = [
-    {
-      value: '1CAL',
-      label: '1CAL',
-    },
-    {
-      value: '2CAL',
-      label: '2CAL',
-    },
-  ];
   return (
     <div className={styles.filterContainer}>
       <div className={styles.dropdown}>
@@ -59,10 +39,6 @@ const FilterContainer = () => {
       <div className={styles.datepicker}>
         <DatePicker />
       </div>
-      {/* <Button text="조회" onClick={handleSearch} /> */}
-      {/* <SearchBar /> */}
-      {/* TODO: searchbar 함수 받게! */}
-      {/* <Button text="검색" onClick={handleFilter} /> */}
     </div>
   );
 };

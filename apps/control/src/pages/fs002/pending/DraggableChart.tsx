@@ -34,7 +34,7 @@ interface PropsType {
 
 const DraggableChart = ({ chartName }: PropsType) => {
   const id = 'draggableChart-' + chartName;
-  const materialData = useMaterialStore((state) => state.data);
+  const materialData = useMaterialStore((state) => state.data as MaterialDTO[]);
   const title = useMaterialStore((state) => state.scheduleNo);
   const updateData = useMaterialStore((state) => state.updateData!);
   const { hoveredPoint, setHoveredPoint } = useHoverStore();
@@ -50,8 +50,7 @@ const DraggableChart = ({ chartName }: PropsType) => {
   //   categories.push(i.toFixed(1)); // 소수점 1자리까지 표시
   // }
   // z 값의 총합 계산
-  const totalWorkingTime =
-    materialData?.reduce((sum, item: MaterialDTO) => sum + item.z, 0) || 0;
+  const totalWorkingTime = expectedDuration ? (expectedDuration as number) : 0;
   const totalHours = Math.floor(totalWorkingTime / 60); // 60분을 기준으로 시간 단위로 변환
 
   const categories: string[] = [];

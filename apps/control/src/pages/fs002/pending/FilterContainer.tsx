@@ -3,39 +3,25 @@ import { useEffect, useState } from 'react';
 
 import styles from './FilterContainer.module.scss';
 
+import { OptionType } from '@/config/scheduling/dropdownConfig';
 import { ScheduleInfoDTO } from '@/config/scheduling/dto';
 import { useScheduleStore, useMaterialStore } from '@/store/fs002store';
-
-interface OptionType {
-  value: string;
-  label: string;
-}
+import { options } from '@/utils/scheduling/dropdownUtils';
 
 const FilterContainer = () => {
   const scheduleData = useScheduleStore(
     (state) => state.data as ScheduleInfoDTO[],
   ); // Schedule data 세팅
-  const cleanScheduleData = useScheduleStore((state) => state.cleanData); // cleanData 함수 추가
-  const cleanMaterialData = useMaterialStore((state) => state.cleanData); // cleanData 함수 추가
-  const fetchScheduleData = useScheduleStore((state) => state.fetchData); // fetch Schedule data
-  const fetchMaterialData = useMaterialStore((state) => state.fetchData); // fetch Material data
+  const cleanScheduleData = useScheduleStore((state) => state.cleanData!); // cleanData 함수 추가
+  const cleanMaterialData = useMaterialStore((state) => state.cleanData!); // cleanData 함수 추가
+  const fetchScheduleData = useScheduleStore((state) => state.fetchData!); // fetch Schedule data
+  const fetchMaterialData = useMaterialStore((state) => state.fetchData!); // fetch Material data
 
   // rollUnitName을 관리할 state 추가
   const [rollUnitOptions, setRollUnitOptions] = useState<OptionType[]>([]);
   const [selectedRollUnit, setSelectedRollUnit] = useState<
     string[] | undefined
   >([]); // 선택된 롤 단위명 상태 추가
-
-  const options: OptionType[] = [
-    {
-      value: '1CAL',
-      label: '1CAL',
-    },
-    {
-      value: '2CAL',
-      label: '2CAL',
-    },
-  ];
 
   const handleProcessCode = (value?: string[]) => {
     if (value && value[0] !== '') {
