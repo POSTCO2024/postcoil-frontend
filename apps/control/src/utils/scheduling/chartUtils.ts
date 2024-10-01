@@ -46,3 +46,26 @@ export const transformedDataToTimelineChartData = (
     color: item.isRejected === 'Y' ? '#ff9382' : 'lightgray',
   }));
 };
+
+export const transformedDataToResultChartData = (
+  data: WorkItemDTO[],
+  name?: 'width' | 'thickness',
+) => {
+  // sequence 순서에 따라 data를 정렬
+  const sortedData = data.sort(
+    (a, b) => (a.sequence as number) - (b.sequence as number),
+  );
+
+  return sortedData.map((item) => ({
+    name: item.workItemId as string,
+    description: item.materialNo as string,
+    y:
+      name === 'width'
+        ? (item.initialGoalWidth as number)
+        : (item.initialThickness as number),
+    z: item.expectedItemDuration as number,
+    x: item.sequence as number,
+    id: item.workItemId as string,
+    color: item.isRejected === 'Y' ? '#ff9382' : 'lightgray',
+  }));
+};
