@@ -224,14 +224,19 @@ export const Fc002: React.FC = () => {
         onClick={handleRecommendModalOpen}>
         에러패스 추천
       </Button>
+
       <CommonModal
-        title="에러패스 추천 재료"
+        title={
+          <span style={{ fontSize: '1.3em', fontWeight: 'bold' }}>
+            에러패스 추천 재료
+          </span>
+        }
         isModalOpen={isRecommendModalOpen}
         onCancel={() => setIsRecommendModalOpen(false)} // 추천 모달 닫기
         onApply={handleRecommendModalOk} // '사용' 버튼을 눌렀을 때 실행
         isButtonNeeded={false}
         width={1500}>
-        <div className={styles.table}>
+        <div className={styles.table} style={{ margin: '20px 0' }}>
           <Table
             useCheckBox={true}
             columns={columnsData}
@@ -247,24 +252,36 @@ export const Fc002: React.FC = () => {
         </div>
         <p
           style={{
-            fontSize: '1.7rem',
+            fontSize: '1.8rem',
             textAlign: 'center',
             marginTop: '20px',
           }}>
           추천 재료를 사용하시겠습니까?
         </p>
-        <Button
-          type="primary"
-          className={styles.modalFooter}
-          onClick={handleRecommendModalOk}>
-          사용
-        </Button>
-        <Button
-          type="default"
-          className={styles.modalFooter}
-          onClick={() => setIsRecommendModalOpen(false)}>
-          미사용
-        </Button>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            marginTop: '20px',
+            margin: '20px',
+          }}>
+          <Button
+            type="primary"
+            style={{ borderRadius: '5px', padding: '10px 20px' }}
+            onClick={handleRecommendModalOk}>
+            사용
+          </Button>
+          <Button
+            type="default"
+            style={{
+              marginLeft: '5px',
+              borderRadius: '5px',
+              padding: '10px 20px',
+            }}
+            onClick={() => setIsRecommendModalOpen(false)}>
+            미사용
+          </Button>
+        </div>
       </CommonModal>
 
       <Button type="primary" className={styles.btn} onClick={handleModalOpen}>
