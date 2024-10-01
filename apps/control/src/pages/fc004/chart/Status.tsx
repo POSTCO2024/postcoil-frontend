@@ -8,8 +8,6 @@ interface StatusProps {
 }
 
 const Status: React.FC<StatusProps> = ({ status }) => {
-  if (status == 'RUNNING') {
-  }
   return (
     <div className={styles.statusContainer}>
       {/* <h4>설비 이상</h4> */}

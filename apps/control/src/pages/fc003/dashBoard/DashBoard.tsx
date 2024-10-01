@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
 import { Client } from '@stomp/stompjs';
+import React, { useState, useEffect } from 'react';
 import SocketJS from 'sockjs-client';
 
 import Board from './board/Board';

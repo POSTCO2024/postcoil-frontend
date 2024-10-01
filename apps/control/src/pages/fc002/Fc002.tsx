@@ -7,9 +7,10 @@ import SockJS from 'sockjs-client';
 
 import styles from './Fc002.module.scss';
 import { TopBar } from './topBar/TopBar';
-import { transformData, ApiResponseItem } from '@/utils/control/transformData';
+
 import CommonModal from '@/components/common/CommonModal';
 import { columnsData } from '@/utils/control/fc002Utils';
+import { transformData, ApiResponseItem } from '@/utils/control/transformData';
 
 const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
 const controlBaseUrl = import.meta.env.VITE_CONTROL_BASE_URL;

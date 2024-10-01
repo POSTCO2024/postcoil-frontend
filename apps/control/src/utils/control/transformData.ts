@@ -44,8 +44,39 @@ export interface ApiResponse {
   resultMsg?: string;
 }
 
+// 변환할 데이터의 타입 정의
+export interface TransformedData {
+  targetId: string;
+  materialNo: string;
+  errorType: string;
+  factoryCode: string;
+  materialType: string;
+  opCode: string;
+  progress: string;
+  thickness: number;
+  width: number;
+  length: number;
+  weight: number;
+  passProc: string;
+  remProc: string;
+  preProc: string;
+  nextProc: string;
+  storageLoc: string;
+  yard: string;
+  coilTypeCode: string;
+  orderNo: string;
+  customerName: string;
+  goalWidth: number;
+  goalThickness: number;
+  goalLength: number;
+  dueDate: string;
+  remarks: string;
+}
+
 // 변환
-export const transformData = (apiData: ApiResponseItem[]): any[] => {
+export const transformData = (
+  apiData: ApiResponseItem[],
+): TransformedData[] => {
   return apiData.map((item) => ({
     targetId: item.targetId,
     materialNo: item.material.no,

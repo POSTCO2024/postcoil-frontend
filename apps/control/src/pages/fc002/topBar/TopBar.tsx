@@ -1,8 +1,9 @@
 import { Dropdown, SearchBar, Input, SearchButton } from '@postcoil/ui';
-import React, { useState } from 'react';
 import axios from 'axios';
+import React, { useState } from 'react';
 
 import styles from './TopBar.module.scss';
+
 import {
   optionsDropdown1,
   optionsDropdown2,

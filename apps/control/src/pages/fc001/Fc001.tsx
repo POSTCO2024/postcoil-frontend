@@ -5,8 +5,9 @@ import React, { useState, useEffect } from 'react';
 import styles from './Fc001.module.scss';
 import { RowheaderTable } from './rowheadertable/RowheaderTable';
 import { TopBar } from './topBar/TopBar';
-import { transformData, ApiResponseItem } from '@/utils/control/transformData';
+
 import { columnsList, columnsTableConfig } from '@/utils/control/fc001Utils';
+import { transformData, ApiResponseItem } from '@/utils/control/transformData';
 
 const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
 const controlBaseUrl = import.meta.env.VITE_CONTROL_BASE_URL;
