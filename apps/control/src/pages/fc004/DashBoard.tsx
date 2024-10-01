@@ -29,6 +29,9 @@ import {
   useRollUnitData,
 } from '@/pages/fc004/useChartData';
 
+const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
+const controlBaseUrl = import.meta.env.VITE_CONTROL_BASE_URL;
+
 // Interface
 // API response
 interface ApiResponse<T = any> {
@@ -80,7 +83,7 @@ const DashBoard: React.FC = () => {
 
   // 에러재 비율
   const fetchErrorNormalCount = async () => {
-    const url = `http://localhost:8086/api/v1/dashboard/error_count?currProc=${selectedProc}`;
+    const url = `${controlApiUrl}${controlBaseUrl}/dashboard/error_count?currProc=${selectedProc}`;
     try {
       const response = await axios.get<ApiResponse<ErrorDataType>>(url);
       if (response.data.status === 200) {
@@ -93,7 +96,7 @@ const DashBoard: React.FC = () => {
 
   //생산 마감일
   const fetchDueDateTable = async () => {
-    const url = `http://localhost:8086/api/v1/dashboard/dueDate?currProc=${selectedProc}`;
+    const url = `${controlApiUrl}${controlBaseUrl}/dashboard/dueDate?currProc=${selectedProc}`;
     try {
       const response = await axios.get<ApiResponse>(url);
 

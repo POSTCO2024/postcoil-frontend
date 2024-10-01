@@ -1,12 +1,15 @@
 // src/hooks/useChartData.ts
 import axios from 'axios';
 
+const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
+const controlBaseUrl = import.meta.env.VITE_CONTROL_BASE_URL;
+
 // 품종/고객사 비율(DonutChart)
 export const useOrderData = () => {
   return async (currProc: string) => {
     try {
       const response = await axios.get(
-        'http://localhost:8086/api/v1/dashboard/order?currProc=' + currProc,
+        `${controlApiUrl}${controlBaseUrl}/dashboard/order?currProc=${currProc}`,
       );
       if (response.status === 200) {
         const result = response.data.result;
@@ -96,8 +99,7 @@ export const useWidthThicknessData = () => {
   return async (selectedProc: string) => {
     try {
       const response = await axios.get(
-        `http://localhost:8086/api/v1/dashboard/distribution?currProc=` +
-          selectedProc,
+        `${controlApiUrl}${controlBaseUrl}/dashboard/distribution?currProc=${selectedProc}`,
       );
       if (response.status === 200) {
         const result = response.data.result;
@@ -197,8 +199,7 @@ export const useRollUnitData = () => {
   return async (selectedProc: string) => {
     try {
       const response = await axios.get(
-        'http://localhost:8086/api/v1/dashboard/rollUnit?currProc=' +
-          selectedProc,
+        `${controlApiUrl}${controlBaseUrl}/dashboard/rollUnit?currProc=${selectedProc}`,
       );
 
       // console.log('API 응답 데이터:', response.data); // API 응답 확인

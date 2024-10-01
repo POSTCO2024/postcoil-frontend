@@ -7,10 +7,13 @@ import SockJS from 'sockjs-client';
 
 import styles from './Fc002.module.scss';
 import { TopBar } from './topBar/TopBar';
-
+import { transformData, ApiResponseItem } from '@/utils/control/transformData';
 import CommonModal from '@/components/common/CommonModal';
 import { columnsData } from '@/utils/control/fc002Utils';
-import { transformData, ApiResponseItem } from '@/utils/control/transformData';
+
+const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
+const controlBaseUrl = import.meta.env.VITE_CONTROL_BASE_URL;
+const modelApiUrl = import.meta.env.VITE_MODEL_API_URL;
 
 // API
 export interface ApiResponse {
@@ -21,7 +24,7 @@ export interface ApiResponse {
 
 // 1. 에러재 목록 조회
 async function getErrorMaterialData(processCode: string): Promise<any[]> {
-  const url = `http://localhost:8086/api/v1/control/error-materials/error-by-curr-proc?currProc=${processCode}`;
+  const url = `${controlApiUrl}${controlBaseUrl}/error-materials/error-by-curr-proc?currProc=${processCode}`;
   try {
     const response = await axios.get<ApiResponse>(url);
     if (response.data.status === 200) {
@@ -39,7 +42,7 @@ async function getErrorMaterialData(processCode: string): Promise<any[]> {
 
 // 2. 에러패스
 async function updateIsError(data: React.Key[]) {
-  const url = `http://localhost:8086//api/v1/control/error-materials/errorpass`;
+  const url = `${controlApiUrl}${controlBaseUrl}/error-materials/errorpass`;
   try {
     const response = await axios.put(url, data);
     console.log(response.data.result);
@@ -52,7 +55,7 @@ async function updateIsError(data: React.Key[]) {
 
 // 3. 에러패스 추천
 async function getErrorPassRecommend(data: any) {
-  const url = `http://192.168.0.8:8000/errorpass`;
+  const url = `${modelApiUrl}/errorpass/recomend`;
   try {
     const response = await axios.post(url, data, {
       headers: {
