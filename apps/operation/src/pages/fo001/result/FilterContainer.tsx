@@ -1,6 +1,8 @@
 import { RedoOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { Dropdown } from '@postcoil/ui';
 import { Button } from '@postcoil/ui/components/atoms/Button';
+import { RedButton } from '@postcoil/ui/components/atoms/RedButton';
+import axios from 'axios';
 
 import styles from './FilterContainer.module.scss';
 
@@ -90,6 +92,35 @@ const FilterContainer = () => {
     // Add more options...
   ];
 
+  // 보급버튼 함수
+  const requestCoil = async (workInstructionId: string) => {
+    try {
+      const response = await axios.post(
+        'http://localhost:8087' +
+          '/api/coil-work/request-supply/' +
+          workInstructionId +
+          '?supplyCount=1',
+      );
+    } catch (errors) {
+      console.log(errors);
+    }
+  };
+
+  // Reject 함수
+  const rejectCoil = async (workInstructionId: any, id: any) => {
+    try {
+      const response = await axios.post(
+        'http://localhost:8087' +
+          '/api/coil-work/reject/' +
+          workInstructionId +
+          '/' +
+          id,
+      );
+    } catch (errors) {
+      console.log(errors);
+    }
+  };
+
   return (
     <div className={styles.filterContainer}>
       <div className={styles.dropdown}>
@@ -101,9 +132,16 @@ const FilterContainer = () => {
         조회
       </Button> */}
       <div className={styles.btns}>
-        <Button text={'보급요구'} style={true} />
-        <Button text={'REJECT'} style={true} />
-        <Button text={'긴급정지'} style={true} />
+        <Button
+          text={'보급요구'}
+          style={true}
+          onClick={() => requestCoil('workInstructionId')}
+        />
+        <RedButton
+          text={'REJECT'}
+          style={true}
+          onClick={() => rejectCoil('workInstructionId', 'id')}
+        />
       </div>
     </div>
   );

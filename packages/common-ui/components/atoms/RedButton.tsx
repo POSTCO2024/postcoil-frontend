@@ -1,7 +1,7 @@
 import { Button as AntButton } from 'antd';
 import React from 'react';
 
-import styles from './Button.module.scss';
+import styles from './RedButton.module.scss';
 
 // info
 // props: 버튼 안의 텍스트와 버튼 클릭 시 발생 이벤트 함수를 전달
@@ -14,7 +14,7 @@ interface ButtonProps {
   style?: boolean;
 }
 
-export const Button: React.FC<ButtonProps> = ({ text, onClick, style }) => {
+export const RedButton: React.FC<ButtonProps> = ({ text, onClick, style }) => {
   return (
     <div className={styles.buttonContainer}>
       <AntButton
@@ -27,11 +27,11 @@ export const Button: React.FC<ButtonProps> = ({ text, onClick, style }) => {
                 console.log(text + ' Click');
               }
         }
-        style={style ? { width: 90, backgroundColor: '#1677FF' } : undefined}>
+        style={style ? { width: 90, backgroundColor: '#F5004F' } : undefined}>
         {text}
       </AntButton>
     </div>
   );
 };
 
-export default Button;
+export default RedButton;

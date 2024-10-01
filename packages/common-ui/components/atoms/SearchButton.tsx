@@ -1,6 +1,6 @@
-import React from 'react';
 import { SearchOutlined } from '@ant-design/icons';
 import { Button, Flex } from 'antd';
+import React from 'react';
 
 interface SearchBottonProps {
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
