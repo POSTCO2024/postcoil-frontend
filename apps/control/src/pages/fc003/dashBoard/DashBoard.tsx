@@ -1,9 +1,13 @@
 import { Client } from '@stomp/stompjs';
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import SocketJS from 'sockjs-client';
 
 import Board from './board/Board';
 import styles from './DashBoard.module.scss';
+
+const operationApiUrl = import.meta.env.VITE_OPERATION_API_URL;
+const operationBaseUrl = import.meta.env.VITE_OPERATION_BASE_URL;
 
 // Tab Dataset
 const tabDataPCM = [
@@ -30,28 +34,28 @@ const tabDataPCM = [
 ];
 
 // 데이터 받기
-const initialTabDataCAL = [
-  {
-    key: '1',
-    label: '1CAL',
-    percent: 42,
-    tableData: [
-      { key: '2', column: '목표 수량', value: '100' },
-      { key: '3', column: '작업 완료', value: '42' },
-      { key: '4', column: '작업 예정', value: '64' },
-    ],
-  },
-  {
-    key: '2',
-    label: '2CAL',
-    percent: 80,
-    tableData: [
-      { key: '2', column: '목표 수량', value: '130' },
-      { key: '3', column: '작업 완료', value: '30' },
-      { key: '4', column: '작업 예정', value: '100' },
-    ],
-  },
-];
+// const initialTabDataCAL = [
+//   {
+//     key: '1',
+//     label: '1CAL',
+//     percent: 42,
+//     tableData: [
+//       { key: '2', column: '목표 수량', value: '100' },
+//       { key: '3', column: '작업 완료', value: '42' },
+//       { key: '4', column: '작업 예정', value: '64' },
+//     ],
+//   },
+//   {
+//     key: '2',
+//     label: '2CAL',
+//     percent: 80,
+//     tableData: [
+//       { key: '2', column: '목표 수량', value: '130' },
+//       { key: '3', column: '작업 완료', value: '30' },
+//       { key: '4', column: '작업 예정', value: '100' },
+//     ],
+//   },
+// ];
 
 const tabDataEGL = [
   {
@@ -100,12 +104,55 @@ const tabDataCGL = [
 ];
 
 export const DashBoard: React.FC = () => {
-  // 웹소켓
   // const [message, setMessage] = useState<string>('');
   const [client, setClient] = useState<Client | null>(null);
+  const [tabDataCAL, setTabDataCAL] = useState<any[]>([]);
 
-  const [tabDataCAL, setTabDataCAL] = useState(initialTabDataCAL);
+  // API 요청
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      try {
+        const url = `${operationApiUrl}${operationBaseUrl}/monitoring/summary`;
+        const response = await axios.get(url);
 
+        if (response.data.status === 200) {
+          const result = response.data.result;
+
+          const initialTabDataCAL = result.map((item: any) => ({
+            key: item.process === '1CAL' ? '1' : '2',
+            label: item.process,
+            percent: (item.totalCompleteCoils / item.totalGoalCoils) * 100,
+            tableData: [
+              {
+                key: '2',
+                column: '목표 수량',
+                value: item.totalGoalCoils.toString(),
+              },
+              {
+                key: '3',
+                column: '작업 완료',
+                value: item.totalCompleteCoils.toString(),
+              },
+              {
+                key: '4',
+                column: '작업 예정',
+                value: item.totalScheduledCoils.toString(),
+              },
+            ],
+          }));
+          setTabDataCAL(initialTabDataCAL);
+        } else {
+          console.log(`Error: ${response.data.resultMsg}`);
+        }
+      } catch (error) {
+        console.error('Error fetching initial data: ', error);
+      }
+    };
+
+    fetchInitialData(); // 컴포넌트 마운트 시 API 데이터 가져오기
+  }, []);
+
+  // 웹소켓
   useEffect(() => {
     const socket = new SocketJS('http://localhost:9090/ws/control');
     const stompClient = new Client({
@@ -124,7 +171,7 @@ export const DashBoard: React.FC = () => {
 
           // Process
           const process = data?.TotalSuplly?.process;
-
+          console.log('process:' + process);
           if (process === '1CAL' || process === '2CAL') {
             const updatedTabData = tabDataCAL.map((item) => {
               if (item.label === process) {

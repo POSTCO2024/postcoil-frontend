@@ -35,7 +35,15 @@ const columns: TableColumnsType<DataType> = [
 ];
 
 export const Board: React.FC<BoardProps> = ({ tabData }) => {
-  const [activeKey, setActiveKey] = useState<string>(tabData[0].key);
+  // const [activeKey, setActiveKey] = useState<string>(tabData[0].key);
+
+  const [activeKey, setActiveKey] = useState<string>(
+    tabData.length > 0 ? tabData[0].key : '',
+  );
+  // tabData가 비었을 경우 아무것도 렌더링하지 않도록 처리
+  if (tabData.length === 0) {
+    return <div>데이터가 없습니다.</div>;
+  }
 
   return (
     <div className={styles.board}>
