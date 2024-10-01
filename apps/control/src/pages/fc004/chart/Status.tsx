@@ -1,4 +1,4 @@
-import { Progress, Result } from 'antd';
+import { Result } from 'antd';
 import React from 'react';
 
 import styles from './Status.module.scss';

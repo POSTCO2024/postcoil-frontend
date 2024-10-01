@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Client } from '@stomp/stompjs';
 import SocketJS from 'sockjs-client';
 
@@ -102,7 +101,7 @@ const tabDataCGL = [
 
 export const DashBoard: React.FC = () => {
   // 웹소켓
-  const [message, setMessage] = useState<string>('');
+  // const [message, setMessage] = useState<string>('');
   const [client, setClient] = useState<Client | null>(null);
 
   const [tabDataCAL, setTabDataCAL] = useState(initialTabDataCAL);
@@ -117,11 +116,10 @@ export const DashBoard: React.FC = () => {
       onConnect: () => {
         console.log('Conneted Socket! ');
         stompClient.subscribe('/topic/coilData', (msg) => {
-          setMessage(msg.body); // 웹소켓으로 받은 데이터를 상태에 저장
+          // setMessage(msg.body); // 웹소켓으로 받은 데이터를 상태에 저장
           console.log(msg.body);
 
           const data = JSON.parse(msg.body);
-          setMessage(msg.body);
           console.log(data);
 
           // Process

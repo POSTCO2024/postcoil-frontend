@@ -12,7 +12,7 @@ const BarChartV2: React.FC<BarChartV2Props> = ({ title, option }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    console.log(); // option 값 확인
+    console.log(option); // option 값 확인
     if (chartRef.current && option) {
       let myChart = echarts.getInstanceByDom(chartRef.current); // 기존 차트 인스턴스 가져오기
       if (myChart) {
@@ -27,6 +27,7 @@ const BarChartV2: React.FC<BarChartV2Props> = ({ title, option }) => {
         }
       };
     }
+    return void 0;
   }, [option]);
 
   return (

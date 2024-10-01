@@ -184,7 +184,7 @@ const DashBoard: React.FC = () => {
         console.log('Conneted Socket! ');
         stompClient.subscribe('/topic/coilData', (msg) => {
           setMessage(msg.body); // 웹소켓으로 받은 데이터를 상태에 저장
-          console.log(msg.body);
+          console.log(message); // 수정
         });
       },
       onDisconnect: () => {
