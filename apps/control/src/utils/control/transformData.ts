@@ -35,6 +35,7 @@ export interface ApiResponseItem {
   errorType: string;
   material: MaterialDTO;
   order: OrderDTO;
+  remarks: string;
 }
 
 export interface ApiResponse {
@@ -70,7 +71,7 @@ export const transformData = (apiData: ApiResponseItem[]): any[] => {
     goalThickness: item.order.thickness,
     goalLength: item.order.length,
     dueDate: formatDate(item.order.dueDate),
-    remarks: item.order.remarks,
+    remarks: item.remarks,
   }));
 };
 

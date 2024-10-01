@@ -1,14 +1,16 @@
 import { Table } from '@postcoil/ui';
+import { Client } from '@stomp/stompjs';
 import { Button } from 'antd';
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import SockJS from 'sockjs-client';
 
 import styles from './Fc002.module.scss';
 import { TopBar } from './topBar/TopBar';
-import { transformData, ApiResponseItem } from '@/utils/control/transformData';
 
 import CommonModal from '@/components/common/CommonModal';
 import { columnsData } from '@/utils/control/fc002Utils';
+import { transformData, ApiResponseItem } from '@/utils/control/transformData';
 
 // API
 export interface ApiResponse {
@@ -19,7 +21,7 @@ export interface ApiResponse {
 
 // 1. 에러재 목록 조회
 async function getErrorMaterialData(processCode: string): Promise<any[]> {
-  const url = `http://localhost:8086/api/v1/error-materials/error-by-curr-proc?currProc=${processCode}`;
+  const url = `http://localhost:8086/api/v1/control/error-materials/error-by-curr-proc?currProc=${processCode}`;
   try {
     const response = await axios.get<ApiResponse>(url);
     if (response.data.status === 200) {
@@ -37,7 +39,7 @@ async function getErrorMaterialData(processCode: string): Promise<any[]> {
 
 // 2. 에러패스
 async function updateIsError(data: React.Key[]) {
-  const url = `http://localhost:8086/control/errorpass`;
+  const url = `http://localhost:8086//api/v1/control/error-materials/errorpass`;
   try {
     const response = await axios.put(url, data);
     console.log(response.data.result);
@@ -76,6 +78,7 @@ export const Fc002: React.FC = () => {
   const [selectedProcessCode, setSelectedProcessCode] =
     useState<string>('1PCM');
   const [selectedRows, setSelectedRows] = useState<any[]>([]); // Checked Rows
+  const [client, setClient] = useState<Client | null>(null);
 
   // 검색 결과 처리
   const handleSearchResults = (searchResults: any[]) => {
@@ -138,6 +141,7 @@ export const Fc002: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       const data = await getErrorMaterialData(selectedProcessCode);
+      console.log(data);
       setErrorMaterials(data);
     };
     fetchData();
@@ -148,6 +152,45 @@ export const Fc002: React.FC = () => {
     setSelectedProcessCode(processCode);
   };
 
+  useEffect(() => {
+    const socket = new SockJS('http://localhost:8086/ws/control');
+    const stompClient = new Client({
+      webSocketFactory: () => socket as any,
+      debug: (str) => {
+        console.log(str);
+      },
+      onConnect: () => {
+        console.log('연결되었습니다');
+        stompClient.subscribe('/topic/errorMessage', (msg) => {
+          const paredMessage = JSON.parse(msg.body);
+          console.log('paredMessage : ' + JSON.stringify(paredMessage));
+          console.log('errorMaterials : ' + JSON.stringify(errorMaterials));
+          const newMaterials = errorMaterials.map((item) =>
+            item.materialNo === paredMessage.materialNo
+              ? { ...item, remarks: paredMessage.comment } // 조건이 맞으면 새로운 객체 반환
+              : item,
+          );
+          setErrorMaterials(newMaterials);
+        });
+      },
+      onDisconnect: () => {
+        console.log('Disconnected from WebSocket');
+      },
+      onStompError: (error) => {
+        console.error('STOMP error: ', error);
+      },
+    });
+    stompClient.activate();
+    setClient(stompClient);
+    console.log(client);
+    // 컴포넌트 언마운트 시 WebSocket 연결 해제
+    return () => {
+      if (stompClient) {
+        stompClient.deactivate();
+      }
+    };
+  }, []);
+  console.log(errorMaterials);
   return (
     <div className={styles.boardContainer}>
       <h1>공정별 에러재 관리</h1>

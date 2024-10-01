@@ -10,10 +10,10 @@ import DraggableChart from './result/DraggableChart';
 import DraggableChart2 from './result/DraggableChart2';
 import FilterContainer from './result/FilterContainer';
 import styles from './TaskInstruction.module.scss';
-
 export const TaskInstruction = () => {
   const [message, setMessage] = useState<string>('');
   const [client, setClient] = useState<Client | null>(null);
+
   // 테스트용 url, url 로 요청하면 결과값을 웹소켓으로 쏴주도록 함
   // const getTest = async () => {
   //   try {
