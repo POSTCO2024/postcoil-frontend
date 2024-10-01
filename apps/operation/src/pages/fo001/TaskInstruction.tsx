@@ -26,7 +26,7 @@ export const TaskInstruction = () => {
   //   }
   // };
   useEffect(() => {
-    const socket = new SockJS('http://localhost:8087/coil');
+    const socket = new SockJS('http://localhost:8087/ws/operation');
     const stompClient = new Client({
       webSocketFactory: () => socket as any,
       debug: (str) => {
@@ -34,7 +34,7 @@ export const TaskInstruction = () => {
       },
       onConnect: () => {
         console.log('연결되었습니다');
-        stompClient.subscribe('/topic/coilData', (msg) => {
+        stompClient.subscribe('/topic/work-instruction', (msg) => {
           setMessage(msg.body);
           console.log(msg.body);
         });
