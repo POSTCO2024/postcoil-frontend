@@ -11,7 +11,9 @@ import {
   facilityData,
   columnMapping,
 } from '@/config/management/extMConfig';
-import { url } from '@/config/UrlConfig';
+
+const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
+
 // // TODO: fetch data from API
 // const extractions: DataType = {
 //   공장코드: 100,
@@ -35,7 +37,7 @@ import { url } from '@/config/UrlConfig';
 async function getExtraction(facility: string) {
   try {
     const response = await axios.get(
-      url + '/api/v1/management/extraction/' + facility,
+      controlApiUrl + '/api/v1/management/extraction/' + facility,
     );
     return response.data.criteriaDetails;
   } catch (error) {

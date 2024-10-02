@@ -7,7 +7,8 @@ import styles from './Result.module.scss';
 
 import CommonModal from '@/components/common/CommonModal';
 import { keyMapping } from '@/config/management/errMConfig';
-import { url } from '@/config/UrlConfig';
+
+const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
 
 interface PropsType {
   title: string;
@@ -52,7 +53,7 @@ const Result = ({
   const postStandard = async (data: any) => {
     console.log(data);
     await axios
-      .post(url + '/api/v1/management/error/' + facility, data)
+      .post(controlApiUrl + '/api/v1/management/error/' + facility, data)
       .then((response) => {
         console.log(response);
       })

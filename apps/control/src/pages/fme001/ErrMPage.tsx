@@ -13,12 +13,13 @@ import {
   infoErrColumn,
   columnMapping,
 } from '@/config/management/errMConfig';
-import { url } from '@/config/UrlConfig';
+
+const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
 
 async function getErrorStandard(facility: string) {
   try {
     const response = await axios.get(
-      url + '/api/v1/management/error/' + facility,
+      controlApiUrl + '/api/v1/management/error/' + facility,
     );
     return response.data.criteriaDetails;
   } catch (error) {
