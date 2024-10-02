@@ -37,13 +37,13 @@ const columns: TableColumnsType<DataType> = [
 export const Board: React.FC<BoardProps> = ({ tabData }) => {
   // const [activeKey, setActiveKey] = useState<string>(tabData[0].key);
 
-  const [activeKey, setActiveKey] = useState<string>(
-    tabData.length > 0 ? tabData[0].key : '',
-  );
+  // const nodeRef = useRef(null);
+  const [activeKey, setActiveKey] = useState<string>('1');
+
   // tabData가 비었을 경우 아무것도 렌더링하지 않도록 처리
-  if (tabData.length === 0) {
-    return <div>데이터가 없습니다.</div>;
-  }
+  // if (tabData.length === 0) {
+  //   return <div>데이터가 없습니다.</div>;
+  // }
 
   return (
     <div className={styles.board}>
@@ -51,7 +51,6 @@ export const Board: React.FC<BoardProps> = ({ tabData }) => {
       {/* Tabs 컴포넌트에 onChange 핸들러 연결 */}
       <Tabs
         className={styles.tab}
-        defaultActiveKey={tabData[0].key} // 기본값
         activeKey={activeKey}
         onChange={(key) => setActiveKey(key)}
         items={tabData.map((tab) => ({
@@ -62,6 +61,7 @@ export const Board: React.FC<BoardProps> = ({ tabData }) => {
       {/* == Rerendering 효과 == */}
       <SwitchTransition>
         <CSSTransition
+          // nodeRef={nodeRef}
           key={activeKey}
           timeout={200}
           classNames={{
