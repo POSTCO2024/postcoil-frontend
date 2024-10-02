@@ -10,6 +10,13 @@ import { Result } from 'antd';
 const operationApiUrl = import.meta.env.VITE_OPERATION_API_URL;
 const operationBaseUrl = import.meta.env.VITE_OPERATION_BASE_URL;
 
+interface FactoryDashboard {
+  process: string;
+  totalCompleteCoils: number;
+  totalGoalCoils: number;
+  totalScheduledCoils: number;
+}
+
 // Tab Dataset
 const tabDataPCM = [
   {
@@ -35,28 +42,28 @@ const tabDataPCM = [
 ];
 
 // 데이터 받기
-// const initialTabDataCAL = [
-//   {
-//     key: '1',
-//     label: '1CAL',
-//     percent: 42,
-//     tableData: [
-//       { key: '2', column: '목표 수량', value: '100' },
-//       { key: '3', column: '작업 완료', value: '42' },
-//       { key: '4', column: '작업 예정', value: '64' },
-//     ],
-//   },
-//   {
-//     key: '2',
-//     label: '2CAL',
-//     percent: 80,
-//     tableData: [
-//       { key: '2', column: '목표 수량', value: '130' },
-//       { key: '3', column: '작업 완료', value: '30' },
-//       { key: '4', column: '작업 예정', value: '100' },
-//     ],
-//   },
-// ];
+const initialTabDataCAL = [
+  {
+    key: '1',
+    label: '1CAL',
+    percent: 0, // 기본값 설정
+    tableData: [
+      { key: '2', column: '목표 수량', value: '0' },
+      { key: '3', column: '작업 완료', value: '0' },
+      { key: '4', column: '작업 예정', value: '0' },
+    ],
+  },
+  {
+    key: '2',
+    label: '2CAL',
+    percent: 0, // 기본값 설정
+    tableData: [
+      { key: '2', column: '목표 수량', value: '0' },
+      { key: '3', column: '작업 완료', value: '0' },
+      { key: '4', column: '작업 예정', value: '0' },
+    ],
+  },
+];
 
 const tabDataEGL = [
   {
@@ -107,7 +114,7 @@ const tabDataCGL = [
 export const DashBoard: React.FC = () => {
   // const [message, setMessage] = useState<string>('');
   const [client, setClient] = useState<Client | null>(null);
-  const [tabDataCAL, setTabDataCAL] = useState<any[]>([]);
+  const [tabDataCAL, setTabDataCAL] = useState<any[]>(initialTabDataCAL);
 
   // API 요청
   useEffect(() => {
@@ -121,37 +128,15 @@ export const DashBoard: React.FC = () => {
         if (response.data.status === 200) {
           const result = response.data.result;
 
-          // 1CAL과 2CAL 데이터를 초기화
-          const initialTabDataCAL = [
-            {
-              key: '1',
-              label: '1CAL',
-              percent: 0, // 기본값 설정
-              tableData: [
-                { key: '2', column: '목표 수량', value: '0' },
-                { key: '3', column: '작업 완료', value: '0' },
-                { key: '4', column: '작업 예정', value: '0' },
-              ],
-            },
-            {
-              key: '2',
-              label: '2CAL',
-              percent: 0, // 기본값 설정
-              tableData: [
-                { key: '2', column: '목표 수량', value: '0' },
-                { key: '3', column: '작업 완료', value: '0' },
-                { key: '4', column: '작업 예정', value: '0' },
-              ],
-            },
-          ];
-
           // 응답이 있는 경우에만 업데이트
           result.forEach((item: any) => {
             if (item.process === '1CAL') {
               initialTabDataCAL[0] = {
                 key: '1',
                 label: item.process,
-                percent: (item.totalCompleteCoils / item.totalGoalCoils) * 100,
+                percent: Math.round(
+                  (item.totalCompleteCoils / item.totalGoalCoils) * 100,
+                ),
                 tableData: [
                   {
                     key: '2',
@@ -174,7 +159,9 @@ export const DashBoard: React.FC = () => {
               initialTabDataCAL[1] = {
                 key: '2',
                 label: item.process,
-                percent: (item.totalCompleteCoils / item.totalGoalCoils) * 100,
+                percent: Math.round(
+                  (item.totalCompleteCoils / item.totalGoalCoils) * 100,
+                ),
                 tableData: [
                   {
                     key: '2',
@@ -208,80 +195,89 @@ export const DashBoard: React.FC = () => {
     fetchInitialData(); // 컴포넌트 마운트 시 API 데이터 가져오기
   }, []);
 
-  // // 웹소켓
-  // useEffect(() => {
-  //   const socket = new SocketJS('http://localhost:8086/ws/control');
-  //   const stompClient = new Client({
-  //     webSocketFactory: () => socket as any,
-  //     debug: (str) => {
-  //       console.log(str);
-  //     },
-  //     onConnect: () => {
-  //       console.log('Conneted Socket! ');
-  //       stompClient.subscribe('/topic/operation-websocket-data-start', (msg) => {
-  //         // setMessage(msg.body); // 웹소켓으로 받은 데이터를 상태에 저장q
-  //         console.log("=========");
-  //         console.log(msg.body);
+  // 웹소켓
+  useEffect(() => {
+    const socket = new SocketJS('http://localhost:8086/ws/control');
+    const stompClient = new Client({
+      webSocketFactory: () => socket as any,
+      debug: (str) => {
+        console.log(str);
+      },
+      onConnect: () => {
+        console.log('Conneted Socket! ');
+        stompClient.subscribe('/topic/work-started', (msg) => {
+          // setMessage(msg.body); // 웹소켓으로 받은 데이터를 상태에 저장q
+          console.log('=========');
+          console.log(msg.body);
 
-  //         const data = JSON.parse(msg.body);
-  //         console.log(data);
+          const data = JSON.parse(msg.body);
+          console.log(data);
+          console.log('check');
 
-  //         // Process
-  //         const process = data?.TotalSuplly?.process;
-  //         console.log('process:' + process);
-  //         if (process === '1CAL' || process === '2CAL') {
-  //           const updatedTabData = tabDataCAL.map((item) => {
-  //             if (item.label === process) {
-  //               return {
-  //                 ...item,
-  //                 percent:
-  //                   (data.TotalSuplly.totalCompleteCoils /
-  //                     data.TotalSuplly.totalGoalCoils) *
-  //                   100,
-  //                 tableData: [
-  //                   {
-  //                     key: '2',
-  //                     column: '목표 수량',
-  //                     value: data.TotalSupply.totalGoalCoils.toString(),
-  //                   },
-  //                   {
-  //                     key: '3',
-  //                     column: '작업 완료',
-  //                     value: data.TotalSupply.totalCompleteCoils.toString(),
-  //                   },
-  //                   {
-  //                     key: '4',
-  //                     column: '작업 예정',
-  //                     value: data.TotalSupply.totalScheduledCoils.toString(),
-  //                   },
-  //                 ],
-  //               };
-  //             }
-  //             return item;
-  //           });
-  //           return setTabDataCAL(updatedTabData); // 업데이트된 값으로 상태 변경
-  //         }
-  //       });
-  //     },
-  //     onDisconnect: () => {
-  //       console.log('Disconnected from WebSocket');
-  //     },
-  //     onStompError: (error) => {
-  //       console.error('STOMP error: ', error);
-  //     },
-  //   });
+          // Process
+          if (data.factoryDashboard && Array.isArray(data.factoryDashboard)) {
+            data.factoryDashboard.forEach((item: FactoryDashboard) => {
+              const process = item.process;
+              // 해당 process에 대한 로직 처리
+              if (process === '1CAL' || process === '2CAL') {
+                const updatedTabData = tabDataCAL.map((tabItem) => {
+                  if (tabItem.label === process) {
+                    return {
+                      ...tabItem,
+                      percent: Math.round(
+                        (item.totalCompleteCoils / item.totalGoalCoils) * 100,
+                      ),
+                      tableData: [
+                        {
+                          key: '2',
+                          column: '목표 수량',
+                          value: item.totalGoalCoils.toString(),
+                        },
+                        {
+                          key: '3',
+                          column: '작업 완료',
+                          value: item.totalCompleteCoils.toString(),
+                        },
+                        {
+                          key: '4',
+                          column: '작업 예정',
+                          value: item.totalScheduledCoils.toString(),
+                        },
+                      ],
+                    };
+                  }
+                  return tabItem;
+                });
+                setTabDataCAL(updatedTabData); // 상태 업데이트
+              }
+            });
+          } else {
+            console.error(
+              'Expected factoryDashboard to be an array but received:',
+              data.factoryDashboard,
+            );
+          }
+        });
+      },
+      onDisconnect: () => {
+        console.log('Disconnected from WebSocket');
+      },
+      onStompError: (error) => {
+        console.error('STOMP error: ', error);
+      },
+    });
 
-  //   // WebSocket 연결 활성화
-  //   stompClient.activate();
-  //   setClient(stompClient);
-  //   console.log(client);
+    // WebSocket 연결 활성화
+    stompClient.activate();
+    setClient(stompClient);
+    console.log(client);
 
-  //   return () => {
-  //     if (stompClient) {
-  //       stompClient.deactivate();
-  //     }
-  //   };
-  // }, []);
+    return () => {
+      if (stompClient) {
+        stompClient.deactivate();
+      }
+    };
+  }, [tabDataCAL]);
 
   return (
     <div className={styles.dashboardContainer}>
