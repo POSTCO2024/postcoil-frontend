@@ -348,8 +348,8 @@ const DashBoard: React.FC = () => {
           <div className={styles.smallCard}>
             <h6>스케줄 작업 진행율</h6>
             <h3>
-              {selectedProcessData.workTotalCoils}/
-              {selectedProcessData.workTotalCompleteCoils}
+              {selectedProcessData.workTotalCompleteCoils}/
+              {selectedProcessData.workTotalCoils}
             </h3>
           </div>
           <div className={styles.smallCard}>
