@@ -16,6 +16,8 @@ export const Navigation: React.FC<NavigationProps> = ({
   menuItems,
   mappingKeys,
   isOperationSystem,
+  employeeName = '신찬규',
+  teamName = '관제팀',
 }) => {
   const location = useLocation();
   const levelKeys = getLevelKeys(menuItems as LevelKeysProps[]);
@@ -106,9 +108,9 @@ export const Navigation: React.FC<NavigationProps> = ({
         <div className={styles.loginDiv}>
           <img src={human} />
           <div className={styles.loginInfo}>
-            신찬규 사원
+            {employeeName} 사원
             <br />
-            부서 : 관제팀
+            부서 : {teamName}
           </div>
         </div>
       </div>

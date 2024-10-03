@@ -6,6 +6,8 @@ export interface NavigationProps {
   menuItems: MenuProps['items'];
   mappingKeys?: Array<{ key: string; path: string }>;
   isOperationSystem?: boolean;
+  employeeName?: string;
+  teamName?: string;
 }
 
 export interface LevelKeysProps {
