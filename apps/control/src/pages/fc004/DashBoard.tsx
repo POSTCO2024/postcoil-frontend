@@ -16,13 +16,8 @@ import Status from './chart/Status';
 import styles from './DashBoard.module.scss';
 
 import {
-  // piechartOption,
-  // donutchartOption,
-  // doublebarchartOption1,
-  // doublebarchartOption2,
   rowbarchartOption,
   barchartV2Option1,
-  // barchartV2Option2,
 } from '@/config/DashBoard/DashBoardConfig';
 import {
   useOrderData,
@@ -32,8 +27,6 @@ import {
 
 const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
 const controlBaseUrl = import.meta.env.VITE_CONTROL_BASE_URL;
-// const websocketApiUrl = import.meta.env.VIEE_WEBSOCKET_API_URL;
-// const websocketBaseUrl = import.meta.env.VITE_WEBSOCKET_CONTROL_BASE;
 
 // Interface
 // API response
@@ -58,6 +51,20 @@ interface DueDateDataType {
   tags: string[];
 }
 
+const calculateElapsedTime = (startTime: string): string => {
+  const start = new Date(startTime).getTime();
+  const now = new Date().getTime();
+  const elapsed = now - start; // 밀리초 단위 시간 차이
+
+  const hours = Math.floor(elapsed / (1000 * 60 * 60));
+  const minutes = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((elapsed % (1000 * 60)) / 1000);
+
+  return `${hours.toString().padStart(2, '0')}:${minutes
+    .toString()
+    .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+};
+
 const DashBoard: React.FC = () => {
   // 선택한 공정
   const location = useLocation();
@@ -79,6 +86,57 @@ const DashBoard: React.FC = () => {
   const [rollUnitOption, setRollUnitOption] =
     useState<echarts.EChartsCoreOption | null>(null); // 롤 단위
 
+  // 모니터링 상태 관리
+  // const [workTotalCoils, setWorkTotalCoils] = useState(0);
+  // const [workScheduledCoils, setWorkScheduledCoils] = useState(0);
+  // const [workTotalCompleteCoils, setWorkTotalCompleteCoils] = useState(0);
+  // const [workStartTime, setWorkStartTime] = useState("0:00:00");
+  // const [elapsedTime, setElapsedTime] = useState('0:00:00');
+  // 1CAL 상태 관리
+  const [cal1Data, setCal1Data] = useState({
+    workTotalCoils: 0,
+    workScheduledCoils: 0,
+    workTotalCompleteCoils: 0,
+    workStartTime: '0:00:00',
+    elapsedTime: '0:00:00',
+  });
+
+  // 2CAL 상태 관리
+  const [cal2Data, setCal2Data] = useState({
+    workTotalCoils: 0,
+    workScheduledCoils: 0,
+    workTotalCompleteCoils: 0,
+    workStartTime: '0:00:00',
+    elapsedTime: '0:00:00',
+  });
+  // 상태 업데이트 함수
+  const updateProcessData = (processData: any) => {
+    if (processData.process === '1CAL') {
+      setCal1Data({
+        workTotalCoils: processData.workTotalCoils,
+        workScheduledCoils: processData.workScheduledCoils,
+        workTotalCompleteCoils: processData.workTotalCompleteCoils,
+        workStartTime: processData.workStartTime,
+        elapsedTime: calculateElapsedTime(processData.workStartTime),
+      });
+    } else if (processData.process === '2CAL') {
+      setCal2Data({
+        workTotalCoils: processData.workTotalCoils,
+        workScheduledCoils: processData.workScheduledCoils,
+        workTotalCompleteCoils: processData.workTotalCompleteCoils,
+        workStartTime: processData.workStartTime,
+        elapsedTime: calculateElapsedTime(processData.workStartTime),
+      });
+    }
+  };
+  const mockData = {
+    workTotalCoils: 2,
+    workScheduledCoils: 1,
+    workTotalCompleteCoils: 4,
+    workStartTime: '01:30:10',
+    elapsedTime: '0:00:00',
+  };
+
   // API 호출
   const fetchWidthThicknessData = useWidthThicknessData(); // 폭/두께
   const fetchOrderData = useOrderData(); // 품종/고객사
@@ -97,7 +155,7 @@ const DashBoard: React.FC = () => {
     }
   };
 
-  //생산 마감일
+  // 생산 마감일
   const fetchDueDateTable = async () => {
     const url = `${controlApiUrl}${controlBaseUrl}/dashboard/dueDate?currProc=${selectedProc}`;
     try {
@@ -138,7 +196,6 @@ const DashBoard: React.FC = () => {
   // Rendering
   const render = async () => {
     // 품종/고객사
-    console.log('selectedProc: ' + selectedProc);
     const orderResult = await fetchOrderData(selectedProc);
     setCoilTypeOption(
       (orderResult?.coilTypeOptionResult as echarts.EChartsOption) ?? null,
@@ -168,14 +225,14 @@ const DashBoard: React.FC = () => {
 
   useEffect(() => {
     render();
-  }, [selectedProc]); // selectedProc이 변경될 때마다 실행
+  }, [selectedProc]);
 
   // 웹소켓
   const [message, setMessage] = useState<string>('');
   const [client, setClient] = useState<Client | null>(null);
 
   useEffect(() => {
-    const socket = new SocketJS('http://localhost:9090/ws/control');
+    const socket = new SocketJS('http://localhost:8086/ws/control');
     const stompClient = new Client({
       webSocketFactory: () => socket as any,
       debug: (str) => {
@@ -183,9 +240,17 @@ const DashBoard: React.FC = () => {
       },
       onConnect: () => {
         console.log('Conneted Socket! ');
-        stompClient.subscribe('/topic/coilData', (msg) => {
+        stompClient.subscribe('/topic/work-started', (msg) => {
           setMessage(msg.body); // 웹소켓으로 받은 데이터를 상태에 저장
-          console.log(message); // 수정
+          const data = JSON.parse(msg.body);
+
+          const processData = data.processDashboard?.find(
+            (proc: any) => proc.process === selectedProc,
+          );
+
+          if (processData) {
+            updateProcessData(processData);
+          }
         });
       },
       onDisconnect: () => {
@@ -199,14 +264,41 @@ const DashBoard: React.FC = () => {
     // WebSocket 연결 활성화
     stompClient.activate();
     setClient(stompClient);
-    console.log(client);
 
     return () => {
       if (stompClient) {
         stompClient.deactivate();
       }
     };
-  }, []);
+  }, [selectedProc]);
+
+  // 작업 시작 시간으로부터 경과 시간을 계산하고 주기적으로 업데이트
+  useEffect(() => {
+    const selectedProcessData = selectedProc === '1CAL' ? cal1Data : cal2Data;
+
+    if (selectedProcessData.workStartTime !== '0:00:00') {
+      const intervalId = setInterval(() => {
+        const newElapsedTime = calculateElapsedTime(
+          selectedProcessData.workStartTime,
+        );
+        if (selectedProc === '1CAL') {
+          setCal1Data((prev) => ({ ...prev, elapsedTime: newElapsedTime }));
+        } else if (selectedProc === '2CAL') {
+          setCal2Data((prev) => ({ ...prev, elapsedTime: newElapsedTime }));
+        }
+      }, 1000); // 1초마다 업데이트
+
+      return () => clearInterval(intervalId); // 컴포넌트 언마운트 시 인터벌 클리어
+    }
+  }, [selectedProc, cal1Data.workStartTime, cal2Data.workStartTime]);
+
+  // const selectedProcessData = selectedProc === "1CAL" ? cal1Data : cal2Data;
+  const selectedProcessData =
+    selectedProc === '1CAL'
+      ? cal1Data
+      : selectedProc === '2CAL'
+        ? cal2Data
+        : mockData; // 그 이외의 값일 경우 mock 데이터를 사용
 
   return (
     <div className={styles.parentDiv}>
@@ -215,18 +307,20 @@ const DashBoard: React.FC = () => {
         <div className={styles.line1}>
           <div className={styles.smallCard}>
             <h6>스케줄 작업 진행율</h6>
-            <h3>30/50</h3>
+            <h3>
+              {selectedProcessData.workTotalCompleteCoils}/
+              {selectedProcessData.workTotalCoils}
+            </h3>
           </div>
           <div className={styles.smallCard}>
             <h6>작업 예정</h6>
-            <h3>20</h3>
+            <h3>{selectedProcessData.workScheduledCoils}</h3>
           </div>
           <div className={styles.smallCard}>
             <h6>현재 작업 시간</h6>
-            <h3>00:30:22</h3>
+            <h3>{selectedProcessData.elapsedTime}</h3>
           </div>
           <div className={styles.smallCard}>
-            {/* <h6>설비 이상</h6> */}
             <Status status="RUNNING" />
           </div>
         </div>
@@ -240,13 +334,11 @@ const DashBoard: React.FC = () => {
           </div>
           <div className={styles.smallCard}>
             <RowbarChart option={rowbarchartOption} />
-            {/* <Status status={message.equipmentStatus} /> */}
           </div>
           <div className={styles.smallCard}>
             <List data={dueDate} />
           </div>
         </div>
-        {/* <h4>재료 정보</h4> */}
         <div className={styles.line2}>
           <div className={styles.smallCard}>
             <Piechart data={errorNormalData} />
