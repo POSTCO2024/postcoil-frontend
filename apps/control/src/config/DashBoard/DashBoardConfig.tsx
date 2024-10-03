@@ -23,7 +23,7 @@ export const mockData1PCM = {
   workTotalCoils: 13,
   workScheduledCoils: 4,
   workTotalCompleteCoils: 9,
-  workStartTime: new Date().toISOString(),
+  workStartTime: new Date('2024-10-04T01:30:00').toISOString(), // 시간 수정
   elapsedTime: '0:00:00',
 };
 
