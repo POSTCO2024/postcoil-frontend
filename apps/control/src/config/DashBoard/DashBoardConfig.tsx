@@ -8,6 +8,16 @@
 //
 // 사용: data: await getBarChartData()
 
+// 실시간 모니터링
+// mockData.ts
+export const mockData = {
+  workTotalCoils: 3,
+  workScheduledCoils: 1,
+  workTotalCompleteCoils: 4,
+  workStartTime: new Date().toISOString(), // 현재 시간
+  elapsedTime: '0:00:00',
+};
+
 // 임시 데이터 정의 - data 부분 API로 받기
 // BarChart
 export const barchartOption: echarts.EChartsOption = {

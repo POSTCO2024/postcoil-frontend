@@ -18,6 +18,7 @@ import styles from './DashBoard.module.scss';
 import {
   rowbarchartOption,
   barchartV2Option1,
+  mockData,
 } from '@/config/DashBoard/DashBoardConfig';
 import {
   useOrderData,
@@ -87,11 +88,8 @@ const DashBoard: React.FC = () => {
     useState<echarts.EChartsCoreOption | null>(null); // 롤 단위
 
   // 모니터링 상태 관리
-  // const [workTotalCoils, setWorkTotalCoils] = useState(0);
-  // const [workScheduledCoils, setWorkScheduledCoils] = useState(0);
-  // const [workTotalCompleteCoils, setWorkTotalCompleteCoils] = useState(0);
-  // const [workStartTime, setWorkStartTime] = useState("0:00:00");
-  // const [elapsedTime, setElapsedTime] = useState('0:00:00');
+  // mock 데이터
+  const [mockProcessData, setMockProcessData] = useState(mockData);
   // 1CAL 상태 관리
   const [cal1Data, setCal1Data] = useState({
     workTotalCoils: 0,
@@ -129,13 +127,13 @@ const DashBoard: React.FC = () => {
       });
     }
   };
-  const mockData = {
-    workTotalCoils: 2,
-    workScheduledCoils: 1,
-    workTotalCompleteCoils: 4,
-    workStartTime: '01:30:10',
-    elapsedTime: '0:00:00',
-  };
+  // const mockData = {
+  //   workTotalCoils: 2,
+  //   workScheduledCoils: 1,
+  //   workTotalCompleteCoils: 4,
+  //   workStartTime: new Date().toISOString(),
+  //   elapsedTime: '0:00:00',
+  // };
 
   // API 호출
   const fetchWidthThicknessData = useWidthThicknessData(); // 폭/두께
@@ -292,13 +290,25 @@ const DashBoard: React.FC = () => {
     }
   }, [selectedProc, cal1Data.workStartTime, cal2Data.workStartTime]);
 
+  // Mock 데이터의 경과 시간 업데이트 (1초마다)
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setMockProcessData((prev) => ({
+        ...prev,
+        elapsedTime: calculateElapsedTime(prev.workStartTime),
+      }));
+    }, 1000); // 1초마다 업데이트
+
+    return () => clearInterval(intervalId); // 컴포넌트 언마운트 시 인터벌 해제
+  }, []);
+
   // const selectedProcessData = selectedProc === "1CAL" ? cal1Data : cal2Data;
   const selectedProcessData =
     selectedProc === '1CAL'
       ? cal1Data
       : selectedProc === '2CAL'
         ? cal2Data
-        : mockData; // 그 이외의 값일 경우 mock 데이터를 사용
+        : mockProcessData; // 그 이외의 값일 경우 mock 데이터를 사용
 
   return (
     <div className={styles.parentDiv}>
@@ -308,8 +318,8 @@ const DashBoard: React.FC = () => {
           <div className={styles.smallCard}>
             <h6>스케줄 작업 진행율</h6>
             <h3>
-              {selectedProcessData.workTotalCompleteCoils}/
-              {selectedProcessData.workTotalCoils}
+              {selectedProcessData.workTotalCoils}/
+              {selectedProcessData.workTotalCompleteCoils}
             </h3>
           </div>
           <div className={styles.smallCard}>
