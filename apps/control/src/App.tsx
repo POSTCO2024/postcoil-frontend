@@ -25,7 +25,13 @@ import Fs004a from './pages/fs004/Fs004a';
 function App() {
   return (
     <Router>
-      <div style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          width: '100%',
+          height: '100%',
+        }}>
         <Navigation
           logo={logo}
           human={human}
