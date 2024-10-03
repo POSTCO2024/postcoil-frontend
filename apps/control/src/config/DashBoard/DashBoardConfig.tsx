@@ -10,11 +10,60 @@
 
 // 실시간 모니터링
 // mockData.ts
-export const mockData = {
-  workTotalCoils: 3,
-  workScheduledCoils: 1,
-  workTotalCompleteCoils: 4,
-  workStartTime: new Date().toISOString(), // 현재 시간
+// export const mockData = {
+//   workTotalCoils: 3,
+//   workScheduledCoils: 1,
+//   workTotalCompleteCoils: 4,
+//   workStartTime: new Date().toISOString(), // 현재 시간
+//   elapsedTime: '0:00:00',
+// };
+// DashBoardConfig.ts
+
+export const mockData1PCM = {
+  workTotalCoils: 13,
+  workScheduledCoils: 4,
+  workTotalCompleteCoils: 9,
+  workStartTime: new Date().toISOString(),
+  elapsedTime: '0:00:00',
+};
+
+export const mockData2PCM = {
+  workTotalCoils: 9,
+  workScheduledCoils: 2,
+  workTotalCompleteCoils: 7,
+  workStartTime: new Date().toISOString(),
+  elapsedTime: '0:00:00',
+};
+
+export const mockData1CGL = {
+  workTotalCoils: 15,
+  workScheduledCoils: 5,
+  workTotalCompleteCoils: 10,
+  workStartTime: new Date().toISOString(),
+  elapsedTime: '0:00:00',
+};
+
+export const mockData2CGL = {
+  workTotalCoils: 30,
+  workScheduledCoils: 7,
+  workTotalCompleteCoils: 23,
+  workStartTime: new Date().toISOString(),
+  elapsedTime: '0:00:00',
+};
+
+export const mockData1EGL = {
+  workTotalCoils: 9,
+  workScheduledCoils: 8,
+  workTotalCompleteCoils: 1,
+  workStartTime: new Date().toISOString(),
+  elapsedTime: '0:00:00',
+};
+
+export const mockData2EGL = {
+  workTotalCoils: 10,
+  workScheduledCoils: 2,
+  workTotalCompleteCoils: 8,
+  workStartTime: new Date().toISOString(),
   elapsedTime: '0:00:00',
 };
 

@@ -18,7 +18,12 @@ import styles from './DashBoard.module.scss';
 import {
   rowbarchartOption,
   barchartV2Option1,
-  mockData,
+  mockData1PCM,
+  mockData2PCM,
+  mockData1EGL,
+  mockData2EGL,
+  mockData1CGL,
+  mockData2CGL,
 } from '@/config/DashBoard/DashBoardConfig';
 import {
   useOrderData,
@@ -89,7 +94,13 @@ const DashBoard: React.FC = () => {
 
   // 모니터링 상태 관리
   // mock 데이터
-  const [mockProcessData, setMockProcessData] = useState(mockData);
+  const [mock1PCMProcessData, setMock1PCMProcessData] = useState(mockData1PCM);
+  const [mock2PCMProcessData, setMock2PCMProcessData] = useState(mockData2PCM);
+  const [mock1EGLProcessData, setMock1EGLProcessData] = useState(mockData1EGL);
+  const [mock2EGLProcessData, setMock2EGLProcessData] = useState(mockData2EGL);
+  const [mock1CGLProcessData, setMock1CGLProcessData] = useState(mockData1CGL);
+  const [mock2CGLProcessData, setMock2CGLProcessData] = useState(mockData2CGL);
+
   // 1CAL 상태 관리
   const [cal1Data, setCal1Data] = useState({
     workTotalCoils: 0,
@@ -127,13 +138,6 @@ const DashBoard: React.FC = () => {
       });
     }
   };
-  // const mockData = {
-  //   workTotalCoils: 2,
-  //   workScheduledCoils: 1,
-  //   workTotalCompleteCoils: 4,
-  //   workStartTime: new Date().toISOString(),
-  //   elapsedTime: '0:00:00',
-  // };
 
   // API 호출
   const fetchWidthThicknessData = useWidthThicknessData(); // 폭/두께
@@ -226,9 +230,6 @@ const DashBoard: React.FC = () => {
   }, [selectedProc]);
 
   // 웹소켓
-  const [message, setMessage] = useState<string>('');
-  const [client, setClient] = useState<Client | null>(null);
-
   useEffect(() => {
     const socket = new SocketJS('http://localhost:8086/ws/control');
     const stompClient = new Client({
@@ -239,7 +240,6 @@ const DashBoard: React.FC = () => {
       onConnect: () => {
         console.log('Conneted Socket! ');
         stompClient.subscribe('/topic/work-started', (msg) => {
-          setMessage(msg.body); // 웹소켓으로 받은 데이터를 상태에 저장
           const data = JSON.parse(msg.body);
 
           const processData = data.processDashboard?.find(
@@ -261,7 +261,6 @@ const DashBoard: React.FC = () => {
 
     // WebSocket 연결 활성화
     stompClient.activate();
-    setClient(stompClient);
 
     return () => {
       if (stompClient) {
@@ -293,7 +292,27 @@ const DashBoard: React.FC = () => {
   // Mock 데이터의 경과 시간 업데이트 (1초마다)
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setMockProcessData((prev) => ({
+      setMock1PCMProcessData((prev) => ({
+        ...prev,
+        elapsedTime: calculateElapsedTime(prev.workStartTime),
+      }));
+      setMock2PCMProcessData((prev) => ({
+        ...prev,
+        elapsedTime: calculateElapsedTime(prev.workStartTime),
+      }));
+      setMock1EGLProcessData((prev) => ({
+        ...prev,
+        elapsedTime: calculateElapsedTime(prev.workStartTime),
+      }));
+      setMock2EGLProcessData((prev) => ({
+        ...prev,
+        elapsedTime: calculateElapsedTime(prev.workStartTime),
+      }));
+      setMock1CGLProcessData((prev) => ({
+        ...prev,
+        elapsedTime: calculateElapsedTime(prev.workStartTime),
+      }));
+      setMock2CGLProcessData((prev) => ({
         ...prev,
         elapsedTime: calculateElapsedTime(prev.workStartTime),
       }));
@@ -308,7 +327,17 @@ const DashBoard: React.FC = () => {
       ? cal1Data
       : selectedProc === '2CAL'
         ? cal2Data
-        : mockProcessData; // 그 이외의 값일 경우 mock 데이터를 사용
+        : selectedProc === '1PCM'
+          ? mock1PCMProcessData
+          : selectedProc === '2PCM'
+            ? mock2PCMProcessData
+            : selectedProc === '1EGL'
+              ? mock1EGLProcessData
+              : selectedProc === '2EGL'
+                ? mock2EGLProcessData
+                : selectedProc === '1CGL'
+                  ? mock1CGLProcessData
+                  : mock2CGLProcessData;
 
   return (
     <div className={styles.parentDiv}>
@@ -318,8 +347,8 @@ const DashBoard: React.FC = () => {
           <div className={styles.smallCard}>
             <h6>스케줄 작업 진행율</h6>
             <h3>
-              {selectedProcessData.workTotalCoils}/
-              {selectedProcessData.workTotalCompleteCoils}
+              {selectedProcessData.workTotalCompleteCoils}/
+              {selectedProcessData.workTotalCoils}
             </h3>
           </div>
           <div className={styles.smallCard}>
