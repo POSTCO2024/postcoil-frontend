@@ -1,7 +1,8 @@
 import { ApiParams, createApiClient } from './apiClient';
 
 export const operationApiUrl = import.meta.env.VITE_OPERATION_API_URL;
-export const operationBaseUrl = import.meta.env.VITE_OPERATION_BASE_URL;
+export const workInstructionBaseUrl = import.meta.env
+  .VITE_WORK_INSTRUCTIONS_BASE_URL;
 
 export const operationApiClient = createApiClient(operationApiUrl!);
 
@@ -12,7 +13,7 @@ export const fetchOperationData = async ({
 }: ApiParams) => {
   try {
     const response = await operationApiClient.get(
-      `${operationBaseUrl}/${pageCode}?process=${processCode}${requestParams}`,
+      `${workInstructionBaseUrl}/${pageCode}?process=${processCode}${requestParams}`,
     );
     if (response.data && response.data.result) {
       console.log('fetchData: ', response.data.result);
