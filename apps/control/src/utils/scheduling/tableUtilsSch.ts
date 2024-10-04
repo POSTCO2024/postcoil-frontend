@@ -84,8 +84,8 @@ export const transformedScheduleData = (
   }
   return data.map((item, index) => ({
     no: index + 1,
-    key: item.id,
-    id: item.id,
+    key: item.id ? item.id : item.workInstructionId,
+    id: item.id ? item.id : item.workInstructionId,
     workNo: item.workNo,
     scheduleId: item.scheduleId,
     scheduleNo: item.scheduleNo,
@@ -96,5 +96,6 @@ export const transformedScheduleData = (
     startTime: item.startTime,
     endTime: item.endTime,
     schStatus: item.schStatus,
+    rejectQuantity: item.items.filter((i) => i.isRejected === 'Y').length,
   }));
 };

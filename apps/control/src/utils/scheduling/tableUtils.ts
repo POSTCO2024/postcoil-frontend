@@ -85,6 +85,11 @@ export const materialColumnData: ColumnDataType<MaterialDataType>[] = [
   },
 ];
 
+export const coilTypeColumnData = [
+  { title: '품종', dataIndex: 'type', key: 'type' },
+  { title: '개수', dataIndex: 'count', key: 'count' },
+];
+
 export const workItemColumnData: ColumnDataType<MaterialDataType>[] = [
   {
     title: 'Seq.',
@@ -107,6 +112,19 @@ export const workItemColumnData: ColumnDataType<MaterialDataType>[] = [
     title: '입측 두께',
     dataIndex: 'initialThickness',
     key: 'initialThickness',
+    // sortable: true,
+  },
+  {
+    title: '목표폭',
+    dataIndex: 'goalWidth',
+    key: 'goalWidth',
+    sortable: true,
+    defaultSortOrder: 'descend',
+  },
+  {
+    title: '목표두께',
+    dataIndex: 'goalThickness',
+    key: 'goalThickness',
     sortable: true,
   },
   {
@@ -119,19 +137,52 @@ export const workItemColumnData: ColumnDataType<MaterialDataType>[] = [
     title: '출측 두께',
     dataIndex: 'processedThickness',
     key: 'processedThickness',
+    // sortable: true,
+  },
+  {
+    title: '온도',
+    dataIndex: 'temperature',
+    key: 'temperature',
     sortable: true,
+  },
+  {
+    title: '차공정',
+    dataIndex: 'nextProc',
+    key: 'nextProc',
+    sortable: true,
+    otherProps: {
+      filters: [
+        {
+          text: 'CGL',
+          value: '1CGL' || '2CGL',
+        },
+        {
+          text: 'EGL',
+          value: '1EGL' || '2EGL',
+        },
+        {
+          text: '포장',
+          value: '101' || '201',
+        },
+      ],
+      onFilter: (value: string, record: { nextProc: string[] }) =>
+        record.nextProc.indexOf(value) === 0,
+    },
+  },
+  {
+    title: '품종',
+    dataIndex: 'coilTypeCode',
+    key: 'coilTypeCode',
   },
   {
     title: '작업 시작 시간',
     dataIndex: 'startTime',
     key: 'startTime',
-    sortable: true,
   },
   {
     title: '작업 종료 시간',
     dataIndex: 'endTime',
     key: 'endTime',
-    sortable: true,
   },
   {
     title: '작업 소요 시간',
@@ -142,7 +193,20 @@ export const workItemColumnData: ColumnDataType<MaterialDataType>[] = [
     title: 'Reject 여부',
     dataIndex: 'isRejected',
     key: 'isRejected',
-    sortable: true,
+    otherProps: {
+      filters: [
+        {
+          text: 'Y',
+          value: 'Y',
+        },
+        {
+          text: 'N',
+          value: 'N',
+        },
+      ],
+      onFilter: (value: string, record: { rollUnit: string[] }) =>
+        record.rollUnit.indexOf(value) === 0,
+    },
   },
 ];
 
@@ -177,6 +241,16 @@ export const transformedData = (data: MaterialDTO[]): MaterialDataType[] => {
   }));
 };
 
+export const transformedCoilTypeCodeData = (countCoilTypeCode: {
+  [type: string]: number | string;
+}) =>
+  Object.entries(countCoilTypeCode).map(([type, count], index) => ({
+    key: (index + 1).toString(),
+    id: (index + 1).toString(),
+    type: type,
+    count: count,
+  }));
+
 export const transformedWorkItemData = (
   data: WorkItemDTO[],
 ): MaterialDataType[] => {
@@ -198,10 +272,16 @@ export const transformedWorkItemData = (
     startTime: item.startTime,
     endTime: item.endTime,
     goalWidth: item.initialGoalWidth,
-    initialThickness: item.initialThickness,
-    // 필요컬럼 추가
+    goalThickness: item.initialGoalThickness,
     initialWidth: item.initialWidth,
-    processedWidth: item.processedWidth,
-    processedThickness: item.processedThickness,
+    initialThickness: item.initialThickness,
+    width: item.width,
+    thickness: item.thickness,
+    processedWidth: item.width,
+    processedThickness: item.thickness,
+    temperature: item.temperature,
+    nextProc: item.nextProc,
+    coilTypeCode: item.coilTypeCode,
+    weight: item.weight,
   }));
 };
