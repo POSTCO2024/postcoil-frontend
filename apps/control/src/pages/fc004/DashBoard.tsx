@@ -58,6 +58,15 @@ interface DueDateDataType {
   tags: string[];
 }
 
+// 기본값 세팅
+const defaultCalData = {
+  workTotalCoils: 0,
+  workScheduledCoils: 0,
+  workTotalCompleteCoils: 0,
+  workStartTime: '0:00:00',
+  elapsedTime: '0:00:00',
+};
+
 const calculateElapsedTime = (startTime: string): string => {
   const start = new Date(startTime).getTime();
   const now = new Date().getTime();
@@ -106,42 +115,31 @@ const DashBoard: React.FC = () => {
   const [mock1CGLProcessData, setMock1CGLProcessData] = useState(mockData1CGL);
   const [mock2CGLProcessData, setMock2CGLProcessData] = useState(mockData2CGL);
 
-  // 1CAL 상태 관리
-  const [cal1Data, setCal1Data] = useState({
-    workTotalCoils: 0,
-    workScheduledCoils: 0,
-    workTotalCompleteCoils: 0,
-    workStartTime: '0:00:00',
-    elapsedTime: '0:00:00',
-  });
+  // 1CAL, 2CAL 상태 관리
+  const [cal1Data, setCal1Data] = useState(defaultCalData);
+  const [cal2Data, setCal2Data] = useState(defaultCalData);
 
-  // 2CAL 상태 관리
-  const [cal2Data, setCal2Data] = useState({
-    workTotalCoils: 0,
-    workScheduledCoils: 0,
-    workTotalCompleteCoils: 0,
-    workStartTime: '0:00:00',
-    elapsedTime: '0:00:00',
-  });
   // 상태 업데이트 함수
-  const updateProcessData = (processData: any) => {
-    if (processData.process === '1CAL') {
-      setCal1Data({
-        workTotalCoils: processData.workTotalCoils,
-        workScheduledCoils: processData.workScheduledCoils,
-        workTotalCompleteCoils: processData.workTotalCompleteCoils,
-        workStartTime: processData.workStartTime,
-        elapsedTime: calculateElapsedTime(processData.workStartTime),
-      });
-    } else if (processData.process === '2CAL') {
-      setCal2Data({
-        workTotalCoils: processData.workTotalCoils,
-        workScheduledCoils: processData.workScheduledCoils,
-        workTotalCompleteCoils: processData.workTotalCompleteCoils,
-        workStartTime: processData.workStartTime,
-        elapsedTime: calculateElapsedTime(processData.workStartTime),
-      });
-    }
+  const updateProcessData = (processDashboard: any[]) => {
+    processDashboard.forEach((processData) => {
+      if (processData.process === '1CAL') {
+        setCal1Data({
+          workTotalCoils: processData.workTotalCoils,
+          workScheduledCoils: processData.workScheduledCoils,
+          workTotalCompleteCoils: processData.workTotalCompleteCoils,
+          workStartTime: processData.workStartTime,
+          elapsedTime: calculateElapsedTime(processData.workStartTime),
+        });
+      } else if (processData.process === '2CAL') {
+        setCal2Data({
+          workTotalCoils: processData.workTotalCoils,
+          workScheduledCoils: processData.workScheduledCoils,
+          workTotalCompleteCoils: processData.workTotalCompleteCoils,
+          workStartTime: processData.workStartTime,
+          elapsedTime: calculateElapsedTime(processData.workStartTime),
+        });
+      }
+    });
   };
 
   // API 호출
@@ -206,13 +204,14 @@ const DashBoard: React.FC = () => {
       const response = await axios.get(
         `${operationApiUrl}${operationBaseUrl}/monitoring/analyze?SchProcess=${selectedProc}`,
       );
-      console.log('+++ 확인해 +++');
-      console.log(response);
 
-      if (response.data.status === 200) {
-        const result = response.data.result;
-        console.log('GOOD~');
-        console.log(JSON.stringify(result));
+      if (
+        response.data.status === 200 &&
+        response.data.result.processDashboard
+      ) {
+        const processDashboard = response.data.result.processDashboard;
+        console.log(JSON.stringify(response.data));
+        updateProcessData(processDashboard); // default 값에서 API 응답 결과로 업데이트(실시간 모니터링)
       }
     } catch (error) {
       console.error('API 호출 오류:', error);
