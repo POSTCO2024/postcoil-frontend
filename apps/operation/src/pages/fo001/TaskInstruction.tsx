@@ -27,7 +27,7 @@ const SchRPage = () => {
 
   return (
     <div className={styles.page}>
-      <h1>Schedule 결과</h1>
+      <h1>작업 지시 전문</h1>
       <FilterContainer />
       <section className={styles.tab}>
         <Tab labels={['그래프', '리스트']} onChange={handleTabChange} />
