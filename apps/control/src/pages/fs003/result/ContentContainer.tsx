@@ -1,28 +1,55 @@
 import { Table } from '@postcoil/ui';
+import { ConfigProvider } from 'antd';
+import { useEffect, useState } from 'react';
 
 import styles from './ContentContainer.module.scss';
 
-import { mockdata } from '@/utils/scheduling/mockMaterial';
-import { materialColumnData } from '@/utils/scheduling/tableUtils';
-
-// interface PropsType{
-//   data?: TODO: props로 데이터 받기
-// }
+import { MaterialDataType } from '@/config/scheduling/contentConfig';
+import { useWorkInstructionStore } from '@/store/fs003store';
+import {
+  transformedWorkItemData,
+  workItemColumnData,
+} from '@/utils/scheduling/tableUtils';
 
 const ContentContainer = () => {
+  const materialData = useWorkInstructionStore((state) => state.workItems);
+
+  const [dataSource, setDataSource] = useState<MaterialDataType[]>([]);
+
+  // materialData가 변경될 때마다 dataSource 업데이트 및 재렌더링
+  useEffect(() => {
+    if (materialData && materialData.length > 0) {
+      const transformed = transformedWorkItemData(materialData);
+      setDataSource(transformed);
+    } else {
+      setDataSource([]);
+    }
+    console.log('Material', materialData);
+    console.log('Updated dataSource:', dataSource);
+  }, [materialData]); // materialData가 변경될 때마다 실행
+
   return (
     <div className={styles.contentContainer}>
       <section className={styles.tableWrapper}>
         {/* TODO: 데이터 확정시, @postcoil/ui의 Table 로 변경하기 */}
         <div className={styles.table}>
-          <Table
-            columns={materialColumnData}
-            data={mockdata}
-            rowClassName={(record) =>
-              record.changed ? `${styles.rowChanged}` : ''
-            }
-            size="small"
-          />
+          <ConfigProvider
+            theme={{
+              components: {
+                Table: {
+                  rowHoverBg: '#eff4ff',
+                },
+              },
+            }}>
+            <Table
+              columns={workItemColumnData}
+              data={dataSource}
+              rowClassName={(record) =>
+                record.changed ? `${styles.rowChanged}` : ''
+              }
+              size="small"
+            />
+          </ConfigProvider>
         </div>
       </section>
     </div>

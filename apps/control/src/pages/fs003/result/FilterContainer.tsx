@@ -1,11 +1,12 @@
 import { RedoOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { Dropdown } from '@postcoil/ui';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import styles from './FilterContainer.module.scss';
 
 import { dropDownOptionType } from '@/config/scheduling/dropdownConfig';
 import { ClientDTO } from '@/config/scheduling/dto';
+import { useScheduleStore } from '@/store/fs002store';
 import { useWorkInstructionStore } from '@/store/fs003store';
 import { options } from '@/utils/scheduling/dropdownUtils';
 import { mockRollUnitName } from '@/utils/scheduling/MockDropdown';
@@ -23,6 +24,13 @@ const FilterContainer = () => {
       ? (state.data as ClientDTO[])
       : (state.data2 as ClientDTO[]),
   );
+
+  const prevSelectedProcessCode = useScheduleStore(
+    (state) => state.processCode!,
+  );
+
+  console.log(selectedProcessCode);
+  console.log(prevSelectedProcessCode);
 
   const generateDynamicRollUnitOptions = (
     data: ClientDTO[],
@@ -52,26 +60,29 @@ const FilterContainer = () => {
       };
     });
   };
-
+  const [scheduleNoList, setScheduleNoList] = useState<dropDownOptionType[]>(
+    [],
+  );
   // 선택된 processCode에 따라 fetch 해 온 옵션 생성
-  const scheduleNoList = selectedData
-    ? generateDynamicRollUnitOptions(selectedData)
-    : [];
 
   const [processCode, setProcessCode] = useState<string[]>([
     selectedProcessCode,
   ]);
 
-  const [selectedRollUnitName, setSelectedRollUnitName] = useState<string[]>([
-    scheduleNoList[0].value,
-  ]);
+  const [selectedRollUnitName, setSelectedRollUnitName] = useState<string[]>(
+    [],
+  );
 
   const handleProcessCode = (value?: string[]) => {
-    if (value && value[0] !== '' && value[0] !== selectedProcessCode) {
-      setProcessCode(value); // rollUnitName 초기화
+    if (value && value[0] !== '') {
+      setProcessCode(value);
+      setSelectedRollUnitName([]);
       fetchData(value); // fetchData 함수 호출
+    } else if (value) {
+      setProcessCode(value);
     } else {
       setProcessCode([]);
+      setSelectedRollUnitName([]);
     }
   };
 
@@ -88,6 +99,26 @@ const FilterContainer = () => {
     }
   };
 
+  useEffect(() => {
+    if (selectedData && selectedData.length > 0) {
+      setProcessCode([
+        selectedProcessCode !== ''
+          ? selectedProcessCode
+          : prevSelectedProcessCode,
+      ]);
+      setScheduleNoList(generateDynamicRollUnitOptions(selectedData));
+      setSelectedRollUnitName([selectedData[0].workInstructions.scheduleNo]);
+    } else if (!selectedData) {
+      setProcessCode([prevSelectedProcessCode]);
+      setSelectedRollUnitName([]);
+    } else {
+      setProcessCode([]);
+      setSelectedRollUnitName([]);
+    }
+
+    console.log('filtercontainer3', selectedData);
+  }, [selectedData]);
+
   return (
     <div className={styles.filterContainer}>
       <div className={styles.dropdown}>
@@ -100,7 +131,7 @@ const FilterContainer = () => {
       </div>
       <Dropdown
         title="스케줄명"
-        options={selectedData?.length > 0 ? scheduleNoList : mockRollUnitName}
+        options={selectedData ? scheduleNoList : mockRollUnitName}
         value={selectedRollUnitName}
         onChange={handleRollUnitChange} // 스케줄 선택 시 데이터 매핑 처리
       />

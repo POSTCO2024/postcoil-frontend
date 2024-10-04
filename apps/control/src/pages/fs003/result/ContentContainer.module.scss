@@ -19,6 +19,19 @@
       .rowChanged {
         background-color: C.$tableRed !important; // changed: true 인 색상
       }
+
+      .rowChanged:hover,
+      .rowChanged:focus,
+      .rowChanged:active {
+        td {
+          background-color: rgba(
+            245,
+            159,
+            159,
+            0.826
+          ) !important; // hover 시 배경색
+        }
+      }
     }
   }
 }
