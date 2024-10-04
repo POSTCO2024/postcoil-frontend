@@ -1,9 +1,20 @@
 import { Client } from '@stomp/stompjs';
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import SocketJS from 'sockjs-client';
 
 import Board from './board/Board';
 import styles from './DashBoard.module.scss';
+
+const operationApiUrl = import.meta.env.VITE_OPERATION_API_URL;
+const operationBaseUrl = import.meta.env.VITE_OPERATION_BASE_URL;
+
+interface FactoryDashboard {
+  process: string;
+  totalCompleteCoils: number;
+  totalGoalCoils: number;
+  totalScheduledCoils: number;
+}
 
 // Tab Dataset
 const tabDataPCM = [
@@ -34,21 +45,21 @@ const initialTabDataCAL = [
   {
     key: '1',
     label: '1CAL',
-    percent: 42,
+    percent: 0, // 기본값 설정
     tableData: [
-      { key: '2', column: '목표 수량', value: '100' },
-      { key: '3', column: '작업 완료', value: '42' },
-      { key: '4', column: '작업 예정', value: '64' },
+      { key: '2', column: '목표 수량', value: '0' },
+      { key: '3', column: '작업 완료', value: '0' },
+      { key: '4', column: '작업 예정', value: '0' },
     ],
   },
   {
     key: '2',
     label: '2CAL',
-    percent: 80,
+    percent: 0, // 기본값 설정
     tableData: [
-      { key: '2', column: '목표 수량', value: '130' },
-      { key: '3', column: '작업 완료', value: '30' },
-      { key: '4', column: '작업 예정', value: '100' },
+      { key: '2', column: '목표 수량', value: '0' },
+      { key: '3', column: '작업 완료', value: '0' },
+      { key: '4', column: '작업 예정', value: '0' },
     ],
   },
 ];
@@ -100,14 +111,75 @@ const tabDataCGL = [
 ];
 
 export const DashBoard: React.FC = () => {
-  // 웹소켓
-  // const [message, setMessage] = useState<string>('');
   const [client, setClient] = useState<Client | null>(null);
+  const [tabDataCAL, setTabDataCAL] = useState<any[]>(initialTabDataCAL);
 
-  const [tabDataCAL, setTabDataCAL] = useState(initialTabDataCAL);
-
+  // API 요청
   useEffect(() => {
-    const socket = new SocketJS('http://localhost:9090/ws/control');
+    const fetchInitialData = async () => {
+      try {
+        const url = `${operationApiUrl}${operationBaseUrl}/monitoring/summary`;
+        const response = await axios.get(url);
+
+        if (response.data.status === 200) {
+          const result = response.data.result;
+          let hasData = false;
+
+          // 응답 데이터로 CAL 데이터 업데이트
+          result.forEach((item: any) => {
+            if (item.process === '1CAL' || item.process === '2CAL') {
+              hasData = true;
+              const index = item.process === '1CAL' ? 0 : 1;
+              initialTabDataCAL[index] = {
+                key: (index + 1).toString(),
+                label: item.process,
+                percent: Math.round(
+                  (item.totalCompleteCoils / item.totalGoalCoils) * 100,
+                ),
+                tableData: [
+                  {
+                    key: '2',
+                    column: '목표 수량',
+                    value: item.totalGoalCoils.toString(),
+                  },
+                  {
+                    key: '3',
+                    column: '작업 완료',
+                    value: item.totalCompleteCoils.toString(),
+                  },
+                  {
+                    key: '4',
+                    column: '작업 예정',
+                    value: item.totalScheduledCoils.toString(),
+                  },
+                ],
+              };
+            }
+          });
+
+          // 데이터를 받은 경우에만 상태 업데이트
+          if (hasData) {
+            setTabDataCAL([...initialTabDataCAL]);
+          } else {
+            // 데이터가 없는 경우 기본값을 보여줌
+            setTabDataCAL(initialTabDataCAL);
+          }
+        } else {
+          console.log(`Error: ${response.data.resultMsg}`);
+          setTabDataCAL(initialTabDataCAL); // 오류 발생 시 기본값 설정
+        }
+      } catch (error) {
+        console.error('Error fetching initial data: ', error);
+        setTabDataCAL(initialTabDataCAL); // API 호출 오류 시 기본값 설정
+      }
+    };
+
+    fetchInitialData(); // 컴포넌트 마운트 시 API 데이터 가져오기
+  }, []);
+
+  // 웹소켓
+  useEffect(() => {
+    const socket = new SocketJS('http://localhost:8086/ws/control');
     const stompClient = new Client({
       webSocketFactory: () => socket as any,
       debug: (str) => {
@@ -115,47 +187,57 @@ export const DashBoard: React.FC = () => {
       },
       onConnect: () => {
         console.log('Conneted Socket! ');
-        stompClient.subscribe('/topic/coilData', (msg) => {
-          // setMessage(msg.body); // 웹소켓으로 받은 데이터를 상태에 저장
+        stompClient.subscribe('/topic/work-started', (msg) => {
+          // setMessage(msg.body); // 웹소켓으로 받은 데이터를 상태에 저장q
+          console.log('=========');
           console.log(msg.body);
 
           const data = JSON.parse(msg.body);
           console.log(data);
+          console.log('check');
 
           // Process
-          const process = data?.TotalSuplly?.process;
-
-          if (process === '1CAL' || process === '2CAL') {
-            const updatedTabData = tabDataCAL.map((item) => {
-              if (item.label === process) {
-                return {
-                  ...item,
-                  percent:
-                    (data.TotalSuplly.totalCompleteCoils /
-                      data.TotalSuplly.totalGoalCoils) *
-                    100,
-                  tableData: [
-                    {
-                      key: '2',
-                      column: '목표 수량',
-                      value: data.TotalSupply.totalGoalCoils.toString(),
-                    },
-                    {
-                      key: '3',
-                      column: '작업 완료',
-                      value: data.TotalSupply.totalCompleteCoils.toString(),
-                    },
-                    {
-                      key: '4',
-                      column: '작업 예정',
-                      value: data.TotalSupply.totalScheduledCoils.toString(),
-                    },
-                  ],
-                };
+          if (data.factoryDashboard && Array.isArray(data.factoryDashboard)) {
+            data.factoryDashboard.forEach((item: FactoryDashboard) => {
+              const process = item.process;
+              // 해당 process에 대한 로직 처리
+              if (process === '1CAL' || process === '2CAL') {
+                const updatedTabData = tabDataCAL.map((tabItem) => {
+                  if (tabItem.label === process) {
+                    return {
+                      ...tabItem,
+                      percent: Math.round(
+                        (item.totalCompleteCoils / item.totalGoalCoils) * 100,
+                      ),
+                      tableData: [
+                        {
+                          key: '2',
+                          column: '목표 수량',
+                          value: item.totalGoalCoils.toString(),
+                        },
+                        {
+                          key: '3',
+                          column: '작업 완료',
+                          value: item.totalCompleteCoils.toString(),
+                        },
+                        {
+                          key: '4',
+                          column: '작업 예정',
+                          value: item.totalScheduledCoils.toString(),
+                        },
+                      ],
+                    };
+                  }
+                  return tabItem;
+                });
+                setTabDataCAL(updatedTabData); // 상태 업데이트
               }
-              return item;
             });
-            return setTabDataCAL(updatedTabData); // 업데이트된 값으로 상태 변경
+          } else {
+            console.error(
+              'Expected factoryDashboard to be an array but received:',
+              data.factoryDashboard,
+            );
           }
         });
       },
@@ -177,7 +259,7 @@ export const DashBoard: React.FC = () => {
         stompClient.deactivate();
       }
     };
-  }, []);
+  }, [tabDataCAL]);
 
   return (
     <div className={styles.dashboardContainer}>

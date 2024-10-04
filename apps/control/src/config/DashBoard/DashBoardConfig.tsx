@@ -8,6 +8,65 @@
 //
 // 사용: data: await getBarChartData()
 
+// 실시간 모니터링
+// mockData.ts
+// export const mockData = {
+//   workTotalCoils: 3,
+//   workScheduledCoils: 1,
+//   workTotalCompleteCoils: 4,
+//   workStartTime: new Date().toISOString(), // 현재 시간
+//   elapsedTime: '0:00:00',
+// };
+// DashBoardConfig.ts
+
+export const mockData1PCM = {
+  workTotalCoils: 13,
+  workScheduledCoils: 4,
+  workTotalCompleteCoils: 9,
+  workStartTime: new Date('2024-10-04T01:30:00').toISOString(), // 시간 수정
+  elapsedTime: '0:00:00',
+};
+
+export const mockData2PCM = {
+  workTotalCoils: 9,
+  workScheduledCoils: 2,
+  workTotalCompleteCoils: 7,
+  workStartTime: new Date().toISOString(),
+  elapsedTime: '0:00:00',
+};
+
+export const mockData1CGL = {
+  workTotalCoils: 15,
+  workScheduledCoils: 5,
+  workTotalCompleteCoils: 10,
+  workStartTime: new Date('2024-10-04T12:30:00').toISOString(),
+  elapsedTime: '0:00:00',
+};
+
+export const mockData2CGL = {
+  workTotalCoils: 30,
+  workScheduledCoils: 7,
+  workTotalCompleteCoils: 23,
+  workStartTime: new Date('2024-10-04T11:20:00').toISOString(),
+  elapsedTime: '0:00:00',
+};
+
+export const mockData1EGL = {
+  workTotalCoils: 9,
+  workScheduledCoils: 8,
+  workTotalCompleteCoils: 1,
+  workStartTime: new Date().toISOString(),
+  elapsedTime: '0:00:00',
+};
+
+export const mockData2EGL = {
+  workTotalCoils: 10,
+  workScheduledCoils: 2,
+  workTotalCompleteCoils: 8,
+  workStartTime: new Date().toISOString(),
+  elapsedTime: '0:00:00',
+};
+
 // 임시 데이터 정의 - data 부분 API로 받기
 // BarChart
 export const barchartOption: echarts.EChartsOption = {

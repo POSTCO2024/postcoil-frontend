@@ -5,7 +5,8 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import styles from './StockCharts.module.scss';
 
-import { url } from '@/config/UrlConfig';
+const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
+const controlBaseUrl = import.meta.env.VITE_CONTROL_BASE_URL;
 
 const StockCharts: React.FC = () => {
   const [treemapData, setTreemapData] = useState<any[]>([]);
@@ -23,7 +24,9 @@ const StockCharts: React.FC = () => {
 
   const fetchTreemapData = async () => {
     try {
-      const response = await axios.get(url + '/api/v1/monitoring/materials');
+      const response = await axios.get(
+        `${controlApiUrl}${controlBaseUrl}/monitoring/materials`,
+      );
       const fetchData = transformFetchData(response.data.result);
       setTreemapData(fetchData);
     } catch (error) {
