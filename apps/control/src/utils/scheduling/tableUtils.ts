@@ -262,6 +262,17 @@ export const transformedWorkItemData = (
   ) {
     data.sort((a, b) => (a.sequence as number) - (b.sequence as number));
   }
+
+  const formatIfMoreThanThreeDecimals = (value: number | string) => {
+    if (value != null) {
+      const decimalCount = value.toString().split('.')[1]?.length || 0;
+      return decimalCount > 3
+        ? Math.round((value as number) * 1000) / 1000
+        : value;
+    }
+    return undefined;
+  };
+
   return data.map((item) => ({
     key: item.id,
     id: item.id as string,
@@ -271,17 +282,17 @@ export const transformedWorkItemData = (
     expectedDuration: item.expectedItemDuration,
     startTime: item.startTime,
     endTime: item.endTime,
-    goalWidth: item.initialGoalWidth,
-    goalThickness: item.initialGoalThickness,
-    initialWidth: item.initialWidth,
-    initialThickness: item.initialThickness,
-    width: item.width,
-    thickness: item.thickness,
-    processedWidth: item.width,
-    processedThickness: item.thickness,
-    temperature: item.temperature,
+    goalWidth: formatIfMoreThanThreeDecimals(item.initialGoalWidth),
+    goalThickness: formatIfMoreThanThreeDecimals(item.initialGoalThickness!),
+    initialWidth: formatIfMoreThanThreeDecimals(item.initialWidth!),
+    initialThickness: formatIfMoreThanThreeDecimals(item.initialThickness),
+    width: formatIfMoreThanThreeDecimals(item.width!),
+    thickness: formatIfMoreThanThreeDecimals(item.thickness!),
+    processedWidth: formatIfMoreThanThreeDecimals(item.width!),
+    processedThickness: formatIfMoreThanThreeDecimals(item.thickness!),
+    temperature: formatIfMoreThanThreeDecimals(item.temperature),
     nextProc: item.nextProc,
     coilTypeCode: item.coilTypeCode,
-    weight: item.weight,
+    weight: formatIfMoreThanThreeDecimals(item.weight as number),
   }));
 };

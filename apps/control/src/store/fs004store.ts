@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 import { fetchOperationData } from '@/api/operationApi';
-import { WorkInstructionsDTO } from '@/config/scheduling/dto';
+import { ClientDTO, WorkInstructionsDTO } from '@/config/scheduling/dto';
 import {
   HoverState,
   ScrollState,
@@ -47,19 +47,24 @@ export const useWorkInstructionStore = create<StoreType>((set) => ({
       workItems: null,
     })); // 데이터 상태를 null로 변경
   },
-  setSelectedData: (scheduleNo: string) => {
-    set((state) => {
-      const selectedData = (state.data as WorkInstructionsDTO[])?.find(
-        (item) => item.scheduleNo === scheduleNo,
-      ); // 조건에 맞는 첫 번째 데이터 찾기
+  setData: (scheduleNo: string | ClientDTO) => {
+    if (typeof scheduleNo == 'string') {
+      set((state) => {
+        const selectedData = (state.data as WorkInstructionsDTO[])?.find(
+          (item) => item.scheduleNo === scheduleNo,
+        ); // 조건에 맞는 첫 번째 데이터 찾기
 
-      return {
-        ...state,
-        scheduleNo: scheduleNo,
-        scExpectedDuration: selectedData?.expectedDuration, // 해당 데이터의 expectedDuration
-        workItems: selectedData?.items, // 해당 데이터의 items 배열
-      };
-    });
+        return {
+          ...state,
+          scheduleNo: scheduleNo,
+          scExpectedDuration: selectedData?.expectedDuration, // 해당 데이터의 expectedDuration
+          workItems: selectedData?.items, // 해당 데이터의 items 배열
+        };
+      });
+    } else {
+      // ClientDTO 타입인 경우, 에러를 throw
+      console.error('Expected string but received a ClientDTO');
+    }
   },
 }));
 
