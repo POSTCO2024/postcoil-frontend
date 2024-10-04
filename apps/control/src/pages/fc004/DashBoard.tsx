@@ -5,7 +5,6 @@ import { useLocation } from 'react-router-dom';
 import SocketJS from 'sockjs-client';
 
 // 그래프
-
 import BarChartV2 from './chart/BarChartV2';
 import DonutChart from './chart/DonutChart';
 import DoubleBarChart from './chart/DoubleBarChart';
@@ -33,6 +32,8 @@ import {
 
 const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
 const controlBaseUrl = import.meta.env.VITE_CONTROL_BASE_URL;
+const operationApiUrl = import.meta.env.VITE_OPERATION_API_URL;
+const operationBaseUrl = import.meta.env.VITE_OPERATION_BASE_URL;
 
 // Interface
 // API response
@@ -91,6 +92,10 @@ const DashBoard: React.FC = () => {
   const [dueDate, setDueDate] = useState<DueDateDataType[]>([]); // 생산 기한일
   const [rollUnitOption, setRollUnitOption] =
     useState<echarts.EChartsCoreOption | null>(null); // 롤 단위
+  const [barchartV2Option, setBarchartV2Option] =
+    useState<echarts.EChartsOption | null>(null);
+  const [rowbarchartOption, setRowbarchartOption] =
+    useState<echarts.EChartsOption | null>(null);
 
   // 모니터링 상태 관리
   // mock 데이터
@@ -195,6 +200,25 @@ const DashBoard: React.FC = () => {
     return new Date(dueDate).toISOString().split('T')[0];
   };
 
+  // 차공정/재료진도
+  const fetchChartData = async () => {
+    try {
+      const response = await axios.get(
+        `${operationApiUrl}${operationBaseUrl}/monitoring/analyze?SchProcess=${selectedProc}`,
+      );
+      console.log('+++ 확인해 +++');
+      console.log(response);
+
+      if (response.data.status === 200) {
+        const result = response.data.result;
+        console.log('GOOD~');
+        console.log(JSON.stringify(result));
+      }
+    } catch (error) {
+      console.error('API 호출 오류:', error);
+    }
+  };
+
   // Rendering
   const render = async () => {
     // 품종/고객사
@@ -227,6 +251,7 @@ const DashBoard: React.FC = () => {
 
   useEffect(() => {
     render();
+    fetchChartData();
   }, [selectedProc]);
 
   // 웹소켓
@@ -367,13 +392,13 @@ const DashBoard: React.FC = () => {
         <h2>작업대상재 분석</h2>
         <div className={styles.line2}>
           <div className={styles.smallCard}>
-            <BarChartV2 title="차공정" option={barchartV2Option1} />
+            <BarChartV2 title="차공정" option={barchartV2Option} />
           </div>
           <div className={styles.smallCard}>
             <BarChartV2 title="롤 단위" option={rollUnitOption} />
           </div>
           <div className={styles.smallCard}>
-            <RowbarChart option={rowbarchartOption} />
+            {rowbarchartOption && <RowbarChart option={rowbarchartOption} />}
           </div>
           <div className={styles.smallCard}>
             <List data={dueDate} />
