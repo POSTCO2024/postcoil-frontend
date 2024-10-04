@@ -1,4 +1,8 @@
+import { Tab, Table } from '@postcoil/ui';
+import { ColumnDataType, DataType } from '@postcoil/ui/config/TableConfig';
+import { Client } from '@stomp/stompjs';
 import { useEffect, useState } from 'react';
+import SockJS from 'sockjs-client';
 import * as THREE from 'three';
 import { PMREMGenerator } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -6,8 +10,8 @@ import Stats from 'three/examples/jsm/libs/stats.module';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
 
-import AnalyzeChart from './result/AnalyzeChart';
-import styles from './ThreeDMonitoring.module.scss';
+import ContentContainer from './component/ContentContainer';
+import styles from './ThreeDSimulation.module.scss';
 
 let clipPlaneX: any;
 let clipPlaneX2: any;
@@ -394,10 +398,10 @@ class App {
 
   update(time: number) {
     time *= 0.001;
-    const deltaTime = this.clock.getDelta();
+    const deltaTime = this.clock.getDelta() / 2;
     time += 1;
     if (this.mixer) {
-      this.mixer.update(deltaTime);
+      this.mixer.update(deltaTime / 10);
     }
 
     if (clipPlaneX && clipPlaneX.constant < 300) {
@@ -520,49 +524,178 @@ class App {
     this.renderer.setSize(width, height);
   }
 }
+interface SchDataType extends DataType {
+  key?: string;
+  no: string | number;
+  scheduleId: string;
+  createdDate: string;
+  rollID: string;
+  facility: string;
+  startTime: string;
+  endTime: string;
+  rejectCount?: string | number;
+}
 
-const ThreeDMonitoring = () => {
-  const [meshInfo, setMeshInfo] = useState(null); // JSON 데이터를 저장하는 상태
-  const [messageCount, setMessageCount] = useState(0); // 메시지 카운트를 위한 상태
+// Table 임의 데이터
+const columnsData: ColumnDataType<SchDataType>[] = [
+  {
+    title: 'no',
+    dataIndex: 'no',
+    sortable: {
+      compare: (a, b) => a.no - b.no,
+      multiple: 3,
+    },
+  },
+  {
+    title: '스케줄ID',
+    dataIndex: 'scheduleId',
+  },
+  {
+    title: '생성일자',
+    dataIndex: 'createdDate',
+    sortable: {
+      compare: (a, b) => a.createdDate - b.createdDate,
+      multiple: 1,
+    },
+  },
+  {
+    title: '재료단위',
+    dataIndex: 'rollID',
+    sortable: {
+      compare: (a, b) => a.rollID - b.rollID,
+      multiple: 0,
+    },
+  },
+  {
+    title: '해당공정',
+    dataIndex: 'facility',
+    sortable: {
+      compare: (a, b) => a.facility - b.facility,
+      multiple: 4,
+    },
+  },
+  {
+    title: '작업 예상 시간',
+    dataIndex: 'endTime',
+    sortable: {
+      compare: (a, b) => a.endTime - b.endTime,
+      multiple: 6,
+    },
+  },
+];
 
+// const baseData: SchDataType[] = [
+//   {
+//     no: 1,
+//     scheduleId: '1CAL001A',
+//     createdDate: '2024-08-20',
+//     rollID: 'A',
+//     facility: '1CAL',
+//     startTime: '2024-08-21 18:00:21',
+//     endTime: '2024-08-21 21:00:21',
+//     rejectCount: '1',
+//   },
+//   {
+//     no: 2,
+//     scheduleId: '1CAL002A',
+//     createdDate: '2024-08-20',
+//     rollID: 'A',
+//     facility: '1CAL',
+//     startTime: '2024-08-21 21:00:21',
+//     endTime: '2024-08-21 00:00:21',
+//     rejectCount: '0',
+//   },
+//   {
+//     no: 3,
+//     scheduleId: '1CAL003A',
+//     createdDate: '2024-08-20',
+//     rollID: 'A',
+//     facility: '1CAL',
+//     startTime: '2024-08-21 00:00:21',
+//     endTime: '2024-08-22 03:00:21',
+//     rejectCount: '0',
+//   },
+//   {
+//     no: 4,
+//     scheduleId: '1CAL004A',
+//     createdDate: '2024-08-21',
+//     rollID: 'A',
+//     facility: '1CAL',
+//     startTime: '2024-08-22 03:00:21',
+//     endTime: '2024-08-22 06:00:21',
+//     rejectCount: '0',
+//   },
+// ];
+const ThreeDSimulator = () => {
   useEffect(() => {
+    // Initialize the 3D App
     const container = document.querySelector('#webgl-container');
     if (container && container.children.length === 0) {
-      new App(); // 3D 렌더링을 위한 함수
+      new App();
     }
 
-    // WebSocket 연결 설정
-    const ws = new WebSocket('ws://localhost:8080/control');
+    // Initialize SockJS and STOMP client
+    const socket = new SockJS('http://localhost:8080/ws/control');
+    const stompClient = new Client({
+      webSocketFactory: () => socket,
+      debug: (str) => {
+        console.log(str);
+      },
+      onConnect: () => {
+        console.log('WebSocket connection established');
 
-    ws.onmessage = (event) => {
-      const data = JSON.parse(event.data); // 수신한 메시지를 JSON으로 파싱
-      setMeshInfo(data[messageCount]); // 현재 메시지 인덱스에 해당하는 데이터만 출력
-      setMessageCount((prevCount) => (prevCount + 1) % data.length); // 메시지 카운트 업데이트
-    };
+        // Subscribe to work-started topic
+        stompClient.subscribe('/topic/work-started', (message) => {
+          console.log(message);
+          const body = JSON.parse(message.body);
+          console.log('Received message on /topic/work-started:', body);
+          // Handle the received data as needed
+        });
 
-    const interval = setInterval(() => {
-      ws.send('request-next-data'); // 서버에 다음 데이터를 요청하는 메시지 전송
-    }, 30000); // 30초마다 메시지를 서버에 요청
+        // Subscribe to work-completed topic
+        stompClient.subscribe('/topic/work-completed', (message) => {
+          const body = JSON.parse(message.body);
+          console.log('Received message on /topic/work-completed:', body);
+          // Handle the received data as needed
+        });
+      },
+      onStompError: (error) => {
+        console.error('STOMP error:', error);
+      },
+    });
 
+    // Activate the STOMP client
+    stompClient.activate();
+
+    // Cleanup on unmount
     return () => {
-      ws.close(); // 컴포넌트가 언마운트될 때 WebSocket 연결 종료
-      clearInterval(interval); // 타이머 제거
+      if (stompClient) {
+        stompClient.deactivate();
+      }
     };
-  }, [messageCount]);
+  }, []);
 
+  // Render the component
   return (
     <div className={styles.page}>
-      <h1>3D Monitoring 작업 화면</h1>
+      <h1>3D 시뮬레이션</h1>
       <div
         id="webgl-container"
         style={{ width: '95%', height: '120%', position: 'relative' }}></div>
-      <div className={styles.result}>
+      <div className={styles.schtable}>
         <div className={styles.summary}>
-          <AnalyzeChart />
+          <Table
+            useCheckBox={false}
+            columns={columnsData}
+            handleRowClick={(record) => {
+              console.log(record);
+            }}
+            size="small"
+          />
         </div>
       </div>
     </div>
   );
 };
 
-export default ThreeDMonitoring;
+export default ThreeDSimulator;

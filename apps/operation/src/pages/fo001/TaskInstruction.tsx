@@ -26,7 +26,7 @@ export const TaskInstruction = () => {
     }
   };
   useEffect(() => {
-    const socket = new SockJS('http://localhost:9090/coil');
+    const socket = new SockJS('http://localhost:8080/coil');
     const stompClient = new Client({
       webSocketFactory: () => socket as any,
       debug: (str) => {
