@@ -29,9 +29,6 @@ const FilterContainer = () => {
     (state) => state.processCode!,
   );
 
-  console.log(selectedProcessCode);
-  console.log(prevSelectedProcessCode);
-
   const generateDynamicRollUnitOptions = (
     data: ClientDTO[],
   ): dropDownOptionType[] => {

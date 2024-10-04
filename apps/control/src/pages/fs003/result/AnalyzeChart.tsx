@@ -1,6 +1,6 @@
 import { ClockCircleOutlined, RedoOutlined } from '@ant-design/icons';
 import { Table } from '@postcoil/ui';
-import { ConfigProvider } from 'antd';
+// import { ConfigProvider } from 'antd';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration'; // duration 플러그인 import
 import { useEffect, useState } from 'react';

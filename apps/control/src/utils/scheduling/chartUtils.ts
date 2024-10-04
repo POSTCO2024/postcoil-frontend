@@ -118,13 +118,6 @@ export const transformedDataToResultChartData = (
       x: item.sequence as number,
       id: item.workItemId as string,
       color: targetColor,
-      // item.isRejected === 'Y'
-      //   ? '#ff0c00a8' // case1: rejected 재료
-      //   : point.supplyCompleted === true && item.endTime === ''
-      //     ? 'yellowgreen' // case2: 보급완료 재료
-      //     : item.supplyCompleted
-      //       ? '#b3b3b3' // case3: 작업완료 재료
-      //       : undefined, // case4: 작업예정 재료
     };
   });
 };

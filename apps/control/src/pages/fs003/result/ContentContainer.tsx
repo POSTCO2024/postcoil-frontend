@@ -24,14 +24,11 @@ const ContentContainer = () => {
     } else {
       setDataSource([]);
     }
-    console.log('Material', materialData);
-    console.log('Updated dataSource:', dataSource);
   }, [materialData]); // materialData가 변경될 때마다 실행
 
   return (
     <div className={styles.contentContainer}>
       <section className={styles.tableWrapper}>
-        {/* TODO: 데이터 확정시, @postcoil/ui의 Table 로 변경하기 */}
         <div className={styles.table}>
           <ConfigProvider
             theme={{
