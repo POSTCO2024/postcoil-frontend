@@ -5,7 +5,6 @@ import SocketJS from 'sockjs-client';
 
 import Board from './board/Board';
 import styles from './DashBoard.module.scss';
-import { Result } from 'antd';
 
 const operationApiUrl = import.meta.env.VITE_OPERATION_API_URL;
 const operationBaseUrl = import.meta.env.VITE_OPERATION_BASE_URL;
@@ -112,7 +111,6 @@ const tabDataCGL = [
 ];
 
 export const DashBoard: React.FC = () => {
-  // const [message, setMessage] = useState<string>('');
   const [client, setClient] = useState<Client | null>(null);
   const [tabDataCAL, setTabDataCAL] = useState<any[]>(initialTabDataCAL);
 
@@ -122,42 +120,18 @@ export const DashBoard: React.FC = () => {
       try {
         const url = `${operationApiUrl}${operationBaseUrl}/monitoring/summary`;
         const response = await axios.get(url);
-        console.log('API response ');
-        console.log(Result);
 
         if (response.data.status === 200) {
           const result = response.data.result;
+          let hasData = false;
 
-          // 응답이 있는 경우에만 업데이트
+          // 응답 데이터로 CAL 데이터 업데이트
           result.forEach((item: any) => {
-            if (item.process === '1CAL') {
-              initialTabDataCAL[0] = {
-                key: '1',
-                label: item.process,
-                percent: Math.round(
-                  (item.totalCompleteCoils / item.totalGoalCoils) * 100,
-                ),
-                tableData: [
-                  {
-                    key: '2',
-                    column: '목표 수량',
-                    value: item.totalGoalCoils.toString(),
-                  },
-                  {
-                    key: '3',
-                    column: '작업 완료',
-                    value: item.totalCompleteCoils.toString(),
-                  },
-                  {
-                    key: '4',
-                    column: '작업 예정',
-                    value: item.totalScheduledCoils.toString(),
-                  },
-                ],
-              };
-            } else if (item.process === '2CAL') {
-              initialTabDataCAL[1] = {
-                key: '2',
+            if (item.process === '1CAL' || item.process === '2CAL') {
+              hasData = true;
+              const index = item.process === '1CAL' ? 0 : 1;
+              initialTabDataCAL[index] = {
+                key: (index + 1).toString(),
                 label: item.process,
                 percent: Math.round(
                   (item.totalCompleteCoils / item.totalGoalCoils) * 100,
@@ -183,12 +157,20 @@ export const DashBoard: React.FC = () => {
             }
           });
 
-          setTabDataCAL(initialTabDataCAL); // 상태 업데이트
+          // 데이터를 받은 경우에만 상태 업데이트
+          if (hasData) {
+            setTabDataCAL([...initialTabDataCAL]);
+          } else {
+            // 데이터가 없는 경우 기본값을 보여줌
+            setTabDataCAL(initialTabDataCAL);
+          }
         } else {
           console.log(`Error: ${response.data.resultMsg}`);
+          setTabDataCAL(initialTabDataCAL); // 오류 발생 시 기본값 설정
         }
       } catch (error) {
         console.error('Error fetching initial data: ', error);
+        setTabDataCAL(initialTabDataCAL); // API 호출 오류 시 기본값 설정
       }
     };
 
