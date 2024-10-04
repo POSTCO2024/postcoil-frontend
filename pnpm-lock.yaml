@@ -226,6 +226,9 @@ importers:
       axios:
         specifier: 1.7.3
         version: 1.7.3
+      dayjs:
+        specifier: ^1.11.13
+        version: 1.11.13
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -250,6 +253,9 @@ importers:
       three:
         specifier: ^0.132.2
         version: 0.132.2
+      zustand:
+        specifier: 5.0.0-rc.2
+        version: 5.0.0-rc.2(@types/react@18.3.3)(react@18.3.1)
     devDependencies:
       '@postcoil/eslint-config':
         specifier: workspace:*

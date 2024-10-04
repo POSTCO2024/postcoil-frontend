@@ -1,8 +1,14 @@
 import { RedoOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { Dropdown } from '@postcoil/ui';
 import { Button } from '@postcoil/ui/components/atoms/Button';
+import { useEffect, useState } from 'react';
 
 import styles from './FilterContainer.module.scss';
+
+import { ClientDTO } from '@/config/dto';
+import { useWorkInstructionStore } from '@/store/fo001store';
+import { options } from '@/utils/dropdownUtils';
+import { mockRollUnitName } from '@/utils/MockDropdown';
 
 interface dropDownOptionType {
   value: string;
@@ -11,95 +17,120 @@ interface dropDownOptionType {
   icon?: React.ReactNode;
 }
 
-interface OptionType {
-  value: string;
-  label: string;
-  icon?: React.ReactNode;
-}
-
 const FilterContainer = () => {
-  // const handleSearch = () => {
-  //   // TODO: API 호출
-  // };
+  const fetchData = useWorkInstructionStore((state) => state.fetchData!);
+  const selectedProcessCode = useWorkInstructionStore(
+    (state) => state.processCode!,
+  );
+  const setData = useWorkInstructionStore(
+    (state) => state.setData!, // processCode 업데이트 함수
+  );
+  const selectedData = useWorkInstructionStore((state) =>
+    selectedProcessCode === '1CAL'
+      ? (state.data as ClientDTO[])
+      : (state.data2 as ClientDTO[]),
+  );
 
-  // TODO: fetch DATA
-  const mockOptions: OptionType[] = [
-    {
-      value: '1CAL',
-      label: '1CAL',
-    },
-    {
-      value: '2CAL',
-      label: '2CAL',
-    },
-    // Add more options...
-  ];
+  const generateDynamicRollUnitOptions = (
+    data: ClientDTO[],
+  ): dropDownOptionType[] => {
+    return data.map((client) => {
+      const scheduleNo = client.workInstructions.scheduleNo;
+      const schStatus = client.workInstructions.schStatus;
 
-  const mockRollUnitName: dropDownOptionType[] = [
-    {
-      value: '1CAL001A',
-      label: (
-        <div>
-          {/* 아이콘추가 부분 */}
-          <RedoOutlined spin style={{ color: '#1677ff' }} />
-          <span style={{ marginLeft: 10 }}>{'1CAL001A'}</span>
-        </div>
-      ),
-      icon: <RedoOutlined />,
-    },
-    {
-      value: '1CAL001B',
-      label: (
-        <div>
-          <ClockCircleOutlined style={{ color: '#1677ff' }} />
-          <span style={{ marginLeft: 10 }}>{'1CAL001B'}</span>
-        </div>
-      ),
-      icon: <ClockCircleOutlined />,
-    },
-    {
-      value: '1CAL002A',
-      label: (
-        <div>
-          <ClockCircleOutlined style={{ color: '#1677ff' }} />
-          <span style={{ marginLeft: 10 }}>{'1CAL002A'}</span>
-        </div>
-      ),
-      icon: <ClockCircleOutlined />,
-    },
-    {
-      value: '1CAL002B',
-      label: (
-        <div>
-          <ClockCircleOutlined style={{ color: '#1677ff' }} />
-          <span style={{ marginLeft: 10 }}>{'1CAL002B'}</span>
-        </div>
-      ),
-      icon: <ClockCircleOutlined />,
-    },
-    {
-      value: '1CAL003B',
-      label: (
-        <div>
-          <ClockCircleOutlined style={{ color: '#1677ff' }} />
-          <span style={{ marginLeft: 10 }}>{'1CAL003B'}</span>
-        </div>
-      ),
-      icon: <ClockCircleOutlined />,
-    },
-    // Add more options...
-  ];
+      return {
+        value: scheduleNo,
+        label: (
+          <div>
+            {schStatus === 'IN_PROGRESS' ? (
+              <RedoOutlined spin style={{ color: '#1677ff' }} />
+            ) : (
+              <ClockCircleOutlined style={{ color: '#1677ff' }} />
+            )}
+            <span style={{ marginLeft: 10 }}>{scheduleNo}</span>
+          </div>
+        ),
+        icon:
+          schStatus === 'IN_PROGRESS' ? (
+            <RedoOutlined />
+          ) : (
+            <ClockCircleOutlined />
+          ),
+      };
+    });
+  };
+  const [scheduleNoList, setScheduleNoList] = useState<dropDownOptionType[]>(
+    [],
+  );
+  // 선택된 processCode에 따라 fetch 해 온 옵션 생성
+
+  const [processCode, setProcessCode] = useState<string[]>([
+    selectedProcessCode,
+  ]);
+
+  const [selectedRollUnitName, setSelectedRollUnitName] = useState<string[]>(
+    [],
+  );
+
+  const handleProcessCode = (value?: string[]) => {
+    if (value && value[0] !== '') {
+      setProcessCode(value);
+      setSelectedRollUnitName([]);
+      fetchData(value); // fetchData 함수 호출
+    } else if (value) {
+      setProcessCode(value);
+    } else {
+      setProcessCode([]);
+      setSelectedRollUnitName([]);
+    }
+  };
+
+  const handleRollUnitChange = (value?: string[]) => {
+    if (value && value[0] !== '') {
+      setSelectedRollUnitName(value);
+      setData(
+        selectedData.filter(
+          (item) => item.workInstructions.scheduleNo === value[0],
+        )[0],
+      );
+    } else {
+      setSelectedRollUnitName([]);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedData && selectedData.length > 0) {
+      setProcessCode([
+        selectedProcessCode !== '' ? selectedProcessCode : '1CAL',
+      ]);
+      setScheduleNoList(generateDynamicRollUnitOptions(selectedData));
+      setSelectedRollUnitName([selectedData[0].workInstructions.scheduleNo]);
+    } else {
+      setProcessCode([]);
+      setSelectedRollUnitName([]);
+    }
+
+    console.log('filtercontainer3', selectedData);
+  }, [selectedData]);
 
   return (
     <div className={styles.filterContainer}>
       <div className={styles.dropdown}>
-        <Dropdown title="공정명" options={mockOptions} />
-        {/* TODO: Dropdown 데이터 변경, 함수 받게 */}
+        <Dropdown
+          title="공정명"
+          options={options}
+          onChange={handleProcessCode}
+          value={processCode}
+        />
       </div>
-      <Dropdown title="롤단위명" options={mockRollUnitName} />
-      {/* <Button type="primary" onClick={handleSearch}>
-        조회
-      </Button> */}
+      <div>
+        <Dropdown
+          title="스케줄명"
+          options={selectedData ? scheduleNoList : mockRollUnitName}
+          value={selectedRollUnitName}
+          onChange={handleRollUnitChange} // 스케줄 선택 시 데이터 매핑 처리
+        />
+      </div>
       <div className={styles.btns}>
         <Button text={'보급요구'} style={true} />
         <Button text={'REJECT'} style={true} />

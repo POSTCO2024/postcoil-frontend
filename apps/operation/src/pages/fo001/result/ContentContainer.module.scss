@@ -1,12 +1,12 @@
 @use '@/styles/color' as C;
 
 .contentContainer {
-  margin: 0 auto 20px;
+  margin: 0 auto 50px;
   font-size: 1.6rem;
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 60%;
+  height: 50%;
 
   .tableWrapper {
     overflow-x: scroll;
@@ -18,6 +18,19 @@
 
       .rowChanged {
         background-color: C.$tableRed !important; // changed: true 인 색상
+      }
+
+      .rowChanged:hover,
+      .rowChanged:focus,
+      .rowChanged:active {
+        td {
+          background-color: rgba(
+            245,
+            159,
+            159,
+            0.826
+          ) !important; // hover 시 배경색
+        }
       }
     }
   }
