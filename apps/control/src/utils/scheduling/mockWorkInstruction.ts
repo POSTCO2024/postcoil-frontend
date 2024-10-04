@@ -1,5 +1,14 @@
 import { ColumnDataType, DataType } from '@postcoil/ui/config/TableConfig';
 
+export const mockCoilTypeCodeData = [
+  { key: '1', id: '1', type: 'AA', count: '5' },
+  { key: '2', id: '2', type: 'BB', count: '10' },
+  { key: '3', id: '3', type: 'CC', count: '3' },
+  { key: '4', id: '4', type: 'DD', count: '4' },
+  { key: '5', id: '4', type: 'EE', count: '14' },
+  { key: '6', id: '4', type: 'FF', count: '9' },
+];
+
 export const mockWorkInstructions = [
   {
     id: 50,
