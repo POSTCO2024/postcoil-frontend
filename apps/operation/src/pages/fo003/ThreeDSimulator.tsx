@@ -633,49 +633,8 @@ const ThreeDSimulator = () => {
     if (container && container.children.length === 0) {
       new App();
     }
-
-    // Initialize SockJS and STOMP client
-    const socket = new SockJS('http://localhost:8080/ws/control');
-    const stompClient = new Client({
-      webSocketFactory: () => socket,
-      debug: (str) => {
-        console.log(str);
-      },
-      onConnect: () => {
-        console.log('WebSocket connection established');
-
-        // Subscribe to work-started topic
-        stompClient.subscribe('/topic/work-started', (message) => {
-          console.log(message);
-          const body = JSON.parse(message.body);
-          console.log('Received message on /topic/work-started:', body);
-          // Handle the received data as needed
-        });
-
-        // Subscribe to work-completed topic
-        stompClient.subscribe('/topic/work-completed', (message) => {
-          const body = JSON.parse(message.body);
-          console.log('Received message on /topic/work-completed:', body);
-          // Handle the received data as needed
-        });
-      },
-      onStompError: (error) => {
-        console.error('STOMP error:', error);
-      },
-    });
-
-    // Activate the STOMP client
-    stompClient.activate();
-
-    // Cleanup on unmount
-    return () => {
-      if (stompClient) {
-        stompClient.deactivate();
-      }
-    };
   }, []);
 
-  // Render the component
   return (
     <div className={styles.page}>
       <h1>3D 시뮬레이션</h1>
