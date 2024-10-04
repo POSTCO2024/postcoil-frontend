@@ -22,6 +22,7 @@ export const useWorkInstructionStore = create<StoreType>((set) => ({
   error: null,
   processCode: '', // 현재 process Code
   scheduleNo: '', // 선택된 schedule 이름 저장
+  scheduleStartTime: null, // 선택된 schedule의 시작 시간
   scExpectedDuration: null, // 선택된 schedule의 예상 시간
   countCoilTypeCode: null, // 선택된 schedule의 countCoilTypeCode
   workItems: null, // 선택된 schedule의 업데이트된 재료들 상태
@@ -30,6 +31,7 @@ export const useWorkInstructionStore = create<StoreType>((set) => ({
     return set({
       processCode: data.workInstructions.process,
       scheduleNo: data.workInstructions.scheduleNo,
+      scheduleStartTime: data.workInstructions.startTime,
       scExpectedDuration: data.workInstructions.expectedDuration,
       countCoilTypeCode: data.countCoilTypeCode,
       workItems: data.workInstructions.items,
@@ -45,21 +47,7 @@ export const useWorkInstructionStore = create<StoreType>((set) => ({
       }); // 데이터 fetch
 
       // API로 받은 데이터를 정렬 후 상태에 저장
-      const sortedData = (result as ClientDTO[]).sort((a, b) => {
-        // schStatus 기준으로 먼저 정렬 (IN_PROGRESS 우선)
-        if (
-          a.workInstructions.schStatus === 'IN_PROGRESS' &&
-          b.workInstructions.schStatus === 'PENDING'
-        )
-          return -1;
-        if (
-          a.workInstructions.schStatus === 'PENDING' &&
-          b.workInstructions.schStatus === 'IN_PROGRESS'
-        )
-          return 1;
-        // 같은 schStatus라면 scheduleId 기준으로 오름차순 정렬
-        return a.workInstructions.scheduleId - b.workInstructions.scheduleId;
-      });
+      const sortedData = sortData(result as ClientDTO[]);
 
       // IN_PROGRESS 데이터가 있는지 확인
       const inProgressItem = sortedData.find(
@@ -81,6 +69,7 @@ export const useWorkInstructionStore = create<StoreType>((set) => ({
 
       if (inProgressItem) {
         newState.scheduleNo = inProgressItem.workInstructions.scheduleNo; // 선택된 schedule 이름 저장
+        newState.scheduleStartTime = inProgressItem.workInstructions.startTime;
         newState.scExpectedDuration =
           inProgressItem.workInstructions.expectedDuration; // 예상 시간
         newState.workItems = inProgressItem.workInstructions.items; // 업데이트된 재료들 상태
@@ -88,6 +77,7 @@ export const useWorkInstructionStore = create<StoreType>((set) => ({
         newState.coilSupplyData = inProgressItem.coilSupply; // 업데이트된 CoilSupply 데이터 상태
       } else if (pendingItem) {
         newState.scheduleNo = pendingItem.workInstructions.scheduleNo; // 선택된 schedule 이름 저장
+        newState.scheduleStartTime = pendingItem.workInstructions.startTime; // 선택된 schedule의 시작 시간
         newState.scExpectedDuration =
           pendingItem.workInstructions.expectedDuration; // 예상 시간
         newState.workItems = pendingItem.workInstructions.items; // 업데이트된 재료들 상태
@@ -162,11 +152,11 @@ export const useWorkInstructionStore = create<StoreType>((set) => ({
             },
             coilSupply: {
               ...updatedData[existingItemIndex].coilSupply,
-              // ...newItem.coilSupply, // 웹소켓으로는 coilSupply 업데이트 안하기 때문
+              ...newItem.coilSupply,
             },
             countCoilTypeCode: {
               ...updatedData[existingItemIndex].countCoilTypeCode,
-              ...newItem.countCoilTypeCode,
+              // ...newItem.countCoilTypeCode, // 웹소켓으로는 countCoilTypeCode 업데이트 안하기 때문
             },
           };
         } else {
@@ -180,6 +170,7 @@ export const useWorkInstructionStore = create<StoreType>((set) => ({
           if (state.scheduleNo !== newItem.workInstructions.scheduleNo) {
             set({
               scheduleNo: newItem.workInstructions.scheduleNo,
+              scheduleStartTime: newItem.workInstructions.startTime,
               scExpectedDuration: newItem.workInstructions.expectedDuration,
               countCoilTypeCode: newItem.countCoilTypeCode,
               workItems: newItem.workInstructions.items,
@@ -188,37 +179,39 @@ export const useWorkInstructionStore = create<StoreType>((set) => ({
           }
         }
       });
-
-      // 데이터 정렬: schStatus = "IN_PROGRESS"가 우선, 그 다음 scheduleId 오름차순
-      updatedData.sort((a, b) => {
-        // schStatus 우선순위 정렬
-        if (
-          a.workInstructions.schStatus === 'IN_PROGRESS' &&
-          b.workInstructions.schStatus !== 'IN_PROGRESS'
-        ) {
-          return -1;
-        }
-        if (
-          a.workInstructions.schStatus !== 'IN_PROGRESS' &&
-          b.workInstructions.schStatus === 'IN_PROGRESS'
-        ) {
-          return 1;
-        }
-
-        // scheduleId 오름차순 정렬
-        return a.workInstructions.scheduleId - b.workInstructions.scheduleId;
-      });
+      const sortedData = sortData(updatedData);
 
       // 최종적으로 적절한 상태를 업데이트
       if (processCode === '1CAL') {
-        return { data: updatedData, loading: false };
+        return { data: sortedData, loading: false };
       } else if (processCode === '2CAL') {
-        return { data2: updatedData, loading: false };
+        return { data2: sortedData, loading: false };
       }
       return {}; // 타입 오류 방지 위해 빈 객체 반환
     });
   },
 }));
+
+// API로 받은 데이터를 정렬 후 상태에 저장
+const sortData = (result: ClientDTO[]) =>
+  result.sort((a, b) => {
+    // schStatus 기준으로 먼저 정렬 (IN_PROGRESS 우선)
+    if (
+      a.workInstructions.schStatus === 'IN_PROGRESS' &&
+      b.workInstructions.schStatus === 'PENDING'
+    )
+      return -1;
+    if (
+      a.workInstructions.schStatus === 'PENDING' &&
+      b.workInstructions.schStatus === 'IN_PROGRESS'
+    )
+      return 1;
+    // 같은 schStatus라면 scheduleId 기준으로 오름차순 정렬
+    return a.workInstructions.workInstructionId
+      ? a.workInstructions.workInstructionId -
+          b.workInstructions.workInstructionId!
+      : a.workInstructions.id! - b.workInstructions.id!;
+  });
 
 // WebSocket 초기화 함수
 export const initializeWebSocket = (
@@ -239,7 +232,11 @@ export const initializeWebSocket = (
       // 수신할 주제에 구독
       stompClient.subscribe(topicUrl, (msg) => {
         const parsedMessage = JSON.parse(msg.body);
-        console.log('parsedMessage : ', parsedMessage);
+        console.log('parsedMessage : ', JSON.stringify(parsedMessage));
+
+        // parsedMessage가 수신될 때 updateData 호출
+        const updateData = useWorkInstructionStore.getState().updateData!;
+        updateData(parsedMessage);
       });
     },
     onDisconnect: () => {

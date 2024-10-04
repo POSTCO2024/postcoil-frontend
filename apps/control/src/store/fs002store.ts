@@ -16,12 +16,17 @@ export const useScheduleStore = create<StoreType>((set) => ({
   processCode: '', // 현재 process Code
   fetchData: async (value: string[]) => {
     set({ loading: true, error: null }); // 로딩 시작
+    const { processCode } = useScheduleStore.getState(); // processCode를 받아오기
     try {
       const result: ScheduleInfoDTO[] = await fetchScheduleData({
         pageCode: 'pending',
-        processCode: value[0],
+        processCode: value[0] ? value[0] : processCode,
       }); // 데이터 fetch
-      set({ data: result, processCode: value[0], loading: false }); // 데이터 상태 업데이트 및 로딩 종료
+      set({
+        data: result,
+        processCode: value[0] ? value[0] : processCode,
+        loading: false,
+      }); // 데이터 상태 업데이트 및 로딩 종료
     } catch (error) {
       set({ error: 'Failed to fetch schedule data in FS002', loading: false }); // 에러 발생 시 처리
     }

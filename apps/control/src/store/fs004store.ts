@@ -20,9 +20,9 @@ export const useWorkInstructionStore = create<StoreType>((set) => ({
     set({ loading: true, error: null }); // 로딩 시작
     try {
       const result = await fetchOperationData({
-        pageCode: 'uncompleted', // TODO1: completed로 변경
+        pageCode: 'completed',
         processCode: value[0],
-        //requestParams: `&startDate=${value[1]}&endDate=${value[2]}`, // TODO2: 구현 후 추가
+        requestParams: `&startDate=${value[1]}&endDate=${value[2]}`,
       }); // 데이터 fetch
 
       set({
