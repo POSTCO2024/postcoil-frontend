@@ -287,6 +287,7 @@ const DashBoard: React.FC = () => {
 
       return () => clearInterval(intervalId); // 컴포넌트 언마운트 시 인터벌 클리어
     }
+    return undefined;
   }, [selectedProc, cal1Data.workStartTime, cal2Data.workStartTime]);
 
   // Mock 데이터의 경과 시간 업데이트 (1초마다)
