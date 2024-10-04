@@ -15,6 +15,7 @@ import RollWarnModal from '@/components/common/RollWarnModal';
 import { MaterialDTO } from '@/config/scheduling/dto';
 import ContentContainer from '@/pages/fs001/plan/ContentContainer';
 import FilterContainer from '@/pages/fs001/plan/FilterContainer';
+import { useScheduleStore } from '@/store/fs002store';
 
 const SchPPage = () => {
   const navigate = useNavigate();
@@ -23,6 +24,9 @@ const SchPPage = () => {
   const [isModal3Open, setIsModal3Open] = useState(false);
   const [materialData, setMaterialData] = useState<MaterialDTO[]>([]);
   const [selectedRows, setSelectedRows] = useState<MaterialDTO[]>([]); // checkbox로 선택된 행 데이터를 저장하는 상태
+
+  const [selectedProcessCode, setSelectedProcessCode] = useState<string[]>([]);
+  const fetchData = useScheduleStore((state) => state.fetchData!);
 
   // selectedRows 상태가 변경될 때마다 실행되는 useEffect
   useEffect(() => {
@@ -40,6 +44,7 @@ const SchPPage = () => {
         processCode: value[0],
       });
 
+      setSelectedProcessCode(value);
       setMaterialData(data); // API 호출 후 데이터 설정
     }
   };
@@ -67,6 +72,15 @@ const SchPPage = () => {
           },
         })
         .then((response) => console.log(response.data)); // 결과 console에서 보려고
+
+      // 다음 화면(fs002)의 processCode를 value[0]으로 설정
+      useScheduleStore.setState((state) => ({
+        ...state,
+        processCode: selectedProcessCode[0],
+      }));
+
+      // processCode가 업데이트된 후 fetchData 호출
+      fetchData(selectedProcessCode);
 
       // 성공적으로 요청이 완료되면 모달을 닫고 success 모달을 열기
       setIsModalOpen(true);
@@ -96,7 +110,10 @@ const SchPPage = () => {
   return (
     <div className={styles.page}>
       <h1>Schedule 편성</h1>
-      <FilterContainer handleChange={handleChange} />
+      <FilterContainer
+        handleChange={handleChange}
+        value={selectedProcessCode}
+      />
       <ContentContainer data={materialData} setSelectedRows={setSelectedRows} />
       <Button
         style={{ display: materialData.length > 0 ? 'block' : 'none' }}
