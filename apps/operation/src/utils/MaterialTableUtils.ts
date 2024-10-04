@@ -2,7 +2,7 @@
 import { ColumnDataType } from '@postcoil/ui/config/TableConfig';
 // import { Tag } from 'antd';
 
-import { MaterialDataType } from '@/config/ContentConfig';
+import { MaterialDataType } from '@/config/contentConfig';
 
 export const mockcolumns: ColumnDataType<MaterialDataType>[] = [
   {

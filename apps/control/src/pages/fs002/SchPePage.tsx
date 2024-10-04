@@ -13,11 +13,16 @@ import { useMaterialStore, useScheduleStore } from '@/store/fs002store';
 const SchPePage = () => {
   const data = useMaterialStore((state) => state.data);
   const resetData = useMaterialStore((state) => state.resetData)!;
+
   useEffect(() => {
     return () => {
       // Fetch한 data 초기화
-      useScheduleStore.setState({ data: null });
-      useMaterialStore.setState({ data: null });
+      useScheduleStore.setState({ data: null, processCode: '' });
+      useMaterialStore.setState({
+        data: null,
+        scheduleNo: '',
+        scExpectedDuration: null,
+      });
     };
   }, []);
 

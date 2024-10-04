@@ -1,13 +1,12 @@
 .draggableChart {
   width: 95%;
-  height: 50%;
+  height: fit-content;
   overflow: auto !important;
   margin: 0px auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: start;
-  height: fit-content;
 
   scrollbar-width: none; /* Firefox 전용 */
   &::-webkit-scrollbar {

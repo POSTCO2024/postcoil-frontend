@@ -3,7 +3,10 @@ import { Table } from '@postcoil/ui';
 import styles from './ContentContainer.module.scss';
 
 import { MaterialDTO } from '@/config/scheduling/dto';
-import { mockcolumns, transformedData } from '@/utils/scheduling/tableUtils';
+import {
+  materialColumnData,
+  transformedData,
+} from '@/utils/scheduling/tableUtils';
 
 interface PropsType {
   data: MaterialDTO[];
@@ -23,7 +26,7 @@ const ContentContainer = ({ data, setSelectedRows }: PropsType) => {
           {/* TODO: common-ui의 Table checkbox fix!!  */}
           <Table
             useCheckBox={true}
-            columns={mockcolumns}
+            columns={materialColumnData}
             data={transformedData(data)}
             handleRowsClick={handleRowsClick}
             setSelectedMaterials={setSelectedRows}

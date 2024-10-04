@@ -1,0 +1,15 @@
+.chart {
+  width: 95%;
+  height: 50%;
+  overflow: auto !important;
+  margin: 0px auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+
+  scrollbar-width: none; /* Firefox 전용 */
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera 전용 */
+  }
+}

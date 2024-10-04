@@ -2,7 +2,7 @@ import { Checkbox, Form } from 'antd';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { scheduleApiClient } from '@/api/scheduleApi';
+import { scheduleApiClient, scheduleBaseUrl } from '@/api/scheduleApi';
 import CommonModal from '@/components/common/CommonModal';
 import RollSuccessModal from '@/components/common/RollSuccessModal';
 import { ScheduleInfoDTO } from '@/config/scheduling/dto';
@@ -22,7 +22,7 @@ const SchListModal = ({ isModalOpen, onApply, onCancel }: PropsType) => {
     (state) => state.data as ScheduleInfoDTO[],
   );
   const processCode = useScheduleStore((state) => state.processCode);
-  const cleanScheduleData = useScheduleStore((state) => state.cleanData); // cleanData 함수 추가
+  // const cleanScheduleData = useScheduleStore((state) => state.cleanData); // cleanData 함수 추가
 
   const data = scheduleData
     ? scheduleData!.map((d: { id: string; scheduleNo: string }) => ({
@@ -38,7 +38,6 @@ const SchListModal = ({ isModalOpen, onApply, onCancel }: PropsType) => {
   };
   const handleCancel = () => {
     setIsModal2Open(false);
-    cleanScheduleData();
     navigate('/schedule3');
   };
 
@@ -82,26 +81,39 @@ const SchListModal = ({ isModalOpen, onApply, onCancel }: PropsType) => {
   };
 
   const onFinish = async (values: any) => {
-    console.log(values);
     const checkedPlanIds = Object.keys(values).filter((key) => values[key]);
-    console.log('Checked values:', checkedPlanIds);
 
     // confirmPlans 형식의 requestBody 생성
     const confirmPlans = createConfirmDTO(values);
 
     try {
       await scheduleApiClient
-        .post(
-          `${import.meta.env.VITE_SCHEDULE_API_URL}${import.meta.env.VITE_SCHEDULE_BASE_URL}/confirm`,
-          confirmPlans,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
+        .post(`${scheduleBaseUrl}/confirm`, confirmPlans, {
+          headers: {
+            'Content-Type': 'application/json',
           },
-        )
+        })
         .then((response) => {
-          console.log(response.data);
+          // 응답 상태가 200이고, result 배열의 길이가 1 이상인 경우
+          if (response.data.status === 200 && response.data.result.length > 0) {
+            // planId 배열을 추출하여 쿼리 파라미터 형식으로 변환
+            const planIds = response.data.result.map(
+              (item: ScheduleInfoDTO) => item.id,
+            );
+            const queryParams = planIds
+              .map((id: string) => `planIds=${id}`)
+              .join('&');
+
+            // /confirm/sendKafka로 GET 요청
+            scheduleApiClient
+              .post(`${scheduleBaseUrl}/confirm/sendKafka?${queryParams}`)
+              .then((kafkaResponse) => {
+                console.log('Kafka response:', kafkaResponse.data);
+              })
+              .catch((error) => {
+                console.error('Error sending to Kafka:', error);
+              });
+          }
 
           // 요청이 성공하면 해당 planId에 해당하는 데이터 cache에서 삭제
           useMaterialStore.setState((state) => {

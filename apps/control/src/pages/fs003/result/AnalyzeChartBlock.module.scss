@@ -1,0 +1,26 @@
+.item {
+  // width: 50%;
+  // height: 50%;
+  display: flex; /* Flexbox로 설정 */
+  justify-content: center; /* 수평 가운데 정렬 */
+  align-items: center; /* 수직 가운데 정렬 */
+
+  .itemStyle {
+    width: 90%;
+    height: 80%;
+    text-align: center;
+    align-content: center;
+    border-radius: 15px;
+    box-shadow: 2px 2px 12px -9px rgb(0, 76, 255);
+    background-color: #ffffff;
+
+    .itemTitle {
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .itemContent {
+      font-size: 1.6rem;
+      font-weight: 500;
+    }
+  }
+}

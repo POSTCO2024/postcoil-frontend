@@ -17,13 +17,21 @@ import ThreeDMonitoring from './pages/fo002/ThreeDMonitoring';
 function App() {
   return (
     <Router>
-      <div style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          width: '100%',
+          height: '100%',
+        }}>
         <Navigation
           logo={logo}
           human={human}
           menuItems={MenuItems}
           mappingKeys={mappingKeys}
           isOperationSystem={true}
+          employeeName="이영채"
+          teamName="조업팀"
         />
         <Routes>
           <Route path="/" element={<Navigate replace to="/operation1" />} />

@@ -20,12 +20,18 @@ import SchMPage from './pages/fms001/SchMPage';
 import SchPPage from './pages/fs001/SchPPage';
 import SchPePage from './pages/fs002/SchPePage';
 import SchRPage from './pages/fs003/SchRPage';
-import Fs004a from './pages/fs004/Fs004a';
+import SchTPage from './pages/fs004/SchTPage';
 
 function App() {
   return (
     <Router>
-      <div style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          width: '100%',
+          height: '100%',
+        }}>
         <Navigation
           logo={logo}
           human={human}
@@ -50,7 +56,10 @@ function App() {
             path="/schedule3"
             element={<ContentBoard Board={SchRPage} />}
           />
-          <Route path="/schedule4" element={<ContentBoard Board={Fs004a} />} />
+          <Route
+            path="/schedule4"
+            element={<ContentBoard Board={SchTPage} />}
+          />
           <Route path="/manage1" element={<ContentBoard Board={ExtMPage} />} />
           <Route path="/manage2" element={<ContentBoard Board={ErrMPage} />} />
           <Route path="/manage3" element={<ContentBoard Board={SchMPage} />} />

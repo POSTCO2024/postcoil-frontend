@@ -1,5 +1,5 @@
 import { Table as AntTable, ConfigProvider, TablePaginationConfig } from 'antd';
-import React from 'react';
+import React, { CSSProperties } from 'react';
 
 import styles from './Table.module.scss';
 import { DataType, ColumnDataType } from '../../config/TableConfig';
@@ -49,6 +49,7 @@ interface TableComponentProps<T extends DataType> {
   rowKey?: string | ((record: T) => string);
   components?: any;
   setSelectedMaterials?: any;
+  handleSelectedStyle?: (record: any) => CSSProperties;
 }
 
 export const Table = <T extends DataType>({
@@ -66,6 +67,7 @@ export const Table = <T extends DataType>({
   rowKey,
   components,
   setSelectedMaterials,
+  handleSelectedStyle,
 }: TableComponentProps<T>) => {
   const processedColumns = [...createColumns(columns)];
   // const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -87,6 +89,7 @@ export const Table = <T extends DataType>({
             Table: {
               // headerBg: '#eff4ff',
               // rowSelectedBg: '#eff4ff',
+              // fontFamily: 'Goorm Sans',
             },
           },
         }}>
@@ -98,9 +101,14 @@ export const Table = <T extends DataType>({
           dataSource={data}
           onRow={
             handleRowClick
-              ? (record, rowIndex) => ({
-                  onClick: () => handleRowClick(record, rowIndex),
-                })
+              ? handleSelectedStyle
+                ? (record, rowIndex) => ({
+                    onClick: () => handleRowClick(record, rowIndex),
+                    style: handleSelectedStyle(record),
+                  })
+                : (record, rowIndex) => ({
+                    onClick: () => handleRowClick(record, rowIndex),
+                  })
               : undefined
           }
           scroll={scroll ? scroll : undefined}
