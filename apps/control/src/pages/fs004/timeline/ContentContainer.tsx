@@ -23,8 +23,6 @@ const ContentContainer = () => {
     } else {
       setDataSource([]);
     }
-    console.log('Material', materialData);
-    console.log('Updated dataSource:', dataSource);
   }, [materialData]); // materialData가 변경될 때마다 실행
 
   return (

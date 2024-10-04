@@ -24,6 +24,8 @@ const ScheduleTable = () => {
     console.log(workInstructionData);
     if (workInstructionData && workInstructionData.length > 0) {
       setDataSource(transformedScheduleData(workInstructionData));
+    } else {
+      setDataSource([]);
     }
   }, [workInstructionData]);
 

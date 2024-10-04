@@ -67,7 +67,6 @@ const Chart = ({ chartName }: PropsType) => {
     } else {
       setData([]);
     }
-    console.log('data', data);
   }, [materialData]); // materialData가 변경될 때마다 실행
 
   // useEffect(() => {
@@ -94,7 +93,7 @@ const Chart = ({ chartName }: PropsType) => {
       // tickInterval: 1, // 틱 간격 설정
       // type: 'category',
       labels: {
-        enabled: true, // 라벨을 표시하도록 설정
+        enabled: false, // 라벨을 표시하도록 설정
         useHTML: true, // HTML로 렌더링
         style: {
           fontSize: '11px', // 글꼴 크기 조정
