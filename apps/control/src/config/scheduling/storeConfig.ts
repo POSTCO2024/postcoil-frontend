@@ -25,6 +25,7 @@ export interface StoreType {
   cache?: Record<string, MaterialDTO[]>; // 현재 데이터 상태를 저장할 캐시를 위한 객체
   originalCache?: Record<string, MaterialDTO[]>; // 원본 데이터 상태를 저장할 캐시를 위한 객체
   scheduleNo?: string; // schedule 이름 저장
+  scheduleStartTime?: string | null; // schedule 시작 시간
   processCode?: string; // processCode 저장
   scExpectedDuration?: number | string | null; // 선택된 schedule의 예상 시간
   workItems?: WorkItemDTO[] | null; // 선택된 스케줄에 해당하는 재료들

@@ -51,3 +51,14 @@ export interface ScheduleDataType extends DataType {
   endTime: string | null; // 종료 시간은 null일 수 있음
   schStatus: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED'; // 스케줄 상태
 }
+
+export interface ChartDataType extends Highcharts.Point {
+  name: string;
+  description?: string;
+  y: number;
+  z: number;
+  x: number;
+  id: string;
+  color?: string;
+  changed?: boolean;
+}

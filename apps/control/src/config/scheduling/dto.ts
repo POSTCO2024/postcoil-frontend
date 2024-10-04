@@ -61,6 +61,7 @@ export interface WorkItemDTO {
   width?: number;
   thickness?: number;
   coilTypeCode?: string;
+  weight?: number | string;
 }
 
 export interface WorkInstructionsDTO {
@@ -84,18 +85,17 @@ export interface CoilSupplyDTO {
   workInstructionId: number;
   workStatus: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED';
   totalCoils: number;
-  suppliedCoils: number | null;
-  totalProgressed: number | null;
-  totalRejects: number | null;
+  suppliedCoils: number;
+  totalProgressed: number;
+  totalRejects: number;
 }
 
 export interface ClientDTO {
   workInstructions: WorkInstructionsDTO;
   coilSupply: CoilSupplyDTO;
-  countCoilTypeCode: any; // 품종을 몰라서~
+  countCoilTypeCode: CoilTypeCode; // 품종을 몰라서~
 }
 
 interface CoilTypeCode {
-  HTS400?: number;
-  HTS300?: number;
+  [key: string]: number;
 }
