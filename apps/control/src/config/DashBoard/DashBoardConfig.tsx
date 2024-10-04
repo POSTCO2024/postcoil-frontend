@@ -39,7 +39,7 @@ export const mockData1CGL = {
   workTotalCoils: 15,
   workScheduledCoils: 5,
   workTotalCompleteCoils: 10,
-  workStartTime: new Date().toISOString(),
+  workStartTime: new Date('2024-10-04T12:30:00').toISOString(),
   elapsedTime: '0:00:00',
 };
 
@@ -47,7 +47,7 @@ export const mockData2CGL = {
   workTotalCoils: 30,
   workScheduledCoils: 7,
   workTotalCompleteCoils: 23,
-  workStartTime: new Date().toISOString(),
+  workStartTime: new Date('2024-10-04T11:20:00').toISOString(),
   elapsedTime: '0:00:00',
 };
 
