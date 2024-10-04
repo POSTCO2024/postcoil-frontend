@@ -27,16 +27,22 @@ export const useWorkInstructionStore = create<StoreType>((set) => ({
   countCoilTypeCode: null, // 선택된 schedule의 countCoilTypeCode
   workItems: null, // 선택된 schedule의 업데이트된 재료들 상태
   coilSupplyData: null, // 선택된 schedule의 업데이트된 CoilSupply 데이터 상태
-  setData: (data: ClientDTO) => {
-    return set({
-      processCode: data.workInstructions.process,
-      scheduleNo: data.workInstructions.scheduleNo,
-      scheduleStartTime: data.workInstructions.startTime,
-      scExpectedDuration: data.workInstructions.expectedDuration,
-      countCoilTypeCode: data.countCoilTypeCode,
-      workItems: data.workInstructions.items,
-      coilSupplyData: data.coilSupply,
-    });
+  setData: (data: ClientDTO | string) => {
+    // ClientDTO 타입인지 확인
+    if (typeof data !== 'string') {
+      return set({
+        processCode: data.workInstructions.process,
+        scheduleNo: data.workInstructions.scheduleNo,
+        scheduleStartTime: data.workInstructions.startTime,
+        scExpectedDuration: data.workInstructions.expectedDuration,
+        countCoilTypeCode: data.countCoilTypeCode,
+        workItems: data.workInstructions.items,
+        coilSupplyData: data.coilSupply,
+      });
+    } else {
+      // string 타입인 경우, 에러를 throw
+      console.error('Expected ClientDTO but received a string');
+    }
   }, // set selected Data 함수
   fetchData: async (value: string[]) => {
     set({ loading: true, error: null }); // 로딩 시작
@@ -96,10 +102,12 @@ export const useWorkInstructionStore = create<StoreType>((set) => ({
       const processCode = state.processCode; //newData[0].workInstructions.process;
       const selectedData = processCode === '1CAL' ? state.data : state.data2;
 
+      console.log('>>>>>>>>>updateData 함수 시작>>>>>>>>>');
       // processCode가 스토어의 값과 일치하는 항목만 필터링
       const filteredData = newData.filter(
         (item) => item.workInstructions.process === processCode,
       );
+      console.log('filteredData', filteredData);
 
       // 데이터가 null인 경우 fetchData 호출
       if (!selectedData) {
@@ -181,12 +189,15 @@ export const useWorkInstructionStore = create<StoreType>((set) => ({
       });
       const sortedData = sortData(updatedData);
 
+      console.log('>>>>>>>>>updateData 함수 끝>>>>>>>>>');
+
       // 최종적으로 적절한 상태를 업데이트
       if (processCode === '1CAL') {
         return { data: sortedData, loading: false };
       } else if (processCode === '2CAL') {
         return { data2: sortedData, loading: false };
       }
+
       return {}; // 타입 오류 방지 위해 빈 객체 반환
     });
   },

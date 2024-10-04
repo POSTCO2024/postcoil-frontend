@@ -45,17 +45,22 @@ export const AnalyzeChart = () => {
   // coilSupplyData가 존재할 때만 값을 구조분해 할당
   const {
     workStatus = 'PENDING', // 기본값을 PENDING으로 설정
-    totalCoils = 0,
-    suppliedCoils = 0,
-    totalProgressed = 0,
+    totalCoils = 0, // 총 코일 수
+    suppliedCoils = 0, // 보급 완료
+    totalProgressed = 0, // 작업 완료
     totalRejects = 0,
   } = coilSupplyData || {};
 
-  const convertNegToZero = (value: number): number => (value < 0 ? 0 : value);
+  const convertNegToZero = (value: number): number => (value <= 0 ? 0 : value);
 
-  const pendingSuppliedCoils =
-    totalCoils - totalRejects - totalProgressed - suppliedCoils;
-  const pendingProgressedCoils = suppliedCoils - totalProgressed;
+  const newSuppliedCoils = // 보급완료
+    suppliedCoils >= totalCoils - totalRejects
+      ? totalCoils - totalRejects
+      : suppliedCoils;
+
+  const pendingSuppliedCoils = totalCoils - totalRejects - newSuppliedCoils; // 보급 예정
+
+  const pendingProgressedCoils = newSuppliedCoils - totalProgressed; // 작업 예정
 
   const coiTypeCodeData = countCoilTypeCode
     ? transformedCoilTypeCodeData(countCoilTypeCode)
@@ -88,7 +93,11 @@ export const AnalyzeChart = () => {
     )
     .format('HH:mm:ss');
 
-  useEffect(() => {}, [scheduleNo, coiTypeCodeData]);
+  // coilSupplyData가 업데이트될 때마다 관련 데이터를 리렌더링
+  useEffect(() => {
+    console.log('scheduleNo : ', scheduleNo);
+    console.log('coilSupplyData 업데이트:', coilSupplyData);
+  }, [scheduleNo, coilSupplyData]); // coilSupplyData가 변경될 때마다 실행
 
   return (
     <div className={styles.analyzeChart}>

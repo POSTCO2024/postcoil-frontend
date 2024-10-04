@@ -31,7 +31,9 @@ const Chart = ({ chartName }: PropsType) => {
 
   const materialData = useWorkInstructionStore((state) => state.workItems);
 
-  // materialData.workInstructions
+  const coilSupplyData = useWorkInstructionStore(
+    (state) => state.coilSupplyData!,
+  );
 
   const { hoveredPoint, setHoveredPoint } = useHoverStore();
 
@@ -65,6 +67,7 @@ const Chart = ({ chartName }: PropsType) => {
     if (materialData && materialData.length > 0) {
       const transformed = transformedDataToResultChartData(
         materialData,
+        coilSupplyData,
         chartName,
       );
       setData(transformed);
@@ -72,7 +75,7 @@ const Chart = ({ chartName }: PropsType) => {
       setData([]);
     }
     console.log('data', data);
-  }, [materialData]); // materialData가 변경될 때마다 실행
+  }, [materialData, coilSupplyData]); // materialData가 변경될 때마다 실행
 
   // useEffect(() => {
   const chartOptions: Highcharts.Options = {
