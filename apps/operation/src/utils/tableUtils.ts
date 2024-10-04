@@ -1,8 +1,8 @@
 // Columns 정의
 import { ColumnDataType } from '@postcoil/ui/config/TableConfig';
 
-import { MaterialDataType } from '@/config/scheduling/contentConfig';
-import { MaterialDTO, WorkItemDTO } from '@/config/scheduling/dto';
+import { MaterialDataType } from '@/config/contentConfig';
+import { WorkItemDTO } from '@/config/dto';
 // import { Tag } from 'antd';
 
 export const materialColumnData: ColumnDataType<MaterialDataType>[] = [
@@ -209,37 +209,6 @@ export const workItemColumnData: ColumnDataType<MaterialDataType>[] = [
     },
   },
 ];
-
-export const transformedData = (data: MaterialDTO[]): MaterialDataType[] => {
-  // sequence가 null이 아닌 항목만 필터링하고, 정렬
-  if (
-    data.length > 0 &&
-    data[0].sequence !== null &&
-    (data[0].sequence as number) > 0
-  ) {
-    data.sort((a, b) => (a.sequence as number) - (b.sequence as number)); // type assertion 사용
-  }
-
-  return data.map((item) => ({
-    key: item.id,
-    id: item.id as string,
-    materialNo: item.materialNo,
-    currProc: item.currProc,
-    temperature: item.temperature,
-    rollUnit: item.rollUnit,
-    width: item.width,
-    thickness: item.thickness,
-    nextProc: item.nextProc,
-    goalWidth: item.goalWidth,
-    goalThickness: item.goalThickness,
-    sequence: item.sequence,
-    isScheduled: item.isScheduled,
-    isRejected: item.isRejected,
-    expectedDuration: item.expectedDuration,
-    schedulePlanId: item.schedulePlanId,
-    changed: item.changed,
-  }));
-};
 
 export const transformedCoilTypeCodeData = (countCoilTypeCode: {
   [type: string]: number | string;
