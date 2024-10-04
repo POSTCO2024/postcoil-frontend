@@ -12,6 +12,7 @@ const FilterContainer = () => {
   const scheduleData = useScheduleStore(
     (state) => state.data as ScheduleInfoDTO[],
   ); // Schedule data 세팅
+  const processCode = useScheduleStore((state) => state.processCode!); // processCode 세��
   const cleanScheduleData = useScheduleStore((state) => state.cleanData!); // cleanData 함수 추가
   const cleanMaterialData = useMaterialStore((state) => state.cleanData!); // cleanData 함수 추가
   const fetchScheduleData = useScheduleStore((state) => state.fetchData!); // fetch Schedule data
@@ -22,6 +23,7 @@ const FilterContainer = () => {
   const [selectedRollUnit, setSelectedRollUnit] = useState<
     string[] | undefined
   >([]); // 선택된 롤 단위명 상태 추가
+  const [selectedProcessCode, setSelectedProcessCode] = useState<string[]>([]);
 
   const handleProcessCode = (value?: string[]) => {
     if (value && value[0] !== '') {
@@ -30,6 +32,7 @@ const FilterContainer = () => {
     } else {
       cleanScheduleData();
     }
+    setSelectedProcessCode(value!);
   };
 
   const handleScheduleId = (value?: string[]) => {
@@ -41,6 +44,21 @@ const FilterContainer = () => {
       cleanMaterialData();
     }
   };
+
+  useEffect(() => {
+    if (scheduleData && scheduleData.length > 0) {
+      const newRollUnitOptions = scheduleData.map(
+        (d: { id: string; scheduleNo: string }) => ({
+          value: d.id,
+          label: d.scheduleNo,
+        }),
+      );
+      setRollUnitOptions(newRollUnitOptions);
+      setSelectedProcessCode([processCode]);
+      setSelectedRollUnit([scheduleData[scheduleData.length - 1].scheduleNo]);
+      fetchMaterialData([scheduleData[scheduleData.length - 1].id]);
+    }
+  }, []);
 
   // 스케줄 데이터 변경 시 rollUnitName을 업데이트
   useEffect(() => {
@@ -54,10 +72,12 @@ const FilterContainer = () => {
       setRollUnitOptions(newRollUnitOptions);
     } else {
       setRollUnitOptions([]);
+      setSelectedRollUnit([]); //TODO: 이 부분 변경!
     }
-    setSelectedRollUnit([]);
+    setSelectedProcessCode(processCode !== '' ? [processCode] : []);
+
     cleanMaterialData(); // materialData를 null로 변경
-  }, [cleanMaterialData, scheduleData]);
+  }, [scheduleData]);
 
   return (
     <div className={styles.filterContainer}>
@@ -66,6 +86,7 @@ const FilterContainer = () => {
           title="공정명"
           options={options}
           onChange={handleProcessCode}
+          value={selectedProcessCode}
         />
       </div>
       <Dropdown

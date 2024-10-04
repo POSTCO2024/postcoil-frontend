@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 
 import styles from './DraggableChart.module.scss';
 
+import { ChartDataType } from '@/config/scheduling/contentConfig';
 import { MaterialDTO } from '@/config/scheduling/dto';
 import Highcharts from '@/config/scheduling/highchartsSetup';
 import {
@@ -100,7 +101,7 @@ const DraggableChart = ({ chartName }: PropsType) => {
         tickInterval: 1, // 틱 간격 설정
         // type: 'category',
         labels: {
-          enabled: true, // 라벨을 표시하도록 설정
+          enabled: false, // 라벨을 표시하도록 설정
           useHTML: true, // HTML로 렌더링
           style: {
             fontSize: '11px', // 글꼴 크기 조정
@@ -194,7 +195,7 @@ const DraggableChart = ({ chartName }: PropsType) => {
               },
 
               drop: function (e) {
-                const draggedPoint = this as Highcharts.Point;
+                const draggedPoint = this as ChartDataType;
                 const updatedData = [...data];
                 const newPoint = e.newPoint as NewPointDragDropObject;
 
@@ -203,20 +204,60 @@ const DraggableChart = ({ chartName }: PropsType) => {
                   // Do nothing if the position hasn't changed
                   return;
                 }
-
-                const selectedX = newPoint.x;
+                // console.log('newPoint.x', newPoint.x < 1 ? 1 : newPoint.x);
+                // console.log(
+                //   'newPoint.x',
+                //   newPoint.x > updatedData.length
+                //     ? updatedData.length
+                //     : newPoint.x,
+                // );
+                // const selectedX = newPoint.x; // 변경!! 241002 ASH
 
                 // 드래그된 포인트의 현재 인덱스
                 const pointIndex = updatedData.findIndex(
-                  (p) => p.name === draggedPoint.name,
+                  (p) => p.id === draggedPoint.id,
                 );
 
-                // 변경되었다면
+                // 선택한 인덱스가 0이거나 마지막 값인지 확인
+                const isFirstIndex = pointIndex === 0;
+                const isLastIndex = pointIndex === updatedData.length - 1;
+
+                // 선택된 x 값을 조건에 따라 설정
+                const selectedX =
+                  isFirstIndex || isLastIndex
+                    ? Math.max(1, Math.min(newPoint.x, updatedData.length)) // 경계값이면 제한 적용
+                    : newPoint.x; // 그 외에는 newPoint.x 그대로 적용
+
+                // 이전 포인트의 changed 값을 가져옴
+                const previousChangedValue = updatedData[pointIndex].changed!;
+
+                // 이전 위치와 새로운 위치를 비교하여 changed 값 설정
+                let changedValue = previousChangedValue; // 기본값으로 이전 값을 사용
+
                 if (pointIndex !== selectedX - 1) {
-                  this.update({
-                    color: '#6464ff', // 반투명 보라색으로 변경
-                  });
+                  if (isLastIndex) {
+                    // 마지막 값인 경우
+                    if (selectedX - 1 > pointIndex) {
+                      changedValue = previousChangedValue; // 이전 값과 동일
+                    } else {
+                      changedValue = true; // 변경됨
+                    }
+                  } else if (isFirstIndex) {
+                    // 첫 번째 값인 경우
+                    if (selectedX - 1 < pointIndex) {
+                      changedValue = previousChangedValue; // 이전 값과 동일
+                    } else {
+                      changedValue = true; // 변경됨
+                    }
+                  } else {
+                    changedValue = true;
+                  }
                 }
+
+                console.log('selectedX: ', selectedX);
+                console.log('pointIndex: ', pointIndex);
+                console.log('selectedX-1 : ', selectedX - 1);
+                console.log(pointIndex !== selectedX - 1);
 
                 // 드래그된 위치에서의 x 값 (1과 데이터 길이 사이로 제한)
                 const newX = Math.max(
@@ -228,10 +269,10 @@ const DraggableChart = ({ chartName }: PropsType) => {
                 const [movedPoint] = updatedData.splice(pointIndex, 1);
 
                 // newX에 위치한 인덱스에 포인트 삽입
-                updatedData.splice(newX - 1, 0, {
+                updatedData.splice(selectedX - 1, 0, {
                   ...movedPoint,
                   x: newX,
-                  changed: true,
+                  changed: changedValue, // 변경된 값 적용
                 });
 
                 // x 값을 1부터 순서대로 재정렬

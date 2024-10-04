@@ -6,6 +6,7 @@ import Charts from './pending/Charts';
 import SchListModal from './pending/SchListModal';
 import styles from './SchPePage.module.scss';
 
+import { ScheduleInfoDTO } from '@/config/scheduling/dto';
 import ContentContainer from '@/pages/fs002/pending/ContentContainer';
 import FilterContainer from '@/pages/fs002/pending/FilterContainer';
 import { useMaterialStore, useScheduleStore } from '@/store/fs002store';
@@ -13,11 +14,20 @@ import { useMaterialStore, useScheduleStore } from '@/store/fs002store';
 const SchPePage = () => {
   const data = useMaterialStore((state) => state.data);
   const resetData = useMaterialStore((state) => state.resetData)!;
+  const schData = useScheduleStore((state) => state.data as ScheduleInfoDTO[]);
+  const processCode = useMaterialStore((state) => state.processCode!);
+  const fetchSchedule = useScheduleStore((state) => state.fetchData!);
+  const fetchMaterial = useMaterialStore((state) => state.fetchData!);
+
   useEffect(() => {
     return () => {
       // Fetch한 data 초기화
-      useScheduleStore.setState({ data: null });
-      useMaterialStore.setState({ data: null });
+      useScheduleStore.setState({ data: null, processCode: '' });
+      useMaterialStore.setState({
+        data: null,
+        scheduleNo: '',
+        scExpectedDuration: null,
+      });
     };
   }, []);
 
