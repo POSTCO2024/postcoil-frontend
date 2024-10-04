@@ -7,7 +7,7 @@ export const columnsList = [
     fixed: true,
   },
   {
-    title: '코일 ID',
+    title: '코일 번호',
     dataIndex: 'materialNo',
     key: 'material_no',
     fixed: true,
@@ -51,6 +51,12 @@ export const columnsList = [
     title: '단중(kg/m)',
     dataIndex: 'weight',
     key: 'weight',
+  },
+  {
+    title: '계획 공정',
+    dataIndex: 'processPlan',
+    key: 'process_plan',
+    render: (text: string) => (text === 'null' ? '' : text),
   },
   {
     title: '통과 공정',
@@ -118,6 +124,11 @@ export const columnsList = [
     title: '납기일',
     dataIndex: 'dueDate',
     key: 'due_date',
+  },
+  {
+    title: '롤 단위',
+    dataIndex: 'rollUnitName',
+    key: 'roll_unit_name',
   },
 ];
 

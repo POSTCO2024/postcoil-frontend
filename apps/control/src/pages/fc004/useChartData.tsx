@@ -48,12 +48,12 @@ export const useOrderData = () => {
             },
             series: [
               {
-                name: 'Coil Types',
+                name: '품종',
                 type: 'pie',
                 radius: ['30%', '60%'],
                 data: coilTypeArray,
                 label: {
-                  formatter: '{b}: {d}%',
+                  formatter: '{b}',
                 },
               },
             ],
@@ -75,12 +75,12 @@ export const useOrderData = () => {
             },
             series: [
               {
-                name: 'Customer Names',
+                name: '고객사',
                 type: 'pie',
                 radius: ['30%', '60%'],
                 data: customerNameArray,
                 label: {
-                  formatter: '{b}: {d}%',
+                  formatter: '{b}',
                 },
               },
             ],
@@ -143,7 +143,7 @@ export const useWidthThicknessData = () => {
           },
           series: [
             {
-              name: 'Width',
+              name: '폭',
               type: 'bar',
               barWidth: '60%',
               data: widthData,
@@ -182,7 +182,7 @@ export const useWidthThicknessData = () => {
           },
           series: [
             {
-              name: 'Thickness',
+              name: '두께',
               type: 'bar',
               barWidth: '60%',
               data: thicknessData,
