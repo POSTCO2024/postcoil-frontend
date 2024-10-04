@@ -19,6 +19,8 @@ export const DatePicker: React.FC<{
       const [startStr, endStr] = dateRangeString.split(' - ');
       const startDate = dayjs(startStr); // 문자열을 Dayjs 객체로 변환
       const endDate = dayjs(endStr); // 문자열을 Dayjs 객체로 변환
+
+      console.log(startDate, endDate);
       return [startDate, endDate];
     } else {
       return [null, null];
@@ -57,7 +59,6 @@ export const DatePicker: React.FC<{
       <span> 날짜 </span>
       <span className={styles.spacer}></span>
       <RangePicker
-        status="error"
         disabledDate={disabledDate}
         onChange={(dates) => handleRangeChange(dates as [Dayjs, Dayjs])}
         value={dateRangeStr}

@@ -1,4 +1,5 @@
 import { Button, DatePicker, Dropdown } from '@postcoil/ui';
+import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 
 import styles from './FilterContainer.module.scss';
@@ -7,70 +8,79 @@ import { useWorkInstructionStore } from '@/store/fs004store';
 import { options } from '@/utils/scheduling/dropdownUtils';
 
 const FilterContainer = () => {
-  const selectedProcessCode = useWorkInstructionStore(
-    (state) => state.processCode,
-  );
   const fetchWorkInstructionData = useWorkInstructionStore(
     (state) => state.fetchData!,
   );
   const cleanData = useWorkInstructionStore((state) => state.cleanData!);
 
-  const [processCode, setProcessCode] = useState<string[] | undefined>();
+  const [processCode, setProcessCode] = useState<string[]>(['1CAL']);
   const [selectedDateStr, setSelectedDateStr] = useState<string | null>('');
 
   const handleProcessCode = (value?: string[]) => {
-    if (value && value[0] !== '') {
+    if (value && value[0]) {
       setProcessCode(value);
-      cleanData()!;
+      useWorkInstructionStore.setState({ processCode: value[0] });
     } else {
       setProcessCode([]);
-      cleanData()!;
+      useWorkInstructionStore.setState({ processCode: '' });
     }
-    setSelectedDateStr(null);
-    useWorkInstructionStore.setState({ processCode: value && value[0] });
+    setSelectedDateStr(''); // 날짜 선택 초기화
+    cleanData(); // 데이터 정리
   };
 
+  // 날짜 범위 파싱
   const parseDateRange = (dateRangeStr: string) => {
     const [startDateStr, endDateStr] = dateRangeStr.split(' - ');
 
-    // 각각의 날짜를 월/일/연도 포맷으로 분리
-    const startParts = startDateStr.split('/');
-    const endParts = endDateStr.split('/');
+    // 각각의 날짜가 유효한지 체크
+    if (!startDateStr || !endDateStr) {
+      throw new Error('Invalid date range');
+    }
 
-    // 연도는 두 날짜 모두에서 같은 연도 사용
-    const year = startParts[2];
+    const [startMonth, startDay, startYear] = startDateStr.split('/');
+    const [endMonth, endDay, endYear] = endDateStr.split('/');
 
-    // startDate를 'YYYY-MM-DD' 형식으로 변환
-    const startDate = `${year}-${startParts[0].padStart(2, '0')}-${startParts[1].padStart(2, '0')}`;
+    // 각 요소가 존재하는지 확인하고 padStart 사용
+    const safeStartMonth = startMonth?.padStart(2, '0');
+    const safeStartDay = startDay?.padStart(2, '0');
+    const safeEndMonth = endMonth?.padStart(2, '0');
+    const safeEndDay = endDay?.padStart(2, '0');
 
-    // endDate를 'YYYY-MM-DD' 형식으로 변환
-    const endDate = `${endParts[2]}-${endParts[0].padStart(2, '0')}-${endParts[1].padStart(2, '0')}`;
-
-    return { startDate, endDate };
+    return {
+      startDate: `${startYear}-${safeStartMonth}-${safeStartDay}`,
+      endDate: `${endYear}-${safeEndMonth}-${safeEndDay}`,
+    };
   };
 
+  // 날짜 선택 핸들러
   const handleDatePicker = (dateString?: string) => {
-    setSelectedDateStr(dateString!);
+    console.log(dateString);
+    if (dateString) {
+      setSelectedDateStr(dateString);
+    } else {
+      setSelectedDateStr(''); // 비어 있을 경우
+    }
   };
 
+  // 조회 버튼 핸들러
   const handleSearch = () => {
-    const { startDate, endDate } = selectedDateStr
-      ? parseDateRange(selectedDateStr)
-      : { startDate: '', endDate: '' };
-
-    if (
-      processCode &&
-      processCode[0] !== '' &&
-      startDate !== '' &&
-      endDate !== ''
-    ) {
-      fetchWorkInstructionData([processCode[0], startDate, endDate]); // fetchData 함수 호출
+    if (processCode[0] && selectedDateStr) {
+      const { startDate, endDate } = parseDateRange(selectedDateStr);
+      fetchWorkInstructionData([processCode[0], startDate, endDate]);
     }
   };
 
   useEffect(() => {
-    setSelectedDateStr(null);
-  }, [processCode]);
+    // 오늘 날짜와 2일 전 날짜 계산
+    const today = dayjs(); // 오늘 날짜
+    const endDate = today.format('YYYY-MM-DD'); // 오늘 날짜를 'YYYY-MM-DD' 형식으로 변환
+    const startDate = today.subtract(2, 'day').format('YYYY-MM-DD'); // 2일 전 날짜를 'YYYY-MM-DD' 형식으로 변환
+
+    // 기본 값 설정
+    setSelectedDateStr(`${startDate} - ${endDate}`); // 날짜 범위 설정
+    useWorkInstructionStore.setState({ processCode: '1CAL' }); // 기본 공정명 설정
+    fetchWorkInstructionData([processCode[0], startDate, endDate]); // fetchData 함수 호출
+  }, []); // 컴포넌트가 처음 렌더링될 때 실행
 
   return (
     <div className={styles.filterContainer}>

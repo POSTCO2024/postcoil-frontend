@@ -58,7 +58,7 @@ export interface WorkItemDTO {
   temperature: number;
   preProc?: string;
   nextProc?: string;
-  width?: number;
+  width?: number | string;
   thickness?: number;
   coilTypeCode?: string;
   weight?: number | string;

@@ -2,14 +2,13 @@ import { Tab } from '@postcoil/ui';
 import React, { useState } from 'react';
 // import { useNavigate } from 'react-router-dom';
 
-import styles from './Fs004a.module.scss';
+import styles from './SchTPage.module.scss';
 import Chart from './timeline/Chart';
 import ContentContainer from './timeline/ContentContainer';
 import FilterContainer from './timeline/FilterContainer';
 import ScheduleTable from './timeline/ScheduleTable';
 
-const Fs004a: React.FC = () => {
-  // const navigate = useNavigate();
+const SchTPage: React.FC = () => {
   const [isGraphVisible, setIsGraphVisible] = useState(true);
 
   const handleTabChange = () => {
@@ -40,4 +39,4 @@ const Fs004a: React.FC = () => {
   );
 };
 
-export default Fs004a;
+export default SchTPage;

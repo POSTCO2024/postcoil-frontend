@@ -59,7 +59,6 @@ export const Navigation: React.FC<NavigationProps> = ({
   }
 
   const onOpenChange: MenuProps['onOpenChange'] = (openKeys) => {
-    console.log(openKeys);
     const currentOpenKey = openKeys.find(
       (key) => stateOpenKeys.indexOf(key) === -1,
     );

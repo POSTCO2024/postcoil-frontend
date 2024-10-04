@@ -21,7 +21,7 @@ export interface StoreType {
   updateData?: (newData: any) => void; // 데이터 update하는 함수
   resetData?: () => void; // 데이터 reset하는 함수
   cleanData?: () => void; // data를 비워주는 함수
-  setData?: (data: ClientDTO) => void; // websocket용 selected data 저장
+  setData?: (data: ClientDTO | string) => void; // websocket용 selected data 저장 || 스케줄이력 선택 data
   cache?: Record<string, MaterialDTO[]>; // 현재 데이터 상태를 저장할 캐시를 위한 객체
   originalCache?: Record<string, MaterialDTO[]>; // 원본 데이터 상태를 저장할 캐시를 위한 객체
   scheduleNo?: string; // schedule 이름 저장
