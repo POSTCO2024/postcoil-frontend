@@ -25,13 +25,28 @@ const SchPPage = () => {
   const [materialData, setMaterialData] = useState<MaterialDTO[]>([]);
   const [selectedRows, setSelectedRows] = useState<MaterialDTO[]>([]); // checkbox로 선택된 행 데이터를 저장하는 상태
 
-  const [selectedProcessCode, setSelectedProcessCode] = useState<string[]>([]);
+  const [selectedProcessCode, setSelectedProcessCode] = useState<string[]>([
+    '1CAL', // 기본값 세팅
+  ]);
   const fetchData = useScheduleStore((state) => state.fetchData!);
 
-  // selectedRows 상태가 변경될 때마다 실행되는 useEffect
   useEffect(() => {
-    console.log('선택된 Rows:', selectedRows);
-  }, [selectedRows]); // selectedRows가 변경될 때마다 실행
+    const fetchInitialData = async () => {
+      try {
+        const data = await fetchScheduleData({
+          pageCode: 'plan',
+          processCode: selectedProcessCode[0],
+        });
+        setMaterialData(data);
+      } catch (error) {
+        console.error('Failed to fetch schedule data:', error);
+      }
+    };
+    fetchInitialData(); // 비동기 함수 호출
+  }, []); // 컴포넌트가 처음 렌더링될 때 실행
+
+  // selectedRows 상태가 변경될 때마다 실행되는 useEffect
+  useEffect(() => {}, [selectedRows]); // selectedRows가 변경될 때마다 실행
 
   const handleChange = async (value?: string[]) => {
     if (value && value[0] !== '') {
@@ -62,7 +77,6 @@ const SchPPage = () => {
     try {
       // 선택된 rows의 id만 추출하여 배열로 생성
       const selectedIds = selectedRows.map((row) => row.key);
-      console.log(selectedIds);
 
       // 백엔드로 POST 요청 (selectedIds 전달)
       await scheduleApiClient
@@ -103,7 +117,6 @@ const SchPPage = () => {
       setIsModal3Open(true);
       return;
     }
-
     setIsModal2Open(true);
   };
 

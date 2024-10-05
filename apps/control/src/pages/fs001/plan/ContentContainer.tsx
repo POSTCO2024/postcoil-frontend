@@ -30,6 +30,7 @@ const ContentContainer = ({ data, setSelectedRows }: PropsType) => {
             data={transformedData(data)}
             handleRowsClick={handleRowsClick}
             setSelectedMaterials={setSelectedRows}
+            tableLayout={'fixed'}
           />
         </div>
       </section>
