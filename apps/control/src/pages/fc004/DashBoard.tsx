@@ -35,6 +35,7 @@ import {
 
 const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
 const controlBaseUrl = import.meta.env.VITE_CONTROL_BASE_URL;
+const websocketApiUrl = import.meta.env.VITE_CONTROL_API_URL;
 const operationApiUrl = import.meta.env.VITE_OPERATION_API_URL;
 const operationBaseUrl = import.meta.env.VITE_OPERATION_BASE_URL;
 
@@ -122,25 +123,34 @@ const DashBoard: React.FC = () => {
   const [cal1Data, setCal1Data] = useState(defaultCalData);
   const [cal2Data, setCal2Data] = useState(defaultCalData);
 
-  // 상태 업데이트 함수
-  const updateProcessData = (processDashboard: any[]) => {
-    processDashboard.forEach((processData) => {
-      if (processData.process === '1CAL') {
-        setCal1Data({
-          workTotalCoils: processData.workTotalCoils,
-          workScheduledCoils: processData.workScheduledCoils,
-          workTotalCompleteCoils: processData.workTotalCompleteCoils,
-          workStartTime: processData.workStartTime,
-          elapsedTime: calculateElapsedTime(processData.workStartTime),
-        });
-      } else if (processData.process === '2CAL') {
-        setCal2Data({
-          workTotalCoils: processData.workTotalCoils,
-          workScheduledCoils: processData.workScheduledCoils,
-          workTotalCompleteCoils: processData.workTotalCompleteCoils,
-          workStartTime: processData.workStartTime,
-          elapsedTime: calculateElapsedTime(processData.workStartTime),
-        });
+  // 1CAL, 2CAL 상태 업데이트
+  const updateProcessData = (processDashboard: any) => {
+    // 타입 확인
+    if (!Array.isArray(processDashboard)) {
+      console.error('processDashboard is not an array:', processDashboard);
+      return;
+    }
+    // 값 업데이트
+    processDashboard.forEach((processData: any) => {
+      const {
+        process,
+        workTotalCoils,
+        workScheduledCoils,
+        workTotalCompleteCoils,
+        workStartTime,
+      } = processData;
+
+      const updatedData = {
+        workTotalCoils,
+        workScheduledCoils,
+        workTotalCompleteCoils,
+        workStartTime,
+        elapsedTime: calculateElapsedTime(workStartTime),
+      };
+      if (process === '1CAL') {
+        setCal1Data(updatedData);
+      } else if (process === '2CAL') {
+        setCal2Data(updatedData);
       }
     });
   };
@@ -212,7 +222,8 @@ const DashBoard: React.FC = () => {
         response.data.result.processDashboard
       ) {
         const processDashboard = response.data.result.processDashboard;
-        console.log(JSON.stringify(response.data));
+        console.log('-----');
+        console.log(response);
         updateProcessData(processDashboard); // default 값에서 API 응답 결과로 업데이트(실시간 모니터링)
       }
     } catch (error) {
@@ -294,7 +305,7 @@ const DashBoard: React.FC = () => {
 
   // 웹소켓
   useEffect(() => {
-    const socket = new SocketJS('http://localhost:8086/ws/control');
+    const socket = new SocketJS(`${websocketApiUrl}/ws/control`);
     const stompClient = new Client({
       webSocketFactory: () => socket as any,
       debug: (str) => {
@@ -302,15 +313,23 @@ const DashBoard: React.FC = () => {
       },
       onConnect: () => {
         console.log('Conneted Socket! ');
-        stompClient.subscribe('/topic/work-started', (msg) => {
-          const data = JSON.parse(msg.body);
+        stompClient.subscribe(`/topic/dashboard-${selectedProc}`, (msg) => {
+          try {
+            // Uint8Array -> 문자열로 변환
+            const body = new TextDecoder().decode(msg.binaryBody);
 
-          const processData = data.processDashboard?.find(
-            (proc: any) => proc.process === selectedProc,
-          );
+            // 변환된 문자열을 JSON으로 파싱
+            const data = JSON.parse(body);
+            console.log('Parsed data:', data);
 
-          if (processData) {
-            updateProcessData(processData);
+            // processDashboard가 있는지 확인하고 처리
+            if (data.processDashboard) {
+              updateProcessData(data.processDashboard);
+            } else {
+              console.error('No processDashboard in received data:', data);
+            }
+          } catch (error) {
+            console.error('Failed to process message:', error);
           }
         });
       },

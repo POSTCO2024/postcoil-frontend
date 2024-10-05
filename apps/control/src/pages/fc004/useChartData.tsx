@@ -287,8 +287,7 @@ export const useNextProcData = async (
     );
 
     if (response.status === 200 && response.data.result.totalDashboard) {
-      console.log('===========');
-      console.log(response);
+      // console.log(response);
       const nextProc = response.data.result.totalDashboard[0].nextProc;
 
       // 차공정 (nextProc) 데이터를 차트 옵션으로 변환

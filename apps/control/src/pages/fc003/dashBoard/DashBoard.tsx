@@ -8,6 +8,7 @@ import styles from './DashBoard.module.scss';
 
 const operationApiUrl = import.meta.env.VITE_OPERATION_API_URL;
 const operationBaseUrl = import.meta.env.VITE_OPERATION_BASE_URL;
+const websocketApiUrl = import.meta.env.VITE_CONTROL_API_URL;
 
 interface FactoryDashboard {
   process: string;
@@ -179,7 +180,7 @@ export const DashBoard: React.FC = () => {
 
   // 웹소켓
   useEffect(() => {
-    const socket = new SocketJS('http://localhost:8086/ws/control');
+    const socket = new SocketJS(`${websocketApiUrl}/ws/control`);
     const stompClient = new Client({
       webSocketFactory: () => socket as any,
       debug: (str) => {
@@ -188,8 +189,8 @@ export const DashBoard: React.FC = () => {
       onConnect: () => {
         console.log('Conneted Socket! ');
         stompClient.subscribe('/topic/work-started', (msg) => {
-          // setMessage(msg.body); // 웹소켓으로 받은 데이터를 상태에 저장q
-          console.log('=========');
+          // setMessage(msg.body); // 웹소켓으로 받은 데이터를 상태에 저장
+          console.log('웹소켓 데이터');
           console.log(msg.body);
 
           const data = JSON.parse(msg.body);
