@@ -18,7 +18,6 @@ const ContentContainer = () => {
   // materialData가 변경될 때마다 dataSource 업데이트 및 재렌더링
   useEffect(() => {
     if (materialData && materialData.length > 0) {
-      console.log('content:', materialData);
       const transformed = transformedWorkItemData(materialData);
       setDataSource(transformed);
     } else {
