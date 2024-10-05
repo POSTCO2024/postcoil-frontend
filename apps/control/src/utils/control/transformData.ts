@@ -35,6 +35,8 @@ export interface ApiResponseItem {
   errorType: string;
   material: MaterialDTO;
   order: OrderDTO;
+  processPlan: string;
+  rollUnitName: string;
   remarks: string;
 }
 
@@ -89,6 +91,7 @@ export const transformData = (
     width: item.material.width,
     length: item.material.length,
     weight: item.material.weight,
+    processPlan: item.processPlan,
     passProc: item.material.passProc,
     remProc: item.material.remProc,
     preProc: item.material.preProc,
@@ -102,6 +105,7 @@ export const transformData = (
     goalThickness: item.order.thickness,
     goalLength: item.order.length,
     dueDate: formatDate(item.order.dueDate),
+    rollUnitName: item.rollUnitName,
     remarks: item.remarks,
   }));
 };
