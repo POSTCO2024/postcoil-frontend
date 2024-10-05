@@ -29,7 +29,7 @@ async function getErrorMaterialData(processCode: string): Promise<any[]> {
   try {
     const response = await axios.get<ApiResponse>(url);
     if (response.data.status === 200) {
-      console.log(response.data.result);
+      // console.log(response.data.result);
       return transformData(response.data.result);
     } else {
       console.log('Error: ', response.data.resultMsg);
@@ -98,8 +98,8 @@ export const Fc002: React.FC = () => {
       const materialIdsSelected = selectedRows.map((r, _) => r.targetId);
       // const selectedMaterialIds = errorMaterials.filter((row) => materialIdsSelected.includes(row.materialId));
 
-      console.log('Filtering ... ');
-      console.log(materialIdsSelected); // 선택된 materialId
+      // console.log('Filtering ... ');
+      // console.log(materialIdsSelected); // 선택된 materialId
       // console.log(selectedMaterialIds); // 필터링 된 rows
 
       await updateIsError(materialIdsSelected); // Error Pass API 요청
@@ -145,7 +145,7 @@ export const Fc002: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       const data = await getErrorMaterialData(selectedProcessCode);
-      console.log(data);
+      console.log('useEffect Data : ' + JSON.stringify(data));
       setErrorMaterials(data);
     };
     fetchData();
@@ -168,13 +168,14 @@ export const Fc002: React.FC = () => {
         stompClient.subscribe('/topic/errorMessage', (msg) => {
           const paredMessage = JSON.parse(msg.body);
           console.log('paredMessage : ' + JSON.stringify(paredMessage));
-          console.log('errorMaterials : ' + JSON.stringify(errorMaterials));
-          const newMaterials = errorMaterials.map((item) =>
-            item.materialNo === paredMessage.materialNo
-              ? { ...item, remarks: paredMessage.comment } // 조건이 맞으면 새로운 객체 반환
-              : item,
+
+          setErrorMaterials((prevErrorMaterials) =>
+            prevErrorMaterials.map((item) =>
+              item.materialNo === paredMessage.materialNo
+                ? { ...item, remarks: paredMessage.comment } // 조건이 맞으면 새로운 객체 반환
+                : item,
+            ),
           );
-          setErrorMaterials(newMaterials);
         });
       },
       onDisconnect: () => {
@@ -194,7 +195,6 @@ export const Fc002: React.FC = () => {
       }
     };
   }, []);
-  console.log(errorMaterials);
   return (
     <div className={styles.boardContainer}>
       <h1>공정별 에러재 관리</h1>
