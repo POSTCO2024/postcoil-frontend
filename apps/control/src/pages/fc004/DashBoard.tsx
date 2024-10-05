@@ -201,50 +201,73 @@ const DashBoard: React.FC = () => {
     return new Date(dueDate).toISOString().split('T')[0];
   };
 
-  // 차공정 및 재료진도 데이터 Fetch 및 상태 업데이트
-  const fetchData = async () => {
-    const nextProcOption: EChartsOption | null =
-      await useNextProcData(selectedProc);
-    const currProcessOption: EChartsOption | null =
-      await useCurrProcessData(selectedProc);
-
-    if (nextProcOption) setBarchartV2Option(nextProcOption);
-    if (currProcessOption) setRowbarchartOption(currProcessOption);
+  // 공통 상태 초기화 함수
+  const resetState = () => {
+    setCoilTypeOption(null);
+    setCustomerNameOption(null);
+    setWidthOption(null);
+    setThicknessOption(null);
+    setBarchartV2Option(null);
+    setRowbarchartOption(null);
+    setRollUnitOption(null);
+    setDueDate([]);
   };
 
-  // Rendering
-  const render = async () => {
-    // 품종/고객사
-    const orderResult = await fetchOrderData(selectedProc);
-    setCoilTypeOption(
-      (orderResult?.coilTypeOptionResult as echarts.EChartsOption) ?? null,
-    );
-    setCustomerNameOption(
-      (orderResult?.customerNameOptionResult as echarts.EChartsOption) ?? null,
-    );
-
-    // 폭/두께
-    const materialResult = await fetchWidthThicknessData(selectedProc);
-    if (materialResult) {
-      setWidthOption(materialResult.widthOptionResult);
-      setThicknessOption(materialResult.thicknessOptionResult);
+  // 공통 데이터 처리 함수
+  const handleApiResponse = (response: any, setState: React.Dispatch<any>) => {
+    if (response) {
+      setState(response);
+    } else {
+      setState(null);
     }
+  };
 
-    // 에러 비율
-    await fetchErrorNormalCount();
+  // render 함수
+  const render = async () => {
+    try {
+      // 품종/고객사 데이터 Fetch
+      const orderResult = await fetchOrderData(selectedProc);
+      handleApiResponse(orderResult?.coilTypeOptionResult, setCoilTypeOption);
+      handleApiResponse(
+        orderResult?.customerNameOptionResult,
+        setCustomerNameOption,
+      );
 
-    // 마감일 정보
-    const tableData = await fetchDueDateTable();
-    setDueDate(tableData);
+      // 폭/두께 데이터 Fetch
+      const materialResult = await fetchWidthThicknessData(selectedProc);
+      handleApiResponse(materialResult?.widthOptionResult, setWidthOption);
+      handleApiResponse(
+        materialResult?.thicknessOptionResult,
+        setThicknessOption,
+      );
 
-    // 롤 단위
-    const rollUnitResult = await fetchRollUnitData(selectedProc);
-    setRollUnitOption(rollUnitResult);
+      // 차공정(nextProc) 및 재료진도(currProcess) 데이터 Fetch
+      const nextProcOption: EChartsOption | null =
+        await useNextProcData(selectedProc);
+      handleApiResponse(nextProcOption, setBarchartV2Option);
+
+      const currProcessOption: EChartsOption | null =
+        await useCurrProcessData(selectedProc);
+      handleApiResponse(currProcessOption, setRowbarchartOption);
+
+      // 에러재 비율 데이터 Fetch
+      await fetchErrorNormalCount();
+
+      // 롤 단위 데이터 Fetch
+      const rollUnitResult = await fetchRollUnitData(selectedProc);
+      handleApiResponse(rollUnitResult, setRollUnitOption);
+
+      // 생산 마감일 데이터 Fetch
+      const tableData = await fetchDueDateTable();
+      handleApiResponse(tableData, setDueDate);
+    } catch (error) {
+      console.error('Error fetching data', error);
+      resetState(); // 에러 발생 시 모든 상태 초기화
+    }
   };
 
   useEffect(() => {
     render();
-    fetchData();
   }, [selectedProc]);
 
   // 웹소켓
