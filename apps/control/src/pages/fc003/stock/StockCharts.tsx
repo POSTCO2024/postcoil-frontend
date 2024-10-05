@@ -12,10 +12,12 @@ const StockCharts: React.FC = () => {
   const [treemapData, setTreemapData] = useState<any[]>([]);
 
   const transformFetchData = (data: { [key: string]: number }) => {
-    const treemapData = Object.keys(data).map((key) => ({
-      name: key,
-      value: data[key],
-    }));
+    const treemapData = Object.keys(data).map((key) => {
+      return {
+        name: key.replace(/A$/, '입측').replace(/B$/, '출측'),
+        value: data[key],
+      };
+    });
     // treemapData.sort(function (a, b) {
     //   return a.value - b.value;
     // });
@@ -27,6 +29,7 @@ const StockCharts: React.FC = () => {
       const response = await axios.get(
         `${controlApiUrl}${controlBaseUrl}/monitoring/materials`,
       );
+      console.log('Stock : ' + JSON.stringify(response.data.result));
       const fetchData = transformFetchData(response.data.result);
       setTreemapData(fetchData);
     } catch (error) {
@@ -68,7 +71,7 @@ const StockCharts: React.FC = () => {
       {
         type: 'treemap',
         data: treemapData.map((item: any, index: any) => ({
-          name: item.name + ' 동',
+          name: item.name,
           value: item.value,
           itemStyle: {
             // 색상 지정 후 하나씩 가져오기
@@ -99,15 +102,15 @@ const StockCharts: React.FC = () => {
             show: true,
             // 해당 표에 손을 놓으면 개수 표시
             formatter: function (graph) {
-              return `${graph.name} 동 : ${graph.value} 개`;
+              return `${graph.name} : ${graph.value} 개`;
             },
           },
         },
         breadcrumb: {
-          show: false,
+          show: true,
         },
-        roam: false, // 확대 기능 사용안함
-        nodeClick: false, // 클릭시 표 움직이는 기능 사용안함
+        roam: true, // 확대 기능 사용안함
+        // nodeClick: false, // 클릭시 표 움직이는 기능 사용안함
         universalTransition: true,
       },
     ],
@@ -124,7 +127,7 @@ const StockCharts: React.FC = () => {
     },
     yAxis: {
       type: 'category',
-      data: treemapData.map((item) => item.name + '동'),
+      data: treemapData.map((item) => item.name),
     },
     series: [
       {

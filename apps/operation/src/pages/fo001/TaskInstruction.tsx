@@ -14,7 +14,7 @@ import {
 
 const SchRPage = () => {
   const [isGraphVisible, setIsGraphVisible] = useState(true);
-  const fetchData = useWorkInstructionStore((state) => state.fetchData!);
+  const fetchData = useWorkInstructionStore((state: any) => state.fetchData!);
 
   useEffect(() => {
     initializeWebSocket(); // 웹소켓 초기화
