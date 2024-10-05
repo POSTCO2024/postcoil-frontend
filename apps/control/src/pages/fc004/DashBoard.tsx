@@ -201,6 +201,25 @@ const DashBoard: React.FC = () => {
     return new Date(dueDate).toISOString().split('T')[0];
   };
 
+  // 실시간 모니터링
+  const fetchMonitoringData = async () => {
+    try {
+      const response = await axios.get(
+        `${operationApiUrl}${operationBaseUrl}/monitoring/analyze?SchProcess=${selectedProc}`,
+      );
+      if (
+        response.data.status === 200 &&
+        response.data.result.processDashboard
+      ) {
+        const processDashboard = response.data.result.processDashboard;
+        console.log(JSON.stringify(response.data));
+        updateProcessData(processDashboard); // default 값에서 API 응답 결과로 업데이트(실시간 모니터링)
+      }
+    } catch (error) {
+      console.error('API 호출 오류:', error);
+    }
+  };
+
   // 공통 상태 초기화 함수
   const resetState = () => {
     setCoilTypeOption(null);
@@ -264,6 +283,9 @@ const DashBoard: React.FC = () => {
       console.error('Error fetching data', error);
       resetState(); // 에러 발생 시 모든 상태 초기화
     }
+
+    // 실시간 모니터링 데이터 Fetch
+    await fetchMonitoringData();
   };
 
   useEffect(() => {
