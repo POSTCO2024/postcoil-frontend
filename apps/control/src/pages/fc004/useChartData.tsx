@@ -1,8 +1,11 @@
 // src/hooks/useChartData.ts
 import axios from 'axios';
+import { EChartsOption } from 'echarts';
 
 const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
 const controlBaseUrl = import.meta.env.VITE_CONTROL_BASE_URL;
+const operationApiUrl = import.meta.env.VITE_OPERATION_API_URL;
+const operationBaseUrl = import.meta.env.VITE_OPERATION_BASE_URL;
 
 // 품종/고객사 비율(DonutChart)
 export const useOrderData = () => {
@@ -272,4 +275,136 @@ export const useRollUnitData = () => {
     }
     return null;
   };
+};
+
+// 차공정 (nextProc)
+export const useNextProcData = async (
+  selectedProc: string,
+): Promise<EChartsOption | null> => {
+  try {
+    const response = await axios.get(
+      `${operationApiUrl}${operationBaseUrl}/monitoring/analyze?SchProcess=${selectedProc}`,
+    );
+
+    if (response.status === 200 && response.data.result.totalDashboard) {
+      console.log('===========');
+      console.log(response);
+      const nextProc = response.data.result.totalDashboard[0].nextProc;
+
+      // 차공정 (nextProc) 데이터를 차트 옵션으로 변환
+      const nextProcOption: EChartsOption = {
+        title: { text: '스케줄', left: 'center', show: false },
+        tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+        legend: { bottom: '0%', left: 'center' },
+        grid: {
+          left: '5%',
+          right: '5%',
+          top: '15%',
+          bottom: '20%',
+          containLabel: true,
+        },
+        xAxis: [
+          {
+            type: 'value', // 명확하게 value 축으로 설정
+            axisLabel: {
+              formatter: '{value}', // 값의 형식 지정
+            },
+            axisLine: {
+              // 축의 선 스타일 정의
+              show: true,
+            },
+          },
+        ],
+        yAxis: [
+          {
+            type: 'category', // 명확하게 category 축으로 설정
+            data: ['공정'],
+            axisLabel: {
+              formatter: (value: string) => value, // 범주 이름의 형식 지정
+            },
+            axisLine: {
+              // 축의 선 스타일 정의
+              show: true,
+            },
+          },
+        ],
+        series: Object.keys(nextProc).map((procName) => ({
+          name: procName,
+          type: 'bar',
+          data: [nextProc[procName]],
+          itemStyle: { color: procName === '101' ? '#FABC3F' : '#87A2FF' },
+        })),
+      };
+      return nextProcOption;
+    }
+  } catch (error) {
+    console.error('API 요청 중 오류 발생', error);
+  }
+  return null;
+};
+
+// 재료진도 (currProcess)
+export const useCurrProcessData = async (
+  selectedProc: string,
+): Promise<EChartsOption | null> => {
+  try {
+    const response = await axios.get(
+      `${operationApiUrl}${operationBaseUrl}/monitoring/analyze?SchProcess=${selectedProc}`,
+    );
+
+    if (response.status === 200 && response.data.result.totalDashboard) {
+      const currProcess = response.data.result.totalDashboard[0].currProcess;
+
+      // 재료진도 (currProcess) 데이터를 차트 옵션으로 변환
+      const currProcessOption: EChartsOption = {
+        title: { text: '재료 진도', left: 'center', top: '30px', show: false },
+        tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+        legend: { bottom: '0%', left: 'center' },
+        grid: {
+          left: '5%',
+          right: '5%',
+          top: '15%',
+          bottom: '20%',
+          containLabel: true,
+        },
+        xAxis: [
+          {
+            type: 'value', // x축을 'value'로 명확하게 지정
+            axisLabel: {
+              formatter: '{value}', // x축의 값 형식 지정
+            },
+            axisLine: {
+              // x축 선 스타일 정의
+              show: true,
+            },
+          },
+        ],
+        yAxis: [
+          {
+            type: 'category', // y축을 'category'로 명확하게 지정
+            data: ['1PCM'], // y축에 표시될 카테고리 데이터
+            axisLabel: {
+              formatter: (value: string) => value, // y축 값의 형식 지정
+            },
+            axisLine: {
+              // y축 선 스타일 정의
+              show: true,
+            },
+          },
+        ],
+        series: Object.keys(currProcess).map((procName) => ({
+          name: procName,
+          type: 'bar',
+          stack: 'total', // 데이터를 쌓아서 표현
+          label: { show: true }, // 데이터 값 라벨 표시
+          emphasis: { focus: 'series' }, // 시리즈 강조 설정
+          data: [currProcess[procName]], // 시리즈에 맞는 데이터 설정
+        })),
+      };
+      return currProcessOption;
+    }
+  } catch (error) {
+    console.error('API 요청 중 오류 발생', error);
+  }
+  return null;
 };

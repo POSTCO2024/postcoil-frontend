@@ -3,6 +3,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import SocketJS from 'sockjs-client';
+import { EChartsOption } from 'echarts';
 
 // 그래프
 import BarChartV2 from './chart/BarChartV2';
@@ -28,6 +29,8 @@ import {
   useOrderData,
   useWidthThicknessData,
   useRollUnitData,
+  useNextProcData,
+  useCurrProcessData,
 } from '@/pages/fc004/useChartData';
 
 const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
@@ -198,24 +201,15 @@ const DashBoard: React.FC = () => {
     return new Date(dueDate).toISOString().split('T')[0];
   };
 
-  // 차공정/재료진도
-  const fetchChartData = async () => {
-    try {
-      const response = await axios.get(
-        `${operationApiUrl}${operationBaseUrl}/monitoring/analyze?SchProcess=${selectedProc}`,
-      );
+  // 차공정 및 재료진도 데이터 Fetch 및 상태 업데이트
+  const fetchData = async () => {
+    const nextProcOption: EChartsOption | null =
+      await useNextProcData(selectedProc);
+    const currProcessOption: EChartsOption | null =
+      await useCurrProcessData(selectedProc);
 
-      if (
-        response.data.status === 200 &&
-        response.data.result.processDashboard
-      ) {
-        const processDashboard = response.data.result.processDashboard;
-        console.log(JSON.stringify(response.data));
-        updateProcessData(processDashboard); // default 값에서 API 응답 결과로 업데이트(실시간 모니터링)
-      }
-    } catch (error) {
-      console.error('API 호출 오류:', error);
-    }
+    if (nextProcOption) setBarchartV2Option(nextProcOption);
+    if (currProcessOption) setRowbarchartOption(currProcessOption);
   };
 
   // Rendering
@@ -250,7 +244,7 @@ const DashBoard: React.FC = () => {
 
   useEffect(() => {
     render();
-    fetchChartData();
+    fetchData();
   }, [selectedProc]);
 
   // 웹소켓
