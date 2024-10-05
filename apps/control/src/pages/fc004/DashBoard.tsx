@@ -16,8 +16,6 @@ import Status from './chart/Status';
 import styles from './DashBoard.module.scss';
 
 import {
-  rowbarchartOption,
-  barchartV2Option1,
   mockData1PCM,
   mockData2PCM,
   mockData1EGL,
@@ -90,7 +88,7 @@ const DashBoard: React.FC = () => {
   const location = useLocation();
   const selectedProc = location.pathname.split('/')[2];
 
-  // State 관리
+  // 그래프 상태관리
   const [coilTypeOption, setCoilTypeOption] =
     useState<echarts.EChartsOption | null>(null); // 품종
   const [customerNameOption, setCustomerNameOption] =
@@ -106,12 +104,12 @@ const DashBoard: React.FC = () => {
   const [rollUnitOption, setRollUnitOption] =
     useState<echarts.EChartsCoreOption | null>(null); // 롤 단위
   const [barchartV2Option, setBarchartV2Option] =
-    useState<echarts.EChartsOption | null>(null);
+    useState<echarts.EChartsOption | null>(null); // 차공정
   const [rowbarchartOption, setRowbarchartOption] =
-    useState<echarts.EChartsOption | null>(null);
+    useState<echarts.EChartsOption | null>(null); // 재료진도
 
   // 모니터링 상태 관리
-  // mock 데이터
+  // - mock 데이터
   const [mock1PCMProcessData, setMock1PCMProcessData] = useState(mockData1PCM);
   const [mock2PCMProcessData, setMock2PCMProcessData] = useState(mockData2PCM);
   const [mock1EGLProcessData, setMock1EGLProcessData] = useState(mockData1EGL);
@@ -119,11 +117,11 @@ const DashBoard: React.FC = () => {
   const [mock1CGLProcessData, setMock1CGLProcessData] = useState(mockData1CGL);
   const [mock2CGLProcessData, setMock2CGLProcessData] = useState(mockData2CGL);
 
-  // 1CAL, 2CAL 상태 관리
+  // - 1CAL, 2CAL 상태 관리
   const [cal1Data, setCal1Data] = useState(defaultCalData);
   const [cal2Data, setCal2Data] = useState(defaultCalData);
 
-  // 1CAL, 2CAL 상태 업데이트
+  // - 1CAL, 2CAL 상태 업데이트
   const updateProcessData = (processDashboard: any) => {
     // 타입 확인
     if (!Array.isArray(processDashboard)) {
@@ -160,7 +158,7 @@ const DashBoard: React.FC = () => {
   const fetchOrderData = useOrderData(); // 품종/고객사
   const fetchRollUnitData = useRollUnitData(); // 롤 단위
 
-  // 에러재 비율
+  // - 에러재 비율
   const fetchErrorNormalCount = async () => {
     const url = `${controlApiUrl}${controlBaseUrl}/dashboard/error_count?currProc=${selectedProc}`;
     try {
@@ -173,7 +171,7 @@ const DashBoard: React.FC = () => {
     }
   };
 
-  // 생산 마감일
+  // - 생산 마감일
   const fetchDueDateTable = async () => {
     const url = `${controlApiUrl}${controlBaseUrl}/dashboard/dueDate?currProc=${selectedProc}`;
     try {
@@ -211,7 +209,7 @@ const DashBoard: React.FC = () => {
     return new Date(dueDate).toISOString().split('T')[0];
   };
 
-  // 실시간 모니터링
+  // - 실시간 모니터링
   const fetchMonitoringData = async () => {
     try {
       const response = await axios.get(
@@ -252,7 +250,7 @@ const DashBoard: React.FC = () => {
     }
   };
 
-  // render 함수
+  // rendering
   const render = async () => {
     try {
       // 품종/고객사 데이터 Fetch
@@ -404,7 +402,7 @@ const DashBoard: React.FC = () => {
     return () => clearInterval(intervalId); // 컴포넌트 언마운트 시 인터벌 해제
   }, []);
 
-  // const selectedProcessData = selectedProc === "1CAL" ? cal1Data : cal2Data;
+  // 화면 별로 값 보여주기
   const selectedProcessData =
     selectedProc === '1CAL'
       ? cal1Data
