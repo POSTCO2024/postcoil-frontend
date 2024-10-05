@@ -28,11 +28,9 @@ const Result = ({ title, data }: PropsType) => {
   const handleApply = () => {
     // TODO: save data to server
     // form.submit();
-    console.log('Success:');
+    console.log('Success - 보내기');
     setIsModalOpen(false);
   };
-
-  // TODO: 조회 common 컴포넌트꺼 사용! - 롤편성조회 화면 지우기
 
   const onFinish = (values: any) => {
     console.log('Success:', values);
@@ -64,11 +62,11 @@ const Result = ({ title, data }: PropsType) => {
           {data.map((item: any) => {
             return (
               <div key={item.key}>
-                <p style={{ fontWeight: 'bold' }}>{item.column}</p>
+                <p style={{ fontWeight: '600' }}>{item.column}</p>
                 <Form.Item name={item.column}>
                   <Input
-                    type="text"
-                    addonAfter={item.column == '소둔온도' ? '°C' : ''}
+                    type="number"
+                    addonAfter={item.value ? 'mm' : '순위'}
                   />
                 </Form.Item>
               </div>

@@ -25,6 +25,7 @@
     width: 90%;
     height: calc(100% - 2.2rem - 140px);
     column-gap: 6%;
+    overflow: auto;
 
     * {
       th {

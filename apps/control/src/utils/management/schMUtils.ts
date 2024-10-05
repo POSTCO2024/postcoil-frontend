@@ -30,7 +30,7 @@ export const transformedData = (
     return (data as ConstraintInsertionDTO[]).map((c) => ({
       key: c.id.toString(),
       id: c.id.toString(),
-      column: c.targetColumn,
+      column: c.targetColumn === 'goal_width' ? '목표폭' : '두께',
       value: c.targetValue,
     }));
   }
