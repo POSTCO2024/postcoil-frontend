@@ -61,6 +61,12 @@ class App {
   // private model: THREE.Object3D | null = null;
   // private box: THREE.Box3 | null = null;
   // private selectedMeshInfo: string = ''; // 클릭된 메쉬 정보를 저장
+
+  private defaultTimeScale = 1; // 기본 속도
+  private expectedDurationTimeScale = 1; // 애니메이션 속도
+  private isExpectedDurationActive = false; // expectedDuration이 활성화 되었는지 여부
+  private expectedDurationElapsedTime = 0; // elapsed time tracker
+  private expectedDuration: number = 0; // 전달된 expectedDuration 값을 저장할 변수
   private controls: any;
   private schCoils: THREE.Object3D[] = [];
 
@@ -307,6 +313,10 @@ class App {
         const action = this.mixer.clipAction(animations[0]);
         action.play();
       }
+      if (coilItems.length > 0) {
+        this.expectedDuration = coilItems[0].expectedDuration || 1; // 첫 번째 아이템의 expectedDuration
+        this.adjustAnimationSpeed(this.expectedDuration);
+      }
       this.renderer.localClippingEnabled = true;
 
       console.log(gltf.animations);
@@ -423,12 +433,44 @@ class App {
     this.smallCameras = this.cameras.filter((_, i) => i !== index);
   }
 
+  // ****************** 애니메이션 속도 조절 부분
+  private adjustAnimationSpeed(expectedDuration: number) {
+    if (this.mixer) {
+      this.isExpectedDurationActive = true;
+      this.expectedDurationElapsedTime = 0; // 시간을 0으로 초기화
+
+      // expectedDuration 값에 따라 timeScale 변경
+      this.expectedDurationTimeScale = this.defaultTimeScale / expectedDuration;
+      this.mixer.timeScale = this.expectedDurationTimeScale;
+
+      setTimeout(() => {
+        // expectedDuration이 지나면 기본 속도로 복구
+        this.resetAnimationSpeed();
+      }, expectedDuration * 1000); // 밀리초로 변환하여 사용
+    }
+  }
+
+  private resetAnimationSpeed() {
+    if (this.mixer) {
+      this.mixer.timeScale = this.defaultTimeScale;
+      this.isExpectedDurationActive = false;
+    }
+  }
   update(time: number) {
     time *= 0.001;
     const deltaTime = this.clock.getDelta() / 2;
     time += 1;
     if (this.mixer) {
       this.mixer.update(deltaTime);
+    }
+
+    // expectedDuration이 진행 중이면 경과 시간을 업데이트
+    if (this.isExpectedDurationActive) {
+      this.expectedDurationElapsedTime += deltaTime;
+      if (this.expectedDurationElapsedTime >= this.expectedDuration) {
+        // expectedDuration 시간이 지나면 기본 속도로 변경
+        this.resetAnimationSpeed();
+      }
     }
 
     if (clipPlaneX && clipPlaneX.constant < 300) {
