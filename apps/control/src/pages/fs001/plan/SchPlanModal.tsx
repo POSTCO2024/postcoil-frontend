@@ -1,6 +1,5 @@
 import { CheckCircleFilled } from '@ant-design/icons';
 import { Table } from '@postcoil/ui';
-import { ColumnDataType } from '@postcoil/ui/config/TableConfig';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
