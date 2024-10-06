@@ -17,6 +17,35 @@ const SchRPage = () => {
   const fetchData = useWorkInstructionStore((state: any) => state.fetchData!);
 
   useEffect(() => {
+    const socket = new SockJS('http://localhost:8080/coil');
+    const stompClient = new Client({
+      webSocketFactory: () => socket as any,
+      debug: (str) => {
+        console.log(str);
+      },
+      onConnect: () => {
+        console.log('연결되었습니다');
+        stompClient.subscribe('/topic/coilData', (msg) => {
+          setMessage(msg.body);
+          console.log(msg.body);
+        });
+      },
+      onDisconnect: () => {
+        console.log('Disconnected from WebSocket');
+      },
+      onStompError: (error) => {
+        console.error('STOMP error: ', error);
+      },
+    });
+    stompClient.activate();
+    setClient(stompClient);
+    console.log(client);
+    // 컴포넌트 언마운트 시 WebSocket 연결 해제
+    return () => {
+      if (stompClient) {
+        stompClient.deactivate();
+      }
+    };
     initializeWebSocket(); // 웹소켓 초기화
     fetchData(['1CAL']);
   }, []);

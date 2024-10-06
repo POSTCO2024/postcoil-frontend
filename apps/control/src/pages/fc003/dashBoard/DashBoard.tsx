@@ -180,6 +180,7 @@ export const DashBoard: React.FC = () => {
   // 웹소켓
   useEffect(() => {
     const socket = new SocketJS('http://localhost:8086/ws/control');
+    const socket = new SocketJS('http://localhost:8086/ws/control');
     const stompClient = new Client({
       webSocketFactory: () => socket as any,
       debug: (str) => {
