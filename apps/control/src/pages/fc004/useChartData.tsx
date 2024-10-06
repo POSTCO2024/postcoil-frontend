@@ -217,8 +217,10 @@ export const useRollUnitData = () => {
       // console.log('API 응답 데이터:', response.data); // API 응답 확인
 
       if (response.status === 200) {
-        const aData = response.data.result.acount ?? 0;
-        const bData = response.data.result.bcount ?? 0;
+        // console.log("롤 단위 API")
+        // console.log(response.data);
+        const aData = response.data.result.A ?? 0;
+        const bData = response.data.result.B ?? 0;
 
         const rollUnitOptionResult = {
           title: {
@@ -286,10 +288,16 @@ export const fetchNextProcData = async (
     const response = await axios.get(
       `${operationApiUrl}${operationBaseUrl}/monitoring/analyze?SchProcess=${selectedProc}`,
     );
+    // if (response.status === 200) {
+    //   console.log('확인');
+    //   console.log(response);
+    // }
 
-    if (response.status === 200 && response.data.result.totalDashboard) {
+    if (response.status === 200 && response.data.totalDashboard) {
+      //response.data.result.totalDashboard
+      // console.log("차공정 데이터 API");
       // console.log(response);
-      const nextProc = response.data.result.totalDashboard[0].nextProc;
+      const nextProc = response.data.totalDashboard[0].nextProc;
 
       // 차공정 (nextProc) 데이터를 차트 옵션으로 변환
       const nextProcOption: EChartsOption = {
@@ -352,8 +360,8 @@ export const fetchCurrProcessData = async (
       `${operationApiUrl}${operationBaseUrl}/monitoring/analyze?SchProcess=${selectedProc}`,
     );
 
-    if (response.status === 200 && response.data.result.totalDashboard) {
-      const currProcess = response.data.result.totalDashboard[0].currProcess;
+    if (response.status === 200 && response.data.totalDashboard) {
+      const currProcess = response.data.totalDashboard[0].currProcess;
 
       // 재료진도 (currProcess) 데이터를 차트 옵션으로 변환
       const currProcessOption: EChartsOption = {
