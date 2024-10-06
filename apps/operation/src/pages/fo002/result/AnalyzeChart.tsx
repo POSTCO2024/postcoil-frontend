@@ -22,7 +22,7 @@ export const AnalyzeChart = () => {
   const [suppliedCoils, setSuppliedCoils] = useState(0);
   const [totalRejects, setTotalRejects] = useState(0);
   const [workDuration, setWorkDuration] = useState('00:00:00');
-  const [stompClient, setStompClient] = useState<Client | null>(null);
+  const [, setStompClient] = useState<Client | null>(null);
 
   useEffect(() => {
     const socket = new SockJS('http://localhost:8080/ws/operation');

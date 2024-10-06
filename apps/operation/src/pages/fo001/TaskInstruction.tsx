@@ -16,8 +16,8 @@ import {
 
 const SchRPage = () => {
   const [isGraphVisible, setIsGraphVisible] = useState(true);
-  const [stompClient, setStompClient] = useState<Client | null>(null); // stompClient 상태 추가
-  const [message, setMessage] = useState(''); // 메시지 상태 추가
+  const [, setStompClient] = useState<Client | null>(null); // stompClient 상태 추가
+  const [, setMessage] = useState(''); // 메시지 상태 추가
   const fetchData = useWorkInstructionStore((state: any) => state.fetchData!);
 
   useEffect(() => {
