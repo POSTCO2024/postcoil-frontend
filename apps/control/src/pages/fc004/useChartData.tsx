@@ -1,7 +1,7 @@
 // src/hooks/useChartData.ts
 import axios from 'axios';
 import { EChartsOption } from 'echarts';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
 const controlBaseUrl = import.meta.env.VITE_CONTROL_BASE_URL;
