@@ -1,9 +1,9 @@
-import { Tab, Table } from '@postcoil/ui';
+import { Table } from '@postcoil/ui';
 import { ColumnDataType, DataType } from '@postcoil/ui/config/TableConfig';
-import { Client } from '@stomp/stompjs';
+// import { Client } from '@stomp/stompjs';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import SockJS from 'sockjs-client';
+// import SockJS from 'sockjs-client';
 import * as THREE from 'three';
 import { PMREMGenerator } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -11,7 +11,7 @@ import Stats from 'three/examples/jsm/libs/stats.module';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
 
-import ContentContainer from './component/ContentContainer';
+// import ContentContainer from './component/ContentContainer';
 import styles from './ThreeDSimulation.module.scss';
 
 let clipPlaneX: any;
@@ -67,8 +67,8 @@ class App {
   private isExpectedDurationActive = false; // expectedDuration이 활성화 되었는지 여부
   private expectedDurationElapsedTime = 0; // elapsed time tracker
   private expectedDuration: number = 0; // 전달된 expectedDuration 값을 저장할 변수
-  private controls: any;
-  private schCoils: THREE.Object3D[] = [];
+  // private controls: any;
+  // private schCoils: THREE.Object3D[] = [];
 
   constructor(coilItems: any[]) {
     this.divContainer = document.querySelector('#webgl-container');
@@ -593,65 +593,65 @@ class App {
     this.renderer.setSize(width, height);
   }
 }
-interface SchDataType extends DataType {
-  key?: string;
-  no: string | number;
-  scheduleId: string;
-  createdDate: string;
-  rollID: string;
-  facility: string;
-  startTime: string;
-  endTime: string;
-  rejectCount?: string | number;
-}
+// interface SchDataType extends DataType {
+//   key?: string;
+//   no: string | number;
+//   scheduleId: string;
+//   createdDate: string;
+//   rollID: string;
+//   facility: string;
+//   startTime: string;
+//   endTime: string;
+//   rejectCount?: string | number;
+// }
 
 // Table 임의 데이터
-const columnsData: ColumnDataType<SchDataType>[] = [
-  {
-    title: 'no',
-    dataIndex: 'no',
-    sortable: {
-      compare: (a, b) => a.no - b.no,
-      multiple: 3,
-    },
-  },
-  {
-    title: '스케줄ID',
-    dataIndex: 'scheduleId',
-  },
-  {
-    title: '생성일자',
-    dataIndex: 'createdDate',
-    sortable: {
-      compare: (a, b) => a.createdDate - b.createdDate,
-      multiple: 1,
-    },
-  },
-  {
-    title: '재료단위',
-    dataIndex: 'rollID',
-    sortable: {
-      compare: (a, b) => a.rollID - b.rollID,
-      multiple: 0,
-    },
-  },
-  {
-    title: '해당공정',
-    dataIndex: 'facility',
-    sortable: {
-      compare: (a, b) => a.facility - b.facility,
-      multiple: 4,
-    },
-  },
-  {
-    title: '작업 예상 시간',
-    dataIndex: 'endTime',
-    sortable: {
-      compare: (a, b) => a.endTime - b.endTime,
-      multiple: 6,
-    },
-  },
-];
+// const columnsData: ColumnDataType<SchDataType>[] = [
+//   {
+//     title: 'no',
+//     dataIndex: 'no',
+//     sortable: {
+//       compare: (a, b) => a.no - b.no,
+//       multiple: 3,
+//     },
+//   },
+//   {
+//     title: '스케줄ID',
+//     dataIndex: 'scheduleId',
+//   },
+//   {
+//     title: '생성일자',
+//     dataIndex: 'createdDate',
+//     sortable: {
+//       compare: (a, b) => a.createdDate - b.createdDate,
+//       multiple: 1,
+//     },
+//   },
+//   {
+//     title: '재료단위',
+//     dataIndex: 'rollID',
+//     sortable: {
+//       compare: (a, b) => a.rollID - b.rollID,
+//       multiple: 0,
+//     },
+//   },
+//   {
+//     title: '해당공정',
+//     dataIndex: 'facility',
+//     sortable: {
+//       compare: (a, b) => a.facility - b.facility,
+//       multiple: 4,
+//     },
+//   },
+//   {
+//     title: '작업 예상 시간',
+//     dataIndex: 'endTime',
+//     sortable: {
+//       compare: (a, b) => a.endTime - b.endTime,
+//       multiple: 6,
+//     },
+//   },
+// ];
 
 interface WorkInstruction extends DataType {
   scheduleId: number;
@@ -663,9 +663,9 @@ interface WorkInstruction extends DataType {
   schStatus: string;
 }
 
-interface WorkInstructionItem extends DataType {
-  itemId: number;
-}
+// interface WorkInstructionItem extends DataType {
+//   itemId: number;
+// }
 const ThreeDSimulator = () => {
   const [workInstructions, setWorkInstructions] = useState<WorkInstruction[]>(
     [],

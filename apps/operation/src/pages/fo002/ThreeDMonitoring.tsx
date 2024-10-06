@@ -522,7 +522,6 @@ class App {
 }
 
 const ThreeDMonitoring = () => {
-  const [meshInfo, setMeshInfo] = useState(null); // JSON 데이터를 저장하는 상태
   const [messageCount, setMessageCount] = useState(0); // 메시지 카운트를 위한 상태
 
   useEffect(() => {

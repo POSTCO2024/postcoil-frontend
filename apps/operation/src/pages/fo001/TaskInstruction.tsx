@@ -1,5 +1,7 @@
 import { Tab } from '@postcoil/ui';
+import { Client } from '@stomp/stompjs'; // stompjs import 추가
 import { useEffect, useState } from 'react';
+import SockJS from 'sockjs-client';
 
 import AnalyzeChart from './result/AnalyzeChart';
 import Chart from './result/Chart';
@@ -14,18 +16,20 @@ import {
 
 const SchRPage = () => {
   const [isGraphVisible, setIsGraphVisible] = useState(true);
+  const [stompClient, setStompClient] = useState<Client | null>(null); // stompClient 상태 추가
+  const [message, setMessage] = useState(''); // 메시지 상태 추가
   const fetchData = useWorkInstructionStore((state: any) => state.fetchData!);
 
   useEffect(() => {
     const socket = new SockJS('http://localhost:8080/coil');
-    const stompClient = new Client({
+    const client = new Client({
       webSocketFactory: () => socket as any,
       debug: (str) => {
         console.log(str);
       },
       onConnect: () => {
         console.log('연결되었습니다');
-        stompClient.subscribe('/topic/coilData', (msg) => {
+        client.subscribe('/topic/coilData', (msg) => {
           setMessage(msg.body);
           console.log(msg.body);
         });
@@ -37,18 +41,22 @@ const SchRPage = () => {
         console.error('STOMP error: ', error);
       },
     });
-    stompClient.activate();
-    setClient(stompClient);
+
+    client.activate();
+    setStompClient(client); // stompClient 설정
     console.log(client);
-    // 컴포넌트 언마운트 시 WebSocket 연결 해제
+
     return () => {
-      if (stompClient) {
-        stompClient.deactivate();
+      if (client) {
+        client.deactivate();
       }
     };
-    initializeWebSocket(); // 웹소켓 초기화
-    fetchData(['1CAL']);
   }, []);
+
+  useEffect(() => {
+    initializeWebSocket(); // 웹소켓 초기화
+    fetchData(['1CAL']); // 데이터 불러오기
+  }, [fetchData]);
 
   const handleTabChange = () => {
     setIsGraphVisible((prevState) => !prevState);
