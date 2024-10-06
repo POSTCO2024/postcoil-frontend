@@ -41,10 +41,28 @@ export const materialColumnData: ColumnDataType<MaterialDataType>[] = [
     sortable: true,
   },
   {
+    title: '목표폭',
+    dataIndex: 'goalWidth',
+    key: 'goalWidth',
+    sortable: true,
+    defaultSortOrder: 'descend',
+  },
+  {
+    title: '목표두께',
+    dataIndex: 'goalThickness',
+    key: 'goalThickness',
+    sortable: true,
+  },
+  {
     title: '온도',
     dataIndex: 'temperature',
     key: 'temperature',
     sortable: true,
+  },
+  {
+    title: '작업 예상 소요 시간',
+    dataIndex: 'expectedDuration',
+    key: 'expectedDuration',
   },
   {
     title: '차공정',
@@ -69,19 +87,6 @@ export const materialColumnData: ColumnDataType<MaterialDataType>[] = [
       onFilter: (value: string, record: { nextProc: string[] }) =>
         record.nextProc.indexOf(value) === 0,
     },
-  },
-  {
-    title: '목표폭',
-    dataIndex: 'goalWidth',
-    key: 'goalWidth',
-    sortable: true,
-    defaultSortOrder: 'descend',
-  },
-  {
-    title: '목표두께',
-    dataIndex: 'goalThickness',
-    key: 'goalThickness',
-    sortable: true,
   },
 ];
 

@@ -20,7 +20,6 @@ export const DatePicker: React.FC<{
       const startDate = dayjs(startStr); // 문자열을 Dayjs 객체로 변환
       const endDate = dayjs(endStr); // 문자열을 Dayjs 객체로 변환
 
-      console.log(startDate, endDate);
       return [startDate, endDate];
     } else {
       return [null, null];

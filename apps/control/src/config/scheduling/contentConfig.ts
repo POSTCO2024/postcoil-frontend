@@ -62,3 +62,26 @@ export interface ChartDataType extends Highcharts.Point {
   color?: string;
   changed?: boolean;
 }
+
+// Fs001 SchPlanModal Data Type
+export interface PlanModalDataType extends DataType {
+  key?: string | number;
+  id?: string;
+  rollUnit: string;
+  countMaterials: number;
+  scheduleCriteria?: string;
+  description?: { [key: string]: string | number }[];
+}
+
+// Fs001 CompletedModal Data Type
+export interface CompletedModalDataType extends DataType {
+  key?: string | number;
+  id?: string;
+  scheduleNo: string;
+  rollUnit: string;
+  countMaterials: number;
+  quantity: number;
+  unInsertionQuantity: number;
+  autoInsertionQuantity: number;
+  description?: string[];
+}

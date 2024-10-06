@@ -23,7 +23,6 @@ const ContentContainer = ({ data, setSelectedRows }: PropsType) => {
     <div className={styles.contentContainer}>
       <section className={styles.result}>
         <div className={styles.table}>
-          {/* TODO: common-ui의 Table checkbox fix!!  */}
           <Table
             useCheckBox={true}
             columns={materialColumnData}
