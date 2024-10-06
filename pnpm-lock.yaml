@@ -247,6 +247,9 @@ importers:
       sockjs-client:
         specifier: ^1.6.1
         version: 1.6.1
+      stompjs:
+        specifier: ^2.3.3
+        version: 2.3.3
       three:
         specifier: ^0.132.2
         version: 0.132.2

@@ -175,7 +175,7 @@ const DashBoard: React.FC = () => {
   const [client, setClient] = useState<Client | null>(null);
 
   useEffect(() => {
-    const socket = new SocketJS('http://localhost:9090/ws/control');
+    const socket = new SocketJS('http://localhost:8086/ws/control');
     const stompClient = new Client({
       webSocketFactory: () => socket as any,
       debug: (str) => {

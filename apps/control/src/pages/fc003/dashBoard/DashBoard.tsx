@@ -107,7 +107,7 @@ export const DashBoard: React.FC = () => {
   const [tabDataCAL, setTabDataCAL] = useState(initialTabDataCAL);
 
   useEffect(() => {
-    const socket = new SocketJS('http://localhost:9090/ws/control');
+    const socket = new SocketJS('http://localhost:8086/ws/control');
     const stompClient = new Client({
       webSocketFactory: () => socket as any,
       debug: (str) => {
