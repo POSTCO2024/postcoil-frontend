@@ -2,9 +2,10 @@
 export const columnsList = [
   {
     title: '번호',
-    dataIndex: 'targetId',
-    key: 'targetId',
+    dataIndex: 'index',
+    key: 'index',
     fixed: true,
+    render: (_: any, __: any, index: number) => index + 1,
   },
   {
     title: '코일 번호',
