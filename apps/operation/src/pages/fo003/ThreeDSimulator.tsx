@@ -1,4 +1,9 @@
+import { Table } from '@postcoil/ui';
+import { ColumnDataType, DataType } from '@postcoil/ui/config/TableConfig';
+// import { Client } from '@stomp/stompjs';
+import axios from 'axios';
 import { useEffect, useState } from 'react';
+// import SockJS from 'sockjs-client';
 import * as THREE from 'three';
 import { PMREMGenerator } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -6,8 +11,8 @@ import Stats from 'three/examples/jsm/libs/stats.module';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
 
-import AnalyzeChart from './result/AnalyzeChart';
-import styles from './ThreeDMonitoring.module.scss';
+// import ContentContainer from './component/ContentContainer';
+import styles from './ThreeDSimulation.module.scss';
 
 let clipPlaneX: any;
 let clipPlaneX2: any;
@@ -57,12 +62,19 @@ class App {
   // private box: THREE.Box3 | null = null;
   // private selectedMeshInfo: string = ''; // 클릭된 메쉬 정보를 저장
 
-  constructor() {
+  private defaultTimeScale = 1; // 기본 속도
+  private expectedDurationTimeScale = 1; // 애니메이션 속도
+  private isExpectedDurationActive = false; // expectedDuration이 활성화 되었는지 여부
+  private expectedDurationElapsedTime = 0; // elapsed time tracker
+  private expectedDuration: number = 0; // 전달된 expectedDuration 값을 저장할 변수
+  // private controls: any;
+  // private schCoils: THREE.Object3D[] = [];
+
+  constructor(coilItems: any[]) {
     this.divContainer = document.querySelector('#webgl-container');
     this.infoDiv = document.querySelector('#mesh-info'); // 선택된 Mesh 정보를 표시할 div 선택
     this.cameras = [];
     this.smallCameras = [];
-
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
     this.divContainer?.appendChild(renderer.domElement);
@@ -83,7 +95,7 @@ class App {
     });
 
     this.setupCamera();
-    this.setupModel();
+    this.setupModel(coilItems);
     this.setupControls();
     this.setupEventListeners();
     this.setupEnvironmentMap();
@@ -168,10 +180,35 @@ class App {
     this.fps = stats;
   }
 
-  private setupModel() {
+  private setupModel(coilItems: any[]) {
     new GLTFLoader().load('./postco.glb', (gltf) => {
       const model = gltf.scene;
       this.scene.add(model);
+
+      const numCoils = coilItems.length;
+
+      // 1. Handle 'SchCoil' objects (SchCoil1, SchCoil2, ...)
+      const schCoils = []; // Array to store SchCoil objects
+      for (let i = 1; i <= 8; i++) {
+        const coil = model.getObjectByName(`SchCoil${i}`);
+        if (coil) {
+          schCoils.push(coil);
+        }
+      }
+      const subCoils = []; // Array to store subCoil objects
+      for (let i = 6; i <= 39; i++) {
+        const subCoilName = i < 10 ? `subcoil00${i}` : `subcoil0${i}`;
+        const subCoil = model.getObjectByName(subCoilName);
+        if (subCoil) {
+          subCoils.push(subCoil);
+        }
+      }
+      schCoils.forEach((coil, index) => {
+        coil.visible = index < numCoils; // Show up to numCoils SchCoils, hide the rest
+      });
+      subCoils.forEach((subCoil) => {
+        subCoil.visible = false;
+      });
 
       model.traverse((child) => {
         if (child instanceof THREE.Mesh) {
@@ -275,6 +312,10 @@ class App {
       if (animations && animations.length) {
         const action = this.mixer.clipAction(animations[0]);
         action.play();
+      }
+      if (coilItems.length > 0) {
+        this.expectedDuration = coilItems[0].expectedDuration || 1; // 첫 번째 아이템의 expectedDuration
+        this.adjustAnimationSpeed(this.expectedDuration);
       }
       this.renderer.localClippingEnabled = true;
 
@@ -392,12 +433,44 @@ class App {
     this.smallCameras = this.cameras.filter((_, i) => i !== index);
   }
 
+  // ****************** 애니메이션 속도 조절 부분
+  private adjustAnimationSpeed(expectedDuration: number) {
+    if (this.mixer) {
+      this.isExpectedDurationActive = true;
+      this.expectedDurationElapsedTime = 0; // 시간을 0으로 초기화
+
+      // expectedDuration 값에 따라 timeScale 변경
+      this.expectedDurationTimeScale = this.defaultTimeScale / expectedDuration;
+      this.mixer.timeScale = this.expectedDurationTimeScale;
+
+      setTimeout(() => {
+        // expectedDuration이 지나면 기본 속도로 복구
+        this.resetAnimationSpeed();
+      }, expectedDuration * 1000); // 밀리초로 변환하여 사용
+    }
+  }
+
+  private resetAnimationSpeed() {
+    if (this.mixer) {
+      this.mixer.timeScale = this.defaultTimeScale;
+      this.isExpectedDurationActive = false;
+    }
+  }
   update(time: number) {
     time *= 0.001;
-    const deltaTime = this.clock.getDelta();
+    const deltaTime = this.clock.getDelta() / 2;
     time += 1;
     if (this.mixer) {
       this.mixer.update(deltaTime);
+    }
+
+    // expectedDuration이 진행 중이면 경과 시간을 업데이트
+    if (this.isExpectedDurationActive) {
+      this.expectedDurationElapsedTime += deltaTime;
+      if (this.expectedDurationElapsedTime >= this.expectedDuration) {
+        // expectedDuration 시간이 지나면 기본 속도로 변경
+        this.resetAnimationSpeed();
+      }
     }
 
     if (clipPlaneX && clipPlaneX.constant < 300) {
@@ -520,48 +593,235 @@ class App {
     this.renderer.setSize(width, height);
   }
 }
+// interface SchDataType extends DataType {
+//   key?: string;
+//   no: string | number;
+//   scheduleId: string;
+//   createdDate: string;
+//   rollID: string;
+//   facility: string;
+//   startTime: string;
+//   endTime: string;
+//   rejectCount?: string | number;
+// }
 
-const ThreeDMonitoring = () => {
-  const [messageCount] = useState(0); // 메시지 카운트를 위한 상태
+// Table 임의 데이터
+// const columnsData: ColumnDataType<SchDataType>[] = [
+//   {
+//     title: 'no',
+//     dataIndex: 'no',
+//     sortable: {
+//       compare: (a, b) => a.no - b.no,
+//       multiple: 3,
+//     },
+//   },
+//   {
+//     title: '스케줄ID',
+//     dataIndex: 'scheduleId',
+//   },
+//   {
+//     title: '생성일자',
+//     dataIndex: 'createdDate',
+//     sortable: {
+//       compare: (a, b) => a.createdDate - b.createdDate,
+//       multiple: 1,
+//     },
+//   },
+//   {
+//     title: '재료단위',
+//     dataIndex: 'rollID',
+//     sortable: {
+//       compare: (a, b) => a.rollID - b.rollID,
+//       multiple: 0,
+//     },
+//   },
+//   {
+//     title: '해당공정',
+//     dataIndex: 'facility',
+//     sortable: {
+//       compare: (a, b) => a.facility - b.facility,
+//       multiple: 4,
+//     },
+//   },
+//   {
+//     title: '작업 예상 시간',
+//     dataIndex: 'endTime',
+//     sortable: {
+//       compare: (a, b) => a.endTime - b.endTime,
+//       multiple: 6,
+//     },
+//   },
+// ];
+
+interface WorkInstruction extends DataType {
+  scheduleId: number;
+  scheduleNo: string;
+  process: string;
+  rollUnit: string;
+  totalQuantity: number;
+  expectedDuration: number;
+  schStatus: string;
+}
+
+// interface WorkInstructionItem extends DataType {
+//   itemId: number;
+// }
+const ThreeDSimulator = () => {
+  const [workInstructions, setWorkInstructions] = useState<WorkInstruction[]>(
+    [],
+  );
+  const [loading, setLoading] = useState(true);
+
+  // API 호출 함수
+  const fetchWorkInstructions = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        `${import.meta.env.VITE_OPERATION_API_URL}${import.meta.env.VITE_WORK_INSTRUCTIONS_BASE_URL}/pending-schedule`,
+        {},
+      );
+
+      const { result } = response.data;
+
+      const simplifiedData = result.map(
+        (item: WorkInstruction): Record<string, any> => ({
+          scheduleId: item.scheduleId,
+          scheduleNo: item.scheduleNo,
+          process: item.process,
+          rollUnit: item.rollUnit,
+          totalQuantity: item.totalQuantity,
+          expectedDuration: item.expectedDuration,
+          schStatus: item.schStatus,
+        }),
+      );
+
+      setWorkInstructions(simplifiedData);
+    } catch (error) {
+      console.error('Error fetching work instructions:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  // 작업 아이템 데이터를 가져오는 함수
+  const fetchWorkInstructionItems = async (scheduleId: number) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_OPERATION_API_URL}${import.meta.env.VITE_WORK_INSTRUCTIONS_BASE_URL}-items/get-items?workInstructionId=${scheduleId}`,
+      );
+
+      const { result } = response.data;
+      console.log('Selected items:', result);
+
+      // 이전 WebGL 컨테이너를 삭제하고 새로운 App 초기화
+      const container = document.querySelector('#webgl-container');
+      if (container) {
+        while (container.firstChild) {
+          container.removeChild(container.firstChild); // 기존의 내용을 모두 제거
+        }
+      }
+      new App(result);
+    } catch (error) {
+      console.error('Error fetching work instruction items:', error);
+    }
+  };
 
   useEffect(() => {
+    // Initialize the 3D App
     const container = document.querySelector('#webgl-container');
     if (container && container.children.length === 0) {
-      new App(); // 3D 렌더링을 위한 함수
+      new App([]);
     }
+    fetchWorkInstructions();
+  }, []);
 
-    // WebSocket 연결 설정
-    // const ws = new WebSocket('ws://localhost:8086/ws/opeartion');
-
-    // ws.onmessage = (event) => {
-    //   const data = JSON.parse(event.data); // 수신한 메시지를 JSON으로 파싱
-    //   setMeshInfo(data[messageCount]); // 현재 메시지 인덱스에 해당하는 데이터만 출력
-    //   setMessageCount((prevCount) => (prevCount + 1) % data.length); // 메시지 카운트 업데이트
-    // };
-
-    // const interval = setInterval(() => {
-    //   ws.send('request-next-data'); // 서버에 다음 데이터를 요청하는 메시지 전송
-    // }, 30000); // 30초마다 메시지를 서버에 요청
-
-    // return () => {
-    //   ws.close(); // 컴포넌트가 언마운트될 때 WebSocket 연결 종료
-    //   clearInterval(interval); // 타이머 제거
-    // };
-  }, [messageCount]);
+  const columnsData: ColumnDataType<WorkInstruction>[] = [
+    {
+      title: '작업지시서 ID',
+      dataIndex: 'scheduleId',
+      key: 'scheduleId',
+      sortable: true,
+    },
+    {
+      title: '스케쥴 NO',
+      dataIndex: 'scheduleNo',
+      key: 'scheduleNo',
+      sortable: true,
+    },
+    {
+      title: '공정',
+      dataIndex: 'process',
+      key: 'process',
+    },
+    {
+      title: '롤 단위',
+      dataIndex: 'rollUnit',
+      key: 'rollUnit',
+    },
+    {
+      title: '전체 코일 개수',
+      dataIndex: 'totalQuantity',
+      key: 'totalQuantity',
+    },
+    {
+      title: '예상시간',
+      dataIndex: 'expectedDuration',
+      key: 'expectedDuration',
+    },
+    {
+      title: '작업상태',
+      dataIndex: 'schStatus',
+      key: 'schStatus',
+    },
+  ];
+  // row 클릭 이벤트 핸들러를 위한 추가 코드
+  const handleRowClick = (record: WorkInstruction) => {
+    // scheduleId를 이용하여 API 호출
+    fetchWorkInstructionItems(record.scheduleId);
+  };
 
   return (
     <div className={styles.page}>
-      <h1>3D Monitoring 작업 화면</h1>
+      <h1>3D 시뮬레이션</h1>
       <div
         id="webgl-container"
         style={{ width: '95%', height: '120%', position: 'relative' }}></div>
-      <div className={styles.result}>
+      <div className={styles.schtable}>
         <div className={styles.summary}>
-          <AnalyzeChart />
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            <Table<WorkInstruction>
+              columns={columnsData}
+              data={workInstructions}
+              rowKey="scheduleId"
+              useCheckBox={false}
+              pagination={false}
+              handleRowClick={handleRowClick} // handleRowClick 전달
+            />
+          )}
         </div>
+        {/* <div className={styles.selectedItems}>
+          <h2>선택된 작업 아이템</h2>
+          {selectedItems.length > 0 ? (
+            <Table<WorkInstructionItem>
+              columns={[
+                {
+                  title: '아이템 ID',
+                  dataIndex: 'itemId',
+                  key: 'itemId',
+                },
+              ]}
+              data={selectedItems}
+              rowKey="itemId"
+              pagination={false}
+            />
+          ) : (
+            <p>아이템을 선택하세요.</p>
+          )}
+        </div> */}
       </div>
     </div>
   );
 };
 
-export default ThreeDMonitoring;
+export default ThreeDSimulator;
