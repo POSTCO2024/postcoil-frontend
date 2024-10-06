@@ -1,7 +1,7 @@
 import { RedoOutlined } from '@ant-design/icons';
 import { Table } from '@postcoil/ui';
 import { ConfigProvider } from 'antd';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import SockJS from 'sockjs-client';
 import { over, Client, Message } from 'stompjs';
 
