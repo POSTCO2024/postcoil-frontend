@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import SockJS from 'sockjs-client';
 import { over, Client, Message } from 'stompjs';
 
-import { DataType as TableDataType } from 'C:/Users/BIT1/Desktop/Postco/postcoil-frontend/packages/common-ui/config/TableConfig'; // TableConfig에서 DataType 가져옴
+// import { DataType as TableDataType } from 'C:/Users/BIT1/Desktop/Postco/postcoil-frontend/packages/common-ui/config/TableConfig'; // TableConfig에서 DataType 가져옴
 
 import styles from './AnalyzeChart.module.scss';
 

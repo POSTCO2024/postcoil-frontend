@@ -522,7 +522,7 @@ class App {
 }
 
 const ThreeDMonitoring = () => {
-  const [messageCount, setMessageCount] = useState(0); // 메시지 카운트를 위한 상태
+  const [messageCount] = useState(0); // 메시지 카운트를 위한 상태
 
   useEffect(() => {
     const container = document.querySelector('#webgl-container');
