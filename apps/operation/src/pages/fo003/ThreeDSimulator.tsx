@@ -677,7 +677,7 @@ const ThreeDSimulator = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        'http://localhost:8082/api/v2/work-instructions/pending-schedule',
+        `${import.meta.env.VITE_OPERATION_API_URL}${import.meta.env.VITE_WORK_INSTRUCTIONS_BASE_URL}/pending-schedule`,
         {},
       );
 
@@ -706,7 +706,7 @@ const ThreeDSimulator = () => {
   const fetchWorkInstructionItems = async (scheduleId: number) => {
     try {
       const response = await axios.get(
-        `http://localhost:8082/api/v2/work-instructions-items/get-items?workInstructionId=${scheduleId}`,
+        `${import.meta.env.VITE_OPERATION_API_URL}${import.meta.env.VITE_WORK_INSTRUCTIONS_BASE_URL}-items/get-items?workInstructionId=${scheduleId}`,
       );
 
       const { result } = response.data;
