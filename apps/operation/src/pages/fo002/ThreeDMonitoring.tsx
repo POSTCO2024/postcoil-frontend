@@ -532,22 +532,22 @@ const ThreeDMonitoring = () => {
     }
 
     // WebSocket 연결 설정
-    const ws = new WebSocket('ws://localhost:8080/control');
+    // const ws = new WebSocket('ws://localhost:8086/ws/opeartion');
 
-    ws.onmessage = (event) => {
-      const data = JSON.parse(event.data); // 수신한 메시지를 JSON으로 파싱
-      setMeshInfo(data[messageCount]); // 현재 메시지 인덱스에 해당하는 데이터만 출력
-      setMessageCount((prevCount) => (prevCount + 1) % data.length); // 메시지 카운트 업데이트
-    };
+    // ws.onmessage = (event) => {
+    //   const data = JSON.parse(event.data); // 수신한 메시지를 JSON으로 파싱
+    //   setMeshInfo(data[messageCount]); // 현재 메시지 인덱스에 해당하는 데이터만 출력
+    //   setMessageCount((prevCount) => (prevCount + 1) % data.length); // 메시지 카운트 업데이트
+    // };
 
-    const interval = setInterval(() => {
-      ws.send('request-next-data'); // 서버에 다음 데이터를 요청하는 메시지 전송
-    }, 30000); // 30초마다 메시지를 서버에 요청
+    // const interval = setInterval(() => {
+    //   ws.send('request-next-data'); // 서버에 다음 데이터를 요청하는 메시지 전송
+    // }, 30000); // 30초마다 메시지를 서버에 요청
 
-    return () => {
-      ws.close(); // 컴포넌트가 언마운트될 때 WebSocket 연결 종료
-      clearInterval(interval); // 타이머 제거
-    };
+    // return () => {
+    //   ws.close(); // 컴포넌트가 언마운트될 때 WebSocket 연결 종료
+    //   clearInterval(interval); // 타이머 제거
+    // };
   }, [messageCount]);
 
   return (

@@ -1,6 +1,7 @@
 import { Tab, Table } from '@postcoil/ui';
 import { ColumnDataType, DataType } from '@postcoil/ui/config/TableConfig';
 import { Client } from '@stomp/stompjs';
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import SockJS from 'sockjs-client';
 import * as THREE from 'three';
@@ -60,13 +61,14 @@ class App {
   // private model: THREE.Object3D | null = null;
   // private box: THREE.Box3 | null = null;
   // private selectedMeshInfo: string = ''; // 클릭된 메쉬 정보를 저장
+  private controls: any;
+  private schCoils: THREE.Object3D[] = [];
 
-  constructor() {
+  constructor(coilItems: any[]) {
     this.divContainer = document.querySelector('#webgl-container');
     this.infoDiv = document.querySelector('#mesh-info'); // 선택된 Mesh 정보를 표시할 div 선택
     this.cameras = [];
     this.smallCameras = [];
-
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
     this.divContainer?.appendChild(renderer.domElement);
@@ -87,7 +89,7 @@ class App {
     });
 
     this.setupCamera();
-    this.setupModel();
+    this.setupModel(coilItems);
     this.setupControls();
     this.setupEventListeners();
     this.setupEnvironmentMap();
@@ -172,10 +174,35 @@ class App {
     this.fps = stats;
   }
 
-  private setupModel() {
+  private setupModel(coilItems: any[]) {
     new GLTFLoader().load('./postco.glb', (gltf) => {
       const model = gltf.scene;
       this.scene.add(model);
+
+      const numCoils = coilItems.length;
+
+      // 1. Handle 'SchCoil' objects (SchCoil1, SchCoil2, ...)
+      const schCoils = []; // Array to store SchCoil objects
+      for (let i = 1; i <= 8; i++) {
+        const coil = model.getObjectByName(`SchCoil${i}`);
+        if (coil) {
+          schCoils.push(coil);
+        }
+      }
+      const subCoils = []; // Array to store subCoil objects
+      for (let i = 6; i <= 39; i++) {
+        const subCoilName = i < 10 ? `subcoil00${i}` : `subcoil0${i}`;
+        const subCoil = model.getObjectByName(subCoilName);
+        if (subCoil) {
+          subCoils.push(subCoil);
+        }
+      }
+      schCoils.forEach((coil, index) => {
+        coil.visible = index < numCoils; // Show up to numCoils SchCoils, hide the rest
+      });
+      subCoils.forEach((subCoil) => {
+        subCoil.visible = false;
+      });
 
       model.traverse((child) => {
         if (child instanceof THREE.Mesh) {
@@ -401,7 +428,7 @@ class App {
     const deltaTime = this.clock.getDelta() / 2;
     time += 1;
     if (this.mixer) {
-      this.mixer.update(deltaTime / 10);
+      this.mixer.update(deltaTime);
     }
 
     if (clipPlaneX && clipPlaneX.constant < 300) {
@@ -584,56 +611,131 @@ const columnsData: ColumnDataType<SchDataType>[] = [
   },
 ];
 
-// const baseData: SchDataType[] = [
-//   {
-//     no: 1,
-//     scheduleId: '1CAL001A',
-//     createdDate: '2024-08-20',
-//     rollID: 'A',
-//     facility: '1CAL',
-//     startTime: '2024-08-21 18:00:21',
-//     endTime: '2024-08-21 21:00:21',
-//     rejectCount: '1',
-//   },
-//   {
-//     no: 2,
-//     scheduleId: '1CAL002A',
-//     createdDate: '2024-08-20',
-//     rollID: 'A',
-//     facility: '1CAL',
-//     startTime: '2024-08-21 21:00:21',
-//     endTime: '2024-08-21 00:00:21',
-//     rejectCount: '0',
-//   },
-//   {
-//     no: 3,
-//     scheduleId: '1CAL003A',
-//     createdDate: '2024-08-20',
-//     rollID: 'A',
-//     facility: '1CAL',
-//     startTime: '2024-08-21 00:00:21',
-//     endTime: '2024-08-22 03:00:21',
-//     rejectCount: '0',
-//   },
-//   {
-//     no: 4,
-//     scheduleId: '1CAL004A',
-//     createdDate: '2024-08-21',
-//     rollID: 'A',
-//     facility: '1CAL',
-//     startTime: '2024-08-22 03:00:21',
-//     endTime: '2024-08-22 06:00:21',
-//     rejectCount: '0',
-//   },
-// ];
+interface WorkInstruction extends DataType {
+  scheduleId: number;
+  scheduleNo: string;
+  process: string;
+  rollUnit: string;
+  totalQuantity: number;
+  expectedDuration: number;
+  schStatus: string;
+}
+
+interface WorkInstructionItem extends DataType {
+  itemId: number;
+}
 const ThreeDSimulator = () => {
+  const [workInstructions, setWorkInstructions] = useState<WorkInstruction[]>(
+    [],
+  );
+  const [loading, setLoading] = useState(true);
+
+  // API 호출 함수
+  const fetchWorkInstructions = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        'http://localhost:8082/api/v2/work-instructions/pending-schedule',
+        {},
+      );
+
+      const { result } = response.data;
+
+      const simplifiedData = result.map(
+        (item: WorkInstruction): Record<string, any> => ({
+          scheduleId: item.scheduleId,
+          scheduleNo: item.scheduleNo,
+          process: item.process,
+          rollUnit: item.rollUnit,
+          totalQuantity: item.totalQuantity,
+          expectedDuration: item.expectedDuration,
+          schStatus: item.schStatus,
+        }),
+      );
+
+      setWorkInstructions(simplifiedData);
+    } catch (error) {
+      console.error('Error fetching work instructions:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  // 작업 아이템 데이터를 가져오는 함수
+  const fetchWorkInstructionItems = async (scheduleId: number) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8082/api/v2/work-instructions-items/get-items?workInstructionId=${scheduleId}`,
+      );
+
+      const { result } = response.data;
+      console.log('Selected items:', result);
+
+      // 이전 WebGL 컨테이너를 삭제하고 새로운 App 초기화
+      const container = document.querySelector('#webgl-container');
+      if (container) {
+        while (container.firstChild) {
+          container.removeChild(container.firstChild); // 기존의 내용을 모두 제거
+        }
+      }
+      new App(result);
+    } catch (error) {
+      console.error('Error fetching work instruction items:', error);
+    }
+  };
+
   useEffect(() => {
     // Initialize the 3D App
     const container = document.querySelector('#webgl-container');
     if (container && container.children.length === 0) {
-      new App();
+      new App([]);
     }
+    fetchWorkInstructions();
   }, []);
+
+  const columnsData: ColumnDataType<WorkInstruction>[] = [
+    {
+      title: '작업지시서 ID',
+      dataIndex: 'scheduleId',
+      key: 'scheduleId',
+      sortable: true,
+    },
+    {
+      title: '스케쥴 NO',
+      dataIndex: 'scheduleNo',
+      key: 'scheduleNo',
+      sortable: true,
+    },
+    {
+      title: '공정',
+      dataIndex: 'process',
+      key: 'process',
+    },
+    {
+      title: '롤 단위',
+      dataIndex: 'rollUnit',
+      key: 'rollUnit',
+    },
+    {
+      title: '전체 코일 개수',
+      dataIndex: 'totalQuantity',
+      key: 'totalQuantity',
+    },
+    {
+      title: '예상시간',
+      dataIndex: 'expectedDuration',
+      key: 'expectedDuration',
+    },
+    {
+      title: '작업상태',
+      dataIndex: 'schStatus',
+      key: 'schStatus',
+    },
+  ];
+  // row 클릭 이벤트 핸들러를 위한 추가 코드
+  const handleRowClick = (record: WorkInstruction) => {
+    // scheduleId를 이용하여 API 호출
+    fetchWorkInstructionItems(record.scheduleId);
+  };
 
   return (
     <div className={styles.page}>
@@ -643,15 +745,38 @@ const ThreeDSimulator = () => {
         style={{ width: '95%', height: '120%', position: 'relative' }}></div>
       <div className={styles.schtable}>
         <div className={styles.summary}>
-          <Table
-            useCheckBox={false}
-            columns={columnsData}
-            handleRowClick={(record) => {
-              console.log(record);
-            }}
-            size="small"
-          />
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            <Table<WorkInstruction>
+              columns={columnsData}
+              data={workInstructions}
+              rowKey="scheduleId"
+              useCheckBox={false}
+              pagination={false}
+              handleRowClick={handleRowClick} // handleRowClick 전달
+            />
+          )}
         </div>
+        {/* <div className={styles.selectedItems}>
+          <h2>선택된 작업 아이템</h2>
+          {selectedItems.length > 0 ? (
+            <Table<WorkInstructionItem>
+              columns={[
+                {
+                  title: '아이템 ID',
+                  dataIndex: 'itemId',
+                  key: 'itemId',
+                },
+              ]}
+              data={selectedItems}
+              rowKey="itemId"
+              pagination={false}
+            />
+          ) : (
+            <p>아이템을 선택하세요.</p>
+          )}
+        </div> */}
       </div>
     </div>
   );

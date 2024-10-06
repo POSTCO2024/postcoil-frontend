@@ -1,6 +1,6 @@
 import { Client } from '@stomp/stompjs';
-import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import React, { useState, useEffect } from 'react';
 import SocketJS from 'sockjs-client';
 
 import Board from './board/Board';
