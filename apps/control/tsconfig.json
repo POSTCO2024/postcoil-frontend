@@ -3,10 +3,20 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@postcoil/ui": ["../../packages/common-ui/components"]
+      "@/*": [
+        "src/*"
+      ],
+      "@postcoil/ui": [
+        "../../packages/common-ui/components"
+      ]
     }
   },
-  "include": ["src", "vite.config.ts", "vitest.config.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "src",
+    "vite.config.ts",
+    "vitest.config.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

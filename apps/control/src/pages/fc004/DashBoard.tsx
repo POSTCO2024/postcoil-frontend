@@ -5,7 +5,6 @@ import { useLocation } from 'react-router-dom';
 import SocketJS from 'sockjs-client';
 
 // 그래프
-
 import BarChartV2 from './chart/BarChartV2';
 import DonutChart from './chart/DonutChart';
 import DoubleBarChart from './chart/DoubleBarChart';
@@ -16,8 +15,6 @@ import Status from './chart/Status';
 import styles from './DashBoard.module.scss';
 
 import {
-  rowbarchartOption,
-  barchartV2Option1,
   mockData1PCM,
   mockData2PCM,
   mockData1EGL,
@@ -29,10 +26,15 @@ import {
   useOrderData,
   useWidthThicknessData,
   useRollUnitData,
+  useNextProcDataFetch,
+  useCurrProcessDataFetch,
 } from '@/pages/fc004/useChartData';
 
 const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
 const controlBaseUrl = import.meta.env.VITE_CONTROL_BASE_URL;
+const websocketApiUrl = import.meta.env.VITE_CONTROL_API_URL;
+const operationApiUrl = import.meta.env.VITE_OPERATION_API_URL;
+const operationBaseUrl = import.meta.env.VITE_OPERATION_BASE_URL;
 
 // Interface
 // API response
@@ -57,6 +59,15 @@ interface DueDateDataType {
   tags: string[];
 }
 
+// 기본값 세팅
+const defaultCalData = {
+  workTotalCoils: 0,
+  workScheduledCoils: 0,
+  workTotalCompleteCoils: 0,
+  workStartTime: '0:00:00',
+  elapsedTime: '0:00:00',
+};
+
 const calculateElapsedTime = (startTime: string): string => {
   const start = new Date(startTime).getTime();
   const now = new Date().getTime();
@@ -76,7 +87,7 @@ const DashBoard: React.FC = () => {
   const location = useLocation();
   const selectedProc = location.pathname.split('/')[2];
 
-  // State 관리
+  // 그래프 상태관리
   const [coilTypeOption, setCoilTypeOption] =
     useState<echarts.EChartsOption | null>(null); // 품종
   const [customerNameOption, setCustomerNameOption] =
@@ -91,9 +102,13 @@ const DashBoard: React.FC = () => {
   const [dueDate, setDueDate] = useState<DueDateDataType[]>([]); // 생산 기한일
   const [rollUnitOption, setRollUnitOption] =
     useState<echarts.EChartsCoreOption | null>(null); // 롤 단위
+  // const [barchartV2Option, setBarchartV2Option] =
+  //   useState<echarts.EChartsOption | null>(null); // 차공정
+  // const [rowbarchartOption, setRowbarchartOption] =
+  //   useState<echarts.EChartsOption | null>(null); // 재료진도
 
   // 모니터링 상태 관리
-  // mock 데이터
+  // - mock 데이터
   const [mock1PCMProcessData, setMock1PCMProcessData] = useState(mockData1PCM);
   const [mock2PCMProcessData, setMock2PCMProcessData] = useState(mockData2PCM);
   const [mock1EGLProcessData, setMock1EGLProcessData] = useState(mockData1EGL);
@@ -101,42 +116,40 @@ const DashBoard: React.FC = () => {
   const [mock1CGLProcessData, setMock1CGLProcessData] = useState(mockData1CGL);
   const [mock2CGLProcessData, setMock2CGLProcessData] = useState(mockData2CGL);
 
-  // 1CAL 상태 관리
-  const [cal1Data, setCal1Data] = useState({
-    workTotalCoils: 0,
-    workScheduledCoils: 0,
-    workTotalCompleteCoils: 0,
-    workStartTime: '0:00:00',
-    elapsedTime: '0:00:00',
-  });
+  // - 1CAL, 2CAL 상태 관리
+  const [cal1Data, setCal1Data] = useState(defaultCalData);
+  const [cal2Data, setCal2Data] = useState(defaultCalData);
 
-  // 2CAL 상태 관리
-  const [cal2Data, setCal2Data] = useState({
-    workTotalCoils: 0,
-    workScheduledCoils: 0,
-    workTotalCompleteCoils: 0,
-    workStartTime: '0:00:00',
-    elapsedTime: '0:00:00',
-  });
-  // 상태 업데이트 함수
-  const updateProcessData = (processData: any) => {
-    if (processData.process === '1CAL') {
-      setCal1Data({
-        workTotalCoils: processData.workTotalCoils,
-        workScheduledCoils: processData.workScheduledCoils,
-        workTotalCompleteCoils: processData.workTotalCompleteCoils,
-        workStartTime: processData.workStartTime,
-        elapsedTime: calculateElapsedTime(processData.workStartTime),
-      });
-    } else if (processData.process === '2CAL') {
-      setCal2Data({
-        workTotalCoils: processData.workTotalCoils,
-        workScheduledCoils: processData.workScheduledCoils,
-        workTotalCompleteCoils: processData.workTotalCompleteCoils,
-        workStartTime: processData.workStartTime,
-        elapsedTime: calculateElapsedTime(processData.workStartTime),
-      });
+  // - 1CAL, 2CAL 상태 업데이트
+  const updateProcessData = (processDashboard: any) => {
+    // 타입 확인
+    if (!Array.isArray(processDashboard)) {
+      console.error('processDashboard is not an array:', processDashboard);
+      return;
     }
+    // 값 업데이트
+    processDashboard.forEach((processData: any) => {
+      const {
+        process,
+        workTotalCoils,
+        workScheduledCoils,
+        workTotalCompleteCoils,
+        workStartTime,
+      } = processData;
+
+      const updatedData = {
+        workTotalCoils,
+        workScheduledCoils,
+        workTotalCompleteCoils,
+        workStartTime,
+        elapsedTime: calculateElapsedTime(workStartTime),
+      };
+      if (process === '1CAL') {
+        setCal1Data(updatedData);
+      } else if (process === '2CAL') {
+        setCal2Data(updatedData);
+      }
+    });
   };
 
   // API 호출
@@ -144,7 +157,10 @@ const DashBoard: React.FC = () => {
   const fetchOrderData = useOrderData(); // 품종/고객사
   const fetchRollUnitData = useRollUnitData(); // 롤 단위
 
-  // 에러재 비율
+  const nextProcOption = useNextProcDataFetch(selectedProc);
+  const currProcessOption = useCurrProcessDataFetch(selectedProc);
+
+  // - 에러재 비율
   const fetchErrorNormalCount = async () => {
     const url = `${controlApiUrl}${controlBaseUrl}/dashboard/error_count?currProc=${selectedProc}`;
     try {
@@ -157,7 +173,7 @@ const DashBoard: React.FC = () => {
     }
   };
 
-  // 생산 마감일
+  // - 생산 마감일
   const fetchDueDateTable = async () => {
     const url = `${controlApiUrl}${controlBaseUrl}/dashboard/dueDate?currProc=${selectedProc}`;
     try {
@@ -195,43 +211,85 @@ const DashBoard: React.FC = () => {
     return new Date(dueDate).toISOString().split('T')[0];
   };
 
-  // Rendering
-  const render = async () => {
-    // 품종/고객사
-    const orderResult = await fetchOrderData(selectedProc);
-    setCoilTypeOption(
-      (orderResult?.coilTypeOptionResult as echarts.EChartsOption) ?? null,
-    );
-    setCustomerNameOption(
-      (orderResult?.customerNameOptionResult as echarts.EChartsOption) ?? null,
-    );
-
-    // 폭/두께
-    const materialResult = await fetchWidthThicknessData(selectedProc);
-    if (materialResult) {
-      setWidthOption(materialResult.widthOptionResult);
-      setThicknessOption(materialResult.thicknessOptionResult);
+  // - 실시간 모니터링
+  const fetchMonitoringData = async () => {
+    try {
+      const response = await axios.get(
+        `${operationApiUrl}${operationBaseUrl}/monitoring/analyze?SchProcess=${selectedProc}`,
+      );
+      if (
+        response.data.status === 200 &&
+        response.data.result.processDashboard
+      ) {
+        const processDashboard = response.data.result.processDashboard;
+        console.log('-----');
+        console.log(response);
+        updateProcessData(processDashboard); // default 값에서 API 응답 결과로 업데이트(실시간 모니터링)
+      }
+    } catch (error) {
+      console.error('API 호출 오류:', error);
     }
-
-    // 에러 비율
-    await fetchErrorNormalCount();
-
-    // 마감일 정보
-    const tableData = await fetchDueDateTable();
-    setDueDate(tableData);
-
-    // 롤 단위
-    const rollUnitResult = await fetchRollUnitData(selectedProc);
-    setRollUnitOption(rollUnitResult);
   };
 
+  // 공통 상태 초기화 함수
+  const resetState = () => {
+    setCoilTypeOption(null);
+    setCustomerNameOption(null);
+    setWidthOption(null);
+    setThicknessOption(null);
+    // setBarchartV2Option(null);
+    // setRowbarchartOption(null);
+    setRollUnitOption(null);
+    setDueDate([]);
+  };
+
+  // 공통 데이터 처리 함수
+  const handleApiResponse = (response: any, setState: React.Dispatch<any>) => {
+    if (response) {
+      setState(response);
+    } else {
+      setState(null);
+    }
+  };
+
+  // 데이터 Fetch
   useEffect(() => {
-    render();
+    const fetchData = async () => {
+      try {
+        const orderResult = await fetchOrderData(selectedProc);
+        handleApiResponse(orderResult?.coilTypeOptionResult, setCoilTypeOption);
+        handleApiResponse(
+          orderResult?.customerNameOptionResult,
+          setCustomerNameOption,
+        );
+
+        const materialResult = await fetchWidthThicknessData(selectedProc);
+        handleApiResponse(materialResult?.widthOptionResult, setWidthOption);
+        handleApiResponse(
+          materialResult?.thicknessOptionResult,
+          setThicknessOption,
+        );
+
+        await fetchErrorNormalCount();
+        const rollUnitResult = await fetchRollUnitData(selectedProc);
+        handleApiResponse(rollUnitResult, setRollUnitOption);
+
+        const tableData = await fetchDueDateTable();
+        handleApiResponse(tableData, setDueDate);
+      } catch (error) {
+        console.error('Error fetching data', error);
+        resetState();
+      }
+
+      await fetchMonitoringData();
+    };
+
+    fetchData();
   }, [selectedProc]);
 
   // 웹소켓
   useEffect(() => {
-    const socket = new SocketJS('http://localhost:8086/ws/control');
+    const socket = new SocketJS(`${websocketApiUrl}/ws/control`);
     const stompClient = new Client({
       webSocketFactory: () => socket as any,
       debug: (str) => {
@@ -239,15 +297,23 @@ const DashBoard: React.FC = () => {
       },
       onConnect: () => {
         console.log('Conneted Socket! ');
-        stompClient.subscribe('/topic/work-started', (msg) => {
-          const data = JSON.parse(msg.body);
+        stompClient.subscribe(`/topic/dashboard-${selectedProc}`, (msg) => {
+          try {
+            // Uint8Array -> 문자열로 변환
+            const body = new TextDecoder().decode(msg.binaryBody);
 
-          const processData = data.processDashboard?.find(
-            (proc: any) => proc.process === selectedProc,
-          );
+            // 변환된 문자열을 JSON으로 파싱
+            const data = JSON.parse(body);
+            console.log('Parsed data:', data);
 
-          if (processData) {
-            updateProcessData(processData);
+            // processDashboard가 있는지 확인하고 처리
+            if (data.processDashboard) {
+              updateProcessData(data.processDashboard);
+            } else {
+              console.error('No processDashboard in received data:', data);
+            }
+          } catch (error) {
+            console.error('Failed to process message:', error);
           }
         });
       },
@@ -322,7 +388,7 @@ const DashBoard: React.FC = () => {
     return () => clearInterval(intervalId); // 컴포넌트 언마운트 시 인터벌 해제
   }, []);
 
-  // const selectedProcessData = selectedProc === "1CAL" ? cal1Data : cal2Data;
+  // 화면 별로 값 보여주기
   const selectedProcessData =
     selectedProc === '1CAL'
       ? cal1Data
@@ -367,13 +433,13 @@ const DashBoard: React.FC = () => {
         <h2>작업대상재 분석</h2>
         <div className={styles.line2}>
           <div className={styles.smallCard}>
-            <BarChartV2 title="차공정" option={barchartV2Option1} />
+            <BarChartV2 title="차공정" option={nextProcOption} />
           </div>
           <div className={styles.smallCard}>
             <BarChartV2 title="롤 단위" option={rollUnitOption} />
           </div>
           <div className={styles.smallCard}>
-            <RowbarChart option={rowbarchartOption} />
+            <RowbarChart option={currProcessOption} />
           </div>
           <div className={styles.smallCard}>
             <List data={dueDate} />
