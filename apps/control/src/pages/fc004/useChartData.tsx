@@ -1,6 +1,7 @@
 // src/hooks/useChartData.ts
 import axios from 'axios';
 import { EChartsOption } from 'echarts';
+import { useState, useEffect } from 'React';
 
 const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
 const controlBaseUrl = import.meta.env.VITE_CONTROL_BASE_URL;
@@ -278,7 +279,7 @@ export const useRollUnitData = () => {
 };
 
 // 차공정 (nextProc)
-export const useNextProcData = async (
+export const fetchNextProcData = async (
   selectedProc: string,
 ): Promise<EChartsOption | null> => {
   try {
@@ -343,7 +344,7 @@ export const useNextProcData = async (
 };
 
 // 재료진도 (currProcess)
-export const useCurrProcessData = async (
+export const fetchCurrProcessData = async (
   selectedProc: string,
 ): Promise<EChartsOption | null> => {
   try {
@@ -406,4 +407,36 @@ export const useCurrProcessData = async (
     console.error('API 요청 중 오류 발생', error);
   }
   return null;
+};
+
+// useChartData.ts 파일에서 커스텀 훅으로 정의
+export const useNextProcDataFetch = (selectedProc: string) => {
+  const [nextProcOption, setNextProcOption] = useState<EChartsOption | null>(
+    null,
+  );
+
+  useEffect(() => {
+    const fetchNextProcDataAsync = async () => {
+      const result = await fetchNextProcData(selectedProc);
+      setNextProcOption(result);
+    };
+    fetchNextProcDataAsync();
+  }, [selectedProc]);
+
+  return nextProcOption;
+};
+
+export const useCurrProcessDataFetch = (selectedProc: string) => {
+  const [currProcessOption, setCurrProcessOption] =
+    useState<EChartsOption | null>(null);
+
+  useEffect(() => {
+    const fetchCurrProcessDataAsync = async () => {
+      const result = await fetchCurrProcessData(selectedProc);
+      setCurrProcessOption(result);
+    };
+    fetchCurrProcessDataAsync();
+  }, [selectedProc]);
+
+  return currProcessOption;
 };

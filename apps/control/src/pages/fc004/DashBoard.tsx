@@ -3,7 +3,6 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import SocketJS from 'sockjs-client';
-import { EChartsOption } from 'echarts';
 
 // 그래프
 import BarChartV2 from './chart/BarChartV2';
@@ -27,8 +26,8 @@ import {
   useOrderData,
   useWidthThicknessData,
   useRollUnitData,
-  useNextProcData,
-  useCurrProcessData,
+  useNextProcDataFetch,
+  useCurrProcessDataFetch,
 } from '@/pages/fc004/useChartData';
 
 const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
@@ -103,10 +102,10 @@ const DashBoard: React.FC = () => {
   const [dueDate, setDueDate] = useState<DueDateDataType[]>([]); // 생산 기한일
   const [rollUnitOption, setRollUnitOption] =
     useState<echarts.EChartsCoreOption | null>(null); // 롤 단위
-  const [barchartV2Option, setBarchartV2Option] =
-    useState<echarts.EChartsOption | null>(null); // 차공정
-  const [rowbarchartOption, setRowbarchartOption] =
-    useState<echarts.EChartsOption | null>(null); // 재료진도
+  // const [barchartV2Option, setBarchartV2Option] =
+  //   useState<echarts.EChartsOption | null>(null); // 차공정
+  // const [rowbarchartOption, setRowbarchartOption] =
+  //   useState<echarts.EChartsOption | null>(null); // 재료진도
 
   // 모니터링 상태 관리
   // - mock 데이터
@@ -157,6 +156,9 @@ const DashBoard: React.FC = () => {
   const fetchWidthThicknessData = useWidthThicknessData(); // 폭/두께
   const fetchOrderData = useOrderData(); // 품종/고객사
   const fetchRollUnitData = useRollUnitData(); // 롤 단위
+
+  const nextProcOption = useNextProcDataFetch(selectedProc);
+  const currProcessOption = useCurrProcessDataFetch(selectedProc);
 
   // - 에러재 비율
   const fetchErrorNormalCount = async () => {
@@ -235,8 +237,8 @@ const DashBoard: React.FC = () => {
     setCustomerNameOption(null);
     setWidthOption(null);
     setThicknessOption(null);
-    setBarchartV2Option(null);
-    setRowbarchartOption(null);
+    // setBarchartV2Option(null);
+    // setRowbarchartOption(null);
     setRollUnitOption(null);
     setDueDate([]);
   };
@@ -250,55 +252,39 @@ const DashBoard: React.FC = () => {
     }
   };
 
-  // rendering
-  const render = async () => {
-    try {
-      // 품종/고객사 데이터 Fetch
-      const orderResult = await fetchOrderData(selectedProc);
-      handleApiResponse(orderResult?.coilTypeOptionResult, setCoilTypeOption);
-      handleApiResponse(
-        orderResult?.customerNameOptionResult,
-        setCustomerNameOption,
-      );
-
-      // 폭/두께 데이터 Fetch
-      const materialResult = await fetchWidthThicknessData(selectedProc);
-      handleApiResponse(materialResult?.widthOptionResult, setWidthOption);
-      handleApiResponse(
-        materialResult?.thicknessOptionResult,
-        setThicknessOption,
-      );
-
-      // 차공정(nextProc) 및 재료진도(currProcess) 데이터 Fetch
-      const nextProcOption: EChartsOption | null =
-        await useNextProcData(selectedProc);
-      handleApiResponse(nextProcOption, setBarchartV2Option);
-
-      const currProcessOption: EChartsOption | null =
-        await useCurrProcessData(selectedProc);
-      handleApiResponse(currProcessOption, setRowbarchartOption);
-
-      // 에러재 비율 데이터 Fetch
-      await fetchErrorNormalCount();
-
-      // 롤 단위 데이터 Fetch
-      const rollUnitResult = await fetchRollUnitData(selectedProc);
-      handleApiResponse(rollUnitResult, setRollUnitOption);
-
-      // 생산 마감일 데이터 Fetch
-      const tableData = await fetchDueDateTable();
-      handleApiResponse(tableData, setDueDate);
-    } catch (error) {
-      console.error('Error fetching data', error);
-      resetState(); // 에러 발생 시 모든 상태 초기화
-    }
-
-    // 실시간 모니터링 데이터 Fetch
-    await fetchMonitoringData();
-  };
-
+  // 데이터 Fetch
   useEffect(() => {
-    render();
+    const fetchData = async () => {
+      try {
+        const orderResult = await fetchOrderData(selectedProc);
+        handleApiResponse(orderResult?.coilTypeOptionResult, setCoilTypeOption);
+        handleApiResponse(
+          orderResult?.customerNameOptionResult,
+          setCustomerNameOption,
+        );
+
+        const materialResult = await fetchWidthThicknessData(selectedProc);
+        handleApiResponse(materialResult?.widthOptionResult, setWidthOption);
+        handleApiResponse(
+          materialResult?.thicknessOptionResult,
+          setThicknessOption,
+        );
+
+        await fetchErrorNormalCount();
+        const rollUnitResult = await fetchRollUnitData(selectedProc);
+        handleApiResponse(rollUnitResult, setRollUnitOption);
+
+        const tableData = await fetchDueDateTable();
+        handleApiResponse(tableData, setDueDate);
+      } catch (error) {
+        console.error('Error fetching data', error);
+        resetState();
+      }
+
+      await fetchMonitoringData();
+    };
+
+    fetchData();
   }, [selectedProc]);
 
   // 웹소켓
@@ -447,13 +433,13 @@ const DashBoard: React.FC = () => {
         <h2>작업대상재 분석</h2>
         <div className={styles.line2}>
           <div className={styles.smallCard}>
-            <BarChartV2 title="차공정" option={barchartV2Option} />
+            <BarChartV2 title="차공정" option={nextProcOption} />
           </div>
           <div className={styles.smallCard}>
             <BarChartV2 title="롤 단위" option={rollUnitOption} />
           </div>
           <div className={styles.smallCard}>
-            {rowbarchartOption && <RowbarChart option={rowbarchartOption} />}
+            <RowbarChart option={currProcessOption} />
           </div>
           <div className={styles.smallCard}>
             <List data={dueDate} />
