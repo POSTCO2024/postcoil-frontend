@@ -1,6 +1,8 @@
 import { RedoOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { Dropdown } from '@postcoil/ui';
 import { Button } from '@postcoil/ui/components/atoms/Button';
+import { RedButton } from '@postcoil/ui/components/atoms/RedButton';
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 
 import styles from './FilterContainer.module.scss';
@@ -9,6 +11,8 @@ import { ClientDTO } from '@/config/dto';
 import { useWorkInstructionStore } from '@/store/fo001store';
 import { options } from '@/utils/dropdownUtils';
 import { mockRollUnitName } from '@/utils/MockDropdown';
+
+const operationUrl = import.meta.env.VITE_OPERATION_API_URL;
 
 interface dropDownOptionType {
   value: string;
@@ -98,6 +102,29 @@ const FilterContainer = () => {
     }
   };
 
+  const requestCoil = async (workInstructionId: string) => {
+    try {
+      const response = await axios.post(
+        operationUrl +
+          '/api/coil-work/request-supply/' +
+          workInstructionId +
+          '?supplyCount=1',
+      );
+    } catch (errors) {
+      console.log(errors);
+    }
+  };
+  // Reject 함수
+  const rejectCoil = async (workInstructionId: any, id: any) => {
+    try {
+      const response = await axios.post(
+        operationUrl + '/api/coil-work/reject/' + workInstructionId + '/' + id,
+      );
+    } catch (errors) {
+      console.log(errors);
+    }
+  };
+
   useEffect(() => {
     if (selectedData && selectedData.length > 0) {
       setProcessCode([
@@ -132,9 +159,17 @@ const FilterContainer = () => {
         />
       </div>
       <div className={styles.btns}>
-        <Button text={'보급요구'} style={true} />
-        <Button text={'REJECT'} style={true} />
-        <Button text={'긴급정지'} style={true} />
+        <Button
+          text={'보급요구'}
+          style={true}
+          onClick={() => requestCoil('workInstructionId')}
+        />
+        <RedButton
+          text={'REJECT'}
+          style={true}
+          onClick={() => rejectCoil('workInstructionId', 'coilId')}
+        />
+        {/* <Button text={'긴급정지'} style={true} /> */}
       </div>
     </div>
   );
