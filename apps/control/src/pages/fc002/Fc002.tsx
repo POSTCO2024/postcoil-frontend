@@ -1,8 +1,9 @@
 import { Table } from '@postcoil/ui';
 import { Client } from '@stomp/stompjs';
-import { Button } from 'antd';
+import { Button, Divider, notification, Space } from 'antd';
+import type { NotificationArgsProps } from 'antd';
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import SockJS from 'sockjs-client';
 
 import styles from './Fc002.module.scss';
@@ -15,6 +16,10 @@ import { transformData, ApiResponseItem } from '@/utils/control/transformData';
 const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
 const controlBaseUrl = import.meta.env.VITE_CONTROL_BASE_URL;
 const modelApiUrl = import.meta.env.VITE_MODEL_API_URL;
+
+type NotificationPlacement = NotificationArgsProps['placement'];
+
+const Context = React.createContext({ name: 'Default' });
 
 // API
 export interface ApiResponse {
@@ -29,7 +34,7 @@ async function getErrorMaterialData(processCode: string): Promise<any[]> {
   try {
     const response = await axios.get<ApiResponse>(url);
     if (response.data.status === 200) {
-      // console.log(response.data.result);
+      console.log(response.data.result);
       return transformData(response.data.result);
     } else {
       console.log('Error: ', response.data.resultMsg);
@@ -74,6 +79,19 @@ async function getErrorPassRecommend(data: any) {
 }
 
 export const Fc002: React.FC = () => {
+  const [api, contextHolder] = notification.useNotification();
+
+  const openNotification = (placement: NotificationPlacement) => {
+    api.info({
+      message: `${message.currProc} 의 ${message.materialNo} 에`,
+      description: (
+        <Context.Consumer>{() => '비고가 생성되었습니다'}</Context.Consumer>
+      ),
+      placement,
+    });
+  };
+
+  const contextValue = useMemo(() => ({ name: 'Ant Design' }), []);
   // 조회
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [isRecommendModalOpen, setIsRecommendModalOpen] = React.useState(false);
@@ -83,6 +101,7 @@ export const Fc002: React.FC = () => {
     useState<string>('1PCM');
   const [selectedRows, setSelectedRows] = useState<any[]>([]); // Checked Rows
   const [client, setClient] = useState<Client | null>(null);
+  const [message, setMessage] = useState<any>({});
 
   // 검색 결과 처리
   const handleSearchResults = (searchResults: any[]) => {
@@ -157,7 +176,7 @@ export const Fc002: React.FC = () => {
   };
 
   useEffect(() => {
-    const socket = new SockJS('http://localhost:8086/ws/control');
+    const socket = new SockJS(controlApiUrl + '/ws/control');
     const stompClient = new Client({
       webSocketFactory: () => socket as any,
       debug: (str) => {
@@ -168,7 +187,7 @@ export const Fc002: React.FC = () => {
         stompClient.subscribe('/topic/errorMessage', (msg) => {
           const paredMessage = JSON.parse(msg.body);
           console.log('paredMessage : ' + JSON.stringify(paredMessage));
-
+          setMessage(paredMessage);
           setErrorMaterials((prevErrorMaterials) =>
             prevErrorMaterials.map((item) =>
               item.materialNo === paredMessage.materialNo
@@ -195,8 +214,14 @@ export const Fc002: React.FC = () => {
       }
     };
   }, []);
+
+  useEffect(() => openNotification('topRight'), [message]);
   return (
     <div className={styles.boardContainer}>
+      <Context.Provider value={contextValue}>
+        {contextHolder}
+        <Space></Space>
+      </Context.Provider>
       <h1>공정별 에러재 관리</h1>
       <TopBar
         onProcessChange={handleDropdownChange}
