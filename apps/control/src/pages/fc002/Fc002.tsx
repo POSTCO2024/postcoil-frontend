@@ -1,6 +1,6 @@
 import { Table } from '@postcoil/ui';
 import { Client } from '@stomp/stompjs';
-import { Button, Divider, notification, Space } from 'antd';
+import { Button, notification, Space } from 'antd';
 import type { NotificationArgsProps } from 'antd';
 import axios from 'axios';
 import React, { useState, useEffect, useMemo } from 'react';
