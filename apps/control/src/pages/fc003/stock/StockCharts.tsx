@@ -108,6 +108,8 @@ const StockCharts: React.FC = () => {
         },
         breadcrumb: {
           show: true,
+          bottom: 20,
+          height: 30,
         },
         roam: true, // 확대 기능 사용안함
         // nodeClick: false, // 클릭시 표 움직이는 기능 사용안함
