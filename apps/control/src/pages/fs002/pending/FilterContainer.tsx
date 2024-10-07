@@ -1,5 +1,5 @@
 import { Dropdown } from '@postcoil/ui';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import styles from './FilterContainer.module.scss';
 
@@ -12,20 +12,19 @@ const FilterContainer = () => {
   const scheduleData = useScheduleStore(
     (state) => state.data as ScheduleInfoDTO[],
   ); // Schedule data 세팅
-  const scheduleNo = useMaterialStore((state) => state.scheduleNo);
-  const materialData = useScheduleStore((state) => state.data as MaterialDTO[]); // Schedule data 세팅
   const processCode = useScheduleStore((state) => state.processCode!); // processCode 세팅
+  const scheduleNo = useMaterialStore((state) => state.scheduleNo!);
+  const materialData = useMaterialStore((state) => state.data as MaterialDTO[]); // Schedule data 세팅
   const cleanScheduleData = useScheduleStore((state) => state.cleanData!); // cleanData 함수 추가
   const cleanMaterialData = useMaterialStore((state) => state.cleanData!); // cleanData 함수 추가
   const fetchScheduleData = useScheduleStore((state) => state.fetchData!); // fetch Schedule data
   const fetchMaterialData = useMaterialStore((state) => state.fetchData!); // fetch Material data
 
   const [rollUnitOptions, setRollUnitOptions] = useState<OptionType[]>([]); // rollUnitName을 관리할 state 추가
-  const [selectedRollUnit, setSelectedRollUnit] = useState<
-    string[] | undefined
-  >([]); // 선택된 롤 단위명 상태 추가
+  const [selectedRollUnit, setSelectedRollUnit] = useState<string[]>([]); // 선택된 롤 단위명 상태 추가
   const [selectedProcessCode, setSelectedProcessCode] = useState<string[]>([]); // 공정명 선택으로 인한 스케줄명 재세팅을 위한 상태
-  const [isFirst, setIsFirst] = useState(true); // 첫 번째 렌더링인지 확인하기 위한 ref
+  // const [isFirst, setIsFirst] = useState(true); // 첫 번째 렌더링인지 확인하기 위한 ref
+  const isFirst = useRef(true);
 
   const handleProcessCode = (value?: string[]) => {
     if (value && value[0] !== '') {
@@ -35,6 +34,7 @@ const FilterContainer = () => {
     } else {
       cleanScheduleData();
     }
+
     setSelectedProcessCode(value!);
     cleanMaterialData();
   };
@@ -50,51 +50,106 @@ const FilterContainer = () => {
   };
 
   useEffect(() => {
-    // 첫 화면 데이터 세팅 조건
-    if (materialData && materialData.length > 0) {
-      // fs002에서 Direct 되었을 경우
+    if (isFirst.current) {
+      if (scheduleData && scheduleData.length > 0) {
+        // Schedule data가 있을 경우
+      } else {
+        // 기본값 세팅
+
+        const initializeData = async () => {
+          setSelectedProcessCode(['1CAL']);
+          await fetchScheduleData(['1CAL']);
+        };
+        initializeData();
+      }
+    }
+
+    // Cleanup 함수
+    return () => {
+      cleanScheduleData();
+      cleanMaterialData();
+      isFirst.current = true;
+    };
+  }, []); // scheduleData 및 materialData가 변경될 때만 실행
+
+  useEffect(() => {
+    if (isFirst && scheduleData && scheduleData.length > 0) {
       const newRollUnitOptions = scheduleData.map((d) => ({
         value: d.id,
         label: d.scheduleNo,
       }));
-
       setRollUnitOptions(newRollUnitOptions);
-      setSelectedProcessCode([processCode]);
-      setSelectedRollUnit([scheduleNo!]);
-    } else {
-      // 처음 렌더링 되었을 경우
-      setSelectedProcessCode(['1CAL']);
-      fetchScheduleData(['1CAL']);
-    }
-
-    return () => {
-      cleanScheduleData();
-      cleanMaterialData();
-    };
-  }, []);
-
-  useEffect(() => {
-    if (scheduleData && scheduleData.length > 0) {
-      const newRollUnitOptions = scheduleData.map(
-        (d: { id: string; scheduleNo: string }) => ({
-          value: d.id,
-          label: d.scheduleNo,
-        }),
-      );
-      setRollUnitOptions(newRollUnitOptions);
-
-      if (isFirst) {
-        // 처음 렌더링 했을 경우 기본 값 세팅
-        setSelectedRollUnit([scheduleData[0].id]);
+      if (materialData && materialData.length > 0) {
+        setRollUnitOptions(
+          scheduleData.map((d) => ({ value: d.id, label: d.scheduleNo })),
+        );
+        setSelectedRollUnit([scheduleNo]);
+        setSelectedProcessCode([processCode]);
+        return;
+      } else {
+        setSelectedRollUnit([scheduleData[0].scheduleNo]);
         fetchMaterialData([scheduleData[0].id]);
-        setIsFirst(false);
       }
-    } else {
-      setRollUnitOptions([]);
-      setSelectedRollUnit([]);
-      cleanMaterialData();
+
+      isFirst.current = false;
+    } else if (!isFirst.current && scheduleData && scheduleData.length > 0) {
+      if (materialData && materialData.length > 0) {
+        setRollUnitOptions(
+          scheduleData.map((d) => ({ value: d.id, label: d.scheduleNo })),
+        );
+      }
     }
-  }, [scheduleData]);
+  }, [scheduleData]); // scheduleData가 변경될 때마다 실행
+
+  // useEffect(() => {
+  //   console.log('useEffect 첫 렌더링시');
+  //   if (scheduleData && scheduleData.length > 0) {
+  //     if (materialData && materialData.length > 0) {
+  //       console.log('Schedule data와 Material data가 모두 있을 경우');
+  //       // Schedule data와 Material data가 모두 있을 경우
+  //       setRollUnitOptions(
+  //         scheduleData.map((d) => ({ value: d.id, label: d.scheduleNo })),
+  //       );
+  //       console.log('Schedule data', scheduleNo, processCode);
+  //       setSelectedRollUnit([scheduleNo]);
+  //       setSelectedProcessCode([processCode]);
+
+  //       setIsFirst(false);
+  //     }
+  //   } else {
+  //     // 기본값 세팅
+  //     const initializeData = async () => {
+  //       setSelectedProcessCode(['1CAL']);
+  //       await fetchScheduleData(['1CAL']);
+  //     };
+  //     initializeData();
+  //   }
+  //   console.log(scheduleData);
+
+  //   return () => {
+  //     cleanScheduleData();
+  //     cleanMaterialData();
+  //   };
+  // }, []); // 컴포넌트 마운트 시 실행
+
+  // useEffect(() => {
+  //   if (isFirst) {
+  //     if (scheduleData && (!materialData || materialData.length === 0)) {
+  //       const newRollUnitOptions = scheduleData.map((d) => ({
+  //         value: d.id,
+  //         label: d.scheduleNo,
+  //       }));
+  //       setRollUnitOptions(newRollUnitOptions);
+  //       setSelectedRollUnit([scheduleData[0].scheduleNo]);
+  //       fetchMaterialData([scheduleData[0].id]);
+  //       setIsFirst(false);
+  //     }
+  //   } else {
+  //     setRollUnitOptions([]);
+  //     setSelectedRollUnit([]);
+  //     cleanMaterialData();
+  //   }
+  // }, [scheduleData]); // scheduleData가 변경될 때마다 실행
 
   return (
     <div className={styles.filterContainer}>

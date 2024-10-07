@@ -1,6 +1,7 @@
 export interface MaterialDTO {
   [x: string]: any;
   id: number | string;
+  materialId?: number | string;
   materialNo?: string;
   currProc?: string;
   width?: number | string;

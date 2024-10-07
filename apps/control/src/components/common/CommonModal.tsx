@@ -6,6 +6,7 @@ interface PropsType {
   title?: string | React.ReactNode;
   isModalOpen: boolean;
   isConfirmation?: boolean;
+  isConfirmationButtonName?: string;
   isButtonNeeded?: boolean;
   width?: number | undefined; // Modal width
   style?: React.CSSProperties | undefined; // Modal style
@@ -18,6 +19,7 @@ const CommonModal = ({
   title,
   isModalOpen,
   isConfirmation = false,
+  isConfirmationButtonName,
   isButtonNeeded = true,
   onCancel,
   onApply,
@@ -35,7 +37,11 @@ const CommonModal = ({
         isButtonNeeded && (
           <div className="modal-btns">
             <Button className="apply-btn" onClick={onApply}>
-              {isConfirmation ? '확인' : '적용'}
+              {isConfirmation
+                ? '확인'
+                : isConfirmationButtonName
+                  ? isConfirmationButtonName
+                  : '적용'}
             </Button>
             {!isConfirmation && <Button onClick={onCancel}>취소</Button>}
           </div>

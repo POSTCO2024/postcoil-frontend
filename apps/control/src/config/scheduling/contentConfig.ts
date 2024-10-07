@@ -4,6 +4,7 @@ import { DataType } from '@postcoil/ui/config/TableConfig';
 export interface MaterialDataType extends DataType {
   key?: string | number;
   id?: string;
+  materialId?: number | string;
   materialNo?: string;
   opCode?: string;
   currProc?: string;
@@ -84,4 +85,13 @@ export interface CompletedModalDataType extends DataType {
   unInsertionQuantity: number;
   autoInsertionQuantity: number;
   description?: string[];
+}
+
+// Fs002 ConfirmModal Data Type
+export interface ConfirmModalDataType extends DataType {
+  key: string | number;
+  id: string;
+  scheduleNo: string;
+  quantity?: number;
+  isSequenceChanged: JSX.Element;
 }

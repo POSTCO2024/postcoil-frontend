@@ -7,6 +7,7 @@ import styles from './SchPlanModal.module.scss';
 
 import { scheduleApiClient, scheduleBaseUrl } from '@/api/scheduleApi';
 import CommonModal from '@/components/common/CommonModal';
+import RollFailModal from '@/components/common/RollFailModal';
 import {
   CompletedModalDataType,
   PlanModalDataType,
@@ -36,6 +37,7 @@ const SchPlanModal = ({
   const selectedProcessCode = selectedRows[0] ? selectedRows[0].currProc! : '';
   const [scheduleA, setScheduleA] = useState<ScheduleInfoDTO[]>([]);
   const [scheduleB, setScheduleB] = useState<ScheduleInfoDTO[]>([]);
+  const [isFailModalOpen, setIsFailModalOpen] = useState(false);
 
   const modalData = transformedPlanModalData(selectedRows);
   const completedModalData = transformedCompletedModalData(
@@ -62,25 +64,29 @@ const SchPlanModal = ({
       const selectedIds = selectedRows.map((row) => row.key);
       console.log('SelectedIds:', selectedIds); // selectedIds 확인
 
-      let planData: ScheduleInfoDTO[];
-
       // 백엔드로 POST 요청 (selectedIds 전달)
-      await scheduleApiClient
-        .post(`${scheduleBaseUrl}/plan/execute`, selectedIds, {
+      const response = await scheduleApiClient.post(
+        `${scheduleBaseUrl}/plan/execute`,
+        selectedIds,
+        {
           headers: {
             'Content-Type': 'application/json',
           },
-        })
-        .then((response) => {
-          planData = response.data.result;
+        },
+      );
 
-          setScheduleA(planData.filter((data) => data.rollUnit === 'A'));
-          setScheduleB(planData.filter((data) => data.rollUnit === 'B'));
+      const planData: ScheduleInfoDTO[] = response.data.result; // const로 변경
 
-          fetchMaterialData(planData.map((data) => data.id));
+      if (planData.length === 0) {
+        // 결과가 없을 때 실패 모달을 열고 함수 종료
+        onCancel();
+        setIsFailModalOpen(true);
+        return; // 여기서 return으로 함수 종료
+      }
 
-          console.log('Plan execute response:', planData); // 결과 확인
-        });
+      // 결과가 있을 때만 이후 코드 실행
+      setScheduleA(planData.filter((data) => data.rollUnit === 'A'));
+      setScheduleB(planData.filter((data) => data.rollUnit === 'B'));
 
       // 다음 화면(fs002)의 processCode를 설정
       useScheduleStore.setState((state) => ({
@@ -89,14 +95,56 @@ const SchPlanModal = ({
       }));
 
       // processCode가 업데이트된 후 fetchData 호출
-      fetchScheduleData([selectedProcessCode]);
+      await fetchScheduleData([selectedProcessCode]);
+      await fetchMaterialData(planData.map((data) => data.id));
+
+      console.log('Plan execute response:', planData); // 결과 확인
 
       // 성공적으로 요청이 완료되면 모달을 닫고 success 모달을 열기
-      setIsCompletedModalOpen(true);
+      setIsCompletedModalOpen(true); // 이 부분은 planData.length > 0일 때만 실행
       onCancel();
+      // // 백엔드로 POST 요청 (selectedIds 전달)
+      // await scheduleApiClient
+      //   .post(`${scheduleBaseUrl}/plan/execute`, selectedIds, {
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //     },
+      //   })
+      //   .then((response) => {
+      //     planData = response.data.result;
+
+      //     setScheduleA(planData.filter((data) => data.rollUnit === 'A'));
+      //     setScheduleB(planData.filter((data) => data.rollUnit === 'B'));
+
+      //     if (planData.length > 0) {
+      //       // 다음 화면(fs002)의 processCode를 설정
+      //       useScheduleStore.setState((state) => ({
+      //         ...state,
+      //         processCode: selectedProcessCode,
+      //       }));
+
+      //       // processCode가 업데이트된 후 fetchData 호출
+      //       fetchScheduleData([selectedProcessCode]);
+      //       fetchMaterialData(planData.map((data) => data.id));
+
+      //       console.log('Plan execute response:', planData); // 결과 확인
+      //     } else {
+      //       onCancel();
+      //       setIsFailModalOpen(true);
+      //       return;
+      //     }
+      //   });
+
+      // // 성공적으로 요청이 완료되면 모달을 닫고 success 모달을 열기
+      // setIsCompletedModalOpen(true);
+      // onCancel();
     } catch (error) {
       console.error('Error during plan execution:', error);
     }
+  };
+
+  const handleFailModal = () => {
+    setIsFailModalOpen(false);
   };
 
   // 확장된 행을 렌더링하는 함수
@@ -151,6 +199,7 @@ const SchPlanModal = ({
           {`총 ${selectedRows.length}개의 재료로 스케줄을 편성하시겠습니까?`}
         </p>
       </CommonModal>
+
       <CommonModal
         title={'편성된 스케줄 확인'}
         isModalOpen={isCompletedModalOpen}
@@ -180,6 +229,12 @@ const SchPlanModal = ({
           style={{ padding: 10 }}
         />
       </CommonModal>
+      <RollFailModal
+        isModalOpen={isFailModalOpen}
+        handleCancel={handleFailModal}
+        handleApply={handleFailModal}
+        title={'스케줄 편성에 실패하였습니다.'}
+      />
     </>
   );
 };

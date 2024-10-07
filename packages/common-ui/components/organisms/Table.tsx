@@ -124,7 +124,6 @@ export const Table = <T extends DataType>({
           components={components}
           expandable={{
             expandedRowRender: expandedRowRender, // 확장된 행에 보여줄 내용
-            // rowExpandable: (record) => !!record, // 모든 행을 확장 가능하도록 설정
           }}
         />
       </ConfigProvider>

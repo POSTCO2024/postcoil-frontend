@@ -59,7 +59,7 @@ const SchPPage = () => {
   };
 
   const handleRoll = () => {
-    if (selectedRows.length < 3) {
+    if (selectedRows.length < 1) {
       setIsWarnModalOpen(true);
       return;
     }

@@ -1,6 +1,6 @@
 import { Tab } from '@postcoil/ui';
 import { Button } from 'antd';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import Charts from './pending/Charts';
 import SchListModal from './pending/SchListModal';
@@ -13,8 +13,6 @@ import { useMaterialStore } from '@/store/fs002store';
 const SchPePage = () => {
   const data = useMaterialStore((state) => state.data);
   const resetData = useMaterialStore((state) => state.resetData)!;
-
-  useEffect(() => {}, []);
 
   const [isGraphVisible, setIsGraphVisible] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);

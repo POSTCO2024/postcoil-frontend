@@ -1,4 +1,4 @@
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { CloseCircleOutlined } from '@ant-design/icons';
 
 import CommonModal from './CommonModal';
 
@@ -9,7 +9,7 @@ interface PropsType {
   title?: string | null;
 }
 
-const RollWarnModal = ({
+const RollFailModal = ({
   isModalOpen,
   handleCancel,
   handleApply,
@@ -21,18 +21,18 @@ const RollWarnModal = ({
       isConfirmation={true}
       onCancel={handleCancel}
       onApply={handleApply}>
-      <ExclamationCircleOutlined
+      <CloseCircleOutlined
         style={{
           fontSize: '4rem',
-          justifyContent: 'center !important',
-          color: '#ffb01a',
+          display: 'block',
+          color: 'red',
         }}
       />
-      <p style={{ fontSize: '1.5rem', textAlign: 'center', marginTop: '10px' }}>
+      <p style={{ fontSize: '1.5rem', textAlign: 'center', marginTop: '20px' }}>
         {title}
       </p>
     </CommonModal>
   );
 };
 
-export default RollWarnModal;
+export default RollFailModal;

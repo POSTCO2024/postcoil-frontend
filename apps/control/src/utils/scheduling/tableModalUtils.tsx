@@ -1,7 +1,9 @@
 import { ColumnDataType } from '@postcoil/ui/config/TableConfig';
+import { Checkbox, Form } from 'antd';
 
 import {
   CompletedModalDataType,
+  ConfirmModalDataType,
   PlanModalDataType,
 } from '@/config/scheduling/contentConfig';
 import { MaterialDTO, ScheduleInfoDTO } from '@/config/scheduling/dto';
@@ -196,3 +198,32 @@ export const transformedCompletedModalData = (
       : [];
   }
 };
+
+export const confirmModalColumnData: ColumnDataType<ConfirmModalDataType>[] = [
+  {
+    title: '',
+    dataIndex: 'key',
+    key: 'select',
+    render: (key: string, record) => (
+      <Form.Item name={key} valuePropName="checked" style={{ marginBottom: 0 }}>
+        <Checkbox disabled={record.quantity === undefined} />
+      </Form.Item>
+    ),
+  },
+  {
+    title: '스케줄명',
+    dataIndex: 'scheduleNo',
+    key: 'scheduleNo',
+  },
+  {
+    title: '총 개수',
+    dataIndex: 'quantity',
+    key: 'quantity',
+    width: 80,
+  },
+  {
+    title: '데이터 확인 여부',
+    dataIndex: 'isSequenceChanged',
+    key: 'isSequenceChanged',
+  },
+];
