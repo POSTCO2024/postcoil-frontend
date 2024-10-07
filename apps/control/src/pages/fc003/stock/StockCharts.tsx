@@ -108,6 +108,8 @@ const StockCharts: React.FC = () => {
         },
         breadcrumb: {
           show: true,
+          bottom: 20,
+          height: 30,
         },
         roam: true, // 확대 기능 사용안함
         // nodeClick: false, // 클릭시 표 움직이는 기능 사용안함
@@ -144,7 +146,7 @@ const StockCharts: React.FC = () => {
 
   return (
     <div className={styles.chartContainer}>
-      <h3>공장별 수급량 조회</h3>
+      <h3>공정별 입측/출측 코일 조회</h3>
       <div className={styles.contentContainer}>
         <div ref={chartRef} className={styles.chart} />
         <div className={styles.btn}>
