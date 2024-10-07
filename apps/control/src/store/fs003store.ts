@@ -149,6 +149,7 @@ export const useWorkInstructionStore = create<StoreType>((set) => ({
             newItem.workInstructions.workInstructionId,
         );
 
+        console.log('existingItemIndex: ' + existingItemIndex);
         if (existingItemIndex !== -1) {
           // 기존 항목이 있으면 병합하여 업데이트
           updatedData[existingItemIndex] = {
@@ -177,6 +178,7 @@ export const useWorkInstructionStore = create<StoreType>((set) => ({
           // 만약 기존의 scheduleNo와 다른 경우 새로운 IN_PROGRESS 데이터로 상태 업데이트
           if (state.scheduleNo !== newItem.workInstructions.scheduleNo) {
             set({
+              ...state,
               scheduleNo: newItem.workInstructions.scheduleNo,
               scheduleStartTime: newItem.workInstructions.startTime,
               scExpectedDuration: newItem.workInstructions.expectedDuration,
@@ -193,9 +195,9 @@ export const useWorkInstructionStore = create<StoreType>((set) => ({
 
       // 최종적으로 적절한 상태를 업데이트
       if (processCode === '1CAL') {
-        return { data: sortedData, loading: false };
+        return { ...state, data: sortedData, loading: false };
       } else if (processCode === '2CAL') {
-        return { data2: sortedData, loading: false };
+        return { ...state, data2: sortedData, loading: false };
       }
 
       return {}; // 타입 오류 방지 위해 빈 객체 반환

@@ -4,6 +4,7 @@ import { DataType } from '@postcoil/ui/config/TableConfig';
 export interface MaterialDataType extends DataType {
   key?: string | number;
   id?: string;
+  materialId?: number | string;
   materialNo?: string;
   opCode?: string;
   currProc?: string;
@@ -34,6 +35,7 @@ export interface MaterialDataType extends DataType {
   initialThickness?: number | string;
   processedWidth?: number | string;
   processedThickness?: number | string;
+  isRejected?: string;
 }
 
 export interface ScheduleDataType extends DataType {
@@ -61,4 +63,36 @@ export interface ChartDataType extends Highcharts.Point {
   id: string;
   color?: string;
   changed?: boolean;
+}
+
+// Fs001 SchPlanModal Data Type
+export interface PlanModalDataType extends DataType {
+  key?: string | number;
+  id?: string;
+  rollUnit: string;
+  countMaterials: number;
+  scheduleCriteria?: string;
+  description?: { [key: string]: string | number }[];
+}
+
+// Fs001 CompletedModal Data Type
+export interface CompletedModalDataType extends DataType {
+  key?: string | number;
+  id?: string;
+  scheduleNo: string;
+  rollUnit: string;
+  countMaterials: number;
+  quantity: number;
+  unInsertionQuantity: number;
+  autoInsertionQuantity: number;
+  description?: string[];
+}
+
+// Fs002 ConfirmModal Data Type
+export interface ConfirmModalDataType extends DataType {
+  key: string | number;
+  id: string;
+  scheduleNo: string;
+  quantity?: number;
+  isSequenceChanged: JSX.Element;
 }

@@ -9,4 +9,3 @@ export { Input } from './components/atoms/Input';
 export { SearchButton } from './components/atoms/SearchButton';
 export { Navigation } from './components/organisms/Navigation';
 export { ContentBoard } from './components/organisms/ContentBoard';
-export { DropdownColor } from './components/atoms/DropdownColor';

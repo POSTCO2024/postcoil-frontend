@@ -24,7 +24,7 @@ export const transformedDataToDraggableChartData = (
     x: item.sequence as number,
     id: item.id as string,
     changed: item.changed,
-    color: item.changed ? '#6464ff' : '#7da2f5',
+    color: item.changed ? '#b3b3b3' : '#F1655E',
   }));
 };
 
@@ -103,7 +103,6 @@ export const transformedDataToResultChartData = (
         supplyIndex++; // 보급 예정 인덱스 증가
       }
 
-      console.log(targetColor);
       currentIndex++; // 다음 인덱스를 위해 증가
     }
 

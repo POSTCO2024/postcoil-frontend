@@ -16,15 +16,15 @@ export const useScheduleStore = create<StoreType>((set) => ({
   processCode: '', // 현재 process Code
   fetchData: async (value: string[]) => {
     set({ loading: true, error: null }); // 로딩 시작
-    const { processCode } = useScheduleStore.getState(); // processCode를 받아오기
+    // const { processCode } = useScheduleStore.getState(); // processCode를 받아오기
     try {
       const result: ScheduleInfoDTO[] = await fetchScheduleData({
         pageCode: 'pending',
-        processCode: value[0] ? value[0] : processCode,
+        processCode: value[0],
       }); // 데이터 fetch
       set({
         data: result,
-        processCode: value[0] ? value[0] : processCode,
+        processCode: value[0],
         loading: false,
       }); // 데이터 상태 업데이트 및 로딩 종료
     } catch (error) {
@@ -71,7 +71,7 @@ export const useMaterialStore = create<StoreType>((set) => ({
       const result: MaterialDTO[] = await fetchScheduleData({
         pageCode: 'pending',
         processCode: 'schedule',
-        requestParams: `?id=${value}`, // requestParams 추가 (schedule id에 해당하는 materials 받아오기)
+        requestParams: `?id=${value[0]}`, // requestParams 추가 (schedule id에 해당하는 materials 받아오기)
       }); // 데이터 fetch
 
       // 원본 데이터를 저장하면서 동시에 data에 할당, changed는 false로 설정

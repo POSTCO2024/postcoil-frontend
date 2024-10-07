@@ -6,7 +6,7 @@ import { MaterialDTO } from '@/config/scheduling/dto';
 import {
   materialColumnData,
   transformedData,
-} from '@/utils/scheduling/tableUtils';
+} from '@/utils/scheduling/TableUtils';
 
 interface PropsType {
   data: MaterialDTO[];
@@ -23,13 +23,14 @@ const ContentContainer = ({ data, setSelectedRows }: PropsType) => {
     <div className={styles.contentContainer}>
       <section className={styles.result}>
         <div className={styles.table}>
-          {/* TODO: common-ui의 Table checkbox fix!!  */}
           <Table
             useCheckBox={true}
             columns={materialColumnData}
             data={transformedData(data)}
             handleRowsClick={handleRowsClick}
             setSelectedMaterials={setSelectedRows}
+            scroll={{ x: 'max-content', y: 'auto' }}
+            tableLayout={'fixed'}
           />
         </div>
       </section>

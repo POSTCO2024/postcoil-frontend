@@ -23,7 +23,7 @@ import { useMaterialStore } from '@/store/fs002store';
 import {
   materialColumnData,
   transformedData,
-} from '@/utils/scheduling/tableUtils';
+} from '@/utils/scheduling/TableUtils';
 
 interface RowProps extends React.HTMLAttributes<HTMLTableRowElement> {
   'data-row-key': string;
@@ -41,9 +41,19 @@ const dragColumns: ColumnDataType<MaterialDataType>[] = [
     width: 80,
     title: '',
     dataIndex: 'dragHandle',
+    fixed: true,
     render: () => <DragHandle />,
   },
-  ...materialColumnData,
+  ...materialColumnData.map((column) => {
+    if (column.key === 'rollUnit') {
+      const { sortable, otherProps, ...rest } = column; // sortable, otherProps 제거
+      return {
+        ...rest,
+        width: 70, // 나머지 속성 유지
+      };
+    }
+    return column; // 다른 컬럼은 그대로 반환
+  }),
 ];
 
 const RowContext = React.createContext<RowContextProps>({});
@@ -158,6 +168,8 @@ const ContentContainer = () => {
                   rowClassName={(record) =>
                     record.changed ? `${styles.changedBg}` : ''
                   }
+                  scroll={{ x: 'max-content', y: 'auto' }}
+                  tableLayout={'fixed'}
                 />
               </ConfigProvider>
             </SortableContext>

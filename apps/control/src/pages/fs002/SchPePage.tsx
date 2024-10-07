@@ -1,6 +1,6 @@
 import { Tab } from '@postcoil/ui';
 import { Button } from 'antd';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import Charts from './pending/Charts';
 import SchListModal from './pending/SchListModal';
@@ -8,23 +8,11 @@ import styles from './SchPePage.module.scss';
 
 import ContentContainer from '@/pages/fs002/pending/ContentContainer';
 import FilterContainer from '@/pages/fs002/pending/FilterContainer';
-import { useMaterialStore, useScheduleStore } from '@/store/fs002store';
+import { useMaterialStore } from '@/store/fs002store';
 
 const SchPePage = () => {
   const data = useMaterialStore((state) => state.data);
   const resetData = useMaterialStore((state) => state.resetData)!;
-
-  useEffect(() => {
-    return () => {
-      // Fetch한 data 초기화
-      useScheduleStore.setState({ data: null, processCode: '' });
-      useMaterialStore.setState({
-        data: null,
-        scheduleNo: '',
-        scExpectedDuration: null,
-      });
-    };
-  }, []);
 
   const [isGraphVisible, setIsGraphVisible] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);

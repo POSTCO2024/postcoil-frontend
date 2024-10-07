@@ -1,12 +1,16 @@
-import { Checkbox, Form } from 'antd';
+import { Table } from '@postcoil/ui';
+import { Form, Tag } from 'antd';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { scheduleApiClient, scheduleBaseUrl } from '@/api/scheduleApi';
 import CommonModal from '@/components/common/CommonModal';
 import RollSuccessModal from '@/components/common/RollSuccessModal';
+import RollWarnModal from '@/components/common/RollWarnModal';
 import { ScheduleInfoDTO } from '@/config/scheduling/dto';
 import { useMaterialStore, useScheduleStore } from '@/store/fs002store';
+import { useWorkInstructionStore } from '@/store/fs003store';
+import { confirmModalColumnData } from '@/utils/scheduling/TableModalUtils';
 
 interface PropsType {
   isModalOpen: boolean;
@@ -24,30 +28,65 @@ const SchListModal = ({ isModalOpen, onApply, onCancel }: PropsType) => {
   const processCode = useScheduleStore((state) => state.processCode);
   // const cleanScheduleData = useScheduleStore((state) => state.cleanData); // cleanData 함수 추가
 
+  // Material 데이터를 관리하는 store에서 cache와 originalCache를 가져옴
+  const cache = useMaterialStore.getState().cache!;
+  const originalCache = useMaterialStore.getState().originalCache!;
+
   const data = scheduleData
-    ? scheduleData!.map((d: { id: string; scheduleNo: string }) => ({
-        value: d.id,
-        label: d.scheduleNo,
-      }))
+    ? scheduleData.map((d) => {
+        const hasCache = cache[d.id]; // cache가 있는지 확인
+        const isSequenceChanged = hasCache
+          ? cache[d.id].some((currentMaterial) =>
+              originalCache[d.id]?.find(
+                (originalMaterial) =>
+                  originalMaterial.id === currentMaterial.id &&
+                  originalMaterial.sequence !== currentMaterial.sequence,
+              ),
+            )
+          : false; // sequence 변경 여부 확인
+
+        return {
+          key: d.id,
+          id: d.id,
+          scheduleNo: d.scheduleNo,
+          quantity: hasCache ? cache[d.id].length : undefined, // 각 스케줄의 총 개수
+          isSequenceChanged: hasCache ? ( // tag 추가를 위해 boolean 값으로 변경
+            <>
+              <Tag color="green">확인 완료</Tag>
+              {isSequenceChanged && (
+                <Tag color="red" style={{ marginTop: 5 }}>
+                  코일 순서 변경
+                </Tag>
+              )}
+            </>
+          ) : (
+            <Tag color="orange">확인 필요</Tag>
+          ), // cache가 없을 때 태그 추가
+        };
+      })
     : undefined;
 
   const [isModal2Open, setIsModal2Open] = useState(false);
+  const [isWarnModalOpen, setIsWarnModalOpen] = useState(false);
 
   const onSubmit = () => {
     form.submit(); // 적용버튼 누를시 form 제출!
   };
   const handleCancel = () => {
     setIsModal2Open(false);
+    useWorkInstructionStore.setState((state) => ({
+      ...state,
+      processCode: processCode,
+    }));
     navigate('/schedule3');
   };
 
-  const createConfirmDTO = (values: any) => {
-    // 체크된 planId를 필터링
-    const checkedPlanIds = Object.keys(values).filter((key) => values[key]);
+  const handleClose = () => {
+    setIsWarnModalOpen(false);
+  };
 
-    // Material 데이터를 관리하는 store에서 cache와 originalCache를 가져옴
-    const cache = useMaterialStore.getState().cache!;
-    const originalCache = useMaterialStore.getState().originalCache!;
+  const createConfirmDTO = (checkedPlanIds: any[]) => {
+    // 체크된 planId를 필터링
 
     // checkedPlanIds에 맞는 updateMaterials를 생성
     const confirmPlans = checkedPlanIds.map((planId) => {
@@ -70,6 +109,8 @@ const SchListModal = ({ isModalOpen, onApply, onCancel }: PropsType) => {
           materialId: material.id,
           sequence: material.sequence,
         }));
+      console.log('planId :', planId);
+      console.log('updateMaterials :', updateMaterials);
 
       return {
         planId: Number(planId),
@@ -81,10 +122,21 @@ const SchListModal = ({ isModalOpen, onApply, onCancel }: PropsType) => {
   };
 
   const onFinish = async (values: any) => {
+    // 체크된 planId를 필터링
     const checkedPlanIds = Object.keys(values).filter((key) => values[key]);
 
+    // 체크된 planId가 없으면 경고 메시지를 띄우고 함수 종료
+    if (checkedPlanIds.length === 0) {
+      // 경고 메시지 또는 알림 추가
+      setIsWarnModalOpen(true);
+      // alert('적어도 하나의 항목을 선택해야 합니다.');
+      return; // 체크된 항목이 없으면 함수를 종료
+    }
+
+    console.log('checked planIds :', checkedPlanIds);
+
     // confirmPlans 형식의 requestBody 생성
-    const confirmPlans = createConfirmDTO(values);
+    const confirmPlans = createConfirmDTO(checkedPlanIds);
 
     try {
       await scheduleApiClient
@@ -144,10 +196,10 @@ const SchListModal = ({ isModalOpen, onApply, onCancel }: PropsType) => {
   return (
     <>
       <CommonModal
-        title={`등록할 스케줄 리스트 (${processCode})`}
+        title={`등록할 스케줄 확인 (공정: ${processCode})`}
         isModalOpen={isModalOpen}
         isConfirmation={false}
-        width={370}
+        isConfirmationButtonName={'등록'}
         style={{ textAlign: 'center' }}
         onApply={onSubmit}
         onCancel={onCancel}>
@@ -160,8 +212,8 @@ const SchListModal = ({ isModalOpen, onApply, onCancel }: PropsType) => {
             span: 8,
           }}
           style={{
-            width: 'fit-content',
-            maxWidth: 300,
+            // width: 'fit-content',
+            // maxWidth: 300,
             marginLeft: 'auto',
             marginRight: 'auto',
             marginTop: 20,
@@ -169,20 +221,23 @@ const SchListModal = ({ isModalOpen, onApply, onCancel }: PropsType) => {
           }}
           onFinish={onFinish}
           autoComplete="off">
-          {data &&
-            data.map((item: { value: string; label: string }) => (
-              <Form.Item
-                key={item.value}
-                name={item.value}
-                valuePropName="checked"
-                style={{ height: '1rem' }}>
-                <Checkbox style={{ height: 'fit-content', padding: 0 }}>
-                  {item.label}
-                </Checkbox>
-              </Form.Item>
-            ))}
+          {data && (
+            <Table
+              data={data}
+              columns={confirmModalColumnData}
+              pagination={false}
+              rowKey="key"
+              style={{ height: '85%', overflow: 'auto' }}
+            />
+          )}
         </Form>
       </CommonModal>
+      <RollWarnModal
+        isModalOpen={isWarnModalOpen}
+        handleCancel={handleClose}
+        handleApply={handleClose}
+        title={'적어도 하나의 항목을 선택해주세요.'}
+      />
       <RollSuccessModal
         isModalOpen={isModal2Open}
         handleApply={handleCancel}

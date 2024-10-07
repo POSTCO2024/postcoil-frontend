@@ -10,3 +10,14 @@ export const options: OptionType[] = [
     label: '2CAL',
   },
 ];
+
+export const rollUnitOptions: OptionType[] = [
+  {
+    value: 'A',
+    label: 'A',
+  },
+  {
+    value: 'B',
+    label: 'B',
+  },
+];

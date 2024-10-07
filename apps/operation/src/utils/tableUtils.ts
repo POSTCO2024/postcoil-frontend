@@ -92,15 +92,16 @@ export const coilTypeColumnData = [
 
 export const workItemColumnData: ColumnDataType<MaterialDataType>[] = [
   {
-    title: 'Seq.',
+    title: '순서',
     dataIndex: 'sequence',
     key: 'sequence',
+    fixed: true,
   },
   {
     title: '재료번호',
     dataIndex: 'materialNo',
     key: 'materialNo',
-    // fixed: true,
+    fixed: true,
   },
   {
     title: '입측 폭',

@@ -50,6 +50,8 @@ interface TableComponentProps<T extends DataType> {
   components?: any;
   setSelectedMaterials?: any;
   handleSelectedStyle?: (record: any) => CSSProperties;
+  style?: React.CSSProperties;
+  expandedRowRender?: (record: T) => React.ReactNode; // ExpandedRowData
 }
 
 export const Table = <T extends DataType>({
@@ -68,6 +70,8 @@ export const Table = <T extends DataType>({
   components,
   setSelectedMaterials,
   handleSelectedStyle,
+  style,
+  expandedRowRender = undefined,
 }: TableComponentProps<T>) => {
   const processedColumns = [...createColumns(columns)];
   // const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -94,6 +98,7 @@ export const Table = <T extends DataType>({
           },
         }}>
         <AntTable
+          style={style}
           pagination={pagination || false}
           rowSelection={useCheckBox ? rowSelection : undefined}
           className={`${styles.antTable} ${className}`}
@@ -117,6 +122,13 @@ export const Table = <T extends DataType>({
           rowClassName={rowClassName}
           rowKey={rowKey}
           components={components}
+          expandable={{
+            expandedRowRender: expandedRowRender, // 확장된 행에 보여줄 내용
+          }}
+          locale={{
+            filterConfirm: '적용', // 필터 확인 버튼의 텍스트
+            filterReset: '초기화', // 필터 리셋 버튼의 텍스트
+          }}
         />
       </ConfigProvider>
     </div>

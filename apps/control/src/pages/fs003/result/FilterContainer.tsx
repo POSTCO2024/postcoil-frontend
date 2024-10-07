@@ -6,7 +6,6 @@ import styles from './FilterContainer.module.scss';
 
 import { dropDownOptionType } from '@/config/scheduling/dropdownConfig';
 import { ClientDTO } from '@/config/scheduling/dto';
-import { useScheduleStore } from '@/store/fs002store';
 import { useWorkInstructionStore } from '@/store/fs003store';
 import { options } from '@/utils/scheduling/dropdownUtils';
 import { mockRollUnitName } from '@/utils/scheduling/MockDropdown';
@@ -20,13 +19,28 @@ const FilterContainer = () => {
     (state) => state.setData!, // processCode 업데이트 함수
   );
   const selectedData = useWorkInstructionStore((state) =>
-    selectedProcessCode === '1CAL'
-      ? (state.data as ClientDTO[])
-      : (state.data2 as ClientDTO[]),
+    selectedProcessCode !== ''
+      ? selectedProcessCode === '1CAL'
+        ? (state.data as ClientDTO[])
+        : (state.data2 as ClientDTO[])
+      : null,
   );
 
-  const prevSelectedProcessCode = useScheduleStore(
-    (state) => state.processCode!,
+  // const prevSelectedProcessCode = useScheduleStore(
+  //   (state) => state.processCode!,
+  // );
+
+  const [scheduleNoList, setScheduleNoList] = useState<dropDownOptionType[]>(
+    [],
+  );
+  // 선택된 processCode에 따라 fetch 해 온 옵션 생성
+
+  const [processCode, setProcessCode] = useState<string[]>([
+    selectedProcessCode !== '' ? selectedProcessCode : '1CAL',
+  ]);
+
+  const [selectedRollUnitName, setSelectedRollUnitName] = useState<string[]>(
+    [],
   );
 
   const generateDynamicRollUnitOptions = (
@@ -57,18 +71,44 @@ const FilterContainer = () => {
       };
     });
   };
-  const [scheduleNoList, setScheduleNoList] = useState<dropDownOptionType[]>(
-    [],
-  );
-  // 선택된 processCode에 따라 fetch 해 온 옵션 생성
+  // 처음 렌더링될 때 데이터 fetch 및 WebSocket으로부터 데이터 변경 시 재렌더링
+  // useEffect(() => {
+  //   if (!selectedData || selectedData.length === 0) {
+  //     fetchData(processCode); // 기본 processCode로 fetch
+  //   }
 
-  const [processCode, setProcessCode] = useState<string[]>([
-    selectedProcessCode,
-  ]);
+  //   return () => {
+  //     useWorkInstructionStore.setState((state) => ({
+  //       ...state,
+  //       processCode: '',
+  //       data: null,
+  //       data2: null,
+  //       workItems: null,
+  //     }));
+  //   };
+  // }, []);
 
-  const [selectedRollUnitName, setSelectedRollUnitName] = useState<string[]>(
-    [],
-  );
+  // // WebSocket이나 fetch 이후 selectedData가 변경되면 필터링 및 렌더링
+  // useEffect(() => {
+  //   if (selectedData && selectedData.length > 0) {
+  //     console.log('selectedData: ', selectedData);
+  //     setScheduleNoList(generateDynamicRollUnitOptions(selectedData));
+  //     setSelectedRollUnitName([selectedData[0].workInstructions.scheduleNo]);
+  //   }
+  // }, [selectedData]);
+  useEffect(() => {
+    if (selectedData && selectedData.length > 0) {
+      console.log('selectedData: ', selectedData);
+      // setProcessCode([
+      //   selectedProcessCode !== '' ? selectedProcessCode : '1CAL',
+      // ]);
+      setScheduleNoList(generateDynamicRollUnitOptions(selectedData));
+      setSelectedRollUnitName([selectedData[0].workInstructions.scheduleNo]);
+    } else if (!selectedData) {
+      setProcessCode(['1CAL']);
+      fetchData(['1CAL']);
+    }
+  }, [selectedData]);
 
   const handleProcessCode = (value?: string[]) => {
     if (value && value[0] !== '') {
@@ -77,17 +117,15 @@ const FilterContainer = () => {
       fetchData(value); // fetchData 함수 호출
     } else if (value) {
       setProcessCode(value);
-    } else {
-      setProcessCode([]);
-      setSelectedRollUnitName([]);
     }
+    // setSelectedRollUnitName([]);
   };
 
   const handleRollUnitChange = (value?: string[]) => {
     if (value && value[0] !== '') {
       setSelectedRollUnitName(value);
       setData(
-        selectedData.filter(
+        selectedData!.filter(
           (item) => item.workInstructions.scheduleNo === value[0],
         )[0],
       );
@@ -96,25 +134,25 @@ const FilterContainer = () => {
     }
   };
 
-  useEffect(() => {
-    if (selectedData && selectedData.length > 0) {
-      setProcessCode([
-        selectedProcessCode !== ''
-          ? selectedProcessCode
-          : prevSelectedProcessCode,
-      ]);
-      setScheduleNoList(generateDynamicRollUnitOptions(selectedData));
-      setSelectedRollUnitName([selectedData[0].workInstructions.scheduleNo]);
-    } else if (!selectedData) {
-      setProcessCode([prevSelectedProcessCode]);
-      setSelectedRollUnitName([]);
-    } else {
-      setProcessCode([]);
-      setSelectedRollUnitName([]);
-    }
+  // useEffect(() => {
+  //   if (selectedData && selectedData.length > 0) {
+  //     setProcessCode([
+  //       selectedProcessCode !== ''
+  //         ? selectedProcessCode
+  //         : prevSelectedProcessCode,
+  //     ]);
+  //     setScheduleNoList(generateDynamicRollUnitOptions(selectedData));
+  //     setSelectedRollUnitName([selectedData[0].workInstructions.scheduleNo]);
+  //   } else if (!selectedData && selectedData === 0) {
+  //     setProcessCode([prevSelectedProcessCode]);
+  //     setSelectedRollUnitName([]);
+  //   } else {
+  //     setProcessCode(['1CAL']);
+  //     setSelectedRollUnitName([]);
+  //   }
 
-    console.log('filtercontainer3', selectedData);
-  }, [selectedData]);
+  //   console.log('filtercontainer3', selectedData);
+  // }, [selectedData]);
 
   return (
     <div className={styles.filterContainer}>

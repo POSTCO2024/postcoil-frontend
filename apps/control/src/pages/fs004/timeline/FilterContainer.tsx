@@ -54,7 +54,6 @@ const FilterContainer = () => {
 
   // 날짜 선택 핸들러
   const handleDatePicker = (dateString?: string) => {
-    console.log(dateString);
     if (dateString) {
       setSelectedDateStr(dateString);
     } else {

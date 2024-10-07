@@ -19,27 +19,8 @@ interface DropdownProps {
 interface OptionType {
   value: string;
   label: string | React.ReactNode;
+  icon?: React.ReactNode;
 }
-
-// // Cascader value
-// const optionsDropdown: OptionType[] = [
-//   {
-//     value: '1PCM',
-//     label: '1PCM',
-//   },
-//   {
-//     value: '2PCM',
-//     label: '2PCM',
-//   },
-//   {
-//     value: '1CAL',
-//     label: '1CAL',
-//   },
-// ];
-
-// const onChange = (value: string[]) => {
-//   console.log(value);
-// };
 
 export const Dropdown: React.FC<DropdownProps> = ({
   title,

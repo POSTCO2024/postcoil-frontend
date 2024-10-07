@@ -71,10 +71,10 @@ const DraggableChart = ({ chartName }: PropsType) => {
         chartName,
       );
       setData(transformed);
+      console.log('chart transformed', transformed);
     } else {
       setData([]);
     }
-    console.log('data', data);
   }, [materialData]); // materialData가 변경될 때마다 실행
 
   useEffect(() => {

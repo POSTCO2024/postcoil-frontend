@@ -1,6 +1,7 @@
 export interface MaterialDTO {
   [x: string]: any;
   id: number | string;
+  materialId?: number | string;
   materialNo?: string;
   currProc?: string;
   width?: number | string;
@@ -26,6 +27,11 @@ export interface ScheduleInfoDTO {
   scheduleNo: string;
   scExpectedDuration?: number | string;
   workStatus?: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED';
+  process?: string;
+  rollUnit?: string;
+  quantity?: number;
+  isConfirmed?: string;
+  materials?: MaterialDTO[];
 }
 
 interface UpdateMaterial {
