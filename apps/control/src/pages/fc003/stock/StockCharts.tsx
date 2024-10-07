@@ -144,7 +144,7 @@ const StockCharts: React.FC = () => {
 
   return (
     <div className={styles.chartContainer}>
-      <h3>공장별 수급량 조회</h3>
+      <h3>공정별 입측/출측 코일 조회</h3>
       <div className={styles.contentContainer}>
         <div ref={chartRef} className={styles.chart} />
         <div className={styles.btn}>
