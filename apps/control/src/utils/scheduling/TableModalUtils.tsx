@@ -117,7 +117,7 @@ export const transformedCompletedModalData = (
   prevData: MaterialDTO[],
   completedScheduleA: ScheduleInfoDTO[],
   completedScheduleB: ScheduleInfoDTO[],
-): CompletedModalDataType[] | undefined => {
+): CompletedModalDataType[] => {
   if (prevData.length > 0) {
     const rollUnitA = prevData.filter((item) => item.rollUnit === 'A');
     const rollUnitB = prevData.filter((item) => item.rollUnit === 'B');
@@ -202,6 +202,8 @@ export const transformedCompletedModalData = (
       ? [rollUnitAData, rollUnitBData].filter((item) => item !== undefined)
       : [];
   }
+  // prevData.length가 0일 경우 빈 배열 반환
+  return [];
 };
 
 export const confirmModalColumnData: ColumnDataType<ConfirmModalDataType>[] = [
