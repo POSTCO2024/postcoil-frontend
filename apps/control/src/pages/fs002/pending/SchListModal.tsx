@@ -10,7 +10,7 @@ import RollWarnModal from '@/components/common/RollWarnModal';
 import { ScheduleInfoDTO } from '@/config/scheduling/dto';
 import { useMaterialStore, useScheduleStore } from '@/store/fs002store';
 import { useWorkInstructionStore } from '@/store/fs003store';
-import { confirmModalColumnData } from '@/utils/scheduling/TableModalUtils';
+import { confirmModalColumnData } from '@/utils/scheduling/tableModalUtils';
 
 interface PropsType {
   isModalOpen: boolean;
