@@ -1,12 +1,18 @@
 import { Table } from '@postcoil/ui';
+import { Table as AntTable } from 'antd';
 import { Client } from '@stomp/stompjs';
 import { Button } from 'antd';
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import SockJS from 'sockjs-client';
+import DonutChart from '../fc004/chart/DonutChart';
 
 import styles from './Fc002.module.scss';
 import { TopBar } from './topBar/TopBar';
+import {
+  facilityErrColumn,
+  columnMapping,
+} from '@/config/management/errMConfig';
 
 import CommonModal from '@/components/common/CommonModal';
 import { columnsData } from '@/utils/control/fc002Utils';
@@ -16,13 +22,16 @@ const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
 const controlBaseUrl = import.meta.env.VITE_CONTROL_BASE_URL;
 const modelApiUrl = import.meta.env.VITE_MODEL_API_URL;
 
-// API
+// Interface
 export interface ApiResponse {
   status: number;
   result: ApiResponseItem[];
   resultMsg?: string;
 }
 
+/**
+ * API 요청
+ */
 // 1. 에러재 목록 조회
 async function getErrorMaterialData(processCode: string): Promise<any[]> {
   const url = `${controlApiUrl}${controlBaseUrl}/error-materials/error-by-curr-proc?currProc=${processCode}`;
@@ -73,8 +82,39 @@ async function getErrorPassRecommend(data: any) {
   }
 }
 
+// 4. 에러 기준
+async function getErrorStandard(facility: string) {
+  try {
+    const response = await axios.get(
+      `${controlApiUrl}/api/v1/management/error/${facility}`,
+    );
+    return response.data.criteriaDetails;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return []; // 오류 발생 시 빈 배열 반환
+  }
+}
+
+// 4. 품종/고객사
+async function getOrder(processCode: string) {
+  const url = `${controlApiUrl}${controlBaseUrl}/dashboard/order?currProc=${processCode}`;
+  try {
+    const response = await axios.get(url);
+    if (response.status == 200) {
+      console.log('확인해!!!!!!!!!!!!!!!!!!!!!!');
+      console.log(response.data.result);
+      return response.data.result;
+    }
+  } catch (error) {
+    console.error('POST 요청 중 오류 발생:', error);
+    return [];
+  }
+}
+
 export const Fc002: React.FC = () => {
-  // 조회
+  /**
+   *  State 관리
+   */
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [isRecommendModalOpen, setIsRecommendModalOpen] = React.useState(false);
   const [errorMaterials, setErrorMaterials] = useState<any[]>([]); // 에러재
@@ -83,6 +123,10 @@ export const Fc002: React.FC = () => {
     useState<string>('1PCM');
   const [selectedRows, setSelectedRows] = useState<any[]>([]); // Checked Rows
   const [client, setClient] = useState<Client | null>(null);
+  const [standardDatas, setStandardDatas] = useState<any[]>([]);
+  const [selectedFacility, setSelectedFacility] = useState('1PCM'); // 기본 시설 ID
+  const [coilTypeData, setCoilTypeData] = useState<Record<string, number>>({});
+  const [customerData, setCustomerData] = useState<Record<string, number>>({});
 
   // 검색 결과 처리
   const handleSearchResults = (searchResults: any[]) => {
@@ -115,6 +159,9 @@ export const Fc002: React.FC = () => {
     // setIsRecommendModalOpen(true); // To do: API 연결하고 제거
 
     // API 요청
+    const orderData = await getOrder(selectedProcessCode);
+    console.log('품종/고객사 데이터: ', orderData); // 받아온 데이터 로그 출력
+
     console.log('에러패스 대상: ' + JSON.stringify(errorMaterials, null, 1));
     const data = await getErrorPassRecommend(
       JSON.stringify(errorMaterials, null, 1),
@@ -141,6 +188,9 @@ export const Fc002: React.FC = () => {
     setSelectedRows(selectedRows);
   }
 
+  /**
+   * Effect
+   */
   // 에러재 목록 조회
   useEffect(() => {
     const fetchData = async () => {
@@ -195,6 +245,23 @@ export const Fc002: React.FC = () => {
       }
     };
   }, []);
+
+  // 에러기준
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getErrorStandard(selectedFacility);
+      const transformedData = data.map((item: any, index: number) => ({
+        key: (index + 1).toString(),
+        columnName: columnMapping[item.columnName],
+        value: item.columnValue ?? '미지정', // null일 경우 '미지정'으로 처리
+        mapperId: item.id,
+      }));
+      setStandardDatas(transformedData);
+    };
+
+    fetchData();
+  }, [selectedFacility]); // selectedFacility가 변경될 때마다 데이터 가져오기
+
   return (
     <div className={styles.boardContainer}>
       <h1>공정별 에러재 관리</h1>
@@ -250,6 +317,27 @@ export const Fc002: React.FC = () => {
             handleRowsClick={setSelectedRows}
             setSelectedMaterials={setSelectedMaterials}
           />
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div style={{ flex: 1, marginRight: '10px' }}>
+            <h6>재료 정보</h6>
+            <div className={styles.smallCard}>
+              {/* <DonutChart title="품종" option={coilTypeOption} /> */}
+            </div>
+            <div className={styles.smallCard}>
+              {/* <DonutChart title="고객사" option={customerNameOption} /> */}
+            </div>
+          </div>
+          <div style={{ flex: 1, marginRight: '10px' }}>
+            <h6>에러 기준</h6>
+            <AntTable
+              columns={facilityErrColumn}
+              dataSource={standardDatas.slice(0, 4)}
+              size={'small'}
+              tableLayout={'fixed'}
+              pagination={false}
+            />
+          </div>
         </div>
         <p
           style={{
