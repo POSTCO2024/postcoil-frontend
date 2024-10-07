@@ -125,6 +125,10 @@ export const Table = <T extends DataType>({
           expandable={{
             expandedRowRender: expandedRowRender, // 확장된 행에 보여줄 내용
           }}
+          locale={{
+            filterConfirm: '적용', // 필터 확인 버튼의 텍스트
+            filterReset: '초기화', // 필터 리셋 버튼의 텍스트
+          }}
         />
       </ConfigProvider>
     </div>

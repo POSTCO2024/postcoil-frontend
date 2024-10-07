@@ -19,7 +19,7 @@ import {
   planModalColumnData,
   transformedCompletedModalData,
   transformedPlanModalData,
-} from '@/utils/scheduling/tableModalUtils';
+} from '@/utils/scheduling/TableModalUtils';
 
 interface PropsType {
   isSchPlanModalOpen: boolean;
