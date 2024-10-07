@@ -6,7 +6,7 @@ import { MaterialDTO } from '@/config/scheduling/dto';
 import {
   materialColumnData,
   transformedData,
-} from '@/utils/scheduling/tableUtils';
+} from '@/utils/scheduling/TableUtils';
 
 interface PropsType {
   data: MaterialDTO[];

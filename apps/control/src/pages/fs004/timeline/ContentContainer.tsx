@@ -8,7 +8,7 @@ import { useWorkInstructionStore } from '@/store/fs004store';
 import {
   transformedWorkItemData,
   workItemColumnData,
-} from '@/utils/scheduling/tableUtils';
+} from '@/utils/scheduling/TableUtils';
 
 const ContentContainer = () => {
   const materialData = useWorkInstructionStore((state) => state.workItems);

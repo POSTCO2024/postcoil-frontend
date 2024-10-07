@@ -35,6 +35,7 @@ export interface MaterialDataType extends DataType {
   initialThickness?: number | string;
   processedWidth?: number | string;
   processedThickness?: number | string;
+  isRejected?: string;
 }
 
 export interface ScheduleDataType extends DataType {

@@ -103,7 +103,6 @@ export const transformedDataToResultChartData = (
         supplyIndex++; // 보급 예정 인덱스 증가
       }
 
-      console.log(targetColor);
       currentIndex++; // 다음 인덱스를 위해 증가
     }
 

@@ -9,7 +9,8 @@ import RollSuccessModal from '@/components/common/RollSuccessModal';
 import RollWarnModal from '@/components/common/RollWarnModal';
 import { ScheduleInfoDTO } from '@/config/scheduling/dto';
 import { useMaterialStore, useScheduleStore } from '@/store/fs002store';
-import { confirmModalColumnData } from '@/utils/scheduling/tableModalUtils';
+import { useWorkInstructionStore } from '@/store/fs003store';
+import { confirmModalColumnData } from '@/utils/scheduling/TableModalUtils';
 
 interface PropsType {
   isModalOpen: boolean;
@@ -73,6 +74,10 @@ const SchListModal = ({ isModalOpen, onApply, onCancel }: PropsType) => {
   };
   const handleCancel = () => {
     setIsModal2Open(false);
+    useWorkInstructionStore.setState((state) => ({
+      ...state,
+      processCode: processCode,
+    }));
     navigate('/schedule3');
   };
 
@@ -101,11 +106,12 @@ const SchListModal = ({ isModalOpen, onApply, onCancel }: PropsType) => {
           );
         })
         .map((material) => ({
-          materialId: material.materialId,
+          materialId: material.id,
           sequence: material.sequence,
         }));
       console.log('planId :', planId);
       console.log('updateMaterials :', updateMaterials);
+
       return {
         planId: Number(planId),
         confirmBy: 'PostcoTEAM1', // confirmBy는 고정값

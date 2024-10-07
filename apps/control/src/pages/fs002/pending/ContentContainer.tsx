@@ -23,7 +23,7 @@ import { useMaterialStore } from '@/store/fs002store';
 import {
   materialColumnData,
   transformedData,
-} from '@/utils/scheduling/tableUtils';
+} from '@/utils/scheduling/TableUtils';
 
 interface RowProps extends React.HTMLAttributes<HTMLTableRowElement> {
   'data-row-key': string;

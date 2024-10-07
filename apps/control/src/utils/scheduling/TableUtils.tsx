@@ -1,5 +1,6 @@
 // Columns 정의
 import { ColumnDataType } from '@postcoil/ui/config/TableConfig';
+import { Tag } from 'antd';
 
 import { MaterialDataType } from '@/config/scheduling/contentConfig';
 import { MaterialDTO, WorkItemDTO } from '@/config/scheduling/dto';
@@ -12,12 +13,13 @@ export const materialColumnData: ColumnDataType<MaterialDataType>[] = [
     key: 'materialNo',
     // fixed: true,
   },
-  { title: '공정코드', dataIndex: 'currProc', key: 'currProc' },
+  { title: '공정코드', dataIndex: 'currProc', key: 'currProc', width: 90 },
   {
     title: '롤단위',
     dataIndex: 'rollUnit',
     key: 'rollUnit',
     sortable: true,
+    width: 110,
     otherProps: {
       filters: [
         {
@@ -58,17 +60,20 @@ export const materialColumnData: ColumnDataType<MaterialDataType>[] = [
     dataIndex: 'temperature',
     key: 'temperature',
     sortable: true,
+    width: 80,
   },
   {
     title: '작업 예상 소요 시간',
     dataIndex: 'expectedDuration',
     key: 'expectedDuration',
+    width: 150,
   },
   {
     title: '차공정',
     dataIndex: 'nextProc',
     key: 'nextProc',
     sortable: true,
+    width: 110,
     otherProps: {
       filters: [
         {
@@ -97,27 +102,32 @@ export const coilTypeColumnData = [
 
 export const workItemColumnData: ColumnDataType<MaterialDataType>[] = [
   {
-    title: 'Seq.',
+    title: '순서', //'Seq.',
     dataIndex: 'sequence',
     key: 'sequence',
+    fixed: true,
+    width: 50,
   },
   {
     title: '재료번호',
     dataIndex: 'materialNo',
     key: 'materialNo',
-    // fixed: true,
+    fixed: true,
+    width: 90,
   },
   {
     title: '입측 폭',
     dataIndex: 'initialWidth',
     key: 'initialWidth',
     sortable: true,
+    width: 80,
   },
   {
     title: '입측 두께',
     dataIndex: 'initialThickness',
     key: 'initialThickness',
     // sortable: true,
+    width: 80,
   },
   {
     title: '목표폭',
@@ -125,30 +135,35 @@ export const workItemColumnData: ColumnDataType<MaterialDataType>[] = [
     key: 'goalWidth',
     sortable: true,
     defaultSortOrder: 'descend',
+    width: 80,
   },
   {
     title: '목표두께',
     dataIndex: 'goalThickness',
     key: 'goalThickness',
-    sortable: true,
+    // sortable: true,
+    width: 80,
   },
   {
     title: '출측 폭',
     dataIndex: 'processedWidth',
     key: 'processedWidth',
     sortable: true,
+    width: 80,
   },
   {
     title: '출측 두께',
     dataIndex: 'processedThickness',
     key: 'processedThickness',
     // sortable: true,
+    width: 80,
   },
   {
     title: '온도',
     dataIndex: 'temperature',
     key: 'temperature',
     sortable: true,
+    width: 80,
   },
   {
     title: '차공정',
@@ -173,45 +188,53 @@ export const workItemColumnData: ColumnDataType<MaterialDataType>[] = [
       onFilter: (value: string, record: { nextProc: string[] }) =>
         record.nextProc.indexOf(value) === 0,
     },
+    width: 100,
   },
   {
     title: '품종',
     dataIndex: 'coilTypeCode',
     key: 'coilTypeCode',
+    width: 80,
   },
   {
     title: '작업 시작 시간',
     dataIndex: 'startTime',
     key: 'startTime',
+    width: 200,
   },
   {
     title: '작업 종료 시간',
     dataIndex: 'endTime',
     key: 'endTime',
+    width: 200,
   },
   {
     title: '작업 소요 시간',
     dataIndex: 'expectedDuration',
     key: 'expectedDuration',
+    width: 120,
   },
   {
     title: 'Reject 여부',
     dataIndex: 'isRejected',
     key: 'isRejected',
+    render: (key: string, record) =>
+      record.isRejected === 'Y' ? <Tag color="red">Reject</Tag> : undefined,
     otherProps: {
       filters: [
         {
-          text: 'Y',
+          text: <Tag color="red">Reject</Tag>,
           value: 'Y',
         },
         {
-          text: 'N',
+          text: <Tag color="red">정상처리</Tag>,
           value: 'N',
         },
       ],
       onFilter: (value: string, record: { rollUnit: string[] }) =>
         record.rollUnit.indexOf(value) === 0,
     },
+    width: 120,
   },
 ];
 

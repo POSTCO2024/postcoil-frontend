@@ -9,7 +9,7 @@ import { useWorkInstructionStore } from '@/store/fs003store';
 import {
   transformedWorkItemData,
   workItemColumnData,
-} from '@/utils/scheduling/tableUtils';
+} from '@/utils/scheduling/TableUtils';
 
 const ContentContainer = () => {
   const materialData = useWorkInstructionStore((state) => state.workItems);
@@ -45,6 +45,8 @@ const ContentContainer = () => {
                 record.changed ? `${styles.rowChanged}` : ''
               }
               size="small"
+              scroll={{ x: 'max-content', y: 'auto' }}
+              tableLayout={'fixed'}
             />
           </ConfigProvider>
         </div>
