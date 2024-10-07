@@ -34,7 +34,7 @@ export interface ApiResponseItem {
   targetId: string;
   errorType: string;
   material: MaterialDTO;
-  order: OrderDTO;
+  order?: OrderDTO | null;
   processPlan: string;
   rollUnitName: string;
   remarks: string;
@@ -66,12 +66,12 @@ export interface TransformedData {
   storageLoc: string;
   yard: string;
   coilTypeCode: string;
-  orderNo: string;
-  customerName: string;
-  goalWidth: number;
-  goalThickness: number;
-  goalLength: number;
-  dueDate: string;
+  orderNo?: string | null;
+  customerName?: string | null;
+  goalWidth?: number | null;
+  goalThickness?: number | null;
+  goalLength?: number | null;
+  dueDate?: string | null;
   remarks: string;
 }
 
@@ -99,12 +99,12 @@ export const transformData = (
     storageLoc: item.material.storageLoc,
     yard: item.material.yard,
     coilTypeCode: item.material.coilTypeCode,
-    orderNo: item.order.no,
-    customerName: item.order.customer,
-    goalWidth: item.order.width,
-    goalThickness: item.order.thickness,
-    goalLength: item.order.length,
-    dueDate: formatDate(item.order.dueDate),
+    orderNo: item.order ? item.order.no : null,
+    customerName: item.order ? item.order.customer : null,
+    goalWidth: item.order ? item.order.width : null,
+    goalThickness: item.order ? item.order.thickness : null,
+    goalLength: item.order ? item.order.length : null,
+    dueDate: item.order ? formatDate(item.order.dueDate) : null,
     rollUnitName: item.rollUnitName,
     remarks: item.remarks,
   }));
