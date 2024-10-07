@@ -15,7 +15,7 @@ const Fc003: React.FC = () => {
       <h1>공장별 작업대상재 현황</h1>
       <div className={styles.tab}>
         <Tab
-          labels={['작업 현황 모니터링', '저장위치별 수급량 조회']}
+          labels={['작업 현황 모니터링', '야드 현황 조회']}
           onChange={changeTab}
         />
       </div>
