@@ -80,6 +80,7 @@ export const completedModalColumnData: ColumnDataType<CompletedModalDataType>[] 
       title: '', //'스케줄명',
       dataIndex: 'scheduleNo',
       key: 'scheduleNo',
+      width: 70,
     },
     {
       title: '', //'롤단위',
@@ -90,21 +91,25 @@ export const completedModalColumnData: ColumnDataType<CompletedModalDataType>[] 
       title: '선택 재료 개수',
       dataIndex: 'countMaterials',
       key: 'countMaterials',
+      width: 90,
     },
     {
       title: '편성 재료 개수',
       dataIndex: 'quantity',
       key: 'quantity',
+      width: 90,
     },
     {
       title: '미편성 재료 개수',
       dataIndex: 'unInsertionQuantity',
       key: 'unInsertionQuantity',
+      width: 110,
     },
     {
       title: '자동 미편성 삽입 재료 개수',
       dataIndex: 'autoInsertionQuantity',
       key: 'autoInsertionQuantity',
+      width: 150,
     },
   ];
 

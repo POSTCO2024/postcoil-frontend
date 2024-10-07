@@ -5,7 +5,7 @@ import { WorkInstructionsDTO } from '@/config/scheduling/dto';
 
 export const scheduleColumnData: ColumnDataType<ScheduleDataType>[] = [
   {
-    title: 'no',
+    title: '번호',
     dataIndex: 'no',
     key: 'no',
   },
@@ -19,7 +19,6 @@ export const scheduleColumnData: ColumnDataType<ScheduleDataType>[] = [
     title: '롤단위',
     dataIndex: 'rollUnit',
     key: 'rollUnit',
-    sortable: true,
     otherProps: {
       filters: [
         {
@@ -39,13 +38,11 @@ export const scheduleColumnData: ColumnDataType<ScheduleDataType>[] = [
     title: '작업 시작 시간',
     dataIndex: 'startTime',
     key: 'startTime',
-    sortable: true,
   },
   {
     title: '작업 종료 시간',
     dataIndex: 'endTime',
     key: 'endTime',
-    sortable: true,
   },
   {
     title: '작업 소요 시간',
@@ -56,7 +53,6 @@ export const scheduleColumnData: ColumnDataType<ScheduleDataType>[] = [
     title: 'Reject 수',
     dataIndex: 'rejectQuantity',
     key: 'rejectQuantity',
-    sortable: true,
   },
 ];
 
