@@ -36,6 +36,8 @@ const ContentContainer = () => {
               record.changed ? `${styles.rowChanged}` : ''
             }
             size="small"
+            scroll={{ x: 'max-content', y: 'auto' }}
+            tableLayout={'fixed'}
           />
         </div>
       </section>

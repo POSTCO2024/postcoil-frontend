@@ -29,6 +29,7 @@ const ContentContainer = ({ data, setSelectedRows }: PropsType) => {
             data={transformedData(data)}
             handleRowsClick={handleRowsClick}
             setSelectedMaterials={setSelectedRows}
+            scroll={{ x: 'max-content', y: 'auto' }}
             tableLayout={'fixed'}
           />
         </div>

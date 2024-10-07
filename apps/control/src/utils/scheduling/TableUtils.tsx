@@ -11,7 +11,8 @@ export const materialColumnData: ColumnDataType<MaterialDataType>[] = [
     title: '재료번호',
     dataIndex: 'materialNo',
     key: 'materialNo',
-    // fixed: true,
+    fixed: true,
+    width: 100,
   },
   { title: '공정코드', dataIndex: 'currProc', key: 'currProc', width: 90 },
   {
@@ -35,12 +36,13 @@ export const materialColumnData: ColumnDataType<MaterialDataType>[] = [
         record.rollUnit.indexOf(value) === 0,
     },
   },
-  { title: '폭', dataIndex: 'width', key: 'width', sortable: true },
+  { title: '폭', dataIndex: 'width', key: 'width', sortable: true, width: 90 },
   {
     title: '두께',
     dataIndex: 'thickness',
     key: 'thickness',
     sortable: true,
+    width: 90,
   },
   {
     title: '목표폭',
@@ -48,12 +50,14 @@ export const materialColumnData: ColumnDataType<MaterialDataType>[] = [
     key: 'goalWidth',
     sortable: true,
     defaultSortOrder: 'descend',
+    width: 90,
   },
   {
     title: '목표두께',
     dataIndex: 'goalThickness',
     key: 'goalThickness',
     sortable: true,
+    width: 100,
   },
   {
     title: '온도',
@@ -66,7 +70,7 @@ export const materialColumnData: ColumnDataType<MaterialDataType>[] = [
     title: '작업 예상 소요 시간',
     dataIndex: 'expectedDuration',
     key: 'expectedDuration',
-    width: 150,
+    width: 90,
   },
   {
     title: '차공정',
@@ -197,6 +201,12 @@ export const workItemColumnData: ColumnDataType<MaterialDataType>[] = [
     width: 80,
   },
   {
+    title: '작업 소요 시간',
+    dataIndex: 'expectedDuration',
+    key: 'expectedDuration',
+    width: 120,
+  },
+  {
     title: '작업 시작 시간',
     dataIndex: 'startTime',
     key: 'startTime',
@@ -208,18 +218,19 @@ export const workItemColumnData: ColumnDataType<MaterialDataType>[] = [
     key: 'endTime',
     width: 200,
   },
-  {
-    title: '작업 소요 시간',
-    dataIndex: 'expectedDuration',
-    key: 'expectedDuration',
-    width: 120,
-  },
+
   {
     title: 'Reject 여부',
     dataIndex: 'isRejected',
     key: 'isRejected',
     render: (key: string, record) =>
-      record.isRejected === 'Y' ? <Tag color="red">Reject</Tag> : undefined,
+      record.isRejected === 'Y' ? (
+        <Tag key={key} color="red">
+          Reject
+        </Tag>
+      ) : (
+        <Tag color="green">OK</Tag>
+      ),
     otherProps: {
       filters: [
         {
@@ -227,12 +238,12 @@ export const workItemColumnData: ColumnDataType<MaterialDataType>[] = [
           value: 'Y',
         },
         {
-          text: <Tag color="red">정상처리</Tag>,
+          text: <Tag color="green">OK</Tag>,
           value: 'N',
         },
       ],
-      onFilter: (value: string, record: { rollUnit: string[] }) =>
-        record.rollUnit.indexOf(value) === 0,
+      onFilter: (value: string, record: { isRejected: string[] }) =>
+        record.isRejected.indexOf(value) === 0,
     },
     width: 120,
   },
@@ -301,26 +312,36 @@ export const transformedWorkItemData = (
     return undefined;
   };
 
-  return data.map((item) => ({
-    key: item.id,
-    id: item.id as string,
-    materialNo: item.materialNo,
-    sequence: item.sequence,
-    isRejected: item.isRejected,
-    expectedDuration: item.expectedItemDuration,
-    startTime: item.startTime,
-    endTime: item.endTime,
-    goalWidth: formatIfMoreThanThreeDecimals(item.initialGoalWidth),
-    goalThickness: formatIfMoreThanThreeDecimals(item.initialGoalThickness!),
-    initialWidth: formatIfMoreThanThreeDecimals(item.initialWidth!),
-    initialThickness: formatIfMoreThanThreeDecimals(item.initialThickness),
-    width: formatIfMoreThanThreeDecimals(item.width!),
-    thickness: formatIfMoreThanThreeDecimals(item.thickness!),
-    processedWidth: formatIfMoreThanThreeDecimals(item.width!),
-    processedThickness: formatIfMoreThanThreeDecimals(item.thickness!),
-    temperature: formatIfMoreThanThreeDecimals(item.temperature),
-    nextProc: item.nextProc,
-    coilTypeCode: item.coilTypeCode,
-    weight: formatIfMoreThanThreeDecimals(item.weight as number),
-  }));
+  return data.map((item) => {
+    const shouldDisplayDimensions =
+      item.endTime !== null && item.endTime !== '';
+    return {
+      key: item.id,
+      id: item.id as string,
+      materialNo: item.materialNo,
+      sequence: item.sequence,
+      isRejected: item.isRejected,
+      expectedDuration: item.expectedItemDuration,
+      startTime: item.startTime,
+      endTime: item.endTime,
+      goalWidth: formatIfMoreThanThreeDecimals(item.initialGoalWidth),
+      goalThickness: formatIfMoreThanThreeDecimals(item.initialGoalThickness!),
+      initialWidth: formatIfMoreThanThreeDecimals(item.initialWidth!),
+      initialThickness: formatIfMoreThanThreeDecimals(item.initialThickness),
+      width: formatIfMoreThanThreeDecimals(item.width!),
+      thickness: formatIfMoreThanThreeDecimals(item.thickness!),
+      processedWidth: shouldDisplayDimensions
+        ? formatIfMoreThanThreeDecimals(item.width!)
+        : undefined, // endTime이 null 또는 ''이면 비움
+      processedThickness: shouldDisplayDimensions
+        ? formatIfMoreThanThreeDecimals(item.thickness!)
+        : undefined, // endTime이 null 또는 ''이면 비움
+      temperature: shouldDisplayDimensions
+        ? formatIfMoreThanThreeDecimals(item.temperature)
+        : undefined,
+      nextProc: item.nextProc,
+      coilTypeCode: item.coilTypeCode,
+      weight: formatIfMoreThanThreeDecimals(item.weight as number),
+    };
+  });
 };

@@ -14,7 +14,7 @@ import { mockCoilTypeCodeData } from '@/utils/scheduling/mockWorkInstruction';
 import {
   coilTypeColumnData,
   transformedCoilTypeCodeData,
-} from '@/utils/scheduling/tableUtils';
+} from '@/utils/scheduling/TableUtils';
 
 // duration 플러그인을 dayjs에 등록
 dayjs.extend(duration);
