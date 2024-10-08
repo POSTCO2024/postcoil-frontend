@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import styles from './Result.module.scss';
 
 import CommonModal from '@/components/common/CommonModal';
-import { keyMapping } from '@/config/management/errMConfig';
+import { errKeyMapping } from '@/config/management/errMConfig';
 
 const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
 
@@ -15,7 +15,7 @@ interface PropsType {
   data: any;
   facility: string;
   setPostedData: any;
-  fullData: any;
+  fullData?: any;
 }
 
 // API Post 용
@@ -23,7 +23,7 @@ function transformData(data: any) {
   const transformedData: { [key: string]: any } = {};
   // 원본 객체의 각 키를 매핑된 새로운 키로 변환
   Object.keys(data).forEach((key) => {
-    const newKey = keyMapping[key]; // 매핑된 새로운 키
+    const newKey = errKeyMapping[key]; // 매핑된 새로운 키
     if (newKey) {
       transformedData[newKey] = data[key]; // 새로운 키에 값을 할당
     }
