@@ -3,73 +3,60 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 
 import styles from './ErrMPage.module.scss';
+import useStandardStore from './ErrStore';
+import ExtResult from './ExtResult';
 import FilterContainer from './FilterContainer';
 import Result from './Result';
 
 import {
-  errFacilitycolumn,
-  errFacilityData,
   errFacilityErrColumn,
   ManageColumn,
   infoErrColumn,
   errColumnMapping,
 } from '@/config/management/errMConfig';
-import {
-  columnData,
-  columnsData,
-  columnMapping,
-} from '@/config/management/extMConfig';
+import { columnsData, columnMapping } from '@/config/management/extMConfig';
 
 const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
 
-async function getErrorStandard(facility: string) {
-  try {
-    const response = await axios.get(
-      controlApiUrl + '/api/v1/management/error/' + facility,
-    );
-    return response.data.criteriaDetails;
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-async function getExtraction(facility: string) {
-  try {
-    const response = await axios.get(
-      controlApiUrl + '/api/v1/management/extraction/' + facility,
-    );
-    return response.data.criteriaDetails;
-  } catch (error) {
-    console.log(error);
-  }
-}
-
 const ErrMPage: React.FC = () => {
-  useEffect(() => {
-    const initialErrData = async () => {
-      try {
-        const fetchData = await getErrorStandard('1PCM');
-        console.log('Fetched Data:', fetchData); // 실제 데이터를 로그로 확인
-        transformedErrData(fetchData); // 데이터를 변환
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-    initialErrData(); // async 함수 호출
-  }, []);
+  const { manageData } = useStandardStore();
 
-  useEffect(() => {
-    const initialExtData = async () => {
-      try {
-        const fetchData = await getExtraction('1PCM');
-        console.log('Fetched Data:', fetchData); // 실제 데이터를 로그로 확인
-        transformedExtData(fetchData); // 데이터를 변환
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-    initialExtData(); // async 함수 호출
-  }, []);
+  async function getErrorStandard(facility: string) {
+    try {
+      const response = await axios.get(
+        controlApiUrl + '/api/v1/management/error/' + facility,
+      );
+      transformedErrData(response.data.criteriaDetails);
+      // return response.data.criteriaDetails;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function getExtraction(facility: string) {
+    try {
+      const response = await axios.get(
+        controlApiUrl + '/api/v1/management/extraction/' + facility,
+      );
+      transformedExtData(response.data.criteriaDetails);
+      // return response.data.criteriaDetails;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // useEffect(() => {
+  //   const initialExtData = async () => {
+  //     try {
+  //       const fetchData = await getExtraction('1PCM');
+  //       console.log('Fetched Data:', fetchData); // 실제 데이터를 로그로 확인
+  //       transformedExtData(fetchData); // 데이터를 변환
+  //     } catch (error) {
+  //       console.error('Error fetching data:', error);
+  //     }
+  //   };
+  //   initialExtData(); // async 함수 호출
+  // }, []);
 
   //antd 테이블에 들어가게 변환
   function transformedErrData(fetchData: any) {
@@ -97,18 +84,37 @@ const ErrMPage: React.FC = () => {
     setStandardExtDatas(standardData);
   }
 
-  const setPostedData = (newData: any) => {
+  const setPostedErrData = (newData: any) => {
     setStandardErrDatas(newData);
+  };
+
+  const setPostedExtData = (newData: any) => {
+    setStandardExtDatas(newData);
   };
 
   const handleFilter = (progress: string) => {
     setProgress(progress);
   };
 
-  const [selectedRowIndex, setSelectedRowIndex] = useState(errFacilityData[0]);
+  // const [selectedRowIndex, setSelectedRowIndex] = useState(errFacilityData[0]);
   const [standardErrDatas, setStandardErrDatas] = useState([]);
   const [standardExtDatas, setStandardExtDatas] = useState([]);
   const [progress, setProgress] = useState('1PCM');
+
+  useEffect(() => {
+    // const initialErrData = async () => {
+    //   try {
+    //     const fetchData = await getErrorStandard('1PCM');
+    //     console.log('Fetched Data:', fetchData); // 실제 데이터를 로그로 확인
+    //     transformedErrData(fetchData); // 데이터를 변환
+    //   } catch (error) {
+    //     console.error('Error fetching data:', error);
+    //   }
+    // };
+    // initialErrData(); // async 함수 호출
+    getErrorStandard(progress);
+    getExtraction(progress);
+  }, [progress]);
 
   return (
     <div className={styles.page}>
@@ -126,11 +132,11 @@ const ErrMPage: React.FC = () => {
                 pagination={false}
               />
             </div>
-            <Result
+            <ExtResult
               title="추출기준 관리"
               data={standardExtDatas}
-              facility={selectedRowIndex.facilityId}
-              setPostedData={setPostedData}
+              facility={progress}
+              setPostedData={setPostedExtData}
             />
           </div>
           <div>
@@ -139,18 +145,7 @@ const ErrMPage: React.FC = () => {
                 columns={ManageColumn}
                 dataSource={[
                   ...standardErrDatas.slice(4, 5),
-                  {
-                    key: '20',
-                    id: '20',
-                    columnName: '표면엄격재',
-                    value: 'JPN',
-                  },
-                  {
-                    key: '21',
-                    id: '21',
-                    columnName: '내후성강',
-                    value: 'PAWS50',
-                  },
+                  ...manageData[progress],
                 ]}
                 size={'small'}
                 tableLayout={'fixed'}
@@ -159,10 +154,10 @@ const ErrMPage: React.FC = () => {
             </div>
             <Result
               title="관리재"
-              data={standardErrDatas.slice(4, 5)}
+              data={[...standardErrDatas.slice(4, 5), ...manageData[progress]]}
               fullData={standardErrDatas}
-              facility={selectedRowIndex.facilityId}
-              setPostedData={setPostedData}
+              facility={progress}
+              setPostedData={setPostedErrData}
             />
           </div>
         </div>
@@ -202,8 +197,8 @@ const ErrMPage: React.FC = () => {
               title="설비사양 에러"
               data={standardErrDatas.slice(0, 4)}
               fullData={standardErrDatas}
-              facility={selectedRowIndex.facilityId}
-              setPostedData={setPostedData}
+              facility={progress}
+              setPostedData={setPostedErrData}
             />
           </div>
           <div>
@@ -219,8 +214,8 @@ const ErrMPage: React.FC = () => {
               title="정보이상재"
               data={standardErrDatas.slice(5)}
               fullData={standardErrDatas}
-              facility={selectedRowIndex.facilityId}
-              setPostedData={setPostedData}
+              facility={progress}
+              setPostedData={setPostedErrData}
             />
           </div>
         </div>

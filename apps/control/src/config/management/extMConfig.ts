@@ -7,7 +7,7 @@ export const columnData = [
 
 export const columnsData = [
   {
-    title: '항목',
+    title: '추출기준',
     dataIndex: 'columnName',
   },
   {
