@@ -112,24 +112,23 @@ const ErrMPage: React.FC = () => {
 
   return (
     <div className={styles.page}>
-      <h1>에러기준 관리</h1>
+      <h1>추출, 에러기준 관리</h1>
       <FilterContainer progress={progress} handleFilter={handleFilter} />
       <div className={styles.frame}>
         <div className={styles.tablesFrame}>
           <div>
             <div className={styles.table}>
               <Table
-                columns={errFacilityErrColumn}
-                dataSource={standardErrDatas.slice(0, 4)}
+                columns={columnsData}
+                dataSource={standardExtDatas}
+                tableLayout="fixed"
                 size={'small'}
-                tableLayout={'fixed'}
                 pagination={false}
               />
             </div>
             <Result
-              title="설비사양 에러"
-              data={standardErrDatas.slice(0, 4)}
-              fullData={standardErrDatas}
+              title="추출기준 관리"
+              data={standardExtDatas}
               facility={selectedRowIndex.facilityId}
               setPostedData={setPostedData}
             />
@@ -192,21 +191,21 @@ const ErrMPage: React.FC = () => {
           <div>
             <div className={styles.table}>
               <Table
-                columns={columnsData}
-                dataSource={standardExtDatas}
-                tableLayout="fixed"
+                columns={errFacilityErrColumn}
+                dataSource={standardErrDatas.slice(0, 4)}
                 size={'small'}
+                tableLayout={'fixed'}
                 pagination={false}
               />
             </div>
             <Result
-              title="추출기준 관리"
-              data={standardErrDatas}
+              title="설비사양 에러"
+              data={standardErrDatas.slice(0, 4)}
+              fullData={standardErrDatas}
               facility={selectedRowIndex.facilityId}
               setPostedData={setPostedData}
             />
           </div>
-
           <div>
             <div className={styles.table}>
               <Table
