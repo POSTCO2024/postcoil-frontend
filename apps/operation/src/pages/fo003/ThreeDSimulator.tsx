@@ -143,10 +143,10 @@ class App {
     const pmremGenerator = new PMREMGenerator(this.renderer);
     pmremGenerator.compileEquirectangularShader();
 
-    new RGBELoader().load('image12.hdr', (texture) => {
+    new RGBELoader().load('image20.hdr', (texture) => {
       const envMap = pmremGenerator.fromEquirectangular(texture).texture;
       this.scene.environment = envMap;
-      this.scene.background = new THREE.Color(0x565657);
+      this.scene.background = new THREE.Color(0xebfff5);
       texture.dispose();
       pmremGenerator.dispose();
     });
@@ -175,9 +175,9 @@ class App {
     this.controls3.enabled = false;
     this.controls4.enabled = false;
 
-    const stats = new Stats();
-    this.divContainer?.appendChild(stats.dom);
-    this.fps = stats;
+    // const stats = new Stats();
+    // this.divContainer?.appendChild(stats.dom);
+    // this.fps = stats;
   }
 
   private setupModel(coilItems: any[]) {
@@ -237,6 +237,8 @@ class App {
             // 바닥 Mesh에 대한 특수 처리
             child.material = new THREE.MeshStandardMaterial({
               color: 0x000000, // 바닥의 색상을 명시적으로 설정
+              emissive: 0xf0f0f0,
+              emissiveIntensity: 0.6,
               roughness: 0.8,
               metalness: 0,
               side: THREE.DoubleSide, // 양면 렌더링
@@ -253,7 +255,7 @@ class App {
             //   200,
             //   0xff0000,
             // );
-            //this.scene.add(planeHelper);
+            // this.scene.add(planeHelper);
           }
           if (child.name === 'Plane002') {
             // 클리핑 플레인 설정 (X축 기준으로 왼쪽에서부터 메쉬를 잘라냄)
@@ -294,17 +296,6 @@ class App {
           }
         }
       });
-
-      // const box = new THREE.Box3().setFromObject(model);
-      // const axisHelper = new THREE.AxesHelper(500);
-      // //this.scene.add(axisHelper);
-
-      // const boxHelper = new THREE.BoxHelper(model);
-      // //this.scene.add(boxHelper);
-
-      // this.boxHelper = boxHelper;
-      // this.model = model;
-      // this.box = box;
 
       this.mixer = new THREE.AnimationMixer(model);
 
@@ -368,12 +359,8 @@ class App {
     pointLight.position.set(x, y, z);
     this.scene.add(pointLight);
 
-    // const pointLightHelper = new THREE.PointLightHelper(
-    //   pointLight,
-    //   10,
-    //   helperColor,
-    // );
-    //this.scene.add(pointLightHelper);
+    // const pointLightHelper = new THREE.PointLightHelper(pointLight, 10);
+    // this.scene.add(pointLightHelper);
   }
 
   private setupLight() {
@@ -391,7 +378,7 @@ class App {
     //   directionalLight,
     //   10,
     // );
-    //this.scene.add(directionalLightHelper);
+    // this.scene.add(directionalLightHelper);
 
     const additionalLight = new THREE.DirectionalLight(0xffffff, 10);
     additionalLight.position.set(-1, 1, 0).normalize();
@@ -538,7 +525,7 @@ class App {
     if (this.controls3.enabled) this.controls3.update();
     if (this.controls4.enabled) this.controls4.update();
 
-    this.fps.update();
+    // this.fps.update();
   }
 
   render(time: number) {
@@ -593,65 +580,6 @@ class App {
     this.renderer.setSize(width, height);
   }
 }
-// interface SchDataType extends DataType {
-//   key?: string;
-//   no: string | number;
-//   scheduleId: string;
-//   createdDate: string;
-//   rollID: string;
-//   facility: string;
-//   startTime: string;
-//   endTime: string;
-//   rejectCount?: string | number;
-// }
-
-// Table 임의 데이터
-// const columnsData: ColumnDataType<SchDataType>[] = [
-//   {
-//     title: 'no',
-//     dataIndex: 'no',
-//     sortable: {
-//       compare: (a, b) => a.no - b.no,
-//       multiple: 3,
-//     },
-//   },
-//   {
-//     title: '스케줄ID',
-//     dataIndex: 'scheduleId',
-//   },
-//   {
-//     title: '생성일자',
-//     dataIndex: 'createdDate',
-//     sortable: {
-//       compare: (a, b) => a.createdDate - b.createdDate,
-//       multiple: 1,
-//     },
-//   },
-//   {
-//     title: '재료단위',
-//     dataIndex: 'rollID',
-//     sortable: {
-//       compare: (a, b) => a.rollID - b.rollID,
-//       multiple: 0,
-//     },
-//   },
-//   {
-//     title: '해당공정',
-//     dataIndex: 'facility',
-//     sortable: {
-//       compare: (a, b) => a.facility - b.facility,
-//       multiple: 4,
-//     },
-//   },
-//   {
-//     title: '작업 예상 시간',
-//     dataIndex: 'endTime',
-//     sortable: {
-//       compare: (a, b) => a.endTime - b.endTime,
-//       multiple: 6,
-//     },
-//   },
-// ];
 
 interface WorkInstruction extends DataType {
   scheduleId: number;
@@ -663,13 +591,16 @@ interface WorkInstruction extends DataType {
   schStatus: string;
 }
 
-// interface WorkInstructionItem extends DataType {
-//   itemId: number;
-// }
+interface WorkInstructionItem extends DataType {
+  itemId: number;
+  expectedItemDuration: number;
+}
 const ThreeDSimulator = () => {
   const [workInstructions, setWorkInstructions] = useState<WorkInstruction[]>(
     [],
   );
+  const [selectedItems, setSelectedItems] = useState<WorkInstructionItem[]>([]); // 선택된 아이템 상태 추가
+
   const [loading, setLoading] = useState(true);
 
   // API 호출 함수
@@ -710,7 +641,14 @@ const ThreeDSimulator = () => {
       );
 
       const { result } = response.data;
+      const coilData = result.map(
+        (item: WorkInstructionItem): Record<string, any> => ({
+          itemId: item.sequence,
+          expectedItemDuration: item.expectedItemDuration,
+        }),
+      );
       console.log('Selected items:', result);
+      setSelectedItems(coilData);
 
       // 이전 WebGL 컨테이너를 삭제하고 새로운 App 초기화
       const container = document.querySelector('#webgl-container');
@@ -773,6 +711,19 @@ const ThreeDSimulator = () => {
       key: 'schStatus',
     },
   ];
+
+  const coilsData: ColumnDataType<WorkInstructionItem>[] = [
+    {
+      title: '코일 ID',
+      dataIndex: 'itemId',
+      key: 'itemId',
+    },
+    {
+      title: '예상시간',
+      dataIndex: 'expectedItemDuration',
+      key: 'expectedItemDuration',
+    },
+  ];
   // row 클릭 이벤트 핸들러를 위한 추가 코드
   const handleRowClick = (record: WorkInstruction) => {
     // scheduleId를 이용하여 API 호출
@@ -785,32 +736,32 @@ const ThreeDSimulator = () => {
       <div
         id="webgl-container"
         style={{ width: '95%', height: '120%', position: 'relative' }}></div>
-      <div className={styles.schtable}>
-        <div className={styles.summary}>
-          {loading ? (
-            <p>Loading...</p>
-          ) : (
-            <Table<WorkInstruction>
-              columns={columnsData}
-              data={workInstructions}
-              rowKey="scheduleId"
-              useCheckBox={false}
-              pagination={false}
-              handleRowClick={handleRowClick} // handleRowClick 전달
-            />
-          )}
+      <h3>작업 지시서 리스트</h3>
+
+      <div className={styles.tableContainer}>
+        {/* 테이블을 감싸는 Flexbox 컨테이너 */}
+        <div className={styles.schtable}>
+          <div className={styles.summary}>
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              <Table<WorkInstruction>
+                columns={columnsData}
+                data={workInstructions}
+                rowKey="scheduleId"
+                useCheckBox={false}
+                pagination={false}
+                handleRowClick={handleRowClick} // handleRowClick 전달
+              />
+            )}
+          </div>
         </div>
-        {/* <div className={styles.selectedItems}>
-          <h2>선택된 작업 아이템</h2>
+        {/* 옆에 선택된 작업 아이템을 보여주는 테이블 */}
+        <div className={styles.selectedItemsTable}>
+          <h2>코일 리스트</h2>
           {selectedItems.length > 0 ? (
             <Table<WorkInstructionItem>
-              columns={[
-                {
-                  title: '아이템 ID',
-                  dataIndex: 'itemId',
-                  key: 'itemId',
-                },
-              ]}
+              columns={coilsData}
               data={selectedItems}
               rowKey="itemId"
               pagination={false}
@@ -818,7 +769,7 @@ const ThreeDSimulator = () => {
           ) : (
             <p>아이템을 선택하세요.</p>
           )}
-        </div> */}
+        </div>
       </div>
     </div>
   );

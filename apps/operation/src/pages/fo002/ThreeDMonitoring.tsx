@@ -9,6 +9,11 @@ import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
 import AnalyzeChart from './result/AnalyzeChart';
 import styles from './ThreeDMonitoring.module.scss';
 
+import {
+  initializeWebSocket,
+  useWorkInstructionStore,
+} from '@/store/fo001store';
+
 let clipPlaneX: any;
 let clipPlaneX2: any;
 let clipPlaneX3: any;
@@ -52,12 +57,14 @@ class App {
   private controls2!: OrbitControls;
   private controls3!: OrbitControls;
   private controls4!: OrbitControls;
+  // 애니메이션 활성화 여부를 저장하는 변수
+  private animationEnabled: boolean = false;
   // private boxHelper: THREE.BoxHelper | null = null;
   // private model: THREE.Object3D | null = null;
   // private box: THREE.Box3 | null = null;
   // private selectedMeshInfo: string = ''; // 클릭된 메쉬 정보를 저장
 
-  constructor() {
+  constructor(data: any[]) {
     this.divContainer = document.querySelector('#webgl-container');
     this.infoDiv = document.querySelector('#mesh-info'); // 선택된 Mesh 정보를 표시할 div 선택
     this.cameras = [];
@@ -83,7 +90,7 @@ class App {
     });
 
     this.setupCamera();
-    this.setupModel();
+    this.setupModel(data);
     this.setupControls();
     this.setupEventListeners();
     this.setupEnvironmentMap();
@@ -94,6 +101,17 @@ class App {
     this.resize();
 
     requestAnimationFrame(this.render.bind(this));
+  }
+  // 애니메이션 활성화 여부를 설정하는 메서드
+  setAnimationEnabled(enabled: boolean) {
+    if (this.mixer) {
+      if (enabled) {
+        const action = this.mixer.clipAction(this.mixer._actions[0].getClip());
+        action.play();
+      } else {
+        this.mixer.stopAllAction();
+      }
+    }
   }
 
   // 선택된 메쉬 정보를 표시하는 함수
@@ -131,10 +149,10 @@ class App {
     const pmremGenerator = new PMREMGenerator(this.renderer);
     pmremGenerator.compileEquirectangularShader();
 
-    new RGBELoader().load('image12.hdr', (texture) => {
+    new RGBELoader().load('image20.hdr', (texture) => {
       const envMap = pmremGenerator.fromEquirectangular(texture).texture;
       this.scene.environment = envMap;
-      this.scene.background = new THREE.Color(0x565657);
+      this.scene.background = new THREE.Color(0xebfff5);
       texture.dispose();
       pmremGenerator.dispose();
     });
@@ -163,12 +181,12 @@ class App {
     this.controls3.enabled = false;
     this.controls4.enabled = false;
 
-    const stats = new Stats();
-    this.divContainer?.appendChild(stats.dom);
-    this.fps = stats;
+    // const stats = new Stats();
+    // this.divContainer?.appendChild(stats.dom);
+    // this.fps = stats;
   }
 
-  private setupModel() {
+  private setupModel(data: any[]) {
     new GLTFLoader().load('./postco.glb', (gltf) => {
       const model = gltf.scene;
       this.scene.add(model);
@@ -200,6 +218,8 @@ class App {
             // 바닥 Mesh에 대한 특수 처리
             child.material = new THREE.MeshStandardMaterial({
               color: 0x000000, // 바닥의 색상을 명시적으로 설정
+              emissive: 0xf0f0f0,
+              emissiveIntensity: 0.6,
               roughness: 0.8,
               metalness: 0,
               side: THREE.DoubleSide, // 양면 렌더링
@@ -270,15 +290,14 @@ class App {
       // this.box = box;
 
       this.mixer = new THREE.AnimationMixer(model);
-
       const animations = gltf.animations;
       if (animations && animations.length) {
         const action = this.mixer.clipAction(animations[0]);
         action.play();
       }
-      this.renderer.localClippingEnabled = true;
+      // this.renderer.localClippingEnabled = true;
 
-      console.log(gltf.animations);
+      // console.log(gltf.animations);
     });
   }
 
@@ -465,7 +484,7 @@ class App {
     if (this.controls3.enabled) this.controls3.update();
     if (this.controls4.enabled) this.controls4.update();
 
-    this.fps.update();
+    //this.fps.update();
   }
 
   render(time: number) {
@@ -522,39 +541,41 @@ class App {
 }
 
 const ThreeDMonitoring = () => {
-  const [messageCount] = useState(0); // 메시지 카운트를 위한 상태
-
+  const fetchData = useWorkInstructionStore((state: any) => state.fetchData!);
+  const [data, setData] = useState(null); // 데이터를 위한 상태 선언
+  const selectedData = useWorkInstructionStore((state) => state.data!);
   useEffect(() => {
     const container = document.querySelector('#webgl-container');
     if (container && container.children.length === 0) {
-      new App(); // 3D 렌더링을 위한 함수
+      const app = new App(selectedData); // 3D 렌더링을 위한 함수
+
+      // 웹소켓 초기화 후 데이터 받기
+      initializeWebSocket();
+
+      // fetchData로 데이터 수신 후 처리
+      fetchData(['1CAL']).then((result: any) => {
+        setData(result);
+
+        // 받은 데이터에서 schStatus 상태 확인
+        // const workInstructions = result.workInstructions;
+        console.log('==================================');
+
+        console.log(result);
+        console.log('==================================');
+        if (result.schStatus === 'IN_PROGRESS') {
+          // 애니메이션 활성화
+          app.setAnimationEnabled(true); // 애니메이션을 활성화하는 메서드를 호출
+        }
+      });
     }
-
-    // WebSocket 연결 설정
-    // const ws = new WebSocket('ws://localhost:8086/ws/opeartion');
-
-    // ws.onmessage = (event) => {
-    //   const data = JSON.parse(event.data); // 수신한 메시지를 JSON으로 파싱
-    //   setMeshInfo(data[messageCount]); // 현재 메시지 인덱스에 해당하는 데이터만 출력
-    //   setMessageCount((prevCount) => (prevCount + 1) % data.length); // 메시지 카운트 업데이트
-    // };
-
-    // const interval = setInterval(() => {
-    //   ws.send('request-next-data'); // 서버에 다음 데이터를 요청하는 메시지 전송
-    // }, 30000); // 30초마다 메시지를 서버에 요청
-
-    // return () => {
-    //   ws.close(); // 컴포넌트가 언마운트될 때 WebSocket 연결 종료
-    //   clearInterval(interval); // 타이머 제거
-    // };
-  }, [messageCount]);
+  }, [data, fetchData]);
 
   return (
     <div className={styles.page}>
       <h1>3D Monitoring 작업 화면</h1>
       <div
         id="webgl-container"
-        style={{ width: '95%', height: '120%', position: 'relative' }}></div>
+        style={{ width: '95%', height: '150%', position: 'relative' }}></div>
       <div className={styles.result}>
         <div className={styles.summary}>
           <AnalyzeChart />
