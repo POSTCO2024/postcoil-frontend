@@ -4,7 +4,7 @@ import { Client } from '@stomp/stompjs';
 import { Button, notification, Space } from 'antd';
 import type { NotificationArgsProps } from 'antd';
 import { TopBar } from './topBar/TopBar';
-import Barchart from './chart/BarChart';
+import Barchart from './chart/Barchart';
 
 import axios from 'axios';
 import React, { useState, useEffect, useMemo } from 'react';
@@ -289,9 +289,9 @@ export const Fc002: React.FC = () => {
   useEffect(() => {
     // Coil Type 차트 설정
     setCoilTypeOption({
-      title: {
-        text: 'Coil Type Frequency',
-      },
+      // title: {
+      //   // text: '품종',
+      // },
       tooltip: {},
       xAxis: {
         type: 'category',
@@ -311,9 +311,9 @@ export const Fc002: React.FC = () => {
 
     // Customer Name 차트 설정
     setCustomerNameOption({
-      title: {
-        text: 'Customer Name Frequency',
-      },
+      // title: {
+      //   text: 'Customer Name Frequency',
+      // },
       tooltip: {},
       xAxis: {
         type: 'category',
@@ -386,27 +386,39 @@ export const Fc002: React.FC = () => {
               ...item,
               key: item.targetId,
             }))}
-            scroll={{ x: 'max-content', y: 600 }}
+            scroll={{ x: 'max-content', y: 250 }}
             tableLayout={'fixed'}
             handleRowsClick={setSelectedRows}
             setSelectedMaterials={setSelectedMaterials}
           />
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <div style={{ flex: 1, marginRight: '10px' }}>
+          <div
+            style={{
+              width: '400px',
+              height: '200px',
+              flex: 1,
+              marginRight: '10px',
+            }}>
             <h6>재료 정보</h6>
-            <div className={styles.smallCard}>
-              {/* <DonutChart title="품종" option={coilTypeOption} /> */}
-              <Barchart
-                // title="Coil Type Frequency Chart"
-                option={coilTypeOption}
-              />
-            </div>
-            <div className={styles.smallCard}>
-              {/* <DonutChart title="고객사" option={customerData} /> */}
+            <div className={styles.group}>
+              <div
+                className={styles.smallCard}
+                style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Barchart title="품종" option={coilTypeOption} />
+                {/* </div>
+              <div className={styles.smallCard}> */}
+                <Barchart title="고객사" option={customerNameOption} />
+              </div>
             </div>
           </div>
-          <div style={{ flex: 1, marginRight: '10px' }}>
+          <div
+            style={{
+              width: '400px',
+              height: '100px',
+              flex: 1,
+              marginRight: '10px',
+            }}>
             <h6>에러 기준</h6>
             <AntTable
               columns={facilityErrColumn}
@@ -414,6 +426,7 @@ export const Fc002: React.FC = () => {
               size={'small'}
               tableLayout={'fixed'}
               pagination={false}
+              style={{ padding: '10px' }}
             />
           </div>
         </div>
@@ -421,7 +434,7 @@ export const Fc002: React.FC = () => {
           style={{
             fontSize: '1.8rem',
             textAlign: 'center',
-            marginTop: '20px',
+            marginTop: '50px',
           }}>
           추천 재료를 사용하시겠습니까?
         </p>

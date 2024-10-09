@@ -9,11 +9,7 @@ interface BarchartProps {
   subtitle?: string;
 }
 
-export const Barchart: React.FC<BarchartProps> = ({
-  option,
-  title,
-  subtitle,
-}) => {
+export const Barchart: React.FC<BarchartProps> = ({ option, title }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
   const myChartRef = useRef<echarts.ECharts | null>(null);
 
@@ -49,8 +45,7 @@ export const Barchart: React.FC<BarchartProps> = ({
 
   return (
     <div className={styles.barchartContainer}>
-      <h4>{title}</h4>
-      <p>{subtitle}</p>
+      <h6>{title}</h6>
       <div ref={chartRef} id="barchart" className={styles.chartContainer}></div>
     </div>
   );
