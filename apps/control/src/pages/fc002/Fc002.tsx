@@ -29,11 +29,6 @@ const modelApiUrl = import.meta.env.VITE_MODEL_API_URL;
 type NotificationPlacement = NotificationArgsProps['placement'];
 
 const Context = React.createContext({ name: 'Default' });
-
-type NotificationPlacement = NotificationArgsProps['placement'];
-
-const Context = React.createContext({ name: 'Default' });
-
 // Interface
 export interface ApiResponse {
   status: number;
@@ -406,8 +401,6 @@ export const Fc002: React.FC = () => {
                 className={styles.smallCard}
                 style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Barchart title="품종" option={coilTypeOption} />
-                {/* </div>
-              <div className={styles.smallCard}> */}
                 <Barchart title="고객사" option={customerNameOption} />
               </div>
             </div>
