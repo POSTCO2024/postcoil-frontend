@@ -6,7 +6,8 @@ import {
 } from './dto';
 
 export interface StoreType {
-  data: WorkInstructionsDTO[] | ClientDTO[] | null;
+  // data: WorkInstructionsDTO[] | ClientDTO[] | null;
+  data: ClientDTO[] | null;
   data2?: ClientDTO[] | null; // websocket용
   loading: boolean; // 로딩 상태
   error?: string | null; // 에러 상태

@@ -206,9 +206,19 @@ class App {
       schCoils.forEach((coil, index) => {
         coil.visible = index < numCoils; // Show up to numCoils SchCoils, hide the rest
       });
-      subCoils.forEach((subCoil) => {
-        subCoil.visible = false;
-      });
+      // subCoils 처리
+      // 초과된 코일을 subCoils로 표시 (numCoils가 schCoils의 개수를 초과할 경우)
+      if (numCoils > schCoils.length) {
+        const extraCoils = numCoils - schCoils.length; // 초과된 코일 수
+
+        subCoils.forEach((subCoil, index) => {
+          subCoil.visible = index < extraCoils; // 필요한 수만큼 subCoil 표시
+        });
+      } else {
+        subCoils.forEach((subCoil) => {
+          subCoil.visible = false; // schCoils에서만 다 처리되는 경우 subCoils는 숨김
+        });
+      }
 
       model.traverse((child) => {
         if (child instanceof THREE.Mesh) {

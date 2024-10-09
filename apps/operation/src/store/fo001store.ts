@@ -93,50 +93,43 @@ export const useWorkInstructionStore = create<StoreType>((set) => ({
     }
   },
   updateData: (newData: ClientDTO[]) => {
-    // 웹소켓 데이터로 상태 업데이트
     set((state) => {
-      const processCode = state.processCode; //newData[0].workInstructions.process;
+      const processCode = state.processCode;
       const selectedData = processCode === '1CAL' ? state.data : state.data2;
 
-      console.log('>>>>>>>>>updateData 함수 시작>>>>>>>>>');
-      // processCode가 스토어의 값과 일치하는 항목만 필터링
+      // 현재 processCode와 일치하는 항목만 필터링
       const filteredData = newData.filter(
         (item) => item.workInstructions.process === processCode,
       );
-      console.log('filteredData', filteredData);
 
-      // 데이터가 null인 경우 fetchData 호출
+      // selectedData가 null인 경우 fetchData 호출
       if (!selectedData) {
-        // fetchData 호출하여 데이터 로딩
-        set({ loading: true }); // 로딩 상태로 설정
-        // fetchData를 직접 호출하여 데이터 가져오기
+        set({ loading: true });
         (async () => {
           await state.fetchData!([processCode!]);
         })();
-        return {}; // 상태를 변경하지 않고 null 반환
+        return {};
       }
 
       const updatedData = (selectedData as ClientDTO[]).filter((item) => {
-        // 새로 들어온 데이터 중 해당 item의 workInstructionId와 일치하는 항목을 찾음
         const updatedItem = filteredData.find(
           (newItem) =>
             newItem.workInstructions.workInstructionId ===
             item.workInstructions.workInstructionId,
         );
 
-        // 만약 새로 들어온 데이터의 schStatus가 "COMPLETED"라면 해당 항목 삭제
+        // schStatus가 "COMPLETED"인 항목은 제거
         if (updatedItem?.workInstructions.schStatus === 'COMPLETED') {
-          return false; // 데이터에서 제거
+          return false;
         }
 
-        return true; // 나머지 항목은 유지
+        return true;
       });
 
       // 새로운 데이터 처리
       filteredData.forEach((newItem) => {
-        // schStatus가 "COMPLETED"인 새 항목은 추가하지 않음
         if (newItem.workInstructions.schStatus === 'COMPLETED') {
-          return; // continue
+          return;
         }
 
         const existingItemIndex = updatedData.findIndex(
@@ -160,43 +153,150 @@ export const useWorkInstructionStore = create<StoreType>((set) => ({
             },
             countCoilTypeCode: {
               ...updatedData[existingItemIndex].countCoilTypeCode,
-              // ...newItem.countCoilTypeCode, // 웹소켓으로는 countCoilTypeCode 업데이트 안하기 때문
+              ...newItem.countCoilTypeCode,
             },
           };
         } else {
-          // 새로 들어온 데이터는 배열의 마지막에 추가
+          // 새로 들어온 데이터는 배열에 추가
           updatedData.push(newItem);
         }
-
-        // IN_PROGRESS 상태인 항목 찾기
-        if (newItem.workInstructions.schStatus === 'IN_PROGRESS') {
-          // 만약 기존의 scheduleNo와 다른 경우 새로운 IN_PROGRESS 데이터로 상태 업데이트
-          if (state.scheduleNo !== newItem.workInstructions.scheduleNo) {
-            set({
-              scheduleNo: newItem.workInstructions.scheduleNo,
-              scheduleStartTime: newItem.workInstructions.startTime,
-              scExpectedDuration: newItem.workInstructions.expectedDuration,
-              countCoilTypeCode: newItem.countCoilTypeCode,
-              workItems: newItem.workInstructions.items,
-              coilSupplyData: newItem.coilSupply,
-            });
-          }
-        }
       });
+
       const sortedData = sortData(updatedData);
 
-      console.log('>>>>>>>>>updateData 함수 끝>>>>>>>>>');
+      // IN_PROGRESS 상태인 항목 찾기
+      const inProgressItem = sortedData.find(
+        (item) => item.workInstructions.schStatus === 'IN_PROGRESS',
+      );
 
-      // 최종적으로 적절한 상태를 업데이트
+      const newState: Partial<StoreType> = {
+        loading: false,
+      };
+
       if (processCode === '1CAL') {
-        return { data: sortedData, loading: false };
+        newState.data = sortedData;
       } else if (processCode === '2CAL') {
-        return { data2: sortedData, loading: false };
+        newState.data2 = sortedData;
       }
 
-      return {}; // 타입 오류 방지 위해 빈 객체 반환
+      if (inProgressItem) {
+        newState.scheduleNo = inProgressItem.workInstructions.scheduleNo;
+        newState.scheduleStartTime = inProgressItem.workInstructions.startTime;
+        newState.scExpectedDuration =
+          inProgressItem.workInstructions.expectedDuration;
+        newState.workItems = inProgressItem.workInstructions.items;
+        newState.countCoilTypeCode = inProgressItem.countCoilTypeCode;
+        newState.coilSupplyData = inProgressItem.coilSupply;
+      }
+
+      return newState;
     });
   },
+  // updateData: (newData: ClientDTO[]) => {
+  //   // 웹소켓 데이터로 상태 업데이트
+  //   set((state) => {
+  //     const processCode = state.processCode; //newData[0].workInstructions.process;
+  //     const selectedData = processCode === '1CAL' ? state.data : state.data2;
+
+  //     console.log('>>>>>>>>>updateData 함수 시작>>>>>>>>>');
+  //     // processCode가 스토어의 값과 일치하는 항목만 필터링
+  //     const filteredData = newData.filter(
+  //       (item) => item.workInstructions.process === processCode,
+  //     );
+  //     console.log('filteredData', filteredData);
+
+  //     // 데이터가 null인 경우 fetchData 호출
+  //     if (!selectedData) {
+  //       // fetchData 호출하여 데이터 로딩
+  //       set({ loading: true }); // 로딩 상태로 설정
+  //       // fetchData를 직접 호출하여 데이터 가져오기
+  //       (async () => {
+  //         await state.fetchData!([processCode!]);
+  //       })();
+  //       return {}; // 상태를 변경하지 않고 null 반환
+  //     }
+
+  //     const updatedData = (selectedData as ClientDTO[]).filter((item) => {
+  //       // 새로 들어온 데이터 중 해당 item의 workInstructionId와 일치하는 항목을 찾음
+  //       const updatedItem = filteredData.find(
+  //         (newItem) =>
+  //           newItem.workInstructions.workInstructionId ===
+  //           item.workInstructions.workInstructionId,
+  //       );
+
+  //       // 만약 새로 들어온 데이터의 schStatus가 "COMPLETED"라면 해당 항목 삭제
+  //       if (updatedItem?.workInstructions.schStatus === 'COMPLETED') {
+  //         return false; // 데이터에서 제거
+  //       }
+
+  //       return true; // 나머지 항목은 유지
+  //     });
+
+  //     // 새로운 데이터 처리
+  //     filteredData.forEach((newItem) => {
+  //       // schStatus가 "COMPLETED"인 새 항목은 추가하지 않음
+  //       if (newItem.workInstructions.schStatus === 'COMPLETED') {
+  //         return; // continue
+  //       }
+
+  //       const existingItemIndex = updatedData.findIndex(
+  //         (item) =>
+  //           item.workInstructions.workInstructionId ===
+  //           newItem.workInstructions.workInstructionId,
+  //       );
+
+  //       if (existingItemIndex !== -1) {
+  //         // 기존 항목이 있으면 병합하여 업데이트
+  //         updatedData[existingItemIndex] = {
+  //           ...updatedData[existingItemIndex],
+  //           ...newItem,
+  //           workInstructions: {
+  //             ...updatedData[existingItemIndex].workInstructions,
+  //             ...newItem.workInstructions,
+  //           },
+  //           coilSupply: {
+  //             ...updatedData[existingItemIndex].coilSupply,
+  //             ...newItem.coilSupply,
+  //           },
+  //           countCoilTypeCode: {
+  //             ...updatedData[existingItemIndex].countCoilTypeCode,
+  //             // ...newItem.countCoilTypeCode, // 웹소켓으로는 countCoilTypeCode 업데이트 안하기 때문
+  //           },
+  //         };
+  //       } else {
+  //         // 새로 들어온 데이터는 배열의 마지막에 추가
+  //         updatedData.push(newItem);
+  //       }
+
+  //       // IN_PROGRESS 상태인 항목 찾기
+  //       if (newItem.workInstructions.schStatus === 'IN_PROGRESS') {
+  //         // 만약 기존의 scheduleNo와 다른 경우 새로운 IN_PROGRESS 데이터로 상태 업데이트
+  //         if (state.scheduleNo !== newItem.workInstructions.scheduleNo) {
+  //           set({
+  //             scheduleNo: newItem.workInstructions.scheduleNo,
+  //             scheduleStartTime: newItem.workInstructions.startTime,
+  //             scExpectedDuration: newItem.workInstructions.expectedDuration,
+  //             countCoilTypeCode: newItem.countCoilTypeCode,
+  //             workItems: newItem.workInstructions.items,
+  //             coilSupplyData: newItem.coilSupply,
+  //           });
+  //         }
+  //       }
+  //     });
+  //     const sortedData = sortData(updatedData);
+
+  //     console.log('>>>>>>>>>updateData 함수 끝>>>>>>>>>');
+
+  //     // 최종적으로 적절한 상태를 업데이트
+  //     if (processCode === '1CAL') {
+  //       return { data: sortedData, loading: false };
+  //     } else if (processCode === '2CAL') {
+  //       return { data2: sortedData, loading: false };
+  //     }
+
+  //     return {}; // 타입 오류 방지 위해 빈 객체 반환
+  //   });
+  // },
 }));
 
 // API로 받은 데이터를 정렬 후 상태에 저장
