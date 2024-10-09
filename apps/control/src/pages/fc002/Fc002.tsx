@@ -175,12 +175,9 @@ export const Fc002: React.FC = () => {
     );
 
     // 그래프 준비물~
-    const coilTypeFreq = calculateFrequency(data, 'coilTypeCode'); // 'coilTypeCode'를 key로 사용
-    const customerNameFreq = calculateFrequency(data, 'customerName'); // 'customerName'을 key로 사용
+    const coilTypeFreq = calculateFrequency(data, 'coilTypeCode');
+    const customerNameFreq = calculateFrequency(data, 'customerName');
 
-    console.log('=======================');
-    console.log(coilTypeFreq);
-    console.log(customerNameFreq);
     setCoilTypeFrequency(coilTypeFreq);
     setCustomerNameFrequency(customerNameFreq);
 
@@ -267,6 +264,13 @@ export const Fc002: React.FC = () => {
 
   // 에러기준
   useEffect(() => {
+    if (selectedProcessCode) {
+      setSelectedFacility(selectedProcessCode); // 공정 필터링 설정
+    }
+  }, [selectedProcessCode]);
+
+  // 에러 기준 가져오기
+  useEffect(() => {
     const fetchData = async () => {
       const data = await getErrorStandard(selectedFacility);
       const transformedData = data.map((item: any, index: number) => ({
@@ -278,8 +282,10 @@ export const Fc002: React.FC = () => {
       setStandardDatas(transformedData);
     };
 
-    fetchData();
-  }, [selectedFacility]); // selectedFacility가 변경될 때마다 데이터 가져오기
+    if (selectedFacility) {
+      fetchData();
+    }
+  }, [selectedFacility]); // // selectedFacility가 변경될 때마다 데이터 가져오기
 
   useEffect(() => {
     // Coil Type 차트 설정
