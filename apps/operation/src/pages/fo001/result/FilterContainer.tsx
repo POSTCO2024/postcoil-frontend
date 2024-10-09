@@ -110,6 +110,7 @@ const FilterContainer = () => {
           workInstructionId +
           '?supplyCount=1',
       );
+      console.log(response);
     } catch (errors) {
       console.log(errors);
     }
@@ -120,6 +121,7 @@ const FilterContainer = () => {
       const response = await axios.post(
         operationUrl + '/api/coil-work/reject/' + workInstructionId + '/' + id,
       );
+      console.log(response);
     } catch (errors) {
       console.log(errors);
     }
