@@ -3,13 +3,14 @@ import { Table as AntTable } from 'antd';
 import { Client } from '@stomp/stompjs';
 import { Button, notification, Space } from 'antd';
 import type { NotificationArgsProps } from 'antd';
+import { TopBar } from './topBar/TopBar';
+import Barchart from './chart/BarChart';
+
 import axios from 'axios';
 import React, { useState, useEffect, useMemo } from 'react';
 import SockJS from 'sockjs-client';
-import DonutChart from '../fc004/chart/DonutChart';
 
 import styles from './Fc002.module.scss';
-import { TopBar } from './topBar/TopBar';
 import {
   facilityErrColumn,
   columnMapping,
@@ -18,7 +19,9 @@ import {
 import CommonModal from '@/components/common/CommonModal';
 import { columnsData } from '@/utils/control/fc002Utils';
 import { transformData, ApiResponseItem } from '@/utils/control/transformData';
+import { calculateFrequency } from './CalculateFrequencies';
 
+// URL
 const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
 const controlBaseUrl = import.meta.env.VITE_CONTROL_BASE_URL;
 const modelApiUrl = import.meta.env.VITE_MODEL_API_URL;
@@ -104,22 +107,6 @@ async function getErrorStandard(facility: string) {
   }
 }
 
-// 4. 품종/고객사
-async function getOrder(processCode: string) {
-  const url = `${controlApiUrl}${controlBaseUrl}/dashboard/order?currProc=${processCode}`;
-  try {
-    const response = await axios.get(url);
-    if (response.status == 200) {
-      console.log('확인해!!!!!!!!!!!!!!!!!!!!!!');
-      console.log(response.data.result);
-      return response.data.result;
-    }
-  } catch (error) {
-    console.error('POST 요청 중 오류 발생:', error);
-    return [];
-  }
-}
-
 export const Fc002: React.FC = () => {
   const [api, contextHolder] = notification.useNotification();
 
@@ -148,8 +135,14 @@ export const Fc002: React.FC = () => {
   const [message, setMessage] = useState<any>({});
   const [standardDatas, setStandardDatas] = useState<any[]>([]);
   const [selectedFacility, setSelectedFacility] = useState('1PCM'); // 기본 시설 ID
-  const [coilTypeData, setCoilTypeData] = useState<Record<string, number>>({});
-  const [customerData, setCustomerData] = useState<Record<string, number>>({});
+
+  const [coilTypeFrequency, setCoilTypeFrequency] = useState({});
+  const [customerNameFrequency, setCustomerNameFrequency] = useState({});
+  const [coilTypeOption, setCoilTypeOption] = useState<echarts.EChartsOption>(
+    {},
+  );
+  const [customerNameOption, setCustomerNameOption] =
+    useState<echarts.EChartsOption>({});
 
   // 검색 결과 처리
   const handleSearchResults = (searchResults: any[]) => {
@@ -164,7 +157,6 @@ export const Fc002: React.FC = () => {
     if (selectedRows.length > 0) {
       const materialIdsSelected = selectedRows.map((r, _) => r.targetId);
       // const selectedMaterialIds = errorMaterials.filter((row) => materialIdsSelected.includes(row.materialId));
-
       // console.log('Filtering ... ');
       // console.log(materialIdsSelected); // 선택된 materialId
       // console.log(selectedMaterialIds); // 필터링 된 rows
@@ -182,15 +174,22 @@ export const Fc002: React.FC = () => {
     // setIsRecommendModalOpen(true); // To do: API 연결하고 제거
 
     // API 요청
-    const orderData = await getOrder(selectedProcessCode);
-    console.log('품종/고객사 데이터: ', orderData); // 받아온 데이터 로그 출력
-
     console.log('에러패스 대상: ' + JSON.stringify(errorMaterials, null, 1));
     const data = await getErrorPassRecommend(
       JSON.stringify(errorMaterials, null, 1),
     );
 
-    setErrorPassMaterials(data);
+    // 그래프 준비물~
+    const coilTypeFreq = calculateFrequency(data, 'coilTypeCode'); // 'coilTypeCode'를 key로 사용
+    const customerNameFreq = calculateFrequency(data, 'customerName'); // 'customerName'을 key로 사용
+
+    console.log('=======================');
+    console.log(coilTypeFreq);
+    console.log(customerNameFreq);
+    setCoilTypeFrequency(coilTypeFreq);
+    setCustomerNameFrequency(customerNameFreq);
+
+    setErrorPassMaterials(data); // 에러패스 추천 재료 세팅
     if (data.length > 0) {
       setErrorPassMaterials(data);
       setIsRecommendModalOpen(true); // API 요청 후, 모달 창 열기
@@ -287,6 +286,52 @@ export const Fc002: React.FC = () => {
     fetchData();
   }, [selectedFacility]); // selectedFacility가 변경될 때마다 데이터 가져오기
 
+  useEffect(() => {
+    // Coil Type 차트 설정
+    setCoilTypeOption({
+      title: {
+        text: 'Coil Type Frequency',
+      },
+      tooltip: {},
+      xAxis: {
+        type: 'category',
+        data: Object.keys(coilTypeFrequency),
+      },
+      yAxis: {
+        type: 'value',
+      },
+      series: [
+        {
+          name: 'Frequency',
+          type: 'bar',
+          data: Object.values(coilTypeFrequency),
+        },
+      ],
+    });
+
+    // Customer Name 차트 설정
+    setCustomerNameOption({
+      title: {
+        text: 'Customer Name Frequency',
+      },
+      tooltip: {},
+      xAxis: {
+        type: 'category',
+        data: Object.keys(customerNameFrequency),
+      },
+      yAxis: {
+        type: 'value',
+      },
+      series: [
+        {
+          name: 'Frequency',
+          type: 'bar',
+          data: Object.values(customerNameFrequency),
+        },
+      ],
+    });
+  }, [coilTypeFrequency, customerNameFrequency]); // 주의: 종속성 배열에 추가해야 함
+
   return (
     <div className={styles.boardContainer}>
       <Context.Provider value={contextValue}>
@@ -352,9 +397,13 @@ export const Fc002: React.FC = () => {
             <h6>재료 정보</h6>
             <div className={styles.smallCard}>
               {/* <DonutChart title="품종" option={coilTypeOption} /> */}
+              <Barchart
+                // title="Coil Type Frequency Chart"
+                option={coilTypeOption}
+              />
             </div>
             <div className={styles.smallCard}>
-              {/* <DonutChart title="고객사" option={customerNameOption} /> */}
+              {/* <DonutChart title="고객사" option={customerData} /> */}
             </div>
           </div>
           <div style={{ flex: 1, marginRight: '10px' }}>
