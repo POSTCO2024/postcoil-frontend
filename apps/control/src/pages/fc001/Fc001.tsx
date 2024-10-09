@@ -42,12 +42,12 @@ async function getTable(processCode: string): Promise<any[]> {
 }
 
 // 2) 작업대상재 표(table) 조회
-async function getRowTable(): Promise<any[]> {
-  const url = `${controlApiUrl}${controlBaseUrl}/target-materials/nextProcTable`;
+async function getRowTable(processCode: string): Promise<any[]> {
+  const url = `${controlApiUrl}${controlBaseUrl}/target-materials/nextProcTable?currProc=${processCode}`;
   try {
     const response = await axios.get<ApiResponse>(url);
     if (response.data.status == 200) {
-      console.log(response.data.result);
+      // console.log(response.data.result);
       return response.data.result;
     }
     return [];
@@ -106,7 +106,7 @@ export const Fc001: React.FC = () => {
   useEffect(() => {
     if (!isValue) {
       const fetchData = async () => {
-        const data = await getRowTable(); // API 요청
+        const data = await getRowTable(selectedProcessCode); // API 요청
         setRowTableData(data);
         console.log('표 불러오기');
         console.log(data);

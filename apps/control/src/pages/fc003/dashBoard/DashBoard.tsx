@@ -9,6 +9,7 @@ import styles from './DashBoard.module.scss';
 const operationApiUrl = import.meta.env.VITE_OPERATION_API_URL;
 const operationBaseUrl = import.meta.env.VITE_OPERATION_BASE_URL;
 const websocketApiUrl = import.meta.env.VITE_CONTROL_API_URL;
+const websocketBaseUrl = import.meta.env.VITE_WEBSOCKET_CONTROL_BASE;
 
 interface FactoryDashboard {
   process: string;
@@ -123,7 +124,9 @@ export const DashBoard: React.FC = () => {
         const response = await axios.get(url);
 
         if (response.data.status === 200) {
+          console.log('############');
           const result = response.data.result;
+          console.log(result);
           let hasData = false;
 
           // 응답 데이터로 CAL 데이터 업데이트
@@ -180,22 +183,19 @@ export const DashBoard: React.FC = () => {
 
   // 웹소켓
   useEffect(() => {
-    const socket = new SocketJS(`${websocketApiUrl}/ws/control`);
+    const socket = new SocketJS(`${websocketApiUrl}${websocketBaseUrl}`);
     const stompClient = new Client({
       webSocketFactory: () => socket as any,
       debug: (str) => {
         console.log(str);
       },
       onConnect: () => {
-        console.log('Conneted Socket! ');
+        console.log('Connected Socket! ');
         stompClient.subscribe('/topic/work-started', (msg) => {
-          // setMessage(msg.body); // 웹소켓으로 받은 데이터를 상태에 저장
-          console.log('웹소켓 데이터');
-          console.log(msg.body);
-
-          const data = JSON.parse(msg.body);
-          console.log(data);
-          console.log('check');
+          // Uint8Array -> 문자열로 변환
+          const body = new TextDecoder().decode(msg.binaryBody);
+          const data = JSON.parse(body);
+          console.log('Parsed data:', data);
 
           // Process
           if (data.factoryDashboard && Array.isArray(data.factoryDashboard)) {
@@ -203,35 +203,36 @@ export const DashBoard: React.FC = () => {
               const process = item.process;
               // 해당 process에 대한 로직 처리
               if (process === '1CAL' || process === '2CAL') {
-                const updatedTabData = tabDataCAL.map((tabItem) => {
-                  if (tabItem.label === process) {
-                    return {
-                      ...tabItem,
-                      percent: Math.round(
-                        (item.totalCompleteCoils / item.totalGoalCoils) * 100,
-                      ),
-                      tableData: [
-                        {
-                          key: '2',
-                          column: '목표 수량',
-                          value: item.totalGoalCoils.toString(),
-                        },
-                        {
-                          key: '3',
-                          column: '작업 완료',
-                          value: item.totalCompleteCoils.toString(),
-                        },
-                        {
-                          key: '4',
-                          column: '작업 예정',
-                          value: item.totalScheduledCoils.toString(),
-                        },
-                      ],
-                    };
-                  }
-                  return tabItem;
-                });
-                setTabDataCAL(updatedTabData); // 상태 업데이트
+                setTabDataCAL((prevTabDataCAL) =>
+                  prevTabDataCAL.map((tabItem) => {
+                    if (tabItem.label === process) {
+                      return {
+                        ...tabItem,
+                        percent: Math.round(
+                          (item.totalCompleteCoils / item.totalGoalCoils) * 100,
+                        ),
+                        tableData: [
+                          {
+                            key: '2',
+                            column: '목표 수량',
+                            value: item.totalGoalCoils.toString(),
+                          },
+                          {
+                            key: '3',
+                            column: '작업 완료',
+                            value: item.totalCompleteCoils.toString(),
+                          },
+                          {
+                            key: '4',
+                            column: '작업 예정',
+                            value: item.totalScheduledCoils.toString(),
+                          },
+                        ],
+                      };
+                    }
+                    return tabItem;
+                  }),
+                ); // 상태 업데이트
               }
             });
           } else {

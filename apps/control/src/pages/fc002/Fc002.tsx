@@ -1,18 +1,27 @@
 import { Table } from '@postcoil/ui';
+import { Table as AntTable } from 'antd';
 import { Client } from '@stomp/stompjs';
 import { Button, notification, Space } from 'antd';
 import type { NotificationArgsProps } from 'antd';
+import { TopBar } from './topBar/TopBar';
+import Barchart from './chart/Barchart';
+
 import axios from 'axios';
 import React, { useState, useEffect, useMemo } from 'react';
 import SockJS from 'sockjs-client';
 
 import styles from './Fc002.module.scss';
-import { TopBar } from './topBar/TopBar';
+import {
+  facilityErrColumn,
+  columnMapping,
+} from '@/config/management/errMConfig';
 
 import CommonModal from '@/components/common/CommonModal';
 import { columnsData } from '@/utils/control/fc002Utils';
 import { transformData, ApiResponseItem } from '@/utils/control/transformData';
+import { calculateFrequency } from './CalculateFrequencies';
 
+// URL
 const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
 const controlBaseUrl = import.meta.env.VITE_CONTROL_BASE_URL;
 const modelApiUrl = import.meta.env.VITE_MODEL_API_URL;
@@ -20,14 +29,16 @@ const modelApiUrl = import.meta.env.VITE_MODEL_API_URL;
 type NotificationPlacement = NotificationArgsProps['placement'];
 
 const Context = React.createContext({ name: 'Default' });
-
-// API
+// Interface
 export interface ApiResponse {
   status: number;
   result: ApiResponseItem[];
   resultMsg?: string;
 }
 
+/**
+ * API 요청
+ */
 // 1. 에러재 목록 조회
 async function getErrorMaterialData(processCode: string): Promise<any[]> {
   const url = `${controlApiUrl}${controlBaseUrl}/error-materials/error-by-curr-proc?currProc=${processCode}`;
@@ -78,6 +89,19 @@ async function getErrorPassRecommend(data: any) {
   }
 }
 
+// 4. 에러 기준
+async function getErrorStandard(facility: string) {
+  try {
+    const response = await axios.get(
+      `${controlApiUrl}/api/v1/management/error/${facility}`,
+    );
+    return response.data.criteriaDetails;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return []; // 오류 발생 시 빈 배열 반환
+  }
+}
+
 export const Fc002: React.FC = () => {
   const [api, contextHolder] = notification.useNotification();
 
@@ -92,7 +116,9 @@ export const Fc002: React.FC = () => {
   };
 
   const contextValue = useMemo(() => ({ name: 'Ant Design' }), []);
-  // 조회
+  /**
+   *  State 관리
+   */
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [isRecommendModalOpen, setIsRecommendModalOpen] = React.useState(false);
   const [errorMaterials, setErrorMaterials] = useState<any[]>([]); // 에러재
@@ -102,6 +128,16 @@ export const Fc002: React.FC = () => {
   const [selectedRows, setSelectedRows] = useState<any[]>([]); // Checked Rows
   const [client, setClient] = useState<Client | null>(null);
   const [message, setMessage] = useState<any>({});
+  const [standardDatas, setStandardDatas] = useState<any[]>([]);
+  const [selectedFacility, setSelectedFacility] = useState('1PCM'); // 기본 시설 ID
+
+  const [coilTypeFrequency, setCoilTypeFrequency] = useState({});
+  const [customerNameFrequency, setCustomerNameFrequency] = useState({});
+  const [coilTypeOption, setCoilTypeOption] = useState<echarts.EChartsOption>(
+    {},
+  );
+  const [customerNameOption, setCustomerNameOption] =
+    useState<echarts.EChartsOption>({});
 
   // 검색 결과 처리
   const handleSearchResults = (searchResults: any[]) => {
@@ -116,7 +152,6 @@ export const Fc002: React.FC = () => {
     if (selectedRows.length > 0) {
       const materialIdsSelected = selectedRows.map((r, _) => r.targetId);
       // const selectedMaterialIds = errorMaterials.filter((row) => materialIdsSelected.includes(row.materialId));
-
       // console.log('Filtering ... ');
       // console.log(materialIdsSelected); // 선택된 materialId
       // console.log(selectedMaterialIds); // 필터링 된 rows
@@ -139,7 +174,14 @@ export const Fc002: React.FC = () => {
       JSON.stringify(errorMaterials, null, 1),
     );
 
-    setErrorPassMaterials(data);
+    // 그래프 준비물~
+    const coilTypeFreq = calculateFrequency(data, 'coilTypeCode');
+    const customerNameFreq = calculateFrequency(data, 'customerName');
+
+    setCoilTypeFrequency(coilTypeFreq);
+    setCustomerNameFrequency(customerNameFreq);
+
+    setErrorPassMaterials(data); // 에러패스 추천 재료 세팅
     if (data.length > 0) {
       setErrorPassMaterials(data);
       setIsRecommendModalOpen(true); // API 요청 후, 모달 창 열기
@@ -160,6 +202,9 @@ export const Fc002: React.FC = () => {
     setSelectedRows(selectedRows);
   }
 
+  /**
+   * Effect
+   */
   // 에러재 목록 조회
   useEffect(() => {
     const fetchData = async () => {
@@ -216,6 +261,78 @@ export const Fc002: React.FC = () => {
   }, []);
 
   useEffect(() => openNotification('topRight'), [message]);
+
+  // 에러기준
+  useEffect(() => {
+    if (selectedProcessCode) {
+      setSelectedFacility(selectedProcessCode); // 공정 필터링 설정
+    }
+  }, [selectedProcessCode]);
+
+  // 에러 기준 가져오기
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getErrorStandard(selectedFacility);
+      const transformedData = data.map((item: any, index: number) => ({
+        key: (index + 1).toString(),
+        columnName: columnMapping[item.columnName],
+        value: item.columnValue ?? '미지정', // null일 경우 '미지정'으로 처리
+        mapperId: item.id,
+      }));
+      setStandardDatas(transformedData);
+    };
+
+    if (selectedFacility) {
+      fetchData();
+    }
+  }, [selectedFacility]); // // selectedFacility가 변경될 때마다 데이터 가져오기
+
+  useEffect(() => {
+    // Coil Type 차트 설정
+    setCoilTypeOption({
+      // title: {
+      //   // text: '품종',
+      // },
+      tooltip: {},
+      xAxis: {
+        type: 'category',
+        data: Object.keys(coilTypeFrequency),
+      },
+      yAxis: {
+        type: 'value',
+      },
+      series: [
+        {
+          name: 'Frequency',
+          type: 'bar',
+          data: Object.values(coilTypeFrequency),
+        },
+      ],
+    });
+
+    // Customer Name 차트 설정
+    setCustomerNameOption({
+      // title: {
+      //   text: 'Customer Name Frequency',
+      // },
+      tooltip: {},
+      xAxis: {
+        type: 'category',
+        data: Object.keys(customerNameFrequency),
+      },
+      yAxis: {
+        type: 'value',
+      },
+      series: [
+        {
+          name: 'Frequency',
+          type: 'bar',
+          data: Object.values(customerNameFrequency),
+        },
+      ],
+    });
+  }, [coilTypeFrequency, customerNameFrequency]); // 주의: 종속성 배열에 추가해야 함
+
   return (
     <div className={styles.boardContainer}>
       <Context.Provider value={contextValue}>
@@ -270,17 +387,53 @@ export const Fc002: React.FC = () => {
               ...item,
               key: item.targetId,
             }))}
-            scroll={{ x: 'max-content', y: 600 }}
+            scroll={{ x: 'max-content', y: 250 }}
             tableLayout={'fixed'}
             handleRowsClick={setSelectedRows}
             setSelectedMaterials={setSelectedMaterials}
           />
         </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div
+            style={{
+              width: '400px',
+              height: '200px',
+              flex: 1,
+              marginRight: '10px',
+            }}>
+            <h6>재료 정보</h6>
+            <div className={styles.group}>
+              <div
+                className={styles.smallCard}
+                style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Barchart title="품종" option={coilTypeOption} />
+                <Barchart title="고객사" option={customerNameOption} />
+              </div>
+            </div>
+          </div>
+          <div
+            style={{
+              width: '400px',
+              height: '100px',
+              flex: 1,
+              marginRight: '10px',
+            }}>
+            <h6>에러 기준</h6>
+            <AntTable
+              columns={facilityErrColumn}
+              dataSource={standardDatas.slice(0, 4)}
+              size={'small'}
+              tableLayout={'fixed'}
+              pagination={false}
+              style={{ padding: '10px' }}
+            />
+          </div>
+        </div>
         <p
           style={{
             fontSize: '1.8rem',
             textAlign: 'center',
-            marginTop: '20px',
+            marginTop: '50px',
           }}>
           추천 재료를 사용하시겠습니까?
         </p>

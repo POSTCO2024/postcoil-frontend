@@ -21,24 +21,24 @@ export const List: React.FC<ListProps> = ({ data }) => {
     {
       title: '',
       dataIndex: 'no',
-      width: 20,
+      width: 22,
       key: 'no',
     },
     {
       title: '재료ID',
-      width: 55,
+      width: 58,
       dataIndex: 'materialNo',
       key: 'materialNo',
     },
     {
       title: '생산 마감일',
-      width: 60,
+      width: 65,
       dataIndex: 'dueDate',
       key: 'dueDate',
     },
     {
       title: '',
-      width: 40,
+      width: 35,
       key: 'tags',
       dataIndex: 'tags',
       render: (_, { tags }) => <Tag color="red">{tags}</Tag>,

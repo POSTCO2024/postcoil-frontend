@@ -2,9 +2,10 @@
 export const columnsList = [
   {
     title: '번호',
-    dataIndex: 'targetId',
-    key: 'targetId',
+    dataIndex: 'index',
+    key: 'index',
     fixed: true,
+    render: (_: any, __: any, index: number) => index + 1,
   },
   {
     title: '코일 번호',
@@ -140,9 +141,23 @@ export const columnsTable = [
     key: 'key',
   },
   {
-    title: '총 합계',
-    dataIndex: 'totalCnt',
+    title: '합계',
+    // dataIndex: 'totalCnt',
     key: 'total',
+    render: (_: number, record: any) => {
+      const totalCnt =
+        (record.proc1CAL || 0) +
+        (record.proc2CAL || 0) +
+        (record.proc1EGL || 0) +
+        (record.proc2EGL || 0) +
+        (record.proc1CGL || 0) +
+        (record.proc2CGL || 0) +
+        (record.proc1Packing || 0) +
+        (record.proc2Packing || 0);
+
+      console.log('총 합계:', totalCnt);
+      return totalCnt;
+    },
   },
   {
     title: '1CAL',
@@ -188,7 +203,12 @@ export const columnsTable = [
 
 // 공정 별 컬럼 변경 - 추출 기준있는 공정만 넣음 To do 공정 추가 필요
 export const columnsTableConfig: {
-  [key: string]: { title: string; dataIndex: string; key: string }[];
+  [key: string]: {
+    title: string;
+    dataIndex?: string;
+    key: string;
+    render?: (text: number, record: any) => any;
+  }[];
 } = {
   '1PCM': [
     {
@@ -197,9 +217,16 @@ export const columnsTableConfig: {
       key: 'key',
     },
     {
-      title: '총 합계',
-      dataIndex: 'totalCnt',
+      title: '합계',
       key: 'total',
+      render: (_: any, record: any) => {
+        const totalCnt =
+          (record.proc1CAL || 0) +
+          (record.proc2CAL || 0) +
+          (record.proc1Packing || 0) +
+          (record.proc2Packing || 0);
+        return totalCnt;
+      },
     },
     {
       title: '1CAL',
@@ -229,9 +256,16 @@ export const columnsTableConfig: {
       key: 'key',
     },
     {
-      title: '총 합계',
-      dataIndex: 'totalCnt',
+      title: '합계',
       key: 'total',
+      render: (_: any, record: any) => {
+        const totalCnt =
+          (record.proc1CAL || 0) +
+          (record.proc2CAL || 0) +
+          (record.proc1Packing || 0) +
+          (record.proc2Packing || 0);
+        return totalCnt;
+      },
     },
     {
       title: '1CAL',
@@ -261,9 +295,16 @@ export const columnsTableConfig: {
       key: 'key',
     },
     {
-      title: '총 합계',
-      dataIndex: 'totalCnt',
+      title: '합계',
       key: 'total',
+      render: (_: any, record: any) => {
+        const totalCnt =
+          (record.proc1EGL || 0) +
+          (record.proc2EGL || 0) +
+          (record.proc1Packing || 0) +
+          (record.proc2Packing || 0);
+        return totalCnt;
+      },
     },
     {
       title: '1EGL',
@@ -293,9 +334,16 @@ export const columnsTableConfig: {
       key: 'key',
     },
     {
-      title: '총 합계',
-      dataIndex: 'totalCnt',
+      title: '합계',
       key: 'total',
+      render: (_: any, record: any) => {
+        const totalCnt =
+          (record.proc1EGL || 0) +
+          (record.proc2EGL || 0) +
+          (record.proc1Packing || 0) +
+          (record.proc2Packing || 0);
+        return totalCnt;
+      },
     },
     {
       title: '1EGL',
@@ -325,9 +373,17 @@ export const columnsTableConfig: {
       key: 'key',
     },
     {
-      title: '총 합계',
+      title: '합계',
       dataIndex: 'totalCnt',
       key: 'total',
+      render: (_: any, record: any) => {
+        const totalCnt =
+          (record.proc1CGL || 0) +
+          (record.proc2CGL || 0) +
+          (record.proc1Packing || 0) +
+          (record.proc2Packing || 0);
+        return totalCnt;
+      },
     },
     {
       title: '1CGL',
@@ -357,9 +413,17 @@ export const columnsTableConfig: {
       key: 'key',
     },
     {
-      title: '총 합계',
+      title: '합계',
       dataIndex: 'totalCnt',
       key: 'total',
+      render: (_: any, record: any) => {
+        const totalCnt =
+          (record.proc1CGL || 0) +
+          (record.proc2CGL || 0) +
+          (record.proc1Packing || 0) +
+          (record.proc2Packing || 0);
+        return totalCnt;
+      },
     },
     {
       title: '1CGL',
@@ -389,9 +453,14 @@ export const columnsTableConfig: {
       key: 'key',
     },
     {
-      title: '총 합계',
+      title: '합계',
       dataIndex: 'totalCnt',
       key: 'total',
+      render: (_: any, record: any) => {
+        const totalCnt =
+          (record.proc1Packing || 0) + (record.proc2Packing || 0);
+        return totalCnt;
+      },
     },
     {
       title: '1냉연 포장',
@@ -411,9 +480,14 @@ export const columnsTableConfig: {
       key: 'key',
     },
     {
-      title: '총 합계',
+      title: '합계',
       dataIndex: 'totalCnt',
       key: 'total',
+      render: (_: any, record: any) => {
+        const totalCnt =
+          (record.proc1Packing || 0) + (record.proc2Packing || 0);
+        return totalCnt;
+      },
     },
     {
       title: '1냉연 포장',
@@ -434,9 +508,17 @@ export const columnsTableConfig: {
       key: 'key',
     },
     {
-      title: '총 합계',
+      title: '합계',
       dataIndex: 'totalCnt',
       key: 'total',
+      render: (_: any, record: any) => {
+        const totalCnt =
+          (record.proc1CAL || 0) +
+          (record.proc2CAL || 0) +
+          (record.proc1Packing || 0) +
+          (record.proc2Packing || 0);
+        return totalCnt;
+      },
     },
     {
       title: '1CAL',

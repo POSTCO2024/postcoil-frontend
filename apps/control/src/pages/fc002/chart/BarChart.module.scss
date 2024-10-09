@@ -1,0 +1,32 @@
+/* Barchart.module.scss */
+
+.barchartContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 40%;
+  height: 30%;
+
+  h4 {
+    height: 5px;
+    margin: 0;
+  }
+
+  p {
+    font-size: 1.0rem;
+    height: 20px;
+    padding: 0;
+    margin: 0;
+  }
+
+  .chartContainer {
+    // display: flex;
+    // justify-content: center;
+    // width: 100% !important;
+    // height: calc(100% - 100px) !important;
+    width: 250px; // 또는 적절한 너비
+    height: 230px; // 또는 적절한 높이
+    position: relative; // 차트를 가운데 정렬하는 데 필요할 수 있음
+  }
+}

@@ -30,11 +30,12 @@ import {
   useCurrProcessDataFetch,
 } from '@/pages/fc004/useChartData';
 
+const operationApiUrl = import.meta.env.VITE_OPERATION_API_URL;
+const operationBaseUrl = import.meta.env.VITE_OPERATION_BASE_URL;
 const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
 const controlBaseUrl = import.meta.env.VITE_CONTROL_BASE_URL;
 const websocketApiUrl = import.meta.env.VITE_CONTROL_API_URL;
-const operationApiUrl = import.meta.env.VITE_OPERATION_API_URL;
-const operationBaseUrl = import.meta.env.VITE_OPERATION_BASE_URL;
+const websocketBaseUrl = import.meta.env.VITE_WEBSOCKET_CONTROL_BASE;
 
 // Interface
 // API response
@@ -289,7 +290,7 @@ const DashBoard: React.FC = () => {
 
   // 웹소켓
   useEffect(() => {
-    const socket = new SocketJS(`${websocketApiUrl}/ws/control`);
+    const socket = new SocketJS(`${websocketApiUrl}${websocketBaseUrl}`);
     const stompClient = new Client({
       webSocketFactory: () => socket as any,
       debug: (str) => {
