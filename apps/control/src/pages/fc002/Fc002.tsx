@@ -106,13 +106,15 @@ export const Fc002: React.FC = () => {
   const [api, contextHolder] = notification.useNotification();
 
   const openNotification = (placement: NotificationPlacement) => {
-    api.info({
-      message: `${message.currProc} 의 ${message.materialNo} 에`,
-      description: (
-        <Context.Consumer>{() => '비고가 생성되었습니다'}</Context.Consumer>
-      ),
-      placement,
-    });
+    message.length > 0
+      ? api.info({
+          message: `${message.currProc} 의 ${message.materialNo} 에`,
+          description: (
+            <Context.Consumer>{() => '비고가 생성되었습니다'}</Context.Consumer>
+          ),
+          placement,
+        })
+      : null;
   };
 
   const contextValue = useMemo(() => ({ name: 'Ant Design' }), []);
