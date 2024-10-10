@@ -74,6 +74,7 @@ const DraggableChart = ({ chartName }: PropsType) => {
       console.log('chart transformed', transformed);
     } else {
       setData([]);
+      console.log('chart 데이터 없음');
     }
   }, [materialData]); // materialData가 변경될 때마다 실행
 

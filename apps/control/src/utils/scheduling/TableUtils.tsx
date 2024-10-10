@@ -82,19 +82,21 @@ export const materialColumnData: ColumnDataType<MaterialDataType>[] = [
       filters: [
         {
           text: 'CGL',
-          value: '1CGL' || '2CGL',
+          value: ['1CGL', '2CGL'],
         },
         {
           text: 'EGL',
-          value: '1EGL' || '2EGL',
+          value: ['1EGL', '2EGL'],
         },
         {
           text: '포장',
-          value: '101' || '201',
+          value: ['101', '201'],
         },
       ],
-      onFilter: (value: string, record: { nextProc: string[] }) =>
-        record.nextProc.indexOf(value) === 0,
+      onFilter: (value: string[], record: { nextProc: string[] }) => {
+        // 배열의 교집합을 구해서 필터링
+        return value.some((item) => record.nextProc.includes(item));
+      },
     },
   },
 ];

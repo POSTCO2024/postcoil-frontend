@@ -1,6 +1,6 @@
 import { Tab } from '@postcoil/ui';
 import { Button } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Charts from './pending/Charts';
 import SchListModal from './pending/SchListModal';
@@ -8,11 +8,15 @@ import styles from './SchPePage.module.scss';
 
 import ContentContainer from '@/pages/fs002/pending/ContentContainer';
 import FilterContainer from '@/pages/fs002/pending/FilterContainer';
-import { useMaterialStore } from '@/store/fs002store';
+import { useMaterialStore, useScheduleStore } from '@/store/fs002store';
 
 const SchPePage = () => {
   const data = useMaterialStore((state) => state.data);
   const resetData = useMaterialStore((state) => state.resetData)!;
+  const cleanScheduleData = useScheduleStore((state) => state.cleanData!); // cleanData 함수 추가
+  const cleanMaterialData = useMaterialStore((state) => state.cleanData!); // cleanData 함수 추가
+
+  const [first, setFirst] = useState(0);
 
   const [isGraphVisible, setIsGraphVisible] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,6 +37,19 @@ const SchPePage = () => {
   const handleReset = () => {
     resetData();
   };
+
+  useEffect(() => {
+    setFirst(1);
+
+    return () => {
+      if (first === 1) {
+        console.log('페이지 떠나기');
+        cleanScheduleData();
+        cleanMaterialData();
+        setFirst(0);
+      }
+    };
+  }, []);
 
   return (
     <div className={styles.page}>

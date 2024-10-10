@@ -178,9 +178,10 @@ const SchListModal = ({ isModalOpen, onApply, onCancel }: PropsType) => {
               delete updatedOriginalCache[planId];
             });
 
+            // 새로운 객체를 반환하여 참조 변경
             return {
-              cache: updatedCache,
-              originalCache: updatedOriginalCache,
+              cache: { ...updatedCache }, // 새로운 객체 생성
+              originalCache: { ...updatedOriginalCache }, // 새로운 객체 생성
             };
           });
         }); // 결과 console에서 보려고

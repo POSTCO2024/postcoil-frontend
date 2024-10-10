@@ -24,7 +24,7 @@ export const transformedDataToDraggableChartData = (
     x: item.sequence as number,
     id: item.id as string,
     changed: item.changed,
-    color: item.changed ? '#b3b3b3' : '#F1655E',
+    color: item.changed ? '#6464ff' : '#7da2f5',
   }));
 };
 
@@ -47,7 +47,7 @@ export const transformedDataToTimelineChartData = (
     z: item.expectedItemDuration as number,
     x: item.sequence as number,
     id: item.id as string,
-    color: item.isRejected === 'Y' ? '#ff9382' : 'lightgray',
+    color: item.isRejected === 'Y' ? '#F1655E' : '#b3b3b3',
   }));
 };
 
