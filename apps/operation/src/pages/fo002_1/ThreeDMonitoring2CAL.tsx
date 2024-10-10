@@ -66,7 +66,7 @@ class App {
   // private selectedMeshInfo: string = ''; // 클릭된 메쉬 정보를 저장
   private actions: THREE.AnimationAction[] = []; // 애니메이션 액션을 저장할 배열
 
-  constructor(data: any) {
+  constructor(data: any[]) {
     this.divContainer = document.querySelector('#webgl-container');
     this.infoDiv = document.querySelector('#mesh-info'); // 선택된 Mesh 정보를 표시할 div 선택
     this.cameras = [];
@@ -108,6 +108,7 @@ class App {
   setAnimationEnabled(enabled: boolean) {
     if (this.mixer) {
       this.mixer.timeScale = enabled ? 1 : 0; // timeScale을 조절하여 애니메이션 재생/정지
+      this.animationEnabled = true;
       console.log(`Animation enabled: ${enabled}`);
     }
   }
@@ -184,10 +185,11 @@ class App {
     // this.fps = stats;
   }
 
-  private setupModel(data: any) {
+  private setupModel(data: any[]) {
     new GLTFLoader().load('./postco.glb', (gltf) => {
       const model = gltf.scene;
       this.scene.add(model);
+
       const numCoils = data.length;
       // 1. Handle 'SchCoil' objects (SchCoil1, SchCoil2, ...)
       const schCoils = []; // Array to store SchCoil objects
@@ -221,8 +223,6 @@ class App {
           subCoil.visible = false; // schCoils에서만 다 처리되는 경우 subCoils는 숨김
         });
       }
-
-      console.log(data);
       model.traverse((child) => {
         if (child instanceof THREE.Mesh) {
           child.geometry.computeVertexNormals();
@@ -446,7 +446,6 @@ class App {
   // 클리핑 플레인 업데이트 함수
   private updateClippingPlanes(deltaTime: number, time: number) {
     if (!this.animationEnabled) return; // 애니메이션이 활성화되지 않은 경우 클리핑 플레인 업데이트 중단
-
     if (clipPlaneX && clipPlaneX.constant < 300) {
       clipPlaneX.constant += deltaTime * clipSpeed * clipDirection;
     }

@@ -57,6 +57,8 @@ class App {
   private controls2!: OrbitControls;
   private controls3!: OrbitControls;
   private controls4!: OrbitControls;
+  private animationEnabled: boolean = false; // 애니메이션 활성화 상태
+
   // private boxHelper: THREE.BoxHelper | null = null;
   // private model: THREE.Object3D | null = null;
   // private box: THREE.Box3 | null = null;
@@ -71,6 +73,9 @@ class App {
   // private schCoils: THREE.Object3D[] = [];
 
   constructor(coilItems: any[]) {
+    if (coilItems.length != 0) {
+      this.animationEnabled = true;
+    }
     this.divContainer = document.querySelector('#webgl-container');
     this.infoDiv = document.querySelector('#mesh-info'); // 선택된 Mesh 정보를 표시할 div 선택
     this.cameras = [];
@@ -235,12 +240,6 @@ class App {
               side: THREE.DoubleSide,
             });
           }
-          // else {
-          //   child.material = new THREE.MeshBasicMaterial({
-          //     color: child.material.color || 0xffffff,
-          //     side: THREE.DoubleSide,
-          //   });
-          // }
 
           if (child.name === 'Plane001') {
             console.log('find!');
@@ -453,23 +452,9 @@ class App {
       this.isExpectedDurationActive = false;
     }
   }
-  update(time: number) {
-    time *= 0.001;
-    const deltaTime = this.clock.getDelta() / 2;
-    time += 1;
-    if (this.mixer) {
-      this.mixer.update(deltaTime);
-    }
-
-    // expectedDuration이 진행 중이면 경과 시간을 업데이트
-    if (this.isExpectedDurationActive) {
-      this.expectedDurationElapsedTime += deltaTime;
-      if (this.expectedDurationElapsedTime >= this.expectedDuration) {
-        // expectedDuration 시간이 지나면 기본 속도로 변경
-        this.resetAnimationSpeed();
-      }
-    }
-
+  // 클리핑 플레인 업데이트 함수
+  private updateClippingPlanes(deltaTime: number, time: number) {
+    if (!this.animationEnabled) return; // 애니메이션이 활성화되지 않은 경우 클리핑 플레인 업데이트 중단
     if (clipPlaneX && clipPlaneX.constant < 300) {
       clipPlaneX.constant += deltaTime * clipSpeed * clipDirection;
     }
@@ -491,6 +476,46 @@ class App {
         clipPlaneX3.constant -= deltaTime * clipSpeed;
       }
     }
+  }
+  update(time: number) {
+    time *= 0.001;
+    const deltaTime = this.clock.getDelta();
+    time += 1;
+    if (this.mixer) {
+      this.mixer.update(deltaTime);
+    }
+    this.updateClippingPlanes(deltaTime, time);
+
+    // // expectedDuration이 진행 중이면 경과 시간을 업데이트
+    // if (this.isExpectedDurationActive) {
+    //   this.expectedDurationElapsedTime += deltaTime;
+    //   if (this.expectedDurationElapsedTime >= this.expectedDuration) {
+    //     // expectedDuration 시간이 지나면 기본 속도로 변경
+    //     this.resetAnimationSpeed();
+    //   }
+    // }
+
+    // if (clipPlaneX && clipPlaneX.constant < 300) {
+    //   clipPlaneX.constant += deltaTime * clipSpeed * clipDirection;
+    // }
+
+    // if (clipPlaneX2 && time > 21) {
+    //   const timeInCycle = (time - 21) % 40;
+    //   if (timeInCycle <= 21 && clipPlaneX2.constant < 20) {
+    //     clipPlaneX2.constant += deltaTime * clipSpeed;
+    //   } else if (clipPlaneX2.constant > 5) {
+    //     clipPlaneX2.constant -= deltaTime * clipSpeed;
+    //   }
+    // }
+
+    // if (clipPlaneX3 && time > 44) {
+    //   const timeInCycle = (time - 44) % 40;
+    //   if (timeInCycle <= 20 && clipPlaneX3.constant < 320) {
+    //     clipPlaneX3.constant += deltaTime * clipSpeed;
+    //   } else if (clipPlaneX3.constant > 290) {
+    //     clipPlaneX3.constant -= deltaTime * clipSpeed;
+    //   }
+    // }
 
     timePassed += deltaTime;
 
@@ -603,6 +628,11 @@ interface WorkInstruction extends DataType {
 
 interface WorkInstructionItem extends DataType {
   itemId: number;
+  materialId: number;
+  goalThickness: number;
+  goalWidth: number;
+  currWidth: number;
+  currThickness: number;
   expectedItemDuration: number;
 }
 const ThreeDSimulator = () => {
@@ -653,7 +683,11 @@ const ThreeDSimulator = () => {
       const { result } = response.data;
       const coilData = result.map(
         (item: WorkInstructionItem): Record<string, any> => ({
-          itemId: item.sequence,
+          itemId: item.materialId,
+          goalThickness: item.initialGoalThickness,
+          goalWidth: item.initialGoalWidth,
+          currThickness: item.initialThickness,
+          currWidth: item.initialWidth,
           expectedItemDuration: item.expectedItemDuration,
         }),
       );
@@ -727,6 +761,26 @@ const ThreeDSimulator = () => {
       title: '코일 ID',
       dataIndex: 'itemId',
       key: 'itemId',
+    },
+    {
+      title: '현재 폭',
+      dataIndex: 'currWidth',
+      key: 'currWidth',
+    },
+    {
+      title: '현재 두께',
+      dataIndex: 'currThickness',
+      key: 'currThickness',
+    },
+    {
+      title: '목표 폭',
+      dataIndex: 'goalWidth',
+      key: 'goalWidth',
+    },
+    {
+      title: '목표 두께',
+      dataIndex: 'goalThickness',
+      key: 'goalThickness',
     },
     {
       title: '예상시간',

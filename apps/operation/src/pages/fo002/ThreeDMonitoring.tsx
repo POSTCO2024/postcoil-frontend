@@ -108,6 +108,7 @@ class App {
   setAnimationEnabled(enabled: boolean) {
     if (this.mixer) {
       this.mixer.timeScale = enabled ? 1 : 0; // timeScale을 조절하여 애니메이션 재생/정지
+      this.animationEnabled = true;
       console.log(`Animation enabled: ${enabled}`);
     }
   }
@@ -445,7 +446,6 @@ class App {
   // 클리핑 플레인 업데이트 함수
   private updateClippingPlanes(deltaTime: number, time: number) {
     if (!this.animationEnabled) return; // 애니메이션이 활성화되지 않은 경우 클리핑 플레인 업데이트 중단
-
     if (clipPlaneX && clipPlaneX.constant < 300) {
       clipPlaneX.constant += deltaTime * clipSpeed * clipDirection;
     }
