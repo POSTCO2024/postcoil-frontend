@@ -15,10 +15,25 @@ import {
 const SchRPage = () => {
   const [isGraphVisible, setIsGraphVisible] = useState(true);
   const fetchData = useWorkInstructionStore((state) => state.fetchData!);
+  const cleanWorkInstructionData = useWorkInstructionStore(
+    (state) => state.cleanData!,
+  ); // cleanData 함수 추가
+
+  const [first, setFirst] = useState(0);
 
   useEffect(() => {
     initializeWebSocket(); // 웹소켓 초기화
     fetchData(['1CAL']);
+
+    setFirst(1);
+
+    return () => {
+      if (first === 1) {
+        console.log('페이지 떠나기');
+        cleanWorkInstructionData();
+        setFirst(0);
+      }
+    };
   }, []);
 
   const handleTabChange = () => {

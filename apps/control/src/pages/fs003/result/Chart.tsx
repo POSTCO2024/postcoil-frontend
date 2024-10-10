@@ -219,7 +219,7 @@ const Chart = ({ chartName }: PropsType) => {
         chart.destroy();
       }
     };
-  }, [data]);
+  }, [data, coilSupplyData]);
   //   return () => {
   //     // 컴포넌트 언마운트 시 차트를 해제
   //     if (chart) {

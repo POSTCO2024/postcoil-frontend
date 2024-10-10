@@ -1,5 +1,5 @@
 import { Dropdown } from '@postcoil/ui';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import styles from './FilterContainer.module.scss';
 
@@ -24,7 +24,7 @@ const FilterContainer = () => {
   const [selectedRollUnit, setSelectedRollUnit] = useState<string[]>([]); // 선택된 롤 단위명 상태 추가
   const [selectedProcessCode, setSelectedProcessCode] = useState<string[]>([]); // 공정명 선택으로 인한 스케줄명 재세팅을 위한 상태
   // const [isFirst, setIsFirst] = useState(true); // 첫 번째 렌더링인지 확인하기 위한 ref
-  const isFirst = useRef(true);
+  // const isFirst = useRef(true);
 
   const handleProcessCode = (value?: string[]) => {
     if (value && value[0] !== '') {
@@ -48,58 +48,84 @@ const FilterContainer = () => {
       cleanMaterialData();
     }
   };
-
+  // useEffect(() => {
+  //   return () => {
+  //     console.log('페이지 떠나기');
+  //     cleanScheduleData();
+  //     cleanMaterialData();
+  //   };
+  // }, []);
   useEffect(() => {
-    if (isFirst.current) {
-      if (scheduleData && scheduleData.length > 0) {
-        // Schedule data가 있을 경우
-      } else {
-        // 기본값 세팅
-
-        const initializeData = async () => {
-          setSelectedProcessCode(['1CAL']);
-          await fetchScheduleData(['1CAL']);
-        };
-        initializeData();
-      }
+    console.log('---처음 filter 시작----');
+    console.log('materialData', materialData);
+    console.log('scheduleData', scheduleData);
+    console.log('---처음 filter 끝----');
+    if (!scheduleData || scheduleData.length === 0) {
+      //  기본값 세팅
+      const initializeData = async () => {
+        setSelectedProcessCode(['1CAL']);
+        await fetchScheduleData(['1CAL']);
+      };
+      initializeData();
+      console.log('기본값 세팅');
     }
-
-    // Cleanup 함수
-    return () => {
-      cleanScheduleData();
-      cleanMaterialData();
-      isFirst.current = true;
-    };
+    // return () => {
+    //   console.log('페이지 떠나기');
+    //   cleanScheduleData();
+    //   cleanMaterialData();
+    // };
   }, []); // scheduleData 및 materialData가 변경될 때만 실행
 
   useEffect(() => {
-    if (isFirst && scheduleData && scheduleData.length > 0) {
-      const newRollUnitOptions = scheduleData.map((d) => ({
-        value: d.id,
-        label: d.scheduleNo,
-      }));
-      setRollUnitOptions(newRollUnitOptions);
-      if (materialData && materialData.length > 0) {
-        setRollUnitOptions(
-          scheduleData.map((d) => ({ value: d.id, label: d.scheduleNo })),
-        );
-        setSelectedRollUnit([scheduleNo]);
-        setSelectedProcessCode([processCode]);
-        return;
-      } else {
-        setSelectedRollUnit([scheduleData[0].scheduleNo]);
-        fetchMaterialData([scheduleData[0].id]);
-      }
-
-      isFirst.current = false;
-    } else if (!isFirst.current && scheduleData && scheduleData.length > 0) {
-      if (materialData && materialData.length > 0) {
-        setRollUnitOptions(
-          scheduleData.map((d) => ({ value: d.id, label: d.scheduleNo })),
-        );
-      }
+    console.log(materialData, scheduleData);
+    if (scheduleData && scheduleData.length > 0 && !materialData) {
+      console.log('scheduleData');
+      setRollUnitOptions(
+        scheduleData.map((d) => ({ value: d.id, label: d.scheduleNo })),
+      );
+      setSelectedProcessCode([processCode]);
+      setSelectedRollUnit([scheduleData[0].scheduleNo]);
+      fetchMaterialData([scheduleData[0].id]);
+    } else if (
+      scheduleData &&
+      scheduleData.length > 0 &&
+      materialData &&
+      materialData.length > 0
+    ) {
+      console.log('materialData');
+      console.log(processCode, scheduleNo);
+      setRollUnitOptions(
+        scheduleData.map((d) => ({ value: d.id, label: d.scheduleNo })),
+      );
+      setSelectedProcessCode([processCode]);
+      setSelectedRollUnit([scheduleNo]);
+    } else {
+      console.log('sch.. 3');
+      console.log('materialData', materialData);
+      console.log('scheduleData', scheduleData);
+      console.log('--------------');
+      // setRollUnitOptions([]);
+      // setSelectedRollUnit([]);
+      // cleanMaterialData();
     }
   }, [scheduleData]); // scheduleData가 변경될 때마다 실행
+
+  useEffect(() => {
+    if (materialData && materialData.length > 0) {
+      // console.log('materialData');
+      // setRollUnitOptions(
+      //   scheduleData.map((d) => ({ value: d.id, label: d.scheduleNo })),
+      // );
+      // setSelectedRollUnit([scheduleNo]);
+      // setSelectedProcessCode([processCode]);
+    } else if (scheduleData && scheduleData.length > 0) {
+      // setSelectedProcessCode([processCode]);
+      // setSelectedRollUnit([scheduleData[0].scheduleNo]);
+      // fetchMaterialData([scheduleData[0].id]);
+    } else {
+      // setSelectedRollUnit([]);
+    }
+  }, [materialData]);
 
   // useEffect(() => {
   //   console.log('useEffect 첫 렌더링시');

@@ -1,4 +1,5 @@
 import { ColumnDataType } from '@postcoil/ui/config/TableConfig';
+
 import { Fc002DataType } from '@/config/control/fc002Config';
 
 // Table Columns
@@ -8,6 +9,7 @@ export const columnsData: ColumnDataType<Fc002DataType>[] = [
     dataIndex: 'index',
     key: 'index',
     fixed: true,
+    width: 50,
     render: (_: any, __: any, index: number) => index + 1,
   },
   {
@@ -26,21 +28,25 @@ export const columnsData: ColumnDataType<Fc002DataType>[] = [
     title: '공장 코드',
     dataIndex: 'factoryCode',
     key: 'factory_code',
+    width: 90,
   },
   {
     title: '재료 유형',
     dataIndex: 'materialType',
     key: 'material_type',
+    width: 90,
   },
   {
     title: '조업 코드',
     dataIndex: 'opCode',
     key: 'op_code',
+    width: 90,
   },
   {
     title: '재료 진도',
     dataIndex: 'progress',
     key: 'progress',
+    width: 90,
   },
   // {
   //   title: '진행 진도',
@@ -66,6 +72,7 @@ export const columnsData: ColumnDataType<Fc002DataType>[] = [
     title: '단중(kg/m)',
     dataIndex: 'weight',
     key: 'weight',
+    width: 120,
   },
   {
     title: '계획 공정',
@@ -151,6 +158,7 @@ export const columnsData: ColumnDataType<Fc002DataType>[] = [
     key: 'remarks',
     fixed: 'right',
     render: (text: string) => (text === 'null' ? '' : text),
+    // width: 90,
   },
 ];
 

@@ -13,6 +13,9 @@ import {
 
 const ContentContainer = () => {
   const materialData = useWorkInstructionStore((state) => state.workItems);
+  const coilSupplyData = useWorkInstructionStore(
+    (state) => state.coilSupplyData!,
+  );
 
   const [dataSource, setDataSource] = useState<MaterialDataType[]>([]);
 
@@ -24,7 +27,7 @@ const ContentContainer = () => {
     } else {
       setDataSource([]);
     }
-  }, [materialData]); // materialData가 변경될 때마다 실행
+  }, [materialData, coilSupplyData]); // materialData가 변경될 때마다 실행
 
   return (
     <div className={styles.contentContainer}>

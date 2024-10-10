@@ -96,18 +96,35 @@ const FilterContainer = () => {
   //     setSelectedRollUnitName([selectedData[0].workInstructions.scheduleNo]);
   //   }
   // }, [selectedData]);
+
+  // ver_241010
+  // useEffect(() => {
+  //   if (selectedData && selectedData.length > 0) {
+  //     console.log('selectedData: ', selectedData);
+  //     // setProcessCode([
+  //     //   selectedProcessCode !== '' ? selectedProcessCode : '1CAL',
+  //     // ]);
+  //     setScheduleNoList(generateDynamicRollUnitOptions(selectedData));
+  //     setSelectedRollUnitName([selectedData[0].workInstructions.scheduleNo]);
+  //   } else if (!selectedData) {
+  //     setProcessCode(['1CAL']);
+  //     fetchData(['1CAL']);
+  //   }
+  // }, [selectedData]);
+
   useEffect(() => {
     if (selectedData && selectedData.length > 0) {
-      console.log('selectedData: ', selectedData);
-      // setProcessCode([
-      //   selectedProcessCode !== '' ? selectedProcessCode : '1CAL',
-      // ]);
+      setProcessCode([
+        selectedProcessCode !== '' ? selectedProcessCode : '1CAL',
+      ]);
       setScheduleNoList(generateDynamicRollUnitOptions(selectedData));
       setSelectedRollUnitName([selectedData[0].workInstructions.scheduleNo]);
-    } else if (!selectedData) {
-      setProcessCode(['1CAL']);
-      fetchData(['1CAL']);
+    } else {
+      setProcessCode([]);
+      setSelectedRollUnitName([]);
     }
+
+    console.log('filtercontainer3', selectedData);
   }, [selectedData]);
 
   const handleProcessCode = (value?: string[]) => {

@@ -108,7 +108,10 @@ export const useMaterialStore = create<StoreType>((set) => ({
       return {
         ...state,
         data: updatedData,
-        cache: { ...state.cache, [newData[0].schedulePlanId]: updatedData },
+        cache: {
+          ...state.cache,
+          [newData[0].schedulePlanId]: updatedData,
+        },
       };
     }),
   resetData: () =>
@@ -128,8 +131,8 @@ export const useMaterialStore = create<StoreType>((set) => ({
 
         return {
           ...state,
-          data: originalData, // data를 originalCache의 값으로 설정
-          cache: { ...state.cache, [schedulePlanId]: originalData }, // 캐시도 업데이트
+          data: { ...originalData }, // data를 originalCache의 값으로 설정
+          cache: { ...state.cache, [schedulePlanId]: { ...originalData } }, // 캐시도 업데이트
         };
       }
       return state; // 해당 `schedulePlanId`에 맞는 데이터를 찾지 못한 경우 상태를 그대로 유지
