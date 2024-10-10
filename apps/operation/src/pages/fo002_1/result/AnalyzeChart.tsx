@@ -8,6 +8,7 @@ import styles from './AnalyzeChart.module.scss';
 import AnalyzeChartBlock from './AnalyzeChartBlock';
 
 import { CoilSupplyDTO } from '@/config/dto';
+import { WorkItemDTO } from '@/config/dto';
 import { useWorkInstructionStore } from '@/store/fo001store';
 import { schCoilColumnData } from '@/utils/tableUtils';
 
@@ -18,6 +19,24 @@ export const AnalyzeChart = () => {
   // 필요한 상태를 구독합니다.
   const workItems = useWorkInstructionStore((state) => state.workItems);
   const scheduleNo = useWorkInstructionStore((state) => state.scheduleNo);
+  interface DataType {
+    [key: string]: any;
+  }
+
+  // WorkItemDTO를 DataType으로 변환하는 함수
+  const transformWorkItemsToDataType = (
+    workItems: WorkItemDTO[],
+  ): DataType[] => {
+    return workItems.map((item) => ({
+      materialNo: item.materialNo,
+      sequence: item.sequence,
+      initialThickness: item.initialThickness,
+      initialWidth: item.initialWidth,
+      initialGoalThickness: item.initialGoalThickness,
+      initialGoalWidth: item.initialGoalWidth,
+    }));
+  };
+
   const scExpectedDuration = useWorkInstructionStore(
     (state) => state.scExpectedDuration!,
   );
@@ -127,7 +146,7 @@ export const AnalyzeChart = () => {
           <div className={styles.coilTypeFrame}>
             <Table
               columns={schCoilColumnData}
-              data={workItems ?? []}
+              data={workItems ? transformWorkItemsToDataType(workItems) : []} // null/undefined 처리
               size="small"
             />
           </div>
