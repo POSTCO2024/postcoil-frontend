@@ -1,5 +1,5 @@
 import { Dropdown } from '@postcoil/ui';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import styles from './FilterContainer.module.scss';
 
@@ -24,7 +24,7 @@ const FilterContainer = () => {
   const [selectedRollUnit, setSelectedRollUnit] = useState<string[]>([]); // 선택된 롤 단위명 상태 추가
   const [selectedProcessCode, setSelectedProcessCode] = useState<string[]>([]); // 공정명 선택으로 인한 스케줄명 재세팅을 위한 상태
   // const [isFirst, setIsFirst] = useState(true); // 첫 번째 렌더링인지 확인하기 위한 ref
-  const isFirst = useRef(true);
+  // const isFirst = useRef(true);
 
   const handleProcessCode = (value?: string[]) => {
     if (value && value[0] !== '') {
