@@ -9,12 +9,7 @@ import AnalyzeChartBlock from './AnalyzeChartBlock';
 
 import { CoilSupplyDTO } from '@/config/dto';
 import { useWorkInstructionStore } from '@/store/fo001store';
-import { mockCoilTypeCodeData } from '@/utils/mockWorkInstruction';
-import {
-  coilTypeColumnData,
-  schCoilColumnData,
-  transformedCoilTypeCodeData,
-} from '@/utils/tableUtils';
+import { schCoilColumnData } from '@/utils/tableUtils';
 
 // duration 플러그인을 dayjs에 등록
 dayjs.extend(duration);
@@ -26,9 +21,7 @@ export const AnalyzeChart = () => {
   const scExpectedDuration = useWorkInstructionStore(
     (state) => state.scExpectedDuration!,
   );
-  const countCoilTypeCode = useWorkInstructionStore(
-    (state) => state.countCoilTypeCode,
-  );
+
   const startTime = useWorkInstructionStore(
     (state) => state.scheduleStartTime, // 선택된 schedule의 시작 시간
   );
@@ -58,10 +51,6 @@ export const AnalyzeChart = () => {
   const pendingSuppliedCoils = totalCoils - totalRejects - newSuppliedCoils; // 보급 예정
 
   const pendingProgressedCoils = newSuppliedCoils - totalProgressed; // 작업 예정
-
-  // const coiTypeCodeData = countCoilTypeCode
-  //   ? transformedCoilTypeCodeData(countCoilTypeCode)
-  //   : mockCoilTypeCodeData;
 
   const [timeDifference, setTimeDifference] = useState(0);
   useEffect(() => {
