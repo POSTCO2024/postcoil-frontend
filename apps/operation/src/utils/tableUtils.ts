@@ -89,6 +89,22 @@ export const coilTypeColumnData = [
   { title: '품종', dataIndex: 'type', key: 'type' },
   { title: '개수', dataIndex: 'count', key: 'count' },
 ];
+export const schCoilColumnData = [
+  { title: '코일ID', dataIndex: 'materialNo', key: 'materialNo' }, // materialNo로 수정
+  { title: '순번', dataIndex: 'sequence', key: 'sequence' }, // sequence로 수정
+  {
+    title: '초기 두께',
+    dataIndex: 'initialThickness',
+    key: 'initialThickness',
+  }, // 초기 두께
+  { title: '초기 폭', dataIndex: 'initialWidth', key: 'initialWidth' }, // 초기 폭
+  {
+    title: '목표 두께',
+    dataIndex: 'initialGoalThickness',
+    key: 'initialGoalThickness',
+  }, // 최종 두께
+  { title: '목표 폭', dataIndex: 'initialGoalWidth', key: 'initialGoalWidth' }, // 최종 폭
+];
 
 export const workItemColumnData: ColumnDataType<MaterialDataType>[] = [
   {

@@ -12,6 +12,7 @@ import { useWorkInstructionStore } from '@/store/fo001store';
 import { mockCoilTypeCodeData } from '@/utils/mockWorkInstruction';
 import {
   coilTypeColumnData,
+  schCoilColumnData,
   transformedCoilTypeCodeData,
 } from '@/utils/tableUtils';
 
@@ -58,12 +59,11 @@ export const AnalyzeChart = () => {
 
   const pendingProgressedCoils = newSuppliedCoils - totalProgressed; // 작업 예정
 
-  const coiTypeCodeData = countCoilTypeCode
-    ? transformedCoilTypeCodeData(countCoilTypeCode)
-    : mockCoilTypeCodeData;
+  // const coiTypeCodeData = countCoilTypeCode
+  //   ? transformedCoilTypeCodeData(countCoilTypeCode)
+  //   : mockCoilTypeCodeData;
 
   const [timeDifference, setTimeDifference] = useState(0);
-
   useEffect(() => {
     // 주어진 startTime을 dayjs 객체로 변환
     const start = dayjs(startTime);
@@ -137,8 +137,8 @@ export const AnalyzeChart = () => {
           />
           <div className={styles.coilTypeFrame}>
             <Table
-              columns={coilTypeColumnData}
-              data={coiTypeCodeData}
+              columns={schCoilColumnData}
+              data={workItems ?? []}
               size="small"
             />
           </div>
