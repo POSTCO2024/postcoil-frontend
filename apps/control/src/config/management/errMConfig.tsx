@@ -1,13 +1,13 @@
 import { Tag } from 'antd';
 
-export const facilitycolumn = [
+export const errFacilitycolumn = [
   {
     title: '공정명',
     dataIndex: 'facilityId',
   },
 ];
 
-export const facilityErrColumn = [
+export const errFacilityErrColumn = [
   {
     title: '설비사양 에러',
     dataIndex: 'columnName',
@@ -16,10 +16,18 @@ export const facilityErrColumn = [
     title: '값',
     dataIndex: 'value',
     render: (text: string) => (
-      <>
-        {text}&ensp;&ensp;&ensp;
-        {<Tag color="blue">mm</Tag>}
-      </>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          width: '100%',
+          justifyContent: 'space-between',
+        }}>
+        <div>{text}</div>
+        <div style={{ marginRight: '45%' }}>
+          <Tag color="blue">mm</Tag>
+        </div>
+      </div>
     ),
   },
 ];
@@ -48,7 +56,7 @@ export const infoErrColumn = [
   },
 ];
 
-export const facilityData = [
+export const errFacilityData = [
   { key: '1', id: '1', facilityId: '1PCM' },
   { key: '2', id: '2', facilityId: '2PCM' },
   { key: '3', id: '3', facilityId: '1CAL' },
@@ -79,7 +87,7 @@ export const facilityData = [
 //   { key: '5', id: '5', columnName: '품명', value: 'NULL' },
 // ];
 
-export const columnMapping: { [key: string]: string } = {
+export const errColumnMapping: { [key: string]: string } = {
   max_width: '최대폭',
   min_width: '최소폭',
   max_thickness: '최대두께',
@@ -91,7 +99,7 @@ export const columnMapping: { [key: string]: string } = {
   roll_unit: '품명',
 };
 
-export const keyMapping: { [key: string]: string } = {
+export const errKeyMapping: { [key: string]: string } = {
   최대폭: 'maxWidth',
   최소폭: 'minWidth',
   최대두께: 'maxThickness',

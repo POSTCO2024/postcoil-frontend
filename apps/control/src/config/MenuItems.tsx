@@ -52,8 +52,7 @@ export const MenuItems: MenuItem[] = [
     icon: <SettingOutlined />,
     label: '기준 관리',
     children: [
-      { key: '31', label: <Link to="/manage1">추출기준 관리</Link> },
-      { key: '32', label: <Link to="/manage2">에러기준 관리</Link> },
+      { key: '32', label: <Link to="/manage2">추출, 에러기준 관리</Link> },
       { key: '33', label: <Link to="/manage3">스케줄기준 관리 </Link> },
     ],
   },

@@ -1,8 +1,9 @@
-import { Table, ConfigProvider } from 'antd';
+import { Table } from 'antd';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 
 import styles from './ExtMPage.module.scss';
+// import FilterContainer from './extraction/FilterContainer';
 import Result from './extraction/Result';
 
 import {
@@ -98,27 +99,19 @@ const ExtMPage = () => {
   return (
     <div className={styles.page}>
       <h1>작업대상재 기준 관리</h1>
+      {/* <FilterContainer /> */}
       <div className={styles.frame}>
         <div className={styles.facility}>
-          <ConfigProvider
-            theme={{
-              components: {
-                Table: {
-                  rowHoverBg: '#eff4ff',
-                },
-              },
-            }}>
-            <Table
-              columns={columnData}
-              dataSource={facilityData}
-              pagination={false}
-              // 인수에 rowIndex를 넣어서, 표 기준 index를 가져올 수 있음
-              onRow={(record) => ({
-                onClick: () => handleRowClick(record),
-              })}
-              rowClassName={setClassName}
-            />
-          </ConfigProvider>
+          <Table
+            columns={columnData}
+            dataSource={facilityData}
+            pagination={false}
+            // 인수에 rowIndex를 넣어서, 표 기준 index를 가져올 수 있음
+            onRow={(record) => ({
+              onClick: () => handleRowClick(record),
+            })}
+            rowClassName={setClassName}
+          />
           {/* <Result title="에러기준" data={outlierCriteria} /> */}
         </div>
 

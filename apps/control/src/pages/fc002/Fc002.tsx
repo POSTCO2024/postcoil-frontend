@@ -1,25 +1,24 @@
 import { Table } from '@postcoil/ui';
-import { Table as AntTable } from 'antd';
 import { Client } from '@stomp/stompjs';
-import { Button, notification, Space } from 'antd';
+import { Table as AntTable } from 'antd';
+import { Button, notification } from 'antd';
 import type { NotificationArgsProps } from 'antd';
-import { TopBar } from './topBar/TopBar';
-import Barchart from './chart/Barchart';
-
 import axios from 'axios';
 import React, { useState, useEffect, useMemo } from 'react';
 import SockJS from 'sockjs-client';
 
+import { calculateFrequency } from './CalculateFrequencies';
+import Barchart from './chart/Barchart';
 import styles from './Fc002.module.scss';
-import {
-  facilityErrColumn,
-  columnMapping,
-} from '@/config/management/errMConfig';
+import { TopBar } from './topBar/TopBar';
 
 import CommonModal from '@/components/common/CommonModal';
+import {
+  errFacilityErrColumn,
+  errColumnMapping,
+} from '@/config/management/errMConfig';
 import { columnsData } from '@/utils/control/fc002Utils';
 import { transformData, ApiResponseItem } from '@/utils/control/transformData';
-import { calculateFrequency } from './CalculateFrequencies';
 
 // URL
 const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
@@ -260,8 +259,6 @@ export const Fc002: React.FC = () => {
     };
   }, []);
 
-  useEffect(() => openNotification('topRight'), [message]);
-
   // 에러기준
   useEffect(() => {
     if (selectedProcessCode) {
@@ -275,7 +272,7 @@ export const Fc002: React.FC = () => {
       const data = await getErrorStandard(selectedFacility);
       const transformedData = data.map((item: any, index: number) => ({
         key: (index + 1).toString(),
-        columnName: columnMapping[item.columnName],
+        columnName: errColumnMapping[item.columnName],
         value: item.columnValue ?? '미지정', // null일 경우 '미지정'으로 처리
         mapperId: item.id,
       }));
@@ -333,12 +330,14 @@ export const Fc002: React.FC = () => {
     });
   }, [coilTypeFrequency, customerNameFrequency]); // 주의: 종속성 배열에 추가해야 함
 
+  useEffect(() => {
+    if (message && Object.keys(message).length > 0 && message.materialNo) {
+      openNotification('topRight');
+    }
+  }, [message]);
   return (
     <div className={styles.boardContainer}>
-      <Context.Provider value={contextValue}>
-        {contextHolder}
-        <Space></Space>
-      </Context.Provider>
+      <Context.Provider value={contextValue}>{contextHolder}</Context.Provider>
       <h1>공정별 에러재 관리</h1>
       <TopBar
         onProcessChange={handleDropdownChange}
@@ -420,7 +419,7 @@ export const Fc002: React.FC = () => {
             }}>
             <h6>에러 기준</h6>
             <AntTable
-              columns={facilityErrColumn}
+              columns={errFacilityErrColumn}
               dataSource={standardDatas.slice(0, 4)}
               size={'small'}
               tableLayout={'fixed'}

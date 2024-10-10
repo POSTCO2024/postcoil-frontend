@@ -1,86 +1,167 @@
-import { Table, ConfigProvider } from 'antd';
+import { Table } from 'antd';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 
 import styles from './ErrMPage.module.scss';
+import useStandardStore from './ErrStore';
+import ExtResult from './ExtResult';
+import FilterContainer from './FilterContainer';
 import Result from './Result';
 
 import {
-  facilitycolumn,
-  facilityData,
-  facilityErrColumn,
+  errFacilityErrColumn,
   ManageColumn,
   infoErrColumn,
-  columnMapping,
+  errColumnMapping,
 } from '@/config/management/errMConfig';
+import { columnsData, columnMapping } from '@/config/management/extMConfig';
 
 const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
 
-async function getErrorStandard(facility: string) {
-  try {
-    const response = await axios.get(
-      controlApiUrl + '/api/v1/management/error/' + facility,
-    );
-    return response.data.criteriaDetails;
-  } catch (error) {
-    console.log(error);
-  }
-}
-
 const ErrMPage: React.FC = () => {
-  useEffect(() => {
-    const initialData = async () => {
-      try {
-        const fetchData = await getErrorStandard('1PCM');
-        console.log('Fetched Data:', fetchData); // 실제 데이터를 로그로 확인
-        transformedData(fetchData); // 데이터를 변환
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-    initialData(); // async 함수 호출
-  }, []);
+  const { manageData } = useStandardStore();
+
+  async function getErrorStandard(facility: string) {
+    try {
+      const response = await axios.get(
+        controlApiUrl + '/api/v1/management/error/' + facility,
+      );
+      transformedErrData(response.data.criteriaDetails);
+      // return response.data.criteriaDetails;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function getExtraction(facility: string) {
+    try {
+      const response = await axios.get(
+        controlApiUrl + '/api/v1/management/extraction/' + facility,
+      );
+      transformedExtData(response.data.criteriaDetails);
+      // return response.data.criteriaDetails;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // useEffect(() => {
+  //   const initialExtData = async () => {
+  //     try {
+  //       const fetchData = await getExtraction('1PCM');
+  //       console.log('Fetched Data:', fetchData); // 실제 데이터를 로그로 확인
+  //       transformedExtData(fetchData); // 데이터를 변환
+  //     } catch (error) {
+  //       console.error('Error fetching data:', error);
+  //     }
+  //   };
+  //   initialExtData(); // async 함수 호출
+  // }, []);
 
   //antd 테이블에 들어가게 변환
-  function transformedData(fetchData: any) {
+  function transformedErrData(fetchData: any) {
+    const standardData = fetchData.map((item: any, index: any) => ({
+      key: (index + 1).toString(),
+      id: (index + 1).toString(),
+      columnName: errColumnMapping[item.columnName],
+      value: item.columnValue != null ? item.columnValue : '-',
+      mapperId: item.id,
+    }));
+    console.log('standardData   ' + JSON.stringify(standardData));
+    setStandardErrDatas(standardData);
+  }
+
+  function transformedExtData(fetchData: any) {
+    console.log(fetchData);
     const standardData = fetchData.map((item: any, index: any) => ({
       key: (index + 1).toString(),
       id: (index + 1).toString(),
       columnName: columnMapping[item.columnName],
-      value: item.columnValue != null ? item.columnValue : '미지정',
+      value: item.columnValue,
       mapperId: item.id,
     }));
     console.log('standardData   ' + JSON.stringify(standardData));
-    setStandardDatas(standardData);
+    setStandardExtDatas(standardData);
   }
 
-  const setPostedData = (newData: any) => {
-    setStandardDatas(newData);
+  const setPostedErrData = (newData: any) => {
+    setStandardErrDatas(newData);
   };
 
-  const [selectedRowIndex, setSelectedRowIndex] = useState(facilityData[0]);
-  const [standardDatas, setStandardDatas] = useState([]);
-  const setClassName = (record: any) => {
-    // console.log(
-    //   JSON.stringify(record) + index + JSON.stringify(selectedRowIndex),
-    // );
-    const result =
-      record === selectedRowIndex
-        ? `${styles.antTable} ${styles.selected_row}`
-        : `${styles.antTable}`;
-    return result;
+  const setPostedExtData = (newData: any) => {
+    setStandardExtDatas(newData);
   };
 
-  const handleRowClick = async (index: any) => {
-    setSelectedRowIndex(index);
-    const fetchData = await getErrorStandard(index.facilityId);
-    transformedData(fetchData);
+  const handleFilter = (progress: string) => {
+    setProgress(progress);
   };
+
+  // const [selectedRowIndex, setSelectedRowIndex] = useState(errFacilityData[0]);
+  const [standardErrDatas, setStandardErrDatas] = useState([]);
+  const [standardExtDatas, setStandardExtDatas] = useState([]);
+  const [progress, setProgress] = useState('1PCM');
+
+  useEffect(() => {
+    // const initialErrData = async () => {
+    //   try {
+    //     const fetchData = await getErrorStandard('1PCM');
+    //     console.log('Fetched Data:', fetchData); // 실제 데이터를 로그로 확인
+    //     transformedErrData(fetchData); // 데이터를 변환
+    //   } catch (error) {
+    //     console.error('Error fetching data:', error);
+    //   }
+    // };
+    // initialErrData(); // async 함수 호출
+    getErrorStandard(progress);
+    getExtraction(progress);
+  }, [progress]);
+
   return (
     <div className={styles.page}>
-      <h1>에러기준 관리</h1>
+      <h1>추출, 에러기준 관리</h1>
+      <FilterContainer progress={progress} handleFilter={handleFilter} />
       <div className={styles.frame}>
-        <div className={styles.facility}>
+        <div className={styles.tablesFrame}>
+          <div>
+            <div className={styles.table}>
+              <Table
+                columns={columnsData}
+                dataSource={standardExtDatas}
+                tableLayout="fixed"
+                size={'small'}
+                pagination={false}
+              />
+            </div>
+            <ExtResult
+              title="추출기준 관리"
+              data={standardExtDatas}
+              facility={progress}
+              setPostedData={setPostedExtData}
+            />
+          </div>
+          <div>
+            <div className={styles.table}>
+              <Table
+                columns={ManageColumn}
+                dataSource={[
+                  ...standardErrDatas.slice(4, 5),
+                  ...manageData[progress],
+                ]}
+                size={'small'}
+                tableLayout={'fixed'}
+                pagination={false}
+              />
+            </div>
+            <Result
+              title="관리재"
+              data={[...standardErrDatas.slice(4, 5), ...manageData[progress]]}
+              fullData={standardErrDatas}
+              facility={progress}
+              setPostedData={setPostedErrData}
+            />
+          </div>
+        </div>
+        {/* <div className={styles.facility}>
           <ConfigProvider
             theme={{
               components: {
@@ -100,13 +181,13 @@ const ErrMPage: React.FC = () => {
               rowClassName={setClassName}
             />
           </ConfigProvider>
-        </div>
+        </div> */}
         <div className={styles.tablesFrame}>
           <div>
             <div className={styles.table}>
               <Table
-                columns={facilityErrColumn}
-                dataSource={standardDatas.slice(0, 4)}
+                columns={errFacilityErrColumn}
+                dataSource={standardErrDatas.slice(0, 4)}
                 size={'small'}
                 tableLayout={'fixed'}
                 pagination={false}
@@ -114,45 +195,27 @@ const ErrMPage: React.FC = () => {
             </div>
             <Result
               title="설비사양 에러"
-              data={standardDatas.slice(0, 4)}
-              fullData={standardDatas}
-              facility={selectedRowIndex.facilityId}
-              setPostedData={setPostedData}
-            />
-          </div>
-          <div>
-            <div className={styles.table}>
-              <Table
-                columns={ManageColumn}
-                dataSource={standardDatas.slice(4, 5)}
-                size={'small'}
-                tableLayout={'fixed'}
-                pagination={false}
-              />
-            </div>
-            <Result
-              title="관리재"
-              data={standardDatas.slice(4, 5)}
-              fullData={standardDatas}
-              facility={selectedRowIndex.facilityId}
-              setPostedData={setPostedData}
+              data={standardErrDatas.slice(0, 4)}
+              fullData={standardErrDatas}
+              facility={progress}
+              setPostedData={setPostedErrData}
             />
           </div>
           <div>
             <div className={styles.table}>
               <Table
                 columns={infoErrColumn}
-                dataSource={standardDatas.slice(5)}
+                dataSource={standardErrDatas.slice(5)}
                 size={'small'}
                 pagination={false}
               />
             </div>
             <Result
               title="정보이상재"
-              data={standardDatas.slice(5)}
-              fullData={standardDatas}
-              facility={selectedRowIndex.facilityId}
-              setPostedData={setPostedData}
+              data={standardErrDatas.slice(5)}
+              fullData={standardErrDatas}
+              facility={progress}
+              setPostedData={setPostedErrData}
             />
           </div>
         </div>

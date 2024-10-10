@@ -1,0 +1,33 @@
+import { Button as AntButton } from 'antd';
+import React from 'react';
+
+import styles from './RedButton.module.scss';
+// info
+// props: 버튼 안의 텍스트와 버튼 클릭 시 발생 이벤트 함수를 전달
+// ex) <Button text={ButtonText} onClick={showModal}>
+// props type
+interface ButtonProps {
+  text: string;
+  onClick?: () => void;
+  style?: boolean;
+}
+export const RedButton: React.FC<ButtonProps> = ({ text, onClick, style }) => {
+  return (
+    <div className={styles.buttonContainer}>
+      <AntButton
+        className={styles.button}
+        type="primary"
+        onClick={
+          onClick
+            ? onClick
+            : () => {
+                console.log(text + ' Click');
+              }
+        }
+        style={style ? { width: 90, backgroundColor: '#F5004F' } : undefined}>
+        {text}
+      </AntButton>
+    </div>
+  );
+};
+export default RedButton;

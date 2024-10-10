@@ -3,11 +3,10 @@ import { Input, Form } from 'antd';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 
-import useStandardStore from './ErrStore';
 import styles from './Result.module.scss';
 
 import CommonModal from '@/components/common/CommonModal';
-import { errKeyMapping } from '@/config/management/errMConfig';
+import { keyMapping } from '@/config/management/extMConfig';
 
 const controlApiUrl = import.meta.env.VITE_CONTROL_API_URL;
 
@@ -16,15 +15,13 @@ interface PropsType {
   data: any;
   facility: string;
   setPostedData: any;
-  fullData?: any;
 }
 
-// API Post 용
 function transformData(data: any) {
   const transformedData: { [key: string]: any } = {};
   // 원본 객체의 각 키를 매핑된 새로운 키로 변환
   Object.keys(data).forEach((key) => {
-    const newKey = errKeyMapping[key]; // 매핑된 새로운 키
+    const newKey = keyMapping[key]; // 매핑된 새로운 키
     if (newKey) {
       transformedData[newKey] = data[key]; // 새로운 키에 값을 할당
     }
@@ -34,8 +31,6 @@ function transformData(data: any) {
 
 // modal을 수정하고 부모의 setStandardDatas 에 맞는 형태로 바꿔주는 함수
 function updateValues(dataArray: any, newValues: any) {
-  console.log('dataArray : ', dataArray);
-  console.log('newValues : ', newValues);
   return dataArray.map((item: any) => {
     // 새로운 값을 찾기
     const newValue = newValues[item.columnName];
@@ -46,30 +41,10 @@ function updateValues(dataArray: any, newValues: any) {
   });
 }
 
-const Result = ({
-  title,
-  data,
-  facility,
-  setPostedData,
-  fullData,
-}: PropsType) => {
-  const { manageData, setManageData } = useStandardStore();
-  const manageProData = manageData[facility];
-  const updateManageData = (newData: any) => {
-    const updatedData = manageProData.map((item) => {
-      const newValue = newData[item.columnName];
-      return {
-        ...item,
-        value: newValue !== undefined ? newValue : item.value,
-      };
-    });
-    setManageData(facility, updatedData);
-  };
-
+const ExtResult = ({ title, data, facility, setPostedData }: PropsType) => {
   const postStandard = async (data: any) => {
-    console.log(data);
     await axios
-      .post(controlApiUrl + '/api/v1/management/error/' + facility, data)
+      .post(controlApiUrl + '/api/v1/management/extraction/' + facility, data)
       .then((response) => {
         console.log(response);
       })
@@ -104,13 +79,14 @@ const Result = ({
   };
 
   // TODO: 조회 common 컴포넌트꺼 사용! - 롤편성조회 화면 지우기
-
+  // 모달창의 수정 버튼을 눌렀을 때 이벤트
   const onFinish = (values: any) => {
+    // 수정된 값
     console.log('Success:', values);
-    // console.log('모달 수정 후 부모 새로고침용' + JSON.stringify(updateValues(fullData, values)));
+    // 백엔드 데이터베이스에 맞춰 매핑
+    console.log(transformData(values));
     postStandard(transformData(values));
-    setPostedData(updateValues(fullData, values));
-    updateManageData(values);
+    setPostedData(updateValues(data, values));
     setIsModalOpen(false);
   };
 
@@ -154,7 +130,7 @@ const Result = ({
                   <Input
                     style={{ marginTop: '10%' }}
                     type="text"
-                    // addonAfter={item.columnName == '소둔온도' ? '°C' : 'mm'}
+                    addonAfter={item.columnName == '소둔온도' ? '°C' : ''}
                   />
                 </Form.Item>
               </div>
@@ -166,4 +142,4 @@ const Result = ({
   );
 };
 
-export default Result;
+export default ExtResult;
