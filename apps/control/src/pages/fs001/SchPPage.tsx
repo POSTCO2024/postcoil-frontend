@@ -27,7 +27,8 @@ const SchPPage = () => {
           pageCode: 'plan',
           processCode: selectedProcessCode[0],
         });
-        setMaterialData(data);
+        setMaterialData(data.content);
+        console.log('data-----', data.content);
       } catch (error) {
         console.error('Failed to fetch schedule data:', error);
       }
@@ -50,7 +51,7 @@ const SchPPage = () => {
       });
 
       setSelectedProcessCode(value);
-      setMaterialData(data); // API 호출 후 데이터 설정
+      setMaterialData(data.content); // API 호출 후 데이터 설정
     }
   };
 

@@ -253,33 +253,43 @@ export const workItemColumnData: ColumnDataType<MaterialDataType>[] = [
 
 export const transformedData = (data: MaterialDTO[]): MaterialDataType[] => {
   // sequence가 null이 아닌 항목만 필터링하고, 정렬
-  if (
-    data.length > 0 &&
-    data[0].sequence !== null &&
-    (data[0].sequence as number) > 0
-  ) {
-    data.sort((a, b) => (a.sequence as number) - (b.sequence as number)); // type assertion 사용
+  if (data.length > 0) {
+    // sequence가 존재하고 0보다 큰 항목만 정렬 대상
+    const filteredData = data.filter(
+      (item) => item.sequence !== null && (item.sequence as number) > 0,
+    );
+
+    // sequence 기준으로 정렬
+    if (filteredData.length > 0) {
+      filteredData.sort(
+        (a, b) => (a.sequence as number) - (b.sequence as number),
+      );
+    }
+
+    if (data.length > 0) {
+      return data.map((item) => ({
+        key: item.id,
+        id: item.id as string,
+        materialNo: item.materialNo,
+        currProc: item.currProc,
+        temperature: item.temperature,
+        rollUnit: item.rollUnit,
+        width: item.width,
+        thickness: item.thickness,
+        nextProc: item.nextProc,
+        goalWidth: item.goalWidth,
+        goalThickness: item.goalThickness,
+        sequence: item.sequence,
+        isScheduled: item.isScheduled,
+        isRejected: item.isRejected,
+        expectedDuration: item.expectedDuration,
+        schedulePlanId: item.schedulePlanId,
+        changed: item.changed,
+      }));
+    }
   }
 
-  return data.map((item) => ({
-    key: item.id,
-    id: item.id as string,
-    materialNo: item.materialNo,
-    currProc: item.currProc,
-    temperature: item.temperature,
-    rollUnit: item.rollUnit,
-    width: item.width,
-    thickness: item.thickness,
-    nextProc: item.nextProc,
-    goalWidth: item.goalWidth,
-    goalThickness: item.goalThickness,
-    sequence: item.sequence,
-    isScheduled: item.isScheduled,
-    isRejected: item.isRejected,
-    expectedDuration: item.expectedDuration,
-    schedulePlanId: item.schedulePlanId,
-    changed: item.changed,
-  }));
+  return [];
 };
 
 export const transformedCoilTypeCodeData = (countCoilTypeCode: {
