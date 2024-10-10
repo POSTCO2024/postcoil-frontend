@@ -15,9 +15,9 @@ import {
 const SchRPage = () => {
   const [isGraphVisible, setIsGraphVisible] = useState(true);
   const fetchData = useWorkInstructionStore((state) => state.fetchData!);
-  const cleanWorkInstructionData = useWorkInstructionStore(
-    (state) => state.cleanData!,
-  ); // cleanData 함수 추가
+  // const cleanWorkInstructionData = useWorkInstructionStore(
+  //   (state) => state.cleanData!,
+  // ); // cleanData 함수 추가
 
   // const [first, setFirst] = useState(0);
 
