@@ -62,7 +62,7 @@ class App {
   // private box: THREE.Box3 | null = null;
   // private selectedMeshInfo: string = ''; // 클릭된 메쉬 정보를 저장
 
-  private defaultTimeScale = 1; // 기본 속도
+  // private defaultTimeScale = 1; // 기본 속도
   // private expectedDurationTimeScale = 1; // 애니메이션 속도
   // private isExpectedDurationActive = false; // expectedDuration이 활성화 되었는지 여부
   // private expectedDurationElapsedTime = 0; // elapsed time tracker
