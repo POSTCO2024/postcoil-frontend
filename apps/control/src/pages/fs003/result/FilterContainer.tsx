@@ -18,12 +18,17 @@ const FilterContainer = () => {
   const setData = useWorkInstructionStore(
     (state) => state.setData!, // processCode 업데이트 함수
   );
+  // const selectedData = useWorkInstructionStore((state) =>
+  //   selectedProcessCode !== ''
+  //     ? selectedProcessCode === '1CAL'
+  //       ? (state.data as ClientDTO[])
+  //       : (state.data2 as ClientDTO[])
+  //     : [],
+  // );
   const selectedData = useWorkInstructionStore((state) =>
-    selectedProcessCode !== ''
-      ? selectedProcessCode === '1CAL'
-        ? (state.data as ClientDTO[])
-        : (state.data2 as ClientDTO[])
-      : null,
+    selectedProcessCode === '1CAL'
+      ? (state.data as ClientDTO[])
+      : (state.data2 as ClientDTO[]),
   );
 
   // const prevSelectedProcessCode = useScheduleStore(
@@ -36,7 +41,7 @@ const FilterContainer = () => {
   // 선택된 processCode에 따라 fetch 해 온 옵션 생성
 
   const [processCode, setProcessCode] = useState<string[]>([
-    selectedProcessCode !== '' ? selectedProcessCode : '1CAL',
+    selectedProcessCode,
   ]);
 
   const [selectedRollUnitName, setSelectedRollUnitName] = useState<string[]>(
@@ -134,6 +139,9 @@ const FilterContainer = () => {
       fetchData(value); // fetchData 함수 호출
     } else if (value) {
       setProcessCode(value);
+    } else {
+      setProcessCode([]);
+      setSelectedRollUnitName([]);
     }
     // setSelectedRollUnitName([]);
   };
@@ -142,7 +150,7 @@ const FilterContainer = () => {
     if (value && value[0] !== '') {
       setSelectedRollUnitName(value);
       setData(
-        selectedData!.filter(
+        selectedData.filter(
           (item) => item.workInstructions.scheduleNo === value[0],
         )[0],
       );

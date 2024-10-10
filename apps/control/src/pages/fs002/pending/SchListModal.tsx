@@ -26,7 +26,8 @@ const SchListModal = ({ isModalOpen, onApply, onCancel }: PropsType) => {
     (state) => state.data as ScheduleInfoDTO[],
   );
   const processCode = useScheduleStore((state) => state.processCode);
-  // const cleanScheduleData = useScheduleStore((state) => state.cleanData); // cleanData 함수 추가
+  const cleanScheduleData = useScheduleStore((state) => state.cleanData!); // cleanData 함수 추가
+  const cleanMaterialData = useMaterialStore((state) => state.cleanData!); // cleanData 함수 추가
 
   // Material 데이터를 관리하는 store에서 cache와 originalCache를 가져옴
   const cache = useMaterialStore.getState().cache!;
@@ -172,11 +173,20 @@ const SchListModal = ({ isModalOpen, onApply, onCancel }: PropsType) => {
             const updatedCache = { ...state.cache };
             const updatedOriginalCache = { ...state.originalCache };
 
+            console.log('checkedPlanIds:', checkedPlanIds); // checkedPlanIds 로그 찍기
+
             // checkedPlanIds에 해당하는 값을 삭제
             checkedPlanIds.forEach((planId) => {
+              console.log(`Deleting planId: ${planId}`); // 삭제하려는 planId 확인
+
               delete updatedCache[planId];
               delete updatedOriginalCache[planId];
             });
+
+            console.log('Updated cache:', updatedCache); // 업데이트된 캐시 로그
+            console.log('Updated originalCache:', updatedOriginalCache); // 업데이트된 originalCache 로그
+            cleanScheduleData();
+            cleanMaterialData();
 
             // 새로운 객체를 반환하여 참조 변경
             return {
@@ -185,6 +195,16 @@ const SchListModal = ({ isModalOpen, onApply, onCancel }: PropsType) => {
             };
           });
         }); // 결과 console에서 보려고
+
+      // 상태 업데이트 후에 현재 상태를 다시 확인
+      const currentCache = useMaterialStore.getState().cache;
+      const currentOriginalCache = useMaterialStore.getState().originalCache;
+
+      console.log('Current cache after deletion:', currentCache);
+      console.log(
+        'Current originalCache after deletion:',
+        currentOriginalCache,
+      );
 
       // 폼이 성공적으로 제출되었으니 2번째 모달 열기
       onApply();

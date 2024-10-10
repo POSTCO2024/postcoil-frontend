@@ -19,20 +19,21 @@ const SchRPage = () => {
     (state) => state.cleanData!,
   ); // cleanData 함수 추가
 
-  const [first, setFirst] = useState(0);
+  // const [first, setFirst] = useState(0);
 
   useEffect(() => {
     initializeWebSocket(); // 웹소켓 초기화
     fetchData(['1CAL']);
+    fetchData(['2CAL']);
 
-    setFirst(1);
+    // setFirst(1);
 
     return () => {
-      if (first === 1) {
-        console.log('페이지 떠나기');
-        cleanWorkInstructionData();
-        setFirst(0);
-      }
+      // if (first === 1) {
+      console.log('페이지 떠나기');
+      // cleanWorkInstructionData();
+      // setFirst(0);
+      // }
     };
   }, []);
 
