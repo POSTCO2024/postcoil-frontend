@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { PMREMGenerator } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import Stats from 'three/examples/jsm/libs/stats.module';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
 
@@ -64,10 +63,10 @@ class App {
   // private selectedMeshInfo: string = ''; // 클릭된 메쉬 정보를 저장
 
   private defaultTimeScale = 1; // 기본 속도
-  private expectedDurationTimeScale = 1; // 애니메이션 속도
+  // private expectedDurationTimeScale = 1; // 애니메이션 속도
   // private isExpectedDurationActive = false; // expectedDuration이 활성화 되었는지 여부
   // private expectedDurationElapsedTime = 0; // elapsed time tracker
-  private expectedDuration: number = 0; // 전달된 expectedDuration 값을 저장할 변수
+  // private expectedDuration: number = 0; // 전달된 expectedDuration 값을 저장할 변수
   // private controls: any;
   // private schCoils: THREE.Object3D[] = [];
 
@@ -311,10 +310,10 @@ class App {
         const action = this.mixer.clipAction(animations[0]);
         action.play();
       }
-      if (coilItems.length > 0) {
-        this.expectedDuration = coilItems[0].expectedDuration || 1; // 첫 번째 아이템의 expectedDuration
-        // this.adjustAnimationSpeed(this.expectedDuration);
-      }
+      // if (coilItems.length > 0) {
+      //   this.expectedDuration = coilItems[0].expectedDuration || 1; // 첫 번째 아이템의 expectedDuration
+      //   // this.adjustAnimationSpeed(this.expectedDuration);
+      // }
       this.renderer.localClippingEnabled = true;
 
       console.log(gltf.animations);
@@ -444,12 +443,12 @@ class App {
   //   }
   // }
 
-  private resetAnimationSpeed() {
-    if (this.mixer) {
-      this.mixer.timeScale = this.defaultTimeScale;
-      // this.isExpectedDurationActive = false;
-    }
-  }
+  // private resetAnimationSpeed() {
+  //   if (this.mixer) {
+  //     this.mixer.timeScale = this.defaultTimeScale;
+  //     // this.isExpectedDurationActive = false;
+  //   }
+  // }
   // 클리핑 플레인 업데이트 함수
   private updateClippingPlanes(deltaTime: number, time: number) {
     if (!this.animationEnabled) return; // 애니메이션이 활성화되지 않은 경우 클리핑 플레인 업데이트 중단

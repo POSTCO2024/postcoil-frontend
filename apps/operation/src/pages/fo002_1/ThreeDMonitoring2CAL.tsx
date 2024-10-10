@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { PMREMGenerator } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import Stats from 'three/examples/jsm/libs/stats.module';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
 
