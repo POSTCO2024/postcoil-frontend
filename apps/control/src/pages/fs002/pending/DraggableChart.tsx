@@ -82,7 +82,7 @@ const DraggableChart = ({ chartName }: PropsType) => {
     const chartOptions: Highcharts.Options = {
       chart: {
         type: 'variwide',
-        width: 72 + (expectedDuration as number) * 3, // 72: y축 라벨 너비
+        width: 900, // 83 + (expectedDuration as number) * 3, // 72: y축 라벨 너비
         height: 200, // (9 / 16) * 100 + '%', // 16:9 ratio
         // scrollablePlotArea: {
         //   minWidth: 700, // Minimum width of the plot area

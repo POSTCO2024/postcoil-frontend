@@ -27,6 +27,9 @@
 
 .changedBg {
   background-color: #e2e1fc !important;
+  * {
+    background-color: #e2e1fc !important;
+  }
 }
 
 .changedBg:hover,
