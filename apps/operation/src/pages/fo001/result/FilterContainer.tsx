@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import styles from './FilterContainer.module.scss';
 
 import { ClientDTO } from '@/config/dto';
-import { useWorkInstructionStore } from '@/store/fo001store';
+import { useWorkInstructionStore, useClickedId } from '@/store/fo001store';
 import { options } from '@/utils/dropdownUtils';
 import { mockRollUnitName } from '@/utils/MockDropdown';
 
@@ -34,6 +34,8 @@ const FilterContainer = () => {
       ? (state.data as ClientDTO[])
       : (state.data2 as ClientDTO[]),
   );
+
+  const { clickedId, setClickedId } = useClickedId();
 
   const generateDynamicRollUnitOptions = (
     data: ClientDTO[],
@@ -87,6 +89,7 @@ const FilterContainer = () => {
       setProcessCode([]);
       setSelectedRollUnitName([]);
     }
+    setClickedId(-1);
   };
 
   const handleRollUnitChange = (value?: string[]) => {
@@ -97,6 +100,7 @@ const FilterContainer = () => {
           (item) => item.workInstructions.scheduleNo === value[0],
         )[0],
       );
+      setClickedId(-1);
     } else {
       setSelectedRollUnitName([]);
     }
@@ -118,7 +122,11 @@ const FilterContainer = () => {
   };
   // Reject 함수
   const rejectCoil = async (workInstructionId: any, id: any) => {
+    if (id === -1) {
+      return;
+    }
     try {
+      console.log('rejected coilId :', clickedId);
       const response = await axios.post(
         operationUrl + '/api/coil-work/reject/' + workInstructionId + '/' + id,
       );
@@ -140,6 +148,7 @@ const FilterContainer = () => {
       setSelectedRollUnitName([]);
     }
     console.log('filtercontainer3', selectedData);
+    setClickedId(-1);
   }, [selectedData]);
 
   return (
@@ -172,7 +181,12 @@ const FilterContainer = () => {
         <RedButton
           text={'REJECT'}
           style={true}
-          onClick={() => rejectCoil('workInstructionId', 'coilId')}
+          onClick={() =>
+            rejectCoil(
+              selectedData[0].workInstructions.workInstructionId,
+              clickedId,
+            )
+          }
         />
         {/* <Button text={'긴급정지'} style={true} /> */}
       </div>

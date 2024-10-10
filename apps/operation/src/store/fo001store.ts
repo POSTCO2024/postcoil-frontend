@@ -4,7 +4,12 @@ import { create } from 'zustand';
 
 import { fetchOperationData } from '@/api/operationApi';
 import { ClientDTO } from '@/config/dto';
-import { HoverState, ScrollState, StoreType } from '@/config/storeConfig';
+import {
+  HoverState,
+  ScrollState,
+  StoreType,
+  ClickedState,
+} from '@/config/storeConfig';
 
 const websocketOperationUrl = import.meta.env.VITE_OPERATION_API_URL;
 const websocketOperationEndpoint = import.meta.env
@@ -374,4 +379,9 @@ export const useScrollStore = create<ScrollState>((set) => ({
 export const useHoverStore = create<HoverState>((set) => ({
   hoveredPoint: null,
   setHoveredPoint: (point) => set({ hoveredPoint: point }),
+}));
+
+export const useClickedId = create<ClickedState>((set) => ({
+  clickedId: -1,
+  setClickedId: (id) => set({ clickedId: id }),
 }));

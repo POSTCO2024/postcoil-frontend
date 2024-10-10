@@ -36,3 +36,8 @@ export interface HoverState {
   hoveredPoint: any | null;
   setHoveredPoint: (point: any | null) => void;
 }
+
+export interface ClickedState {
+  clickedId: number;
+  setClickedId: (id: number) => void;
+}

@@ -7,6 +7,7 @@ import {
   useHoverStore,
   useScrollStore,
   useWorkInstructionStore,
+  useClickedId,
 } from '@/store/fo001store';
 import { transformedDataToResultChartData } from '@/utils/chartUtils';
 
@@ -19,6 +20,7 @@ interface DataPoint {
   id: string;
   changed?: boolean; // is the point changed by user?
   color?: string; // chart point color
+  workItemStatus?: string;
 }
 
 interface PropsType {
@@ -34,6 +36,8 @@ const Chart = ({ chartName }: PropsType) => {
   const coilSupplyData = useWorkInstructionStore(
     (state) => state.coilSupplyData!,
   );
+
+  const { clickedId, setClickedId } = useClickedId();
 
   const { hoveredPoint, setHoveredPoint } = useHoverStore();
 
@@ -69,13 +73,14 @@ const Chart = ({ chartName }: PropsType) => {
         materialData,
         coilSupplyData,
         chartName,
+        clickedId,
       );
       setData(transformed);
     } else {
       setData([]);
     }
     console.log('data', data);
-  }, [materialData, coilSupplyData]); // materialData가 변경될 때마다 실행
+  }, [materialData, coilSupplyData, clickedId]); // materialData가 변경될 때마다 실행
 
   // useEffect(() => {
   const chartOptions: Highcharts.Options = {
@@ -161,12 +166,10 @@ const Chart = ({ chartName }: PropsType) => {
             mouseOut: function () {
               setHoveredPoint(null); // 상태 초기화
             },
-            click: function (e) {
-              console.log(e);
-            },
           },
         },
       },
+
       // {
       //   type: 'line',
       //   data: [
@@ -199,6 +202,18 @@ const Chart = ({ chartName }: PropsType) => {
             chartName +
             ': <b> {point.y} mm</b> <br/>' +
             'working Time: <b> {point.z} mins</b> <br/>',
+        },
+        point: {
+          events: {
+            click: function (e) {
+              if (
+                e.point.options.workItemStatus === 'PENDING' &&
+                e.point.options.color !== '#F1655E'
+              ) {
+                setClickedId(Number(e.point.options.id));
+              }
+            },
+          },
         },
       },
     },

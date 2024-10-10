@@ -4,6 +4,7 @@ export const transformedDataToResultChartData = (
   data: WorkItemDTO[],
   coilSupplyData: CoilSupplyDTO,
   name?: 'width' | 'thickness',
+  clickedId?: number,
 ) => {
   // sequence 순서에 따라 data를 정렬
   const sortedData = data.sort(
@@ -51,7 +52,9 @@ export const transformedDataToResultChartData = (
         targetColor = '#7da2f5'; // 보급 예정 재료
         supplyIndex++; // 보급 예정 인덱스 증가
       }
-
+      if (item.workItemId === clickedId) {
+        targetColor = '#ffd700';
+      }
       console.log(targetColor);
       currentIndex++; // 다음 인덱스를 위해 증가
     }
@@ -66,7 +69,8 @@ export const transformedDataToResultChartData = (
       z: item.expectedItemDuration as number,
       x: item.sequence as number,
       id: item.workItemId as string,
-      color: targetColor,
+      color: targetColor as string,
+      workItemStatus: item.workItemStatus as string,
     };
   });
 };
