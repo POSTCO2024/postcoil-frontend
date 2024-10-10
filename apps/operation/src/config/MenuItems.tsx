@@ -13,7 +13,11 @@ export const MenuItems: MenuItem[] = [
   {
     key: '5',
     icon: <FundProjectionScreenOutlined />,
-    label: <Link to="operation2">작업 화면</Link>,
+    label: '작업 화면',
+    children: [
+      { key: '51', label: <Link to="/operation2_1CAL">1CAL</Link> },
+      { key: '52', label: <Link to="/operation2_2CAL">2CAL</Link> },
+    ],
   },
   {
     key: '6',
@@ -25,6 +29,7 @@ export const MenuItems: MenuItem[] = [
 export const mappingKeys = [
   { key: '4', path: '/' },
   { key: '4', path: '/operation1' },
-  { key: '5', path: '/operation2' },
+  { key: '51', path: '/operation2_1CAL' },
+  { key: '52', path: '/operation2_2CAL' },
   { key: '6', path: '/operation3' },
 ];

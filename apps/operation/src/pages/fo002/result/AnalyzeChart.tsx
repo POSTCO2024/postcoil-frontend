@@ -1,7 +1,7 @@
 import { ClockCircleOutlined, RedoOutlined } from '@ant-design/icons';
 import { Table } from '@postcoil/ui';
 import dayjs from 'dayjs';
-import duration from 'dayjs/plugin/duration'; // duration 플러그인 import
+import duration from 'dayjs/plugin/duration';
 import { useEffect, useState } from 'react';
 
 import styles from './AnalyzeChart.module.scss';
@@ -19,31 +19,28 @@ import {
 dayjs.extend(duration);
 
 export const AnalyzeChart = () => {
+  // 필요한 상태를 구독합니다.
   const workItems = useWorkInstructionStore((state) => state.workItems);
-  useEffect(() => {
-    console.log('websocket 으로 데이터 업데이트!!');
-    console.log('workItems: ', workItems);
-  }, [workItems]);
-
   const scheduleNo = useWorkInstructionStore((state) => state.scheduleNo);
   const scExpectedDuration = useWorkInstructionStore(
     (state) => state.scExpectedDuration!,
   );
-
   const countCoilTypeCode = useWorkInstructionStore(
     (state) => state.countCoilTypeCode,
   );
-
   const startTime = useWorkInstructionStore(
     (state) => state.scheduleStartTime, // 선택된 schedule의 시작 시간
   );
-  // coilSupplyData가 존재하는지 확인
   const coilSupplyData: CoilSupplyDTO | null = useWorkInstructionStore(
     (state) => state.coilSupplyData!,
   );
-  // coilSupplyData가 존재할 때만 값을 구조분해 할당
+  // workStatus를 상태에서 구독합니다.
+  const workStatus = useWorkInstructionStore(
+    (state) => state.coilSupplyData?.workStatus || 'PENDING',
+  );
+
+  // coilSupplyData가 존재할 때만 값을 구조 분해 할당
   const {
-    workStatus = 'PENDING', // 기본값을 PENDING으로 설정
     totalCoils = 0, // 총 코일 수
     suppliedCoils = 0, // 보급 완료
     totalProgressed = 0, // 작업 완료
@@ -92,11 +89,14 @@ export const AnalyzeChart = () => {
     )
     .format('HH:mm:ss');
 
-  // coilSupplyData가 업데이트될 때마다 관련 데이터를 리렌더링
+  // 상태 변경 시 콘솔에 출력하여 확인
   useEffect(() => {
+    console.log('websocket 으로 데이터 업데이트!!');
+    console.log('workItems: ', workItems);
     console.log('scheduleNo : ', scheduleNo);
     console.log('coilSupplyData 업데이트:', coilSupplyData);
-  }, [scheduleNo, coilSupplyData]); // coilSupplyData가 변경될 때마다 실행
+    console.log('workStatus:', workStatus);
+  }, [workItems, scheduleNo, coilSupplyData, workStatus]);
 
   return (
     <div className={styles.analyzeChart}>
@@ -121,10 +121,14 @@ export const AnalyzeChart = () => {
           />
           <AnalyzeChartBlock
             title="작업 완료 / 작업 예정 / 보급 예정"
-            content={`${totalProgressed} / ${convertNegToZero(pendingProgressedCoils)} / ${convertNegToZero(pendingSuppliedCoils)}`}
+            content={`${totalProgressed} / ${convertNegToZero(
+              pendingProgressedCoils,
+            )} / ${convertNegToZero(pendingSuppliedCoils)}`}
           />
           <AnalyzeChartBlock
-            title={`작업 ${workStatus === 'IN_PROGRESS' ? '경과' : '예상 소요'} 시간`}
+            title={`작업 ${
+              workStatus === 'IN_PROGRESS' ? '경과' : '예상 소요'
+            } 시간`}
             content={formattedTimeDifference}
           />
           <AnalyzeChartBlock
@@ -132,21 +136,11 @@ export const AnalyzeChart = () => {
             content={`${convertNegToZero(totalRejects)} / ${totalCoils}`}
           />
           <div className={styles.coilTypeFrame}>
-            {/* <ConfigProvider
-              theme={{
-                components: {
-                  Table: {
-                    // cellFontSizeSM: 18,
-                  },
-                },
-              }}> */}
             <Table
               columns={coilTypeColumnData}
               data={coiTypeCodeData}
-              // data={mockCoilTypeCodeData}
               size="small"
             />
-            {/* </ConfigProvider> */}
           </div>
         </div>
       </div>

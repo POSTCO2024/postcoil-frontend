@@ -1,13 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { PMREMGenerator } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import Stats from 'three/examples/jsm/libs/stats.module';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
 
 import AnalyzeChart from './result/AnalyzeChart';
 import styles from './ThreeDMonitoring.module.scss';
+
+import {
+  initializeWebSocket,
+  useWorkInstructionStore,
+} from '@/store/fo001store';
 
 let clipPlaneX: any;
 let clipPlaneX2: any;
@@ -17,7 +21,7 @@ const clipSpeed: number = 11.5;
 const clipDirection: number = 1;
 
 let cube017Heating: any = null;
-let timePassed: number = 0;
+const timePassed: number = 0;
 const cube017ChangeTime: number = 8;
 
 let cubeColling: any = null;
@@ -41,7 +45,6 @@ class App {
   private raycaster: THREE.Raycaster;
   private mouse: THREE.Vector2;
   private clock: THREE.Clock;
-  private fps!: Stats;
   private mixer: THREE.AnimationMixer | null = null;
   private selectedCamera!: THREE.PerspectiveCamera;
   private camera1!: THREE.PerspectiveCamera;
@@ -52,12 +55,15 @@ class App {
   private controls2!: OrbitControls;
   private controls3!: OrbitControls;
   private controls4!: OrbitControls;
+  private animationEnabled: boolean = false; // 애니메이션 활성화 상태
+
+  // 애니메이션 활성화 여부를 저장하는 변수
   // private boxHelper: THREE.BoxHelper | null = null;
   // private model: THREE.Object3D | null = null;
   // private box: THREE.Box3 | null = null;
   // private selectedMeshInfo: string = ''; // 클릭된 메쉬 정보를 저장
 
-  constructor() {
+  constructor(data: any[]) {
     this.divContainer = document.querySelector('#webgl-container');
     this.infoDiv = document.querySelector('#mesh-info'); // 선택된 Mesh 정보를 표시할 div 선택
     this.cameras = [];
@@ -83,7 +89,7 @@ class App {
     });
 
     this.setupCamera();
-    this.setupModel();
+    this.setupModel(data);
     this.setupControls();
     this.setupEventListeners();
     this.setupEnvironmentMap();
@@ -94,6 +100,14 @@ class App {
     this.resize();
 
     requestAnimationFrame(this.render.bind(this));
+  }
+  // 애니메이션 활성화 여부를 설정하는 메서드
+  setAnimationEnabled(enabled: boolean) {
+    if (this.mixer) {
+      this.mixer.timeScale = enabled ? 1 : 0; // timeScale을 조절하여 애니메이션 재생/정지
+      this.animationEnabled = true;
+      console.log(`Animation enabled: ${enabled}`);
+    }
   }
 
   // 선택된 메쉬 정보를 표시하는 함수
@@ -131,10 +145,10 @@ class App {
     const pmremGenerator = new PMREMGenerator(this.renderer);
     pmremGenerator.compileEquirectangularShader();
 
-    new RGBELoader().load('image12.hdr', (texture) => {
+    new RGBELoader().load('image20.hdr', (texture) => {
       const envMap = pmremGenerator.fromEquirectangular(texture).texture;
       this.scene.environment = envMap;
-      this.scene.background = new THREE.Color(0x565657);
+      this.scene.background = new THREE.Color(0xebfff5);
       texture.dispose();
       pmremGenerator.dispose();
     });
@@ -163,16 +177,48 @@ class App {
     this.controls3.enabled = false;
     this.controls4.enabled = false;
 
-    const stats = new Stats();
-    this.divContainer?.appendChild(stats.dom);
-    this.fps = stats;
+    // const stats = new Stats();
+    // this.divContainer?.appendChild(stats.dom);
   }
 
-  private setupModel() {
+  private setupModel(data: any[]) {
     new GLTFLoader().load('./postco.glb', (gltf) => {
       const model = gltf.scene;
       this.scene.add(model);
 
+      const numCoils = data.length;
+      // 1. Handle 'SchCoil' objects (SchCoil1, SchCoil2, ...)
+      const schCoils = []; // Array to store SchCoil objects
+      for (let i = 1; i <= 8; i++) {
+        const coil = model.getObjectByName(`SchCoil${i}`);
+        if (coil) {
+          schCoils.push(coil);
+        }
+      }
+      const subCoils = []; // Array to store subCoil objects
+      for (let i = 6; i <= 39; i++) {
+        const subCoilName = i < 10 ? `subcoil00${i}` : `subcoil0${i}`;
+        const subCoil = model.getObjectByName(subCoilName);
+        if (subCoil) {
+          subCoils.push(subCoil);
+        }
+      }
+      schCoils.forEach((coil, index) => {
+        coil.visible = index < numCoils; // Show up to numCoils SchCoils, hide the rest
+      });
+      // subCoils 처리
+      // 초과된 코일을 subCoils로 표시 (numCoils가 schCoils의 개수를 초과할 경우)
+      if (numCoils > schCoils.length) {
+        const extraCoils = numCoils - schCoils.length; // 초과된 코일 수
+
+        subCoils.forEach((subCoil, index) => {
+          subCoil.visible = index < extraCoils; // 필요한 수만큼 subCoil 표시
+        });
+      } else {
+        subCoils.forEach((subCoil) => {
+          subCoil.visible = false; // schCoils에서만 다 처리되는 경우 subCoils는 숨김
+        });
+      }
       model.traverse((child) => {
         if (child instanceof THREE.Mesh) {
           child.geometry.computeVertexNormals();
@@ -200,6 +246,8 @@ class App {
             // 바닥 Mesh에 대한 특수 처리
             child.material = new THREE.MeshStandardMaterial({
               color: 0x000000, // 바닥의 색상을 명시적으로 설정
+              emissive: 0xf0f0f0,
+              emissiveIntensity: 0.6,
               roughness: 0.8,
               metalness: 0,
               side: THREE.DoubleSide, // 양면 렌더링
@@ -270,11 +318,11 @@ class App {
       // this.box = box;
 
       this.mixer = new THREE.AnimationMixer(model);
-
       const animations = gltf.animations;
       if (animations && animations.length) {
         const action = this.mixer.clipAction(animations[0]);
         action.play();
+        this.mixer.timeScale = 0; // 초기에는 애니메이션 정지
       }
       this.renderer.localClippingEnabled = true;
 
@@ -391,15 +439,9 @@ class App {
     controls.enabled = true;
     this.smallCameras = this.cameras.filter((_, i) => i !== index);
   }
-
-  update(time: number) {
-    time *= 0.001;
-    const deltaTime = this.clock.getDelta();
-    time += 1;
-    if (this.mixer) {
-      this.mixer.update(deltaTime);
-    }
-
+  // 클리핑 플레인 업데이트 함수
+  private updateClippingPlanes(deltaTime: number, time: number) {
+    if (!this.animationEnabled) return; // 애니메이션이 활성화되지 않은 경우 클리핑 플레인 업데이트 중단
     if (clipPlaneX && clipPlaneX.constant < 300) {
       clipPlaneX.constant += deltaTime * clipSpeed * clipDirection;
     }
@@ -421,8 +463,15 @@ class App {
         clipPlaneX3.constant -= deltaTime * clipSpeed;
       }
     }
-
-    timePassed += deltaTime;
+  }
+  update(time: number) {
+    time *= 0.001;
+    const deltaTime = this.clock.getDelta();
+    time += 1;
+    if (this.mixer) {
+      this.mixer.update(deltaTime);
+    }
+    this.updateClippingPlanes(deltaTime, time);
 
     if (cube017Heating && timePassed >= cube017ChangeTime) {
       lerpProgress = Math.min((timePassed - cube017ChangeTime) / duration, 1);
@@ -464,8 +513,6 @@ class App {
     if (this.controls2.enabled) this.controls2.update();
     if (this.controls3.enabled) this.controls3.update();
     if (this.controls4.enabled) this.controls4.update();
-
-    this.fps.update();
   }
 
   render(time: number) {
@@ -522,39 +569,61 @@ class App {
 }
 
 const ThreeDMonitoring = () => {
-  const [messageCount] = useState(0); // 메시지 카운트를 위한 상태
+  const fetchData = useWorkInstructionStore((state) => state.fetchData!);
+  const selectedData = useWorkInstructionStore((state) => state.data!);
+  const workItems = useWorkInstructionStore((state) => state.workItems);
+  const appRef = useRef<any>(null);
 
   useEffect(() => {
-    const container = document.querySelector('#webgl-container');
-    if (container && container.children.length === 0) {
-      new App(); // 3D 렌더링을 위한 함수
+    // 데이터 가져오기
+    fetchData(['1CAL']);
+    // 웹소켓 초기화
+    initializeWebSocket();
+  }, [fetchData]);
+
+  // App 인스턴스 생성
+  useEffect(() => {
+    if (
+      selectedData &&
+      selectedData.length > 0 &&
+      workItems &&
+      !appRef.current
+    ) {
+      const container = document.querySelector('#webgl-container');
+      if (container && container.children.length === 0) {
+        appRef.current = new App(workItems); // workItems를 전달
+        console.log('App 인스턴스 생성 완료');
+        console.log('workitems:', workItems);
+        console.log('selectedData:', selectedData);
+      }
     }
+  }, [selectedData, workItems]);
 
-    // WebSocket 연결 설정
-    // const ws = new WebSocket('ws://localhost:8086/ws/opeartion');
+  // 애니메이션 상태 제어
+  useEffect(() => {
+    if (appRef.current && selectedData) {
+      const inProgressItem = selectedData.find(
+        (item) =>
+          item.workInstructions.schStatus === 'IN_PROGRESS' &&
+          item.workInstructions.process === '1CAL',
+      );
 
-    // ws.onmessage = (event) => {
-    //   const data = JSON.parse(event.data); // 수신한 메시지를 JSON으로 파싱
-    //   setMeshInfo(data[messageCount]); // 현재 메시지 인덱스에 해당하는 데이터만 출력
-    //   setMessageCount((prevCount) => (prevCount + 1) % data.length); // 메시지 카운트 업데이트
-    // };
-
-    // const interval = setInterval(() => {
-    //   ws.send('request-next-data'); // 서버에 다음 데이터를 요청하는 메시지 전송
-    // }, 30000); // 30초마다 메시지를 서버에 요청
-
-    // return () => {
-    //   ws.close(); // 컴포넌트가 언마운트될 때 WebSocket 연결 종료
-    //   clearInterval(interval); // 타이머 제거
-    // };
-  }, [messageCount]);
+      if (inProgressItem) {
+        console.log('여기가 inprogressItem');
+        console.log(inProgressItem);
+        appRef.current.setAnimationEnabled(true);
+      } else {
+        appRef.current.setAnimationEnabled(false);
+      }
+    }
+  }, [selectedData]);
 
   return (
     <div className={styles.page}>
       <h1>3D Monitoring 작업 화면</h1>
       <div
         id="webgl-container"
-        style={{ width: '95%', height: '120%', position: 'relative' }}></div>
+        style={{ width: '95%', height: '150%', position: 'relative' }}></div>
       <div className={styles.result}>
         <div className={styles.summary}>
           <AnalyzeChart />

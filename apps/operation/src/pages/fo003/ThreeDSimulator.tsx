@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { PMREMGenerator } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import Stats from 'three/examples/jsm/libs/stats.module';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
 
@@ -46,7 +45,6 @@ class App {
   private raycaster: THREE.Raycaster;
   private mouse: THREE.Vector2;
   private clock: THREE.Clock;
-  private fps!: Stats;
   private mixer: THREE.AnimationMixer | null = null;
   private selectedCamera!: THREE.PerspectiveCamera;
   private camera1!: THREE.PerspectiveCamera;
@@ -57,20 +55,25 @@ class App {
   private controls2!: OrbitControls;
   private controls3!: OrbitControls;
   private controls4!: OrbitControls;
+  private animationEnabled: boolean = false; // 애니메이션 활성화 상태
+
   // private boxHelper: THREE.BoxHelper | null = null;
   // private model: THREE.Object3D | null = null;
   // private box: THREE.Box3 | null = null;
   // private selectedMeshInfo: string = ''; // 클릭된 메쉬 정보를 저장
 
-  private defaultTimeScale = 1; // 기본 속도
-  private expectedDurationTimeScale = 1; // 애니메이션 속도
-  private isExpectedDurationActive = false; // expectedDuration이 활성화 되었는지 여부
-  private expectedDurationElapsedTime = 0; // elapsed time tracker
-  private expectedDuration: number = 0; // 전달된 expectedDuration 값을 저장할 변수
+  // private defaultTimeScale = 1; // 기본 속도
+  // private expectedDurationTimeScale = 1; // 애니메이션 속도
+  // private isExpectedDurationActive = false; // expectedDuration이 활성화 되었는지 여부
+  // private expectedDurationElapsedTime = 0; // elapsed time tracker
+  // private expectedDuration: number = 0; // 전달된 expectedDuration 값을 저장할 변수
   // private controls: any;
   // private schCoils: THREE.Object3D[] = [];
 
   constructor(coilItems: any[]) {
+    if (coilItems.length != 0) {
+      this.animationEnabled = true;
+    }
     this.divContainer = document.querySelector('#webgl-container');
     this.infoDiv = document.querySelector('#mesh-info'); // 선택된 Mesh 정보를 표시할 div 선택
     this.cameras = [];
@@ -143,10 +146,10 @@ class App {
     const pmremGenerator = new PMREMGenerator(this.renderer);
     pmremGenerator.compileEquirectangularShader();
 
-    new RGBELoader().load('image12.hdr', (texture) => {
+    new RGBELoader().load('image20.hdr', (texture) => {
       const envMap = pmremGenerator.fromEquirectangular(texture).texture;
       this.scene.environment = envMap;
-      this.scene.background = new THREE.Color(0x565657);
+      this.scene.background = new THREE.Color(0xebfff5);
       texture.dispose();
       pmremGenerator.dispose();
     });
@@ -175,9 +178,8 @@ class App {
     this.controls3.enabled = false;
     this.controls4.enabled = false;
 
-    const stats = new Stats();
-    this.divContainer?.appendChild(stats.dom);
-    this.fps = stats;
+    // const stats = new Stats();
+    // this.divContainer?.appendChild(stats.dom);
   }
 
   private setupModel(coilItems: any[]) {
@@ -206,9 +208,19 @@ class App {
       schCoils.forEach((coil, index) => {
         coil.visible = index < numCoils; // Show up to numCoils SchCoils, hide the rest
       });
-      subCoils.forEach((subCoil) => {
-        subCoil.visible = false;
-      });
+      // subCoils 처리
+      // 초과된 코일을 subCoils로 표시 (numCoils가 schCoils의 개수를 초과할 경우)
+      if (numCoils > schCoils.length) {
+        const extraCoils = numCoils - schCoils.length; // 초과된 코일 수
+
+        subCoils.forEach((subCoil, index) => {
+          subCoil.visible = index < extraCoils; // 필요한 수만큼 subCoil 표시
+        });
+      } else {
+        subCoils.forEach((subCoil) => {
+          subCoil.visible = false; // schCoils에서만 다 처리되는 경우 subCoils는 숨김
+        });
+      }
 
       model.traverse((child) => {
         if (child instanceof THREE.Mesh) {
@@ -225,18 +237,14 @@ class App {
               side: THREE.DoubleSide,
             });
           }
-          // else {
-          //   child.material = new THREE.MeshBasicMaterial({
-          //     color: child.material.color || 0xffffff,
-          //     side: THREE.DoubleSide,
-          //   });
-          // }
 
           if (child.name === 'Plane001') {
             console.log('find!');
             // 바닥 Mesh에 대한 특수 처리
             child.material = new THREE.MeshStandardMaterial({
               color: 0x000000, // 바닥의 색상을 명시적으로 설정
+              emissive: 0xf0f0f0,
+              emissiveIntensity: 0.6,
               roughness: 0.8,
               metalness: 0,
               side: THREE.DoubleSide, // 양면 렌더링
@@ -253,7 +261,7 @@ class App {
             //   200,
             //   0xff0000,
             // );
-            //this.scene.add(planeHelper);
+            // this.scene.add(planeHelper);
           }
           if (child.name === 'Plane002') {
             // 클리핑 플레인 설정 (X축 기준으로 왼쪽에서부터 메쉬를 잘라냄)
@@ -295,17 +303,6 @@ class App {
         }
       });
 
-      // const box = new THREE.Box3().setFromObject(model);
-      // const axisHelper = new THREE.AxesHelper(500);
-      // //this.scene.add(axisHelper);
-
-      // const boxHelper = new THREE.BoxHelper(model);
-      // //this.scene.add(boxHelper);
-
-      // this.boxHelper = boxHelper;
-      // this.model = model;
-      // this.box = box;
-
       this.mixer = new THREE.AnimationMixer(model);
 
       const animations = gltf.animations;
@@ -313,10 +310,10 @@ class App {
         const action = this.mixer.clipAction(animations[0]);
         action.play();
       }
-      if (coilItems.length > 0) {
-        this.expectedDuration = coilItems[0].expectedDuration || 1; // 첫 번째 아이템의 expectedDuration
-        this.adjustAnimationSpeed(this.expectedDuration);
-      }
+      // if (coilItems.length > 0) {
+      //   this.expectedDuration = coilItems[0].expectedDuration || 1; // 첫 번째 아이템의 expectedDuration
+      //   // this.adjustAnimationSpeed(this.expectedDuration);
+      // }
       this.renderer.localClippingEnabled = true;
 
       console.log(gltf.animations);
@@ -368,12 +365,8 @@ class App {
     pointLight.position.set(x, y, z);
     this.scene.add(pointLight);
 
-    // const pointLightHelper = new THREE.PointLightHelper(
-    //   pointLight,
-    //   10,
-    //   helperColor,
-    // );
-    //this.scene.add(pointLightHelper);
+    // const pointLightHelper = new THREE.PointLightHelper(pointLight, 10);
+    // this.scene.add(pointLightHelper);
   }
 
   private setupLight() {
@@ -391,7 +384,7 @@ class App {
     //   directionalLight,
     //   10,
     // );
-    //this.scene.add(directionalLightHelper);
+    // this.scene.add(directionalLightHelper);
 
     const additionalLight = new THREE.DirectionalLight(0xffffff, 10);
     additionalLight.position.set(-1, 1, 0).normalize();
@@ -434,45 +427,31 @@ class App {
   }
 
   // ****************** 애니메이션 속도 조절 부분
-  private adjustAnimationSpeed(expectedDuration: number) {
-    if (this.mixer) {
-      this.isExpectedDurationActive = true;
-      this.expectedDurationElapsedTime = 0; // 시간을 0으로 초기화
+  // private adjustAnimationSpeed(expectedDuration: number) {
+  //   if (this.mixer) {
+  //     this.isExpectedDurationActive = true;
+  //     this.expectedDurationElapsedTime = 0; // 시간을 0으로 초기화
 
-      // expectedDuration 값에 따라 timeScale 변경
-      this.expectedDurationTimeScale = this.defaultTimeScale / expectedDuration;
-      this.mixer.timeScale = this.expectedDurationTimeScale;
+  //     // expectedDuration 값에 따라 timeScale 변경
+  //     this.expectedDurationTimeScale = this.defaultTimeScale / expectedDuration;
+  //     this.mixer.timeScale = this.expectedDurationTimeScale;
 
-      setTimeout(() => {
-        // expectedDuration이 지나면 기본 속도로 복구
-        this.resetAnimationSpeed();
-      }, expectedDuration * 1000); // 밀리초로 변환하여 사용
-    }
-  }
+  //     setTimeout(() => {
+  //       // expectedDuration이 지나면 기본 속도로 복구
+  //       this.resetAnimationSpeed();
+  //     }, expectedDuration * 1000); // 밀리초로 변환하여 사용
+  //   }
+  // }
 
-  private resetAnimationSpeed() {
-    if (this.mixer) {
-      this.mixer.timeScale = this.defaultTimeScale;
-      this.isExpectedDurationActive = false;
-    }
-  }
-  update(time: number) {
-    time *= 0.001;
-    const deltaTime = this.clock.getDelta() / 2;
-    time += 1;
-    if (this.mixer) {
-      this.mixer.update(deltaTime);
-    }
-
-    // expectedDuration이 진행 중이면 경과 시간을 업데이트
-    if (this.isExpectedDurationActive) {
-      this.expectedDurationElapsedTime += deltaTime;
-      if (this.expectedDurationElapsedTime >= this.expectedDuration) {
-        // expectedDuration 시간이 지나면 기본 속도로 변경
-        this.resetAnimationSpeed();
-      }
-    }
-
+  // private resetAnimationSpeed() {
+  //   if (this.mixer) {
+  //     this.mixer.timeScale = this.defaultTimeScale;
+  //     // this.isExpectedDurationActive = false;
+  //   }
+  // }
+  // 클리핑 플레인 업데이트 함수
+  private updateClippingPlanes(deltaTime: number, time: number) {
+    if (!this.animationEnabled) return; // 애니메이션이 활성화되지 않은 경우 클리핑 플레인 업데이트 중단
     if (clipPlaneX && clipPlaneX.constant < 300) {
       clipPlaneX.constant += deltaTime * clipSpeed * clipDirection;
     }
@@ -494,6 +473,46 @@ class App {
         clipPlaneX3.constant -= deltaTime * clipSpeed;
       }
     }
+  }
+  update(time: number) {
+    time *= 0.001;
+    const deltaTime = this.clock.getDelta();
+    time += 1;
+    if (this.mixer) {
+      this.mixer.update(deltaTime);
+    }
+    this.updateClippingPlanes(deltaTime, time);
+
+    // // expectedDuration이 진행 중이면 경과 시간을 업데이트
+    // if (this.isExpectedDurationActive) {
+    //   this.expectedDurationElapsedTime += deltaTime;
+    //   if (this.expectedDurationElapsedTime >= this.expectedDuration) {
+    //     // expectedDuration 시간이 지나면 기본 속도로 변경
+    //     this.resetAnimationSpeed();
+    //   }
+    // }
+
+    // if (clipPlaneX && clipPlaneX.constant < 300) {
+    //   clipPlaneX.constant += deltaTime * clipSpeed * clipDirection;
+    // }
+
+    // if (clipPlaneX2 && time > 21) {
+    //   const timeInCycle = (time - 21) % 40;
+    //   if (timeInCycle <= 21 && clipPlaneX2.constant < 20) {
+    //     clipPlaneX2.constant += deltaTime * clipSpeed;
+    //   } else if (clipPlaneX2.constant > 5) {
+    //     clipPlaneX2.constant -= deltaTime * clipSpeed;
+    //   }
+    // }
+
+    // if (clipPlaneX3 && time > 44) {
+    //   const timeInCycle = (time - 44) % 40;
+    //   if (timeInCycle <= 20 && clipPlaneX3.constant < 320) {
+    //     clipPlaneX3.constant += deltaTime * clipSpeed;
+    //   } else if (clipPlaneX3.constant > 290) {
+    //     clipPlaneX3.constant -= deltaTime * clipSpeed;
+    //   }
+    // }
 
     timePassed += deltaTime;
 
@@ -537,8 +556,6 @@ class App {
     if (this.controls2.enabled) this.controls2.update();
     if (this.controls3.enabled) this.controls3.update();
     if (this.controls4.enabled) this.controls4.update();
-
-    this.fps.update();
   }
 
   render(time: number) {
@@ -593,65 +610,6 @@ class App {
     this.renderer.setSize(width, height);
   }
 }
-// interface SchDataType extends DataType {
-//   key?: string;
-//   no: string | number;
-//   scheduleId: string;
-//   createdDate: string;
-//   rollID: string;
-//   facility: string;
-//   startTime: string;
-//   endTime: string;
-//   rejectCount?: string | number;
-// }
-
-// Table 임의 데이터
-// const columnsData: ColumnDataType<SchDataType>[] = [
-//   {
-//     title: 'no',
-//     dataIndex: 'no',
-//     sortable: {
-//       compare: (a, b) => a.no - b.no,
-//       multiple: 3,
-//     },
-//   },
-//   {
-//     title: '스케줄ID',
-//     dataIndex: 'scheduleId',
-//   },
-//   {
-//     title: '생성일자',
-//     dataIndex: 'createdDate',
-//     sortable: {
-//       compare: (a, b) => a.createdDate - b.createdDate,
-//       multiple: 1,
-//     },
-//   },
-//   {
-//     title: '재료단위',
-//     dataIndex: 'rollID',
-//     sortable: {
-//       compare: (a, b) => a.rollID - b.rollID,
-//       multiple: 0,
-//     },
-//   },
-//   {
-//     title: '해당공정',
-//     dataIndex: 'facility',
-//     sortable: {
-//       compare: (a, b) => a.facility - b.facility,
-//       multiple: 4,
-//     },
-//   },
-//   {
-//     title: '작업 예상 시간',
-//     dataIndex: 'endTime',
-//     sortable: {
-//       compare: (a, b) => a.endTime - b.endTime,
-//       multiple: 6,
-//     },
-//   },
-// ];
 
 interface WorkInstruction extends DataType {
   scheduleId: number;
@@ -663,13 +621,21 @@ interface WorkInstruction extends DataType {
   schStatus: string;
 }
 
-// interface WorkInstructionItem extends DataType {
-//   itemId: number;
-// }
+interface WorkInstructionItem extends DataType {
+  itemId: number;
+  materialId: number;
+  goalThickness: number;
+  goalWidth: number;
+  currWidth: number;
+  currThickness: number;
+  expectedItemDuration: number;
+}
 const ThreeDSimulator = () => {
   const [workInstructions, setWorkInstructions] = useState<WorkInstruction[]>(
     [],
   );
+  const [selectedItems, setSelectedItems] = useState<WorkInstructionItem[]>([]); // 선택된 아이템 상태 추가
+
   const [loading, setLoading] = useState(true);
 
   // API 호출 함수
@@ -710,7 +676,18 @@ const ThreeDSimulator = () => {
       );
 
       const { result } = response.data;
+      const coilData = result.map(
+        (item: WorkInstructionItem): Record<string, any> => ({
+          itemId: item.materialId,
+          goalThickness: item.initialGoalThickness,
+          goalWidth: item.initialGoalWidth,
+          currThickness: item.initialThickness,
+          currWidth: item.initialWidth,
+          expectedItemDuration: item.expectedItemDuration,
+        }),
+      );
       console.log('Selected items:', result);
+      setSelectedItems(coilData);
 
       // 이전 WebGL 컨테이너를 삭제하고 새로운 App 초기화
       const container = document.querySelector('#webgl-container');
@@ -773,6 +750,39 @@ const ThreeDSimulator = () => {
       key: 'schStatus',
     },
   ];
+
+  const coilsData: ColumnDataType<WorkInstructionItem>[] = [
+    {
+      title: '코일 ID',
+      dataIndex: 'itemId',
+      key: 'itemId',
+    },
+    {
+      title: '현재 폭',
+      dataIndex: 'currWidth',
+      key: 'currWidth',
+    },
+    {
+      title: '현재 두께',
+      dataIndex: 'currThickness',
+      key: 'currThickness',
+    },
+    {
+      title: '목표 폭',
+      dataIndex: 'goalWidth',
+      key: 'goalWidth',
+    },
+    {
+      title: '목표 두께',
+      dataIndex: 'goalThickness',
+      key: 'goalThickness',
+    },
+    {
+      title: '예상시간',
+      dataIndex: 'expectedItemDuration',
+      key: 'expectedItemDuration',
+    },
+  ];
   // row 클릭 이벤트 핸들러를 위한 추가 코드
   const handleRowClick = (record: WorkInstruction) => {
     // scheduleId를 이용하여 API 호출
@@ -785,32 +795,32 @@ const ThreeDSimulator = () => {
       <div
         id="webgl-container"
         style={{ width: '95%', height: '120%', position: 'relative' }}></div>
-      <div className={styles.schtable}>
-        <div className={styles.summary}>
-          {loading ? (
-            <p>Loading...</p>
-          ) : (
-            <Table<WorkInstruction>
-              columns={columnsData}
-              data={workInstructions}
-              rowKey="scheduleId"
-              useCheckBox={false}
-              pagination={false}
-              handleRowClick={handleRowClick} // handleRowClick 전달
-            />
-          )}
+      <h3>작업 지시서 리스트</h3>
+
+      <div className={styles.tableContainer}>
+        {/* 테이블을 감싸는 Flexbox 컨테이너 */}
+        <div className={styles.schtable}>
+          <div className={styles.summary}>
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              <Table<WorkInstruction>
+                columns={columnsData}
+                data={workInstructions}
+                rowKey="scheduleId"
+                useCheckBox={false}
+                pagination={false}
+                handleRowClick={handleRowClick} // handleRowClick 전달
+              />
+            )}
+          </div>
         </div>
-        {/* <div className={styles.selectedItems}>
-          <h2>선택된 작업 아이템</h2>
+        {/* 옆에 선택된 작업 아이템을 보여주는 테이블 */}
+        <div className={styles.selectedItemsTable}>
+          <h2>코일 리스트</h2>
           {selectedItems.length > 0 ? (
             <Table<WorkInstructionItem>
-              columns={[
-                {
-                  title: '아이템 ID',
-                  dataIndex: 'itemId',
-                  key: 'itemId',
-                },
-              ]}
+              columns={coilsData}
               data={selectedItems}
               rowKey="itemId"
               pagination={false}
@@ -818,7 +828,7 @@ const ThreeDSimulator = () => {
           ) : (
             <p>아이템을 선택하세요.</p>
           )}
-        </div> */}
+        </div>
       </div>
     </div>
   );
