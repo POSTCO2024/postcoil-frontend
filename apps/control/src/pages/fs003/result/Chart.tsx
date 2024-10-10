@@ -75,7 +75,7 @@ const Chart = ({ chartName }: PropsType) => {
       setData([]);
     }
     console.log('data', data);
-  }, [materialData, coilSupplyData]); // materialData가 변경될 때마다 실행
+  }, [materialData]); // materialData가 변경될 때마다 실행
 
   // useEffect(() => {
   const chartOptions: Highcharts.Options = {

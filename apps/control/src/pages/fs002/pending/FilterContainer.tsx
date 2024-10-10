@@ -111,20 +111,15 @@ const FilterContainer = () => {
   }, [scheduleData]); // scheduleData가 변경될 때마다 실행
 
   useEffect(() => {
-    if (materialData && materialData.length > 0) {
-      // console.log('materialData');
-      // setRollUnitOptions(
-      //   scheduleData.map((d) => ({ value: d.id, label: d.scheduleNo })),
-      // );
-      // setSelectedRollUnit([scheduleNo]);
-      // setSelectedProcessCode([processCode]);
-    } else if (scheduleData && scheduleData.length > 0) {
-      // setSelectedProcessCode([processCode]);
-      // setSelectedRollUnit([scheduleData[0].scheduleNo]);
-      // fetchMaterialData([scheduleData[0].id]);
-    } else {
-      // setSelectedRollUnit([]);
-    }
+    console.log('materialData', materialData);
+    // if (materialData && materialData.length > 0) {
+    //   console.log('materialData', materialData);
+    //   setRollUnitOptions(
+    //     materialData.map((d) => ({ value: d.id, label: d.materialName })),
+    //   );
+    // } else {
+    //   setRollUnitOptions([]);
+    // }
   }, [materialData]);
 
   // useEffect(() => {

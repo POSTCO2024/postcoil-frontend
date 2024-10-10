@@ -8,15 +8,15 @@ import styles from './SchPePage.module.scss';
 
 import ContentContainer from '@/pages/fs002/pending/ContentContainer';
 import FilterContainer from '@/pages/fs002/pending/FilterContainer';
-import { useMaterialStore, useScheduleStore } from '@/store/fs002store';
+import { useMaterialStore } from '@/store/fs002store';
 
 const SchPePage = () => {
   const data = useMaterialStore((state) => state.data);
   const resetData = useMaterialStore((state) => state.resetData)!;
-  const cleanScheduleData = useScheduleStore((state) => state.cleanData!); // cleanData 함수 추가
-  const cleanMaterialData = useMaterialStore((state) => state.cleanData!); // cleanData 함수 추가
+  // const cleanScheduleData = useScheduleStore((state) => state.cleanData!); // cleanData 함수 추가
+  // const cleanMaterialData = useMaterialStore((state) => state.cleanData!); // cleanData 함수 추가
 
-  const [first, setFirst] = useState(0);
+  // const [first, setFirst] = useState(0);
 
   const [isGraphVisible, setIsGraphVisible] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -39,16 +39,15 @@ const SchPePage = () => {
   };
 
   useEffect(() => {
-    setFirst(1);
-
-    return () => {
-      if (first === 1) {
-        console.log('페이지 떠나기');
-        cleanScheduleData();
-        cleanMaterialData();
-        setFirst(0);
-      }
-    };
+    // setFirst(1);
+    // return () => {
+    //   // if (first === 1) {
+    //   console.log('페이지 떠나기');
+    //   cleanScheduleData();
+    //   cleanMaterialData();
+    //   // setFirst(0);
+    //   // }
+    // };
   }, []);
 
   return (
@@ -64,7 +63,7 @@ const SchPePage = () => {
             style={data ? { visibility: 'visible' } : { visibility: 'hidden' }}
             className={styles.resetBtn}
             onClick={handleReset}>
-            Reset
+            초기화
           </Button>
           {isGraphVisible ? <Charts /> : <ContentContainer />}
         </div>
