@@ -168,8 +168,8 @@ const ContentContainer = () => {
                   rowClassName={(record) =>
                     record.changed ? `${styles.changedBg}` : ''
                   }
-                  scroll={{ x: 'max-content', y: 'auto' }}
-                  tableLayout={'fixed'}
+                  // scroll={{ x: 'max-content', y: 'auto' }}
+                  // tableLayout={'fixed'}
                 />
               </ConfigProvider>
             </SortableContext>

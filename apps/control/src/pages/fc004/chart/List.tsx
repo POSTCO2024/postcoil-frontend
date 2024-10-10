@@ -54,7 +54,7 @@ export const List: React.FC<ListProps> = ({ data }) => {
         dataSource={data}
         size="small"
         pagination={false}
-        scroll={{ x: 100, y: 200 }}
+        scroll={{ x: 150, y: 150 }}
       />
     </div>
   );

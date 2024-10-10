@@ -5,6 +5,7 @@ export const columnsList = [
     dataIndex: 'index',
     key: 'index',
     fixed: true,
+    width: 60,
     render: (_: any, __: any, index: number) => index + 1,
   },
   {
@@ -17,21 +18,25 @@ export const columnsList = [
     title: '공장 코드',
     dataIndex: 'factoryCode',
     key: 'factory_code',
+    width: 60,
   },
   {
     title: '재료 유형',
     dataIndex: 'materialType',
     key: 'material_type',
+    width: 60,
   },
   {
     title: '조업 코드',
     dataIndex: 'opCode',
     key: 'op_code',
+    width: 60,
   },
   {
     title: '재료 진도',
     dataIndex: 'progress',
     key: 'progress',
+    width: 60,
   },
   {
     title: '두께',
@@ -64,62 +69,74 @@ export const columnsList = [
     dataIndex: 'passProc',
     key: 'passProc',
     render: (text: string) => (text === 'null' ? '' : text),
+    width: 100,
   },
   {
     title: '잔공정',
     dataIndex: 'remProc',
     key: 'remProc',
+    width: 100,
   },
   {
     title: '전공정',
     dataIndex: 'preProc',
     key: 'preProc',
+    width: 100,
     render: (text: string) => (text === 'null' ? '' : text),
   },
   {
     title: '차공정',
     dataIndex: 'nextProc',
     key: 'nextProc',
+    width: 100,
   },
   {
     title: '저장 위치',
     dataIndex: 'storageLoc',
     key: 'storage_loc',
+    width: 100,
   },
   {
     title: '야드 위치',
     dataIndex: 'yard',
     key: 'yard',
+    width: 100,
   },
   {
     title: '품종',
     dataIndex: 'coilTypeCode',
     key: 'coil_type_code',
+    width: 100,
   },
   {
     title: '주문 번호',
     dataIndex: 'orderNo',
     key: 'order_no',
+    width: 100,
   },
   {
     title: '고객사',
     dataIndex: 'customerName',
     key: 'customer_name',
+    width: 80,
   },
   {
     title: '주문 폭',
     dataIndex: 'goalWidth',
     key: 'goal_width',
+    width: 80,
   },
   {
     title: '주문 두께',
     dataIndex: 'goalThickness',
     key: 'goal_thickness',
+    width: 100,
   },
   {
     title: '주문 길이',
     dataIndex: 'goalLength',
     key: 'goal_length',
+    width: 100,
   },
   {
     title: '납기일',
@@ -130,6 +147,7 @@ export const columnsList = [
     title: '롤 단위',
     dataIndex: 'rollUnitName',
     key: 'roll_unit_name',
+    width: 80,
   },
 ];
 

@@ -13,7 +13,7 @@
     font-weight: 600;
     width: 90%;
     margin: 40px auto 0px;
-    height: 2.2rem;
+    // height: 2.2rem;
   }
 
   h2 {
@@ -48,6 +48,7 @@
   align-items: center;
   margin-bottom: 20px; // 카드 간 간격 추가
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15); // 카드 섀도우 추가
+  // overflow: auto;
 }
 
 .line1,
