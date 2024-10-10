@@ -102,7 +102,8 @@ const FilterContainer = () => {
     }
   };
 
-  const requestCoil = async (workInstructionId: string) => {
+  const requestCoil = async (workInstructionId: number) => {
+    console.log(workInstructionId);
     try {
       const response = await axios.post(
         operationUrl +
@@ -138,7 +139,6 @@ const FilterContainer = () => {
       setProcessCode([]);
       setSelectedRollUnitName([]);
     }
-
     console.log('filtercontainer3', selectedData);
   }, [selectedData]);
 
@@ -164,7 +164,10 @@ const FilterContainer = () => {
         <Button
           text={'보급요구'}
           style={true}
-          onClick={() => requestCoil('workInstructionId')}
+          // onClick={() => requestCoil(selectedIntructionId)}
+          onClick={() =>
+            requestCoil(selectedData[0].workInstructions.workInstructionId!)
+          }
         />
         <RedButton
           text={'REJECT'}

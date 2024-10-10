@@ -23,6 +23,7 @@ export const useWorkInstructionStore = create<StoreType>((set) => ({
   countCoilTypeCode: null, // 선택된 schedule의 countCoilTypeCode
   workItems: null, // 선택된 schedule의 업데이트된 재료들 상태
   coilSupplyData: null, // 선택된 schedule의 업데이트된 CoilSupply 데이터 상태
+  workInstructionId: -1,
   setData: (data: ClientDTO | string) => {
     // ClientDTO 타입인지 확인
     if (typeof data !== 'string') {
@@ -34,6 +35,7 @@ export const useWorkInstructionStore = create<StoreType>((set) => ({
         countCoilTypeCode: data.countCoilTypeCode,
         workItems: data.workInstructions.items,
         coilSupplyData: data.coilSupply,
+        workInstructionId: data.workInstructions.workInstructionId,
       });
     } else {
       // string 타입인 경우, 에러를 throw

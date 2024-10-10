@@ -161,6 +161,9 @@ const Chart = ({ chartName }: PropsType) => {
             mouseOut: function () {
               setHoveredPoint(null); // 상태 초기화
             },
+            click: function (e) {
+              console.log(e);
+            },
           },
         },
       },

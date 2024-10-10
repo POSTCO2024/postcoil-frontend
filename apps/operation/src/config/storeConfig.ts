@@ -18,6 +18,7 @@ export interface StoreType {
   workItems?: WorkItemDTO[] | null; // 선택된 스케줄에 해당하는 재료들
   coilSupplyData?: CoilSupplyDTO | null; // websocket용
   countCoilTypeCode?: any; // 선택된 스케줄의 품종 통계
+  workInstructionId?: number;
 }
 
 export interface DragState {
