@@ -1,9 +1,4 @@
-import {
-  ClientDTO,
-  CoilSupplyDTO,
-  WorkInstructionsDTO,
-  WorkItemDTO,
-} from './dto';
+import { ClientDTO, CoilSupplyDTO, WorkItemDTO } from './dto';
 
 export interface StoreType {
   // data: WorkInstructionsDTO[] | ClientDTO[] | null;

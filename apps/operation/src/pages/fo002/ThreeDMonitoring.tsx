@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { PMREMGenerator } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -46,7 +46,6 @@ class App {
   private raycaster: THREE.Raycaster;
   private mouse: THREE.Vector2;
   private clock: THREE.Clock;
-  private fps!: Stats;
   private mixer: THREE.AnimationMixer | null = null;
   private selectedCamera!: THREE.PerspectiveCamera;
   private camera1!: THREE.PerspectiveCamera;
@@ -64,7 +63,6 @@ class App {
   // private model: THREE.Object3D | null = null;
   // private box: THREE.Box3 | null = null;
   // private selectedMeshInfo: string = ''; // 클릭된 메쉬 정보를 저장
-  private actions: THREE.AnimationAction[] = []; // 애니메이션 액션을 저장할 배열
 
   constructor(data: any[]) {
     this.divContainer = document.querySelector('#webgl-container');
@@ -182,7 +180,6 @@ class App {
 
     // const stats = new Stats();
     // this.divContainer?.appendChild(stats.dom);
-    // this.fps = stats;
   }
 
   private setupModel(data: any[]) {
@@ -517,8 +514,6 @@ class App {
     if (this.controls2.enabled) this.controls2.update();
     if (this.controls3.enabled) this.controls3.update();
     if (this.controls4.enabled) this.controls4.update();
-
-    //this.fps.update();
   }
 
   render(time: number) {

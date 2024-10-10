@@ -46,7 +46,6 @@ class App {
   private raycaster: THREE.Raycaster;
   private mouse: THREE.Vector2;
   private clock: THREE.Clock;
-  private fps!: Stats;
   private mixer: THREE.AnimationMixer | null = null;
   private selectedCamera!: THREE.PerspectiveCamera;
   private camera1!: THREE.PerspectiveCamera;
@@ -66,8 +65,8 @@ class App {
 
   private defaultTimeScale = 1; // 기본 속도
   private expectedDurationTimeScale = 1; // 애니메이션 속도
-  private isExpectedDurationActive = false; // expectedDuration이 활성화 되었는지 여부
-  private expectedDurationElapsedTime = 0; // elapsed time tracker
+  // private isExpectedDurationActive = false; // expectedDuration이 활성화 되었는지 여부
+  // private expectedDurationElapsedTime = 0; // elapsed time tracker
   private expectedDuration: number = 0; // 전달된 expectedDuration 값을 저장할 변수
   // private controls: any;
   // private schCoils: THREE.Object3D[] = [];
@@ -182,7 +181,6 @@ class App {
 
     // const stats = new Stats();
     // this.divContainer?.appendChild(stats.dom);
-    // this.fps = stats;
   }
 
   private setupModel(coilItems: any[]) {
@@ -315,7 +313,7 @@ class App {
       }
       if (coilItems.length > 0) {
         this.expectedDuration = coilItems[0].expectedDuration || 1; // 첫 번째 아이템의 expectedDuration
-        this.adjustAnimationSpeed(this.expectedDuration);
+        // this.adjustAnimationSpeed(this.expectedDuration);
       }
       this.renderer.localClippingEnabled = true;
 
@@ -430,26 +428,26 @@ class App {
   }
 
   // ****************** 애니메이션 속도 조절 부분
-  private adjustAnimationSpeed(expectedDuration: number) {
-    if (this.mixer) {
-      this.isExpectedDurationActive = true;
-      this.expectedDurationElapsedTime = 0; // 시간을 0으로 초기화
+  // private adjustAnimationSpeed(expectedDuration: number) {
+  //   if (this.mixer) {
+  //     this.isExpectedDurationActive = true;
+  //     this.expectedDurationElapsedTime = 0; // 시간을 0으로 초기화
 
-      // expectedDuration 값에 따라 timeScale 변경
-      this.expectedDurationTimeScale = this.defaultTimeScale / expectedDuration;
-      this.mixer.timeScale = this.expectedDurationTimeScale;
+  //     // expectedDuration 값에 따라 timeScale 변경
+  //     this.expectedDurationTimeScale = this.defaultTimeScale / expectedDuration;
+  //     this.mixer.timeScale = this.expectedDurationTimeScale;
 
-      setTimeout(() => {
-        // expectedDuration이 지나면 기본 속도로 복구
-        this.resetAnimationSpeed();
-      }, expectedDuration * 1000); // 밀리초로 변환하여 사용
-    }
-  }
+  //     setTimeout(() => {
+  //       // expectedDuration이 지나면 기본 속도로 복구
+  //       this.resetAnimationSpeed();
+  //     }, expectedDuration * 1000); // 밀리초로 변환하여 사용
+  //   }
+  // }
 
   private resetAnimationSpeed() {
     if (this.mixer) {
       this.mixer.timeScale = this.defaultTimeScale;
-      this.isExpectedDurationActive = false;
+      // this.isExpectedDurationActive = false;
     }
   }
   // 클리핑 플레인 업데이트 함수
@@ -559,8 +557,6 @@ class App {
     if (this.controls2.enabled) this.controls2.update();
     if (this.controls3.enabled) this.controls3.update();
     if (this.controls4.enabled) this.controls4.update();
-
-    // this.fps.update();
   }
 
   render(time: number) {
