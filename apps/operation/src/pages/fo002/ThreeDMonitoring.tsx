@@ -13,10 +13,6 @@ import {
   useWorkInstructionStore,
 } from '@/store/fo001store';
 
-let clipPlaneX: any;
-let clipPlaneX2: any;
-let clipPlaneX3: any;
-
 const clipSpeed: number = 11.5;
 const clipDirection: number = 1;
 
@@ -36,6 +32,10 @@ let lerpProgress: number = 0;
 const endCoolColor = new THREE.Color(0x0000ff);
 
 class App {
+  private clipPlaneX: any;
+  private clipPlaneX2: any;
+  private clipPlaneX3: any;
+
   private divContainer: HTMLDivElement | null;
   private infoDiv: HTMLDivElement | null; // 선택된 메쉬 정보를 표시할 div
   private cameras: THREE.PerspectiveCamera[];
@@ -255,8 +255,8 @@ class App {
           }
 
           if (child.name === 'Plane') {
-            clipPlaneX = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 8);
-            child.material.clippingPlanes = [clipPlaneX];
+            this.clipPlaneX = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 8);
+            child.material.clippingPlanes = [this.clipPlaneX];
             child.material.clipShadows = true;
 
             // const planeHelper = new THREE.PlaneHelper(
@@ -268,8 +268,8 @@ class App {
           }
           if (child.name === 'Plane002') {
             // 클리핑 플레인 설정 (X축 기준으로 왼쪽에서부터 메쉬를 잘라냄)
-            clipPlaneX2 = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 0); // X축 방향으로 왼쪽에서 시작
-            child.material.clippingPlanes = [clipPlaneX2]; // 메쉬에 클리핑 플레인 적용
+            this.clipPlaneX2 = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 0); // X축 방향으로 왼쪽에서 시작
+            child.material.clippingPlanes = [this.clipPlaneX2]; // 메쉬에 클리핑 플레인 적용
             child.material.clipShadows = true; // 그림자에도 클리핑 플레인을 적용
 
             // const planeHelper2 = new THREE.PlaneHelper(
@@ -281,8 +281,11 @@ class App {
           }
           if (child.name === 'Plane003') {
             // 클리핑 플레인 설정 (X축 기준으로 왼쪽에서부터 메쉬를 잘라냄)
-            clipPlaneX3 = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 290); // X축 방향으로 왼쪽에서 시작
-            child.material.clippingPlanes = [clipPlaneX3]; // 메쉬에 클리핑 플레인 적용
+            this.clipPlaneX3 = new THREE.Plane(
+              new THREE.Vector3(-1, 0, 0),
+              290,
+            ); // X축 방향으로 왼쪽에서 시작
+            child.material.clippingPlanes = [this.clipPlaneX3]; // 메쉬에 클리핑 플레인 적용
             child.material.clipShadows = true; // 그림자에도 클리핑 플레인을 적용
 
             // const planeHelper3 = new THREE.PlaneHelper(
@@ -442,26 +445,28 @@ class App {
   // 클리핑 플레인 업데이트 함수
   private updateClippingPlanes(deltaTime: number, time: number) {
     if (!this.animationEnabled) return; // 애니메이션이 활성화되지 않은 경우 클리핑 플레인 업데이트 중단
-    if (clipPlaneX && clipPlaneX.constant < 300) {
-      clipPlaneX.constant += deltaTime * clipSpeed * clipDirection;
+    if (this.clipPlaneX && this.clipPlaneX.constant < 300) {
+      this.clipPlaneX.constant += deltaTime * clipSpeed * clipDirection;
     }
 
-    if (clipPlaneX2 && time > 21) {
+    if (this.clipPlaneX2 && time > 21) {
       const timeInCycle = (time - 21) % 40;
-      if (timeInCycle <= 21 && clipPlaneX2.constant < 20) {
-        clipPlaneX2.constant += deltaTime * clipSpeed;
-      } else if (clipPlaneX2.constant > 5) {
-        clipPlaneX2.constant -= deltaTime * clipSpeed;
+      if (timeInCycle <= 21 && this.clipPlaneX2.constant < 20) {
+        this.clipPlaneX2.constant += deltaTime * clipSpeed;
       }
+      // else if (this.clipPlaneX2.constant > 5) {
+      //   this.clipPlaneX2.constant -= deltaTime * clipSpeed;
+      // }
     }
 
-    if (clipPlaneX3 && time > 44) {
+    if (this.clipPlaneX3 && time > 44) {
       const timeInCycle = (time - 44) % 40;
-      if (timeInCycle <= 20 && clipPlaneX3.constant < 320) {
-        clipPlaneX3.constant += deltaTime * clipSpeed;
-      } else if (clipPlaneX3.constant > 290) {
-        clipPlaneX3.constant -= deltaTime * clipSpeed;
+      if (timeInCycle <= 20 && this.clipPlaneX3.constant < 320) {
+        this.clipPlaneX3.constant += deltaTime * clipSpeed;
       }
+      //else if (this.clipPlaneX3.constant > 290) {
+      //   this.clipPlaneX3.constant -= deltaTime * clipSpeed;
+      // }
     }
   }
   update(time: number) {

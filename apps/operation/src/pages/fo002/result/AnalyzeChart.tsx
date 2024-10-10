@@ -8,12 +8,9 @@ import styles from './AnalyzeChart.module.scss';
 import AnalyzeChartBlock from './AnalyzeChartBlock';
 
 import { CoilSupplyDTO } from '@/config/dto';
+import { WorkItemDTO } from '@/config/dto';
 import { useWorkInstructionStore } from '@/store/fo001store';
-import { mockCoilTypeCodeData } from '@/utils/mockWorkInstruction';
-import {
-  coilTypeColumnData,
-  transformedCoilTypeCodeData,
-} from '@/utils/tableUtils';
+import { schCoilColumnData } from '@/utils/tableUtils';
 
 // duration 플러그인을 dayjs에 등록
 dayjs.extend(duration);
@@ -22,12 +19,28 @@ export const AnalyzeChart = () => {
   // 필요한 상태를 구독합니다.
   const workItems = useWorkInstructionStore((state) => state.workItems);
   const scheduleNo = useWorkInstructionStore((state) => state.scheduleNo);
+  interface DataType {
+    [key: string]: any;
+  }
+
+  // WorkItemDTO를 DataType으로 변환하는 함수
+  const transformWorkItemsToDataType = (
+    workItems: WorkItemDTO[],
+  ): DataType[] => {
+    return workItems.map((item) => ({
+      materialNo: item.materialNo,
+      sequence: item.sequence,
+      initialThickness: item.initialThickness,
+      initialWidth: item.initialWidth,
+      initialGoalThickness: item.initialGoalThickness,
+      initialGoalWidth: item.initialGoalWidth,
+    }));
+  };
+
   const scExpectedDuration = useWorkInstructionStore(
     (state) => state.scExpectedDuration!,
   );
-  const countCoilTypeCode = useWorkInstructionStore(
-    (state) => state.countCoilTypeCode,
-  );
+
   const startTime = useWorkInstructionStore(
     (state) => state.scheduleStartTime, // 선택된 schedule의 시작 시간
   );
@@ -58,12 +71,7 @@ export const AnalyzeChart = () => {
 
   const pendingProgressedCoils = newSuppliedCoils - totalProgressed; // 작업 예정
 
-  const coiTypeCodeData = countCoilTypeCode
-    ? transformedCoilTypeCodeData(countCoilTypeCode)
-    : mockCoilTypeCodeData;
-
   const [timeDifference, setTimeDifference] = useState(0);
-
   useEffect(() => {
     // 주어진 startTime을 dayjs 객체로 변환
     const start = dayjs(startTime);
@@ -137,8 +145,8 @@ export const AnalyzeChart = () => {
           />
           <div className={styles.coilTypeFrame}>
             <Table
-              columns={coilTypeColumnData}
-              data={coiTypeCodeData}
+              columns={schCoilColumnData}
+              data={workItems ? transformWorkItemsToDataType(workItems) : []} // null/undefined 처리
               size="small"
             />
           </div>
